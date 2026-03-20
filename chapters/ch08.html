@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第8章 质量 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            background: #8B4513;
+            color: #faf6f0;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.8em;
+            color: #5c3d1a;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* 章节目录 */
+        .chapter-toc {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .toc-title {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-size: 1em;
+            user-select: none;
+        }
+        .toc-title:hover { color: #d4af37; }
+        .toc-icon { transition: transform 0.3s; display: inline-block; }
+        .toc-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .toc-list.collapsed { max-height: 0; margin-top: 0; }
+        .toc-list li {
+            padding: 3px 0;
+            border-bottom: 1px dotted #d4c8a8;
+        }
+        .toc-list a {
+            color: #8B4513;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .toc-list a:hover { color: #d4af37; }
+
+        /* 内容区 */
+        .section-heading {
+            color: #5c3d1a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d5c0;
+        }
+        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+        h3.section-heading { font-size: 1.2em; }
+        h4.section-heading { font-size: 1.05em; }
+
+        .pn-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.75em;
+            vertical-align: super;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .pn-link:hover { color: #8B4513; }
+
+        .section-content {
+            margin-bottom: 20px;
+        }
+        .section-content p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        /* 列表 */
+        .content-list {
+            list-style: none;
+            padding-left: 2em;
+            margin: 12px 0;
+        }
+        .content-list li {
+            position: relative;
+            padding-left: 1.2em;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .content-list li::before {
+            content: "●";
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 实体链接 */
+        .entity-link {
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            padding: 0 1px;
+            transition: all 0.2s;
+        }
+        .entity-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .entity-principle { color: #b8860b; border-color: #b8860b; }
+        .entity-practice { color: #8B4513; border-color: #8B4513; }
+        .entity-process { color: #2E8B57; border-color: #2E8B57; }
+        .entity-role { color: #4169E1; border-color: #4169E1; }
+        .entity-product { color: #8B008B; border-color: #8B008B; }
+        .entity-term { color: #A0522D; border-color: #A0522D; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #d4af37;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .chapter-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch07.html" class="nav-link">◁ 第7章 计划</a> | <a href="ch09.html" class="nav-link">第9章 风险 ▷</a></div>
+
+    <span class="category-tag">实践</span>
+    <h1 class="chapter-title">第8章 质量</h1>
+
+    
+        <nav class="chapter-toc">
+            <h3 class="toc-title" onclick="toggleToc()">
+                <span class="toc-icon">▸</span> 本章目录（33 节）
+            </h3>
+            <ul class="toc-list" id="tocList">
+                <li><a href="#pn-2">8.1 目的</a></li><li><a href="#pn-3">8.1.1 与质量有关的重要术语</a></li><li><a href="#pn-4">8.1.2 基于产品的质量</a></li><li><a href="#pn-5">8.2 对有效质量管理的指导</a></li><li><a href="#pn-6">8.2.1 质量计划</a></li><li><a href="#pn-7">8.2.1.1 用户的质量期望</a></li><li><a href="#pn-8">8.2.1.2 质量容许偏差</a></li><li><a href="#pn-9">8.2.1.3 描述产品</a></li><li><a href="#pn-10">8.2.1.4 产品可持续性</a></li><li><a href="#pn-11">8.2.1.5 质量职责</a></li><li><a href="#pn-12">8.2.1.6 下级计划的质量</a></li><li><a href="#pn-13">8.2.2 质量控制</a></li><li><a href="#pn-14">8.2.3 质量保证</a></li><li><a href="#pn-15">8.3 技术</a></li><li><a href="#pn-16">8.3.1 PRINCE2 质量管理技术</a></li><li><a href="#pn-17">8.3.1.1 计划质量</a></li><li><a href="#pn-18">8.3.1.1.1 收集用户输入</a></li><li><a href="#pn-19">8.3.1.1.2 创建产品描述</a></li><li><a href="#pn-20">8.3.1.1.3 描述质量管理方法</a></li><li><a href="#pn-21">8.3.1.2 控制质量</a></li><li><a href="#pn-22">8.3.1.3 验收产品</a></li><li><a href="#pn-23">8.3.2 支持技术</a></li><li><a href="#pn-24">8.4 应用实践</a></li><li><a href="#pn-25">8.4.1 组织情境</a></li><li><a href="#pn-26">8.4.2 商务情境</a></li><li><a href="#pn-27">8.4.3 交付方法</a></li><li><a href="#pn-28">8.4.3.1 线性-顺序项目</a></li><li><a href="#pn-29">8.4.3.2 迭代-增量项目</a></li><li><a href="#pn-30">8.4.4 可持续性</a></li><li><a href="#pn-31">8.4.5 规模</a></li><li><a href="#pn-32">8.5 为实践提供支持的管理产品</a></li><li><a href="#pn-33">8.6 实践中关键角色的重点</a></li><li><a href="#pn-34">8.7 与原则的关键关系</a></li>
+            </ul>
+        </nav>
+
+    <div class="chapter-content">
+        <div class="section-content"><p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 8.1 目的</h2>
+<div class="section-content"><p>关键信息 <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>实践的目的在于记录用户对项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的需求，并建立满足这<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>求的方法。 质量关乎于确保项目产品满足<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>和期望，并支持实现预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。质量<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>涉及到项目 产品的质量概念、指导、技术、<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>和职责。 定义：质量 产品、服务、<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>、人员、<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>、系统或资源都有一套固定的特性，质量就是这一 固定特性满足相关<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的程度。 PRINCE2 方法包括系统性活动，目的在于：</p>
+<ul class="content-list">
+  <li>在<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中明确确认对项目产品的<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>与验收准则</li>
+</ul>
+<ul class="content-list">
+  <li>识别项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，直至项目可以实施控制的层级</li>
+</ul>
+<ul class="content-list">
+  <li>在<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中对项目产品进行定义，包括评估<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>所依据的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>，检查其质量时所用
+的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>技术，以及相关参与者的质量职责</li>
+</ul>
+<ul class="content-list">
+  <li>在项目生命周期中实施和跟踪所采用的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>技术
+应将质量融入一切；不仅仅是在项目结束时执行测试。</li>
+</ul></div>
+<h3 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 8.1.1 与质量有关的重要术语</h3>
+<div class="section-content"><p>PRINCE2 使用一组特定术语来描述有关项目<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>需求的信息，并实现有效的<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>、 质量控制和<a href="../entities/term.html#entity-质量保证" class="entity-link entity-term" title="术语：质量保证">质量保证</a>。这些术语有：</p>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a></li>
+</ul>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 定义：<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a> 有关项目产品预期达到质量的说明，记录在<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中。 所有项目利益相关方都对项目的执行方式及其将交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>具有特定期望。但在 PRINCE2 中<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>量期望”这一术语仅适用于项目<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中的陈述。 定义：需求 在已<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>中记录的需求或期望。 同样，PRINCE<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>方法会区分在已批准的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>（如产品描述）中捕获的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>和期望，以及未 捕获的需求和期<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>已捕获并记录的需求或期望即被视为需求，构成项目<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>的一部分。<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>批准的管理产品中捕获的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>和期望不在项目范围之内。这种区分对于实现有效的监视和控 制至关重要。 定义：<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a> 项目产品在用户接受之前必须满足的有优先级的准则列表。例如，关键<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a> 可接受的产品集合所需具备的属性的可测量的定义。<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>NTITY_5⟧产品描述中进行说明。实际上，它们由<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>负责，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>代表业务批 准这些验收准则。<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>准则通常<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>业务在验收项目产品时预期实现的功能性能力来描述。 定义：<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a> 描述对执行质量控制的人员将应用的质量措施以及已完成产品必须达到的水平。<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>述中有质量规格说明。这<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>户的质量期望，同时根据业务或运营情境的各 个方面决定。运营情境可能包括适用的监管要求或由现<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>策和<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>驱动的需求。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 8.1.2 基于产品的质量</h3>
+<div class="section-content"><p><a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>的原则是 PRINCE2 <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>方法的核心。PRINCE2 使用“<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>”这一术语来描述项目利 益相关方对项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、成果和收益的期望、需求和愿望。没有任何<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>项目能满足所有需求。 正因如此，需要以受控的方式对需求进行优先级排定和协定。 PRINCE<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>提供了一种基于产品的需求方法，旨在将需求转化为项目产品及其交付活动的<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>准 则和<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>。这有助于避免在无法追溯到<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>业务理由的工作上花费资源。 基于产品的<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>可确保所需产品的质量规格和<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>的清晰可追溯性，从而避<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 未满足用户质量期望而发生冲突。 项目的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>越大、持续时间越长，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>需要处理的需求组合就越大（动态程度也越高）。 无论在<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程中通过产品描述捕获<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的要求的程度如何彻底和准确，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 团队都应该预测需求变<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>应对准备。需求管理是一项持续不断的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>，构成了基于<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>管理方法的第一部分。 在项目生命周期的早期纠正质量<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和缺陷，比在测试已完成产品时（或者更糟，在产品已投 入运营使用时）纠正，要更容易，成本也更低。<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>不仅可以预防此类问题，还能减少质 量控制所涉及的资源和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。</p></div>
+<h2 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 8.2 对有效质量管理的指导</h2>
+<div class="section-content"><p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>管理关注三个要素：<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>、质量控制和<a href="../entities/term.html#entity-质量保证" class="entity-link entity-term" title="术语：质量保证">质量保证</a>。</p>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>涉及：</li>
+</ul>
+<ul class="content-list">
+  <li>识别项目的主要<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，并在<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中根据<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>和验收准则对其进行
+记录</li>
+</ul>
+<ul class="content-list">
+  <li>推导出<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a><a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，并在<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中根据质量规格加以详细说明</li>
+</ul>
+<ul class="content-list">
+  <li>制定<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>，以确保满足相关的质量规格和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a></li>
+</ul>
+<ul class="content-list">
+  <li>获得<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>对以上各项的批准，作为后续<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>和控制的基线</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>涉及：</li>
+</ul>
+<ul class="content-list">
+  <li>在交付期间实施协定的<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a></li>
+</ul>
+<ul class="content-list">
+  <li>评估<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>相关问题，并在必要时提出质量<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a></li>
+</ul>
+<ul class="content-list">
+  <li>确保所交付<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>通过验收</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-质量保证" class="entity-link entity-term" title="术语：质量保证">质量保证</a>涉及：</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>和质量控制技术足以确认可以满足<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>需求</li>
+</ul>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 8.2.1 质量计划</h3>
+<div class="section-content"><p>定义：<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a> 获取项目产品的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>并生成相关的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>。</p></div>
+<h4 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 8.2.1.1 用户的质量期望</h4>
+<div class="section-content"><p><a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>始于在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流程中记录<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>。这些期望在项目产品描述中予以说明， 是<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>的一个要素。 尽管项目<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>通常在概括性层面上撰写，但其中应该识别：</p>
+<ul class="content-list">
+  <li>所有要交付的主要<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>期望和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a></li>
+</ul>
+<ul class="content-list">
+  <li>需要应用的所有标准和程序，包括<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>、用户和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的质量管理体系应该应用到什么
+程度</li>
+</ul>
+<ul class="content-list">
+  <li>任何可能有助于评估项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>是否可接受的测量指标</li>
+</ul>
+<ul class="content-list">
+  <li>可能适用于<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>的质量<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>
+这种覆盖范围至关重要，可避免在编写<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>时引入项目批准范围以外的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。</li>
+</ul></div>
+<h4 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 8.2.1.2 质量容许偏差</h4>
+<div class="section-content"><p>定义：<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a> 产品质量的容许偏差，<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>质量容许偏差，则需上报到更高一级<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层。 项目很少能有足够的资源来满足所有<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>。因此，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应与<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>和 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>合作，使用诸如第 8.3 节中所述的技术并协定这些标准的优先级。然后可以使 用已排定优先级的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>量规格来设置质量容许偏差，借此<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>原则执行项目的管理 和指导。</p></div>
+<h4 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 8.2.1.3 描述产品</h4>
+<div class="section-content"><p>就<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>和指导的目的而言，<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中捕获的高级需求非常有用。但<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的交付需要更多 细节，以实现切合实际的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>、估算、进度表编制和<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>。 定义：<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a> 对产品的用途、格式、组成、来源、<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和开发职责的描述。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> <a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中会捕获对于对某款产品的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。在识别对于该<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的需求后，就会开始生产该产 品。在线性-顺序项目中，这通常在启动<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>执行，然后在每个后续的阶段边界执行。但在迭 代-<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中，产品描述与产品开发工作并行<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。这允许通过产品原型<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>品早期版本的 使用反馈来完善产品的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>。 验收后，产品会成为正常经营的一部分。因此，负责操作和维<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>品的工作人员的需求应作为 质<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>行记录，并包含在产品描述中。 定义：<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a> 项目记录单的一个组件，用于标识项目要交付的产品并记录其<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>情况。 在产品描述经<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>批准后，它将被记录在产品登记单中，并成为项目基线的一部 分。可以变更产品描述，但必须以受控的方式进行变更。进行此变更的高效时机是<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>项目接 近下一阶段，作为评估项目情境是否有任何变更的一部分。</p></div>
+<h4 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 8.2.1.4 产品可持续性</h4>
+<div class="section-content"><p><a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>应包括作为质量规格或<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>捕获的产品可持续性需求。<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>可持续性既要考虑产 品的环境影响<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>要考虑能确保产品在其预期<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>内持续实现其收益的特征。如果产品淘汰工 作在产品的整体环境影响中占比较高，那么考虑其淘汰方法可能是合适的做法。</p></div>
+<h4 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 8.2.1.5 质量职责</h4>
+<div class="section-content"><p>为避免出现混淆和潜在冲突，应在<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中指定产品的质量职责。<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>职责通常描述如下：</p>
+<ul class="content-list">
+  <li>生产者：负责开发<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的人员或团体。</li>
+</ul>
+<ul class="content-list">
+  <li>审查者：负责评估<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>是否符合其<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>或<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>的人员或团体</li>
+</ul>
+<ul class="content-list">
+  <li>审查者应始终不同于生产者，以避免利益冲突。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>：负责确定产品是否可接受的人员或团体</li>
+</ul>
+<ul class="content-list">
+  <li>这可以是<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>，不过项目管理委员会也可以将某些<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的验收职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>授
+权给他人</li>
+</ul>
+<ul class="content-list">
+  <li>这种<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>应在<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>中加以说明</li>
+</ul></div>
+<h4 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 8.2.1.6 下级计划的质量</h4>
+<div class="section-content"><p>单个<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>事件（如测试）可能会在<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>和团队<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>中得到更详细的记录，以便进行更准确 的估算和进度表编制。但<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应该注意，不要引入无法追溯到<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>的 新需求。如因较低级别的计划而引起基线<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>发生变更，则应使用<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>加以 解决（见第 10 章）。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h3 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 8.2.2 质量控制</h3>
+<div class="section-content"><p>定义：<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a> 监视项目的特定产品及其开发或交付活动并判断它们是否满足相应标准的程序； 同时也是一种识别合适方法、尽量减少绩效不佳原因的<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>项目质量控制是针对每个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的一系列活动，通常涉及到多种技术。它始于<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>获得批准 并记录在<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>中之时。 如果产品是新品，并且开发或交付<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>设计或生产方法，则质量控制可能涉及到在<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>投 产之前评估产品原型及其初始生产方法。如果产品达到成熟或商务成品<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>，<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>控制可能仅 涉及到在交付点进行检查。 <a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>中描述了在交付过程中<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>监视和控制产品质量的质量技术。 定义：<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a> 项目记录单的一个组件，用于标识<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的或已发生的所有质量控制活动，并为阶段 竣工报<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a><a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>提供信息。 质量登记单提供质量控制活动的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>对各产品描述的批准开始。随着项目的推进和质量控 制活动记<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>质量登记单会更新，从而（以摘要形式）反映质量活动的实际结果。质量 登记单提供关键的审计和保证信息，<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>管理方法和产品描述中）计划和协定的内容 与实际开展的质量控制活动进行对比。 交付期间的质量控制通常涉及到<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>、项目保证角色与主题专家 (SME)（无论是内部还是 外部）之间的协作。需要<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>内部专家或外部专家支持的质量控制活动应包含在工作分解结 构、进度表和项目预算中，如第 8.3 节所述。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 场景：<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>中的质量控制职责 以下<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>展示了 LouisShopping 项目中的<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>职责： 表 8.1 LouisShoppin<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>质量登记单 质量活动 ID 产<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>ID 产品 质量方法 生产者 审查者 <a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>者 目标 审查日期 实际 <a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>日期 目标 批准日期 实际 批准日期 结果 测试停车 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 检查 T Jones A Doe B Jones 9 月 17 日9 月 17 日9 月 25 日9 月 25 日通过 水泵 性能测试 M Silver S James R Lauren 9 月 12 日9 月 17 日9 月 25 日9 月 28 日未通过 水泵 维护测试 L Kay A Doe R Lauren 9 月 17 日10 月 4 日10 月 5 日10 月 5 日通过</p></div>
+<h3 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 8.2.3 质量保证</h3>
+<div class="section-content"><p>定义：<a href="../entities/term.html#entity-质量保证" class="entity-link entity-term" title="术语：质量保证">质量保证</a> 一种有计划的系统性活动，可就<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>在<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>下测试后达到定义的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>提供 信<a href="../entities/term.html#entity-心。质量保证方法通常由业务执行，以确保" class="entity-link entity-term" title="术语：心。质量保证方法通常由业务执行，以确保">心。质量保证方法通常由业务执行，以确保</a>这些独立于项目团队。 <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>保证的重点是<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>目的质量控制措施适合<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>项目质量规格评估项目产品。质量 保证方法应贯穿整个项目生命周期，从<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>至结束。 注意，不要混淆质量保证和<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>。质量保证专注于产品，独立于项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队。它通常由 业务职<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>行。项目保证是<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>的职责，用于确定项目是否正确执行。项目保 证独立于<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>（而非项目）。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h2 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 8.3 技术</h2>
+<h3 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 8.3.1 PRINCE2 质量管理技术</h3>
+<div class="section-content"><p>PRINCE2 包括围绕“<a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>”的原则集成的三步式<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>管理技术（<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>质量、控制质量和验 收<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>），如图 8.1 所示。在<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中表达的需求驱动下，通过<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>、质量控制和 产品验收的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>循环，确保项目产品与项目<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>之间的一致性。 如果需要，可以使用替代性程序，例如，如果<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>特定于其<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的产品设计、开发和测试 程序。应将使用替代程序的决策作为<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中的剪裁决策的一部分来记录。 来自<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a> <a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a> 项目产<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>管理方法 质量规格和<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a> 质量方法 <a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a> 产品登记单 产品 <a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>活动 验收<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>对 质量计划 质量控制<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 8.1 产品质量生命周期</p></div>
+<h4 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 8.3.1.1 计划质量</h4>
+<h4 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 8.3.1.1.1 收集用户输入</h4>
+<div class="section-content"><p><a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>和验收准则记录在项目<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中，并在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流程中产生，是 PRINCE2 规划技术的主要输入。<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>也是质量计划的主要输入，旨在创建两种<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：</p>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>：详细说明每种产品的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和相关的质量<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>：描述要应用的支持技术和标准，以及达到所需<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>的角色
+和职责。</li>
+</ul>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h4 id="pn-19" class="section-heading"><a href="#pn-19" class="pn-link" title="点击复制链接">[19]</a> 8.3.1.1.2 创建产品描述</h4>
+<div class="section-content"><p><a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中的需求陈述通常是概括性的，必须进一步详细阐述，以实现准确的估算和计 划。在单个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a><a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>产品描述中的少量用户<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>期望转化为数十项<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>的现象并 不罕见。 在将<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的要求转化为质量规格时，最<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>挑战之一是就产品特征的有效测量达成共 识。例如，仅指出新建筑物的空间必须足以容纳 100 名工作人员是不够的。必须考虑工作人 员将如何使用建筑物、他们将执行的工作的性质以及他们将需要的支持设备和设施的类型， <a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>化为质量规格。这些将用于建筑物的设计和建筑，以满足<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。所有这些因素 都需要作为客观的定量和定性测量指标加以捕获：</p>
+<ul class="content-list">
+  <li>定量测量指标：将<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>转化为数值化形式（在上述示例中，100 名工作人员是定量测量
+指标。）</li>
+</ul>
+<ul class="content-list">
+  <li>定性测量指标：将<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>转化为描述性（而非数值化）形式，例如“易用性”。使用定性测
+量指标的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>在于，它们可能过于模糊，无法客观评估。例如，还应描述预期<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>的知识
+和培训水平，来阐明易用性。根据功<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>和非功能性能需求来区分<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>可能很有用：</li>
+</ul>
+<ul class="content-list">
+  <li>功能性<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>：描述必须如何执行和使用<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></li>
+</ul>
+<ul class="content-list">
+  <li>非功能性<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>：描述<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的固有特征，例如产品安全性或可靠<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>场景：非功能性需求示例
+对于 Data Knowledge 的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>记录解决方案，功能性需求是它必须允许对尝试登
+录应用程序的<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>进行身份验证。这些<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>定义了系统/产品必须如何工作和/或表
+现。对于 Data Knowle<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>e 的应用程序需要满足的非功能性需求，一个<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>需求是
+每项时间记录的处理均应在 10<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>内完成。此类需求解释了系统/产品应如何执行，
+包括可用性、性能、安全性等属性。
+区分功能性需求与非功能性需求的另一种方法是将功能性需求与目的适用性相关联，
+将非功能性需求与用途适用性相关联。如果在产品的开发、生产或交付方式方面存在
+<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>，则可能还需要在关联的<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中反映此类需求。
+根据产品需求的复杂性和成熟度，在<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程中将产品描述保持在相对概括的水
+平可能是合适的做法。<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>NTITY_2⟧主要用于建立对时间和成本估算的充分信心，并确认
+项目能在可接受的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a><a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>付。产品描述还识别了负责的生产者、审查者和<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>
+职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>。</li>
+</ul></div>
+<h4 id="pn-20" class="section-heading"><a href="#pn-20" class="pn-link" title="点击复制链接">[20]</a> 8.3.1.1.3 描述质量管理方法</h4>
+<div class="section-content"><p><a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>通常与初始产品描述同时制定，但其内容应旨在确保交付符合<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>和 验收准则的产品。因此，它应该侧重于如何<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>、执行、监视和报告<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>，同时简明扼要 地解释<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>是如何发<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>管理方法描述了将遵循的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>标准和程序、要使用的工具和技术、<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>和记<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>留安排以 及质量管理活动的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>和职责。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 场景：质量标准示例 在 LouisShopping 场景中，购物中心和停车场必须满足消防、安全、安保、传统和其 他监管要求。该项目的<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>将需要合格的主题专家 (SME)，来帮助制定<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a> 中包含的质量规格。此外，BuildyBrick 和 Louistown 市议会已协定采用最新版本的 商场联合会建筑标准，其中包括 BuildyBrick 要满足的既定标准。<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>以及 相关产品描述中引用了商场<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>准，产品描述将引用该标准中的特定条款。随着 建筑工作的完成，在<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>过程中将涉及到多种类型的专业测试和检查活动，以确 认与这些规格的<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>管理方法应确保识别必要的专家，并确保可以安排这些<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>支持质量计划和质量控制。 建筑效率和安全的强制性<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>建筑行业应用高质量标准。在混凝土路面强度、建筑材 料的组成或停车位测量方面，LouisShopping 也不<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>。<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>得批准后<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>述和质量管理方法将纳入项目基线。<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>描述记录在质量登 记单中，以<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>报告质量控制活动，并记录在<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>中，以便监视和报告产 品交付和<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>情况。</p></div>
+<h4 id="pn-21" class="section-heading"><a href="#pn-21" class="pn-link" title="点击复制链接">[21]</a> 8.3.1.2 控制质量</h4>
+<div class="section-content"><p>在<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>和初始产品描述获得批准后，<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>实践的重点就会转移到<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>上。质量控 制活动记录在<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>中，该登记单为<a href="../entities/product.html#entity-阶段竣工报告" class="entity-link entity-product" title="管理产品：阶段竣工报告">阶段竣工报告</a>和项目竣工报告提供信息。 质量<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>记录质量控制活动及其结果（通常为“通过”或“未通过”）。如果<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>过 检查或测试等质量控制活动，但预期该<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>有可能通过此类活动，则重复执行此类活动可能是 合理做法。<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>果产品无法通过质量控制活动，<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>须根据质量<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>和质量规格对未能通过的情况进行<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>质量容许偏差和<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>的例外情况使用第 10 章所述的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理技术来解决。 在产品质量生命周期中识别的经验教训将记录在“项目记录单：<a href="../entities/product.html#entity-经验教训记录单" class="entity-link entity-product" title="管理产品：经验教训记录单">经验教训记录单</a>”中。</p></div>
+<h4 id="pn-22" class="section-heading"><a href="#pn-22" class="pn-link" title="点击复制链接">[22]</a> 8.3.1.3 验收产品</h4>
+<div class="section-content"><p>负责<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的个人或角色在<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中确定。验收通常涉及到对项目提供的产品<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>信 息执行审查，以及根据<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>和验收准则对产品进行独立审查。项目产<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>收通常会 将产品的所有权或职责从项目或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>转移到代表用户的<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h3 id="pn-23" class="section-heading"><a href="#pn-23" class="pn-link" title="点击复制链接">[23]</a> 8.3.2 支持技术</h3>
+<div class="section-content"><p>了解所使用的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>技术类型及其时间、位置和资源<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>对于<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>至关重要。尽管存在各种 各样的质量技术，但在项目情境中，最常用的有：</p>
+<ul class="content-list">
+  <li>验证：</li>
+</ul>
+<ul class="content-list">
+  <li>重点确认临时<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>（如项目设计）反映了必要的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>，并确保交付方
+法遵循良好<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a></li>
+</ul>
+<ul class="content-list">
+  <li>在实际<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>尚不存在的产品设计和开发过程中进行</li>
+</ul>
+<ul class="content-list">
+  <li>通常需要相关<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或方法专家的支持</li>
+</ul>
+<ul class="content-list">
+  <li>核实：</li>
+</ul>
+<ul class="content-list">
+  <li>重点确认<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>符合<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>在测试期间或<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>存在后进行</li>
+</ul>
+<ul class="content-list">
+  <li>通常需要相关<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>专家的支持，并且可能需要安排独立测试</li>
+</ul>
+<ul class="content-list">
+  <li>原型设计：</li>
+</ul>
+<ul class="content-list">
+  <li>生产临时<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，用于获得有关其功能的早期反馈或全面了解生产<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a></li>
+</ul>
+<ul class="content-list">
+  <li>是迭代-增量交付方法（如敏捷法）中不可或缺的一部分；有时称为 Beta 测试</li>
+</ul>
+<ul class="content-list">
+  <li>还可能涉及到<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>替代版本的生产和使用，例如在 A/B 测试中要比较多个版本以决定首
+选版本</li>
+</ul>
+<ul class="content-list">
+  <li>测试：</li>
+</ul>
+<ul class="content-list">
+  <li>涉及到在代表其预期使用的条件下使用<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、其组件或其部分功能</li>
+</ul>
+<ul class="content-list">
+  <li>可在开发和交付过程中多次发生，也可以在不同的位置发生。例如，在<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的设施
+中进行测试可以降低在<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>所在位置可能遭遇的成本和推迟<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。同样，可能需要在
+运营环境中进行现场测试，以确认<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>适合运营用途</li>
+</ul>
+<ul class="content-list">
+  <li>检查：</li>
+</ul>
+<ul class="content-list">
+  <li>确认<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>符合<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a></li>
+</ul>
+<ul class="content-list">
+  <li>通常在交付点进行</li>
+</ul>
+<ul class="content-list">
+  <li>最适用于商品和商业成品</li>
+</ul>
+<ul class="content-list">
+  <li>认证：</li>
+</ul>
+<ul class="content-list">
+  <li>展示<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>符合适用行业需求或监管要求的证明</li>
+</ul>
+<ul class="content-list">
+  <li>通常在交付点进行，所需工作量最少</li>
+</ul>
+<ul class="content-list">
+  <li>仅适用于商业成品</li>
+</ul>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h2 id="pn-24" class="section-heading"><a href="#pn-24" class="pn-link" title="点击复制链接">[24]</a> 8.4 应用实践</h2>
+<h3 id="pn-25" class="section-heading"><a href="#pn-25" class="pn-link" title="点击复制链接">[25]</a> 8.4.1 组织情境</h3>
+<div class="section-content"><p>在<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>情境中进行<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>时，首先要识别业务或项目群是否具有强制要求的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>管理体系， 以及执行<a href="../entities/term.html#entity-质量保证" class="entity-link entity-term" title="术语：质量保证">质量保证</a>方法所需的专业知识。如果一<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>目涉及到多个组织（例如，<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的用户和 <a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>组织），则每个组织可能都有自己的质<a href="../entities/term.html#entity-质量保证" class="entity-link entity-term" title="术语：质量保证">质量保证</a>系和质量保证专业知识。 <a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>中应该反映每个人的角色、职责和能力。 如果项目是项目群或项目组合的一部分，项目群或项<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>管理方法通常决定了该项目 的质量<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法。在这<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>需在质量管理方法中记录特定于项目的方法。 <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>还可能受到外部质量标准的<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>，例如，项目处于受监管环境中时。这些标准可能既适用 于项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，也适用于交付活动，需要反映在<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中。</p></div>
+<h3 id="pn-26" class="section-heading"><a href="#pn-26" class="pn-link" title="点击复制链接">[26]</a> 8.4.2 商务情境</h3>
+<div class="section-content"><p>在商务情境中，<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>必须考虑合同或其他商务协议在<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>交付期间所要求 的功能。例如，<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>设施的访问权或客户的<a href="../entities/term.html#entity-质量保证" class="entity-link entity-term" title="术语：质量保证">质量保证</a>工作人员执行检查或独立测试的能力， 这些应作为合同条款的一部分加以规定。合同可能<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>规定指定供应商提供有关其自身的质 量控制和<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>的透明度。 验收也必须从合同和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>角度加以处理。验收来自供应商的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>可能是客户验收产品的先决 <a href="../entities/term.html#entity-条件。" class="entity-link entity-term" title="术语：条件。">条件。</a>但其条款和条件将包含在合同中，而不是<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中。应注意确保合同规定的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>与产品和<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中的质量和验收准则不存在冲突<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>场景：合同中的质量职责 在 Louistown Shopping 场景中，购物中心和停车场的建筑属于合同<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>。<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>NTITY_1⟧管理方法必须确保质量控制和合同<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>和职责与整体项目验收职责明确 区分开来。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h3 id="pn-27" class="section-heading"><a href="#pn-27" class="pn-link" title="点击复制链接">[27]</a> 8.4.3 交付方法</h3>
+<h4 id="pn-28" class="section-heading"><a href="#pn-28" class="pn-link" title="点击复制链接">[28]</a> 8.4.3.1 线性-顺序项目</h4>
+<div class="section-content"><p>在线性-顺序交付方法中，通常有更多关于所需<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>及其交付活动的信息。这便于开发足够详 细的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和质量规格，以支持进度表编制和估算达到更高的置信度。但这并不表示<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>在 生产或交付过程中不会发生变更。相反，交付活动的顺序通常<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>允许尽早解决产品需求和质 量规格的不确定方面，从而降低后期<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>水平。 此外，与所有项目一样，<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>和质量规格可能会受到线性-顺序项目外部变更的影响，这 可通过<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>来解决。这种外部变更的一个示例是，为项目产品引入新的监管要求。 场景：<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>和<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>变更示例 Findef 的早期市场测试结果<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，在所咨询的市场样本中，接收产品 1 的应用<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>送 通知是一项需求较高的特征，也是越来越多的金融服务产品提供的一项特征。Findef 还了解到，目前出台了有关金融犯罪的新监管<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>要求。<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>将评估引入新通知 特征（一项范围<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>请求）和监<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>告需求（一项质量标准变更请求）的影响。<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 划下一个项目阶段之前，将评估这些变更请求，并提出备选方案。</p></div>
+<h4 id="pn-29" class="section-heading"><a href="#pn-29" class="pn-link" title="点击复制链接">[29]</a> 8.4.3.2 迭代-增量项目</h4>
+<div class="section-content"><p>在迭代-增量项目中，<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>不会随着<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的批准而固定不变。相反， 它们被视为通过开发和交付迭代（通常称为<a href="../entities/term.html#entity-冲刺" class="entity-link entity-term" title="术语：冲刺">冲刺</a>）实现的目标。 在这种情况下，<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>可以采用具有相关验收准则的概要<a href="../entities/term.html#entity-用户故事" class="entity-link entity-term" title="术语：用户故事">用户故事</a>形式进行编写，并且 可以随着项目的推进迭代开发。作为替代方案，可以在<a href="../entities/term.html#entity-产品待办事项" class="entity-link entity-term" title="术语：产品待办事项">产品待办事项</a>列表中捕获和管理需求 （包<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>格和验收准则）。这是一份优先级列表，每次迭代都会进行审查和更新。 <a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a> 准则<a href="../entities/term.html#entity-用户故事" class="entity-link entity-term" title="术语：用户故事">用户故事</a>确定用户故事是否已完成。 敏捷项目也可能旨在尽早交付<a href="../entities/term.html#entity-最小可行产品" class="entity-link entity-term" title="术语：最小可行产品">最小可行产品</a>，即具有足够特征的产品版本，可用于提供反馈 和完善<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a><a href="../entities/term.html#entity-最小可行产品" class="entity-link entity-term" title="术语：最小可行产品">最小可行产品</a>可行产品编写产品描述是在敏捷交付中展示 PRINCE2 原则的有效方 法。<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>可能包括标准的“完成定义”和“就绪定义”。 场景：<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>例子 为了在不影响质量的情况下加快项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，Data Knowledge 的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>记录解决方案和资 <a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>报告套件以时间盒的形式交付<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>备特征将包含在时间盒 3 中，而完善（应该 和可<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>的特征）将于试点之后包含在时间盒 4 中。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h3 id="pn-30" class="section-heading"><a href="#pn-30" class="pn-link" title="点击复制链接">[30]</a> 8.4.4 可持续性</h3>
+<div class="section-content"><p>可持续性是描述和指定项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>时的关键考虑因素。可持续性<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>应满足<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>在交付后维持 预期收<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>能力（例如，产品<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>续性），以及组织实现有关项目及其产品的环境影响预期 的能力（环境可持续性）。 这两个方面均可在<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中简要说明。与产品可持续性相关的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>通常可以从有关产 品供应链的信息及<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>预计的产品使用和支持方式中获得。与环境可<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>关的质量规格可能 需要引述监管或咨询标准。</p></div>
+<h3 id="pn-31" class="section-heading"><a href="#pn-31" class="pn-link" title="点击复制链接">[31]</a> 8.4.5 规模</h3>
+<div class="section-content"><p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>管理总是存在一定的成本。有效<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>的目标是使用适当的质量<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和控制，抵消 产品失效的潜在成本。过于严格的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>会大大增加项目的总体成本。 通过得到充分理解的方法交付少量<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的项目可能会发现，在交付点依靠现有标准和检查足以满 足要求。另一方面<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>果项目开发的新产品具有众多组件或子系统，并且涉及到多<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>交付，则 可能需要在<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>方面进行大量投资，并开<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>量的质量审查。质量审查旨在评估产品是否完 整、是<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>合标准以<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>合其质量规格。在复杂产品的开发中，可能需要在多个点执行这些 审查。 场景：规模示例 Data Knowledge 的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>记录解决方案是一个简单的项目，因此<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>决定在项目 工作<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>管理方法。其中包含所有<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法，并将遵循已建立的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>标准。 计划的质量活动仅限于由公司中选定<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>执行的一轮用户<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>测试。 相比之下，Fi<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a> 的项目经理编写了<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>面的质量管理方法文件，详细说明<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目期间的质量管理方式。由于所涉及工作的复<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和新颖性，他们计划了多项质 量活动。分别是技术设计检查、单元测试、集成测试、性能测试、功<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>测试和用户 验收测试。这些活动的计划和结果在为项目建立的<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>中描述。</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h2 id="pn-32" class="section-heading"><a href="#pn-32" class="pn-link" title="点击复制链接">[32]</a> 8.5 为实践提供支持的管理产品</h2>
+<div class="section-content"><p>PRINCE2 包括用于<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目的 15 种<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。下面描述了特定于质量<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。 管理产品：<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a> 目的 产品描述的目的是描述<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的目的、组成、来源和<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>。它制定于计划阶段，在识别产品需 求后应尽快制定。 概<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>内容 标识符：产品名称或唯一标识符（如果<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>有大量产<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>本：产品描述的当前版本号 目的：产品的目的，其使用方式及预期<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a> 组成：产品组件或零件列表 格式：已完成产品是否有必须符合的标准外观？ 来源：产品的来源，例如设计、商业产品、需要升级或更换的现有系统或预<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>述 质量规格：产品的功能性<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>和非功能性需求及其相关测量指标 所需的开发或生产的方法和技能：描述产品预期会如何开发或生产；所需的任何特殊技能、设 施或设备 分配对象：创建此产品所需的人员或团队 <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>：关键质量规格可变更并保持可接<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>的范围 所需的质量方法和质量技能<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>NTITY_7⟧查产品是否符合其质量规格的质量方法（如验证、测试和 检查），以及执行<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>活动所需技能的指标 职责：产品的生产者、审查者和<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a> 质量管理方法包含在<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中。<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>管理方法的目的是描述<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>目期间要应用的质量技术和标准，以及达到规定的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>和 <a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>所需的角色和职责。 概括性<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>描述质量管理方法范围内的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和工作 质量管理<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>：描述项目<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>和质量控制活动（例如，<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>产品的程序）；应突出说明与 <a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>标准的任何差异，同时提供差异的理由<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>定义质量计划和控制活动的职责（这应包括<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>中用户、业务和支持组织之间的<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>工。） 资源：用于质量<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>、控制和保证活动，例如所需的任何测试设备 支持工<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>技术：用于质量计划和控制活动，包括要使用的任何系统及其使用方法，以及任何 特定技术，例如测试、检查、原型制作 标准：适用于质量<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的任何标准，包括<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>和其他质量记录的组成和格式 参考资料：<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>任何相关文件或产品，例如业务或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的质量管理体系</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a> 质量登记单是项目记录单的一部分<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>质量登记单的目的是汇总已<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>或已发生的所有质量管理活动。<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和项目保证会把质量 登记单作为审查<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>的一部分来使<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 概括性内容 质量标识符：质<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>动的唯一参考编号 产品标识符：受质量活动<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的标识符 质量方法：活动中涉及到的质量方<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>日期：活动的计划日期和实际日期 职责：所涉及的个人或职能及其各自的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和职责 结果：产品是否通过；指示产品未通过时的应对措施 记录：与活动关联<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>件列<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>置 管理产品：<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a> 产品登记单是项目记录单的一部分<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>产品登记单的目的是列出计划所需的所有产品以及这些产品的状态。 概括性内容 产品标识符：产品的标识符 日期：<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>批准日期和产品验收日期 状态：产品状态（如开发中或已<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>）和当前版本号 参<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>关联产品描述的链接</p>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+<h2 id="pn-33" class="section-heading"><a href="#pn-33" class="pn-link" title="点击复制链接">[33]</a> 8.6 实践中关键角色的重点</h2>
+<div class="section-content"><p>PRINCE2 定义了项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的七项关键角色。此处描述了他们特定于<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>实践的职责。 表 8.2 与质量<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>有关的关键<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的重点领域 角色 职责 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a></p>
+<ul class="content-list">
+  <li>提供<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>管理体系和适用标准的详细信息</li>
+</ul>
+<ul class="content-list">
+  <li>设置项目层面<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a></li>
+</ul>
+<ul class="content-list">
+  <li>提供<a href="../entities/term.html#entity-质量保证" class="entity-link entity-term" title="术语：质量保证">质量保证</a>专业知识
+<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a></li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>，在<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中捕获和记录<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>和验收准则</li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>，以准备<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a></li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>，以准备和维护产品描述</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>实施产品描述与<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中协定的质量控制措施</li>
+</ul>
+<ul class="content-list">
+  <li>开发关键<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>
+<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a></li>
+</ul>
+<ul class="content-list">
+  <li>设置<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>层面<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a></li>
+</ul>
+<ul class="content-list">
+  <li>确认项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>验收
+<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a></li>
+</ul>
+<ul class="content-list">
+  <li>提供<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>和验收准则</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a></li>
+</ul>
+<ul class="content-list">
+  <li>协定<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a></li>
+</ul>
+<ul class="content-list">
+  <li>提供人员和资源来执行<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>活动和产品验收</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>并对项目产品的验收问责
+<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>（如果合适）</li>
+</ul>
+<ul class="content-list">
+  <li>协定<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a></li>
+</ul>
+<ul class="content-list">
+  <li>协定关键<a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a></li>
+</ul>
+<ul class="content-list">
+  <li>如<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中所定义，协定产品开发中采用的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>技术和工具</li>
+</ul>
+<ul class="content-list">
+  <li>提供人员和资源以执行<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>质量活动
+<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a></li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>准备和维护产品描述和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a></li>
+</ul>
+<ul class="content-list">
+  <li>生产其<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>范围内与<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>一致的产品</li>
+</ul>
+<ul class="content-list">
+  <li>实施其<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中协定的质量管理程序，包括：</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>范围内产品的质量控制</li>
+</ul>
+<ul class="content-list">
+  <li>汇编<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>范围内产品的质量记录</li>
+</ul>
+<ul class="content-list">
+  <li>向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>报告产品质量状态
+（接下页）</li>
+</ul>
+<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 角色 职责 <a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a></p>
+<ul class="content-list">
+  <li>向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>的建议</li>
+</ul>
+<ul class="content-list">
+  <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>确认质量管理方法符合<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>政策</li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目经理审查产品描述</li>
+</ul>
+<ul class="content-list">
+  <li>就合适的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>专家向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出建议</li>
+</ul>
+<ul class="content-list">
+  <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>成员保证质量管理方法的实施情况（例如正确执行<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>
+程序）
+<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a></li>
+</ul>
+<ul class="content-list">
+  <li>为<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>提供行政支持</li>
+</ul>
+<ul class="content-list">
+  <li>准备和维护<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>和<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a></li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>和成员应用项目质量程序</li>
+</ul></div>
+<h2 id="pn-34" class="section-heading"><a href="#pn-34" class="pn-link" title="点击复制链接">[34]</a> 8.7 与原则的关键关系</h2>
+<div class="section-content"><p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>实践有助于在整个项目生命周期中遵守 PRINCE2 原<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 表 8.3 质量实践与 PRINCE2 原则之间的关键关系 原则 实现方<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>导致 <a href="../entities/principle.html#entity-确保持续业务理由" class="entity-link entity-principle" title="原则：确保持续业务理由">确保持续业务理由</a> 开发质量管理方法，设计和交付符 合<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>所需质量规格的产品 确保项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>实现预期成果，并与 整体<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>战略保持一致 <a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a> 在后续阶段的质量计划中纳入质量 控制活动的经验教训 反复获得和<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>经验教训，以改进 项目的<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>并提高未来项 目的组织能力 定义<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、职责 和关系 在项目<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>内确立质量角色及其各 自的职责 明确<a href="../entities/term.html#entity-质量计划" class="entity-link entity-term" title="术语：质量计划">质量计划</a>、质量控制和质量保 证的问责制 <a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a> 将质量控制和技术与<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>和阶段边 界控制保持一致 及早识别质量<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，避免返工导致 的成本和推迟 <a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a> 在<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中建立项目管理委 员会<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的质量<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a> <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>制定决策并报告例外的高 效方法 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a> 保证所有质量计划和控<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>动都基 于项目产品 与<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>进行有效沟通，避免 与<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>质量期望发生冲突 <a href="../entities/principle.html#entity-根据项目剪裁" class="entity-link entity-principle" title="原则：根据项目剪裁">根据项目剪裁</a> 仅要求那些适合交付方法和产品特 征的质量活动 在项目质量、交付活动和资源之间 达成适当平衡 （续）</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+    </div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch07.html" class="nav-link">◁ 第7章 计划</a> | <a href="ch09.html" class="nav-link">第9章 风险 ▷</a>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+    </div>
+
+    <script>
+        function toggleToc() {
+            var list = document.getElementById('tocList');
+            var icon = document.querySelector('.toc-icon');
+            list.classList.toggle('collapsed');
+            icon.style.transform = list.classList.contains('collapsed')
+                ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+
+        // Purple Numbers: 点击复制链接
+        document.querySelectorAll('.pn-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href.split('#')[0] + link.getAttribute('href');
+                navigator.clipboard.writeText(url).then(function() {
+                    link.style.color = '#2E8B57';
+                    setTimeout(function() { link.style.color = ''; }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

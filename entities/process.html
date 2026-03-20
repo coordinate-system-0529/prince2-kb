@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>流程索引 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #2E8B57;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover { color: #d4af37; }
+
+        .page-title {
+            font-size: 1.8em;
+            color: #2E8B57;
+            border-bottom: 3px double #2E8B57;
+            padding-bottom: 12px;
+            margin-bottom: 8px;
+        }
+
+        .page-stats {
+            color: #8B7355;
+            font-size: 0.9em;
+            margin-bottom: 24px;
+        }
+
+        /* 快速导航 */
+        .quick-nav {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            padding: 10px 16px;
+            margin-bottom: 24px;
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .quick-nav a {
+            color: #2E8B57;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 2px 8px;
+            border: 1px solid #2E8B57;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+        .quick-nav a:hover {
+            background: #2E8B57;
+            color: #faf6f0;
+        }
+
+        /* 实体条目 */
+        .entity-entry {
+            background: #fff;
+            border: 1px solid #e0d5c0;
+            border-left: 4px solid #2E8B57;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 0 4px 4px 0;
+            transition: transform 0.2s;
+        }
+        .entity-entry:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .entity-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .entity-icon {
+            color: #2E8B57;
+            font-size: 1.1em;
+        }
+        .entity-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #3e2a1a;
+        }
+        .occ-count {
+            color: #8B7355;
+            font-size: 0.85em;
+        }
+
+        .entity-desc {
+            color: #5c4a3a;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            padding-left: 24px;
+        }
+
+        .entity-sources {
+            font-size: 0.85em;
+            color: #8B7355;
+            padding-left: 24px;
+        }
+        .source-chapter {
+            display: inline-block;
+            margin-right: 12px;
+            margin-bottom: 4px;
+        }
+        .pn-ref {
+            color: #2E8B57;
+            text-decoration: none;
+            font-size: 0.8em;
+        }
+        .pn-ref:hover { text-decoration: underline; }
+        .no-source { color: #bbb; font-style: italic; }
+
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #2E8B57;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .page-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> |
+        <a href="principle.html" class="nav-link">原则</a> |
+        <a href="practice.html" class="nav-link">实践</a> |
+        <a href="process.html" class="nav-link">流程</a> |
+        <a href="role.html" class="nav-link">角色</a> |
+        <a href="product.html" class="nav-link">管理产品</a> |
+        <a href="term.html" class="nav-link">术语</a>
+    </div>
+
+    <h1 class="page-title">▶ 流程索引</h1>
+    <p class="page-stats">共 7 个流程，在文本中共出现 244 次</p>
+
+    <div class="entity-list">
+        
+        <div class="entity-entry" id="entity-产品交付管理">
+            <div class="entity-header">
+                <span class="entity-icon">▶</span>
+                <span class="entity-name">产品交付管理</span>
+                <span class="occ-count">(18次)</span>
+            </div>
+            <div class="entity-desc">控制小组经理与项目经理之间的工作包交付。</div>
+            <div class="entity-sources">出处：<span class="source-chapter">第11章 进展 <a href="../chapters/ch11.html#pn-15" class="pn-ref">[15]</a></span> <span class="source-chapter">第12章 PRINCE2流程简介 <a href="../chapters/ch12.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch12.html#pn-5" class="pn-ref">[5]</a>, <a href="../chapters/ch12.html#pn-8" class="pn-ref">[8]</a></span> <span class="source-chapter">第13章 项目准备 <a href="../chapters/ch13.html#pn-12" class="pn-ref">[12]</a></span> <span class="source-chapter">第16章 阶段控制 <a href="../chapters/ch16.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch16.html#pn-18" class="pn-ref">[18]</a></span> <span class="source-chapter">第17章 产品交付管理 <a href="../chapters/ch17.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch17.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch17.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch17.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch17.html#pn-6" class="pn-ref">[6]</a></span> <span class="source-chapter">附录A 管理产品 <a href="../chapters/appendix_a.html#pn-1" class="pn-ref">[1]</a></span></div>
+        </div>
+
+        <div class="entity-entry" id="entity-阶段控制">
+            <div class="entity-header">
+                <span class="entity-icon">▶</span>
+                <span class="entity-name">阶段控制</span>
+                <span class="occ-count">(27次)</span>
+            </div>
+            <div class="entity-desc">项目经理在阶段内分配工作、监控进展、处理问题和风险。</div>
+            <div class="entity-sources">出处：<span class="source-chapter">第6章 组织 <a href="../chapters/ch06.html#pn-8" class="pn-ref">[8]</a></span> <span class="source-chapter">第11章 进展 <a href="../chapters/ch11.html#pn-6" class="pn-ref">[6]</a>, <a href="../chapters/ch11.html#pn-15" class="pn-ref">[15]</a></span> <span class="source-chapter">第12章 PRINCE2流程简介 <a href="../chapters/ch12.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch12.html#pn-5" class="pn-ref">[5]</a>, <a href="../chapters/ch12.html#pn-8" class="pn-ref">[8]</a></span> <span class="source-chapter">第13章 项目准备 <a href="../chapters/ch13.html#pn-12" class="pn-ref">[12]</a></span> <span class="source-chapter">第14章 项目指导 <a href="../chapters/ch14.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch14.html#pn-9" class="pn-ref">[9]</a></span> <span class="source-chapter">第15章 项目启动 <a href="../chapters/ch15.html#pn-17" class="pn-ref">[17]</a></span> <span class="source-chapter">第16章 阶段控制 <a href="../chapters/ch16.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch16.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch16.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch16.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch16.html#pn-7" class="pn-ref">[7]</a></span> <span class="source-chapter">第17章 产品交付管理 <a href="../chapters/ch17.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch17.html#pn-11" class="pn-ref">[11]</a></span> <span class="source-chapter">第18章 阶段边界管理 <a href="../chapters/ch18.html#pn-4" class="pn-ref">[4]</a></span> <span class="source-chapter">第19章 项目收尾 <a href="../chapters/ch19.html#pn-4" class="pn-ref">[4]</a></span> <span class="source-chapter">附录A 管理产品 <a href="../chapters/appendix_a.html#pn-1" class="pn-ref">[1]</a></span></div>
+        </div>
+
+        <div class="entity-entry" id="entity-阶段边界管理">
+            <div class="entity-header">
+                <span class="entity-icon">▶</span>
+                <span class="entity-name">阶段边界管理</span>
+                <span class="occ-count">(21次)</span>
+            </div>
+            <div class="entity-desc">在阶段结束时进行审查并获取下一阶段的授权。</div>
+            <div class="entity-sources">出处：<span class="source-chapter">第5章 商业论证 <a href="../chapters/ch05.html#pn-12" class="pn-ref">[12]</a></span> <span class="source-chapter">第7章 计划 <a href="../chapters/ch07.html#pn-15" class="pn-ref">[15]</a></span> <span class="source-chapter">第11章 进展 <a href="../chapters/ch11.html#pn-15" class="pn-ref">[15]</a></span> <span class="source-chapter">第12章 PRINCE2流程简介 <a href="../chapters/ch12.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch12.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch12.html#pn-9" class="pn-ref">[9]</a></span> <span class="source-chapter">第14章 项目指导 <a href="../chapters/ch14.html#pn-4" class="pn-ref">[4]</a></span> <span class="source-chapter">第15章 项目启动 <a href="../chapters/ch15.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch15.html#pn-11" class="pn-ref">[11]</a></span> <span class="source-chapter">第16章 阶段控制 <a href="../chapters/ch16.html#pn-4" class="pn-ref">[4]</a></span> <span class="source-chapter">第17章 产品交付管理 <a href="../chapters/ch17.html#pn-14" class="pn-ref">[14]</a></span> <span class="source-chapter">第18章 阶段边界管理 <a href="../chapters/ch18.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch18.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch18.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch18.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch18.html#pn-7" class="pn-ref">[7]</a></span> <span class="source-chapter">附录A 管理产品 <a href="../chapters/appendix_a.html#pn-1" class="pn-ref">[1]</a></span></div>
+        </div>
+
+        <div class="entity-entry" id="entity-项目准备">
+            <div class="entity-header">
+                <span class="entity-icon">▶</span>
+                <span class="entity-name">项目准备</span>
+                <span class="occ-count">(33次)</span>
+            </div>
+            <div class="entity-desc">确保先决条件就位后才启动项目。输出项目概述文件。</div>
+            <div class="entity-sources">出处：<span class="source-chapter">第1章 简介 <a href="../chapters/ch01.html#pn-6" class="pn-ref">[6]</a></span> <span class="source-chapter">第5章 商业论证 <a href="../chapters/ch05.html#pn-9" class="pn-ref">[9]</a>, <a href="../chapters/ch05.html#pn-10" class="pn-ref">[10]</a></span> <span class="source-chapter">第7章 计划 <a href="../chapters/ch07.html#pn-9" class="pn-ref">[9]</a>, <a href="../chapters/ch07.html#pn-21" class="pn-ref">[21]</a>, <a href="../chapters/ch07.html#pn-39" class="pn-ref">[39]</a>, <a href="../chapters/ch07.html#pn-42" class="pn-ref">[42]</a></span> <span class="source-chapter">第8章 质量 <a href="../chapters/ch08.html#pn-7" class="pn-ref">[7]</a>, <a href="../chapters/ch08.html#pn-14" class="pn-ref">[14]</a>, <a href="../chapters/ch08.html#pn-18" class="pn-ref">[18]</a></span> <span class="source-chapter">第11章 进展 <a href="../chapters/ch11.html#pn-30" class="pn-ref">[30]</a></span> <span class="source-chapter">第12章 PRINCE2流程简介 <a href="../chapters/ch12.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch12.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch12.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch12.html#pn-9" class="pn-ref">[9]</a></span> <span class="source-chapter">第13章 项目准备 <a href="../chapters/ch13.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch13.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch13.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch13.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch13.html#pn-7" class="pn-ref">[7]</a></span> <span class="source-chapter">第14章 项目指导 <a href="../chapters/ch14.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch14.html#pn-6" class="pn-ref">[6]</a></span> <span class="source-chapter">第15章 项目启动 <a href="../chapters/ch15.html#pn-10" class="pn-ref">[10]</a></span> <span class="source-chapter">附录A 管理产品 <a href="../chapters/appendix_a.html#pn-1" class="pn-ref">[1]</a></span> <span class="source-chapter">术语表 <a href="../chapters/glossary.html#pn-1" class="pn-ref">[1]</a></span></div>
+        </div>
+
+        <div class="entity-entry" id="entity-项目启动">
+            <div class="entity-header">
+                <span class="entity-icon">▶</span>
+                <span class="entity-name">项目启动</span>
+                <span class="occ-count">(89次)</span>
+            </div>
+            <div class="entity-desc">为项目建立坚实的基础，创建项目启动文件。</div>
+            <div class="entity-sources">出处：<span class="source-chapter">第1章 简介 <a href="../chapters/ch01.html#pn-5" class="pn-ref">[5]</a>, <a href="../chapters/ch01.html#pn-16" class="pn-ref">[16]</a></span> <span class="source-chapter">第2章 原则 <a href="../chapters/ch02.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch02.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch02.html#pn-8" class="pn-ref">[8]</a></span> <span class="source-chapter">第3章 人员 <a href="../chapters/ch03.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch03.html#pn-9" class="pn-ref">[9]</a>, <a href="../chapters/ch03.html#pn-11" class="pn-ref">[11]</a></span> <span class="source-chapter">第4章 PRINCE2实践简介 <a href="../chapters/ch04.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch04.html#pn-5" class="pn-ref">[5]</a></span> <span class="source-chapter">第5章 商业论证 <a href="../chapters/ch05.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch05.html#pn-9" class="pn-ref">[9]</a>, <a href="../chapters/ch05.html#pn-10" class="pn-ref">[10]</a>, <a href="../chapters/ch05.html#pn-12" class="pn-ref">[12]</a>, <a href="../chapters/ch05.html#pn-23" class="pn-ref">[23]</a></span> <span class="source-chapter">第6章 组织 <a href="../chapters/ch06.html#pn-13" class="pn-ref">[13]</a>, <a href="../chapters/ch06.html#pn-19" class="pn-ref">[19]</a>, <a href="../chapters/ch06.html#pn-21" class="pn-ref">[21]</a>, <a href="../chapters/ch06.html#pn-33" class="pn-ref">[33]</a>, <a href="../chapters/ch06.html#pn-34" class="pn-ref">[34]</a></span> <span class="source-chapter">第7章 计划 <a href="../chapters/ch07.html#pn-9" class="pn-ref">[9]</a>, <a href="../chapters/ch07.html#pn-13" class="pn-ref">[13]</a>, <a href="../chapters/ch07.html#pn-16" class="pn-ref">[16]</a>, <a href="../chapters/ch07.html#pn-19" class="pn-ref">[19]</a>, <a href="../chapters/ch07.html#pn-23" class="pn-ref">[23]</a></span> <span class="source-chapter">第8章 质量 <a href="../chapters/ch08.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch08.html#pn-12" class="pn-ref">[12]</a>, <a href="../chapters/ch08.html#pn-16" class="pn-ref">[16]</a>, <a href="../chapters/ch08.html#pn-19" class="pn-ref">[19]</a>, <a href="../chapters/ch08.html#pn-26" class="pn-ref">[26]</a></span> <span class="source-chapter">第9章 风险 <a href="../chapters/ch09.html#pn-12" class="pn-ref">[12]</a>, <a href="../chapters/ch09.html#pn-35" class="pn-ref">[35]</a></span> <span class="source-chapter">第10章 问题 <a href="../chapters/ch10.html#pn-10" class="pn-ref">[10]</a>, <a href="../chapters/ch10.html#pn-25" class="pn-ref">[25]</a></span> <span class="source-chapter">第11章 进展 <a href="../chapters/ch11.html#pn-15" class="pn-ref">[15]</a>, <a href="../chapters/ch11.html#pn-29" class="pn-ref">[29]</a>, <a href="../chapters/ch11.html#pn-30" class="pn-ref">[30]</a></span> <span class="source-chapter">第12章 PRINCE2流程简介 <a href="../chapters/ch12.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch12.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch12.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch12.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch12.html#pn-9" class="pn-ref">[9]</a></span> <span class="source-chapter">第13章 项目准备 <a href="../chapters/ch13.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch13.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch13.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch13.html#pn-10" class="pn-ref">[10]</a>, <a href="../chapters/ch13.html#pn-12" class="pn-ref">[12]</a></span> <span class="source-chapter">第14章 项目指导 <a href="../chapters/ch14.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch14.html#pn-6" class="pn-ref">[6]</a>, <a href="../chapters/ch14.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch14.html#pn-11" class="pn-ref">[11]</a>, <a href="../chapters/ch14.html#pn-14" class="pn-ref">[14]</a></span> <span class="source-chapter">第15章 项目启动 <a href="../chapters/ch15.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch15.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch15.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch15.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch15.html#pn-6" class="pn-ref">[6]</a></span> <span class="source-chapter">第16章 阶段控制 <a href="../chapters/ch16.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch16.html#pn-6" class="pn-ref">[6]</a>, <a href="../chapters/ch16.html#pn-12" class="pn-ref">[12]</a>, <a href="../chapters/ch16.html#pn-15" class="pn-ref">[15]</a></span> <span class="source-chapter">第18章 阶段边界管理 <a href="../chapters/ch18.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch18.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch18.html#pn-6" class="pn-ref">[6]</a>, <a href="../chapters/ch18.html#pn-7" class="pn-ref">[7]</a>, <a href="../chapters/ch18.html#pn-13" class="pn-ref">[13]</a></span> <span class="source-chapter">第19章 项目收尾 <a href="../chapters/ch19.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch19.html#pn-5" class="pn-ref">[5]</a>, <a href="../chapters/ch19.html#pn-9" class="pn-ref">[9]</a>, <a href="../chapters/ch19.html#pn-10" class="pn-ref">[10]</a></span> <span class="source-chapter">附录A 管理产品 <a href="../chapters/appendix_a.html#pn-1" class="pn-ref">[1]</a></span> <span class="source-chapter">附录B 角色描述 <a href="../chapters/appendix_b.html#pn-1" class="pn-ref">[1]</a></span> <span class="source-chapter">术语表 <a href="../chapters/glossary.html#pn-1" class="pn-ref">[1]</a></span></div>
+        </div>
+
+        <div class="entity-entry" id="entity-项目指导">
+            <div class="entity-header">
+                <span class="entity-icon">▶</span>
+                <span class="entity-name">项目指导</span>
+                <span class="occ-count">(28次)</span>
+            </div>
+            <div class="entity-desc">项目管理委员会在整个项目生命周期中做出关键决策和提供指导。</div>
+            <div class="entity-sources">出处：<span class="source-chapter">第5章 商业论证 <a href="../chapters/ch05.html#pn-9" class="pn-ref">[9]</a></span> <span class="source-chapter">第6章 组织 <a href="../chapters/ch06.html#pn-16" class="pn-ref">[16]</a></span> <span class="source-chapter">第11章 进展 <a href="../chapters/ch11.html#pn-15" class="pn-ref">[15]</a></span> <span class="source-chapter">第12章 PRINCE2流程简介 <a href="../chapters/ch12.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch12.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch12.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch12.html#pn-8" class="pn-ref">[8]</a></span> <span class="source-chapter">第13章 项目准备 <a href="../chapters/ch13.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch13.html#pn-15" class="pn-ref">[15]</a>, <a href="../chapters/ch13.html#pn-18" class="pn-ref">[18]</a></span> <span class="source-chapter">第14章 项目指导 <a href="../chapters/ch14.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch14.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch14.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch14.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch14.html#pn-6" class="pn-ref">[6]</a></span> <span class="source-chapter">第15章 项目启动 <a href="../chapters/ch15.html#pn-4" class="pn-ref">[4]</a></span> <span class="source-chapter">第16章 阶段控制 <a href="../chapters/ch16.html#pn-4" class="pn-ref">[4]</a></span> <span class="source-chapter">第18章 阶段边界管理 <a href="../chapters/ch18.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch18.html#pn-13" class="pn-ref">[13]</a></span> <span class="source-chapter">第19章 项目收尾 <a href="../chapters/ch19.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch19.html#pn-13" class="pn-ref">[13]</a></span> <span class="source-chapter">附录A 管理产品 <a href="../chapters/appendix_a.html#pn-1" class="pn-ref">[1]</a></span> <span class="source-chapter">附录B 角色描述 <a href="../chapters/appendix_b.html#pn-1" class="pn-ref">[1]</a></span></div>
+        </div>
+
+        <div class="entity-entry" id="entity-项目收尾">
+            <div class="entity-header">
+                <span class="entity-icon">▶</span>
+                <span class="entity-name">项目收尾</span>
+                <span class="occ-count">(28次)</span>
+            </div>
+            <div class="entity-desc">正式确认项目产品的验收并有序关闭项目。</div>
+            <div class="entity-sources">出处：<span class="source-chapter">第1章 简介 <a href="../chapters/ch01.html#pn-6" class="pn-ref">[6]</a></span> <span class="source-chapter">第2章 原则 <a href="../chapters/ch02.html#pn-3" class="pn-ref">[3]</a></span> <span class="source-chapter">第5章 商业论证 <a href="../chapters/ch05.html#pn-10" class="pn-ref">[10]</a>, <a href="../chapters/ch05.html#pn-24" class="pn-ref">[24]</a></span> <span class="source-chapter">第11章 进展 <a href="../chapters/ch11.html#pn-31" class="pn-ref">[31]</a></span> <span class="source-chapter">第12章 PRINCE2流程简介 <a href="../chapters/ch12.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch12.html#pn-6" class="pn-ref">[6]</a>, <a href="../chapters/ch12.html#pn-8" class="pn-ref">[8]</a></span> <span class="source-chapter">第14章 项目指导 <a href="../chapters/ch14.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch14.html#pn-11" class="pn-ref">[11]</a>, <a href="../chapters/ch14.html#pn-14" class="pn-ref">[14]</a></span> <span class="source-chapter">第16章 阶段控制 <a href="../chapters/ch16.html#pn-4" class="pn-ref">[4]</a></span> <span class="source-chapter">第18章 阶段边界管理 <a href="../chapters/ch18.html#pn-16" class="pn-ref">[16]</a></span> <span class="source-chapter">第19章 项目收尾 <a href="../chapters/ch19.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch19.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch19.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch19.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch19.html#pn-5" class="pn-ref">[5]</a></span> <span class="source-chapter">附录A 管理产品 <a href="../chapters/appendix_a.html#pn-1" class="pn-ref">[1]</a></span> <span class="source-chapter">附录B 角色描述 <a href="../chapters/appendix_b.html#pn-1" class="pn-ref">[1]</a></span> <span class="source-chapter">术语表 <a href="../chapters/glossary.html#pn-1" class="pn-ref">[1]</a></span></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 流程索引</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRINCE2® 7 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 标题区 */
+        .site-header {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 3px double #d4af37;
+            margin-bottom: 30px;
+        }
+        .site-title {
+            font-size: 2.4em;
+            color: #5c3d1a;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+        .site-title .gold { color: #d4af37; }
+        .site-subtitle {
+            font-size: 1.1em;
+            color: #8B7355;
+            margin-bottom: 16px;
+        }
+        .site-desc {
+            font-size: 0.95em;
+            color: #8B7355;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* 项目介绍 */
+        .intro {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .intro-toggle {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-weight: bold;
+            user-select: none;
+        }
+        .intro-toggle:hover { color: #d4af37; }
+        .intro-content {
+            margin-top: 12px;
+            font-size: 0.95em;
+            color: #5c4a3a;
+            max-height: 300px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .intro-content.collapsed { max-height: 0; margin-top: 0; }
+        .intro-content p { margin-bottom: 8px; }
+
+        /* 实体索引导航 */
+        .entity-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 36px;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #e0d5c0;
+            border-radius: 6px;
+        }
+        .entity-nav-title {
+            width: 100%;
+            text-align: center;
+            font-size: 1em;
+            color: #8B7355;
+            margin-bottom: 4px;
+        }
+        .entity-card {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 2px solid;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #3e2a1a;
+            background: #faf6f0;
+            transition: all 0.2s;
+        }
+        .entity-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .entity-card-icon { font-size: 1.2em; }
+        .entity-card-name { font-weight: bold; }
+        .entity-card-count { color: #8B7355; font-size: 0.85em; }
+
+        /* 分类区块 */
+        .section {
+            margin-bottom: 36px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .section-icon {
+            font-size: 1.3em;
+            color: #d4af37;
+            font-weight: bold;
+            min-width: 50px;
+        }
+        .section-name {
+            font-size: 1.4em;
+            color: #5c3d1a;
+        }
+        .section-count {
+            color: #8B7355;
+            font-size: 0.85em;
+            margin-left: auto;
+        }
+        .section-desc {
+            color: #8B7355;
+            font-size: 0.95em;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        /* 章节卡片网格 */
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 12px;
+        }
+        .chapter-card {
+            background: #fff;
+            border: 1px solid #e0d5c0;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .chapter-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-color: #d4af37;
+        }
+        .chapter-link {
+            display: block;
+            padding: 16px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .chapter-link .chapter-title {
+            font-size: 1.05em;
+            font-weight: bold;
+            color: #5c3d1a;
+            margin-bottom: 6px;
+        }
+        .chapter-link .chapter-desc {
+            font-size: 0.88em;
+            color: #8B7355;
+        }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding: 24px 0;
+            border-top: 3px double #d4af37;
+            text-align: center;
+            color: #8B7355;
+            font-size: 0.85em;
+        }
+        .footer p { margin-bottom: 4px; }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .site-title { font-size: 1.8em; }
+            .chapter-grid { grid-template-columns: 1fr; }
+            .entity-nav { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <h1 class="site-title"><span class="gold">PRINCE2</span>® 7 知识库</h1>
+        <p class="site-subtitle">成功的项目管理方法论 · 结构化知识图谱</p>
+        <p class="site-desc">
+            将 PRINCE2 第7版官方手册（370页，19章）转化为结构化知识图谱，
+            涵盖 199 个关键概念的标注与索引
+        </p>
+    </header>
+
+    <div class="intro">
+        <div class="intro-toggle" onclick="toggleIntro()">
+            <span id="introIcon">▸</span> 关于本知识库
+        </div>
+        <div class="intro-content" id="introContent">
+            <p>本知识库以古籍编纂之法，将 PRINCE2® 7 —— 全球应用最广的项目管理方法论 —— 整理为结构化的知识图谱。</p>
+            <p><strong>内容涵盖：</strong>7大原则、7大实践、7大流程、10种角色、27种管理产品、141个专业术语。</p>
+            <p><strong>标注体系：</strong>文本中的关键概念均已标注为超链接（共6类），点击可跳转至对应的索引页面。</p>
+            <p><strong>段落编号：</strong>采用 Purple Numbers 编号体系，可精确引用到任意段落。</p>
+            <p><strong>结构：</strong>全书分为五卷——概述（总纲）、原则（基石）、实践（管理之术）、流程（生命周期）、附录（详述与索引）。</p>
+        </div>
+    </div>
+
+    <div class="entity-nav">
+        <div class="entity-nav-title">—— 概念索引 ——</div>
+        
+        <a href="entities/principle.html" class="entity-card" style="border-color: #d4af37;">
+            <span class="entity-card-icon" style="color: #d4af37;">◆</span>
+            <span class="entity-card-name">原则</span>
+            <span class="entity-card-count">7项</span>
+        </a>
+        <a href="entities/practice.html" class="entity-card" style="border-color: #8B4513;">
+            <span class="entity-card-icon" style="color: #8B4513;">◈</span>
+            <span class="entity-card-name">实践</span>
+            <span class="entity-card-count">7项</span>
+        </a>
+        <a href="entities/process.html" class="entity-card" style="border-color: #2E8B57;">
+            <span class="entity-card-icon" style="color: #2E8B57;">▶</span>
+            <span class="entity-card-name">流程</span>
+            <span class="entity-card-count">7项</span>
+        </a>
+        <a href="entities/role.html" class="entity-card" style="border-color: #4169E1;">
+            <span class="entity-card-icon" style="color: #4169E1;">◉</span>
+            <span class="entity-card-name">角色</span>
+            <span class="entity-card-count">10项</span>
+        </a>
+        <a href="entities/product.html" class="entity-card" style="border-color: #8B008B;">
+            <span class="entity-card-icon" style="color: #8B008B;">◫</span>
+            <span class="entity-card-name">管理产品</span>
+            <span class="entity-card-count">27项</span>
+        </a>
+        <a href="entities/term.html" class="entity-card" style="border-color: #A0522D;">
+            <span class="entity-card-icon" style="color: #A0522D;">◇</span>
+            <span class="entity-card-name">术语</span>
+            <span class="entity-card-count">141项</span>
+        </a>
+    </div>
+
+    
+    <div class="section" id="section-overview">
+        <div class="section-header">
+            <span class="section-icon">卷壹</span>
+            <h2 class="section-name">概述</h2>
+            <span class="section-count">1 篇</span>
+        </div>
+        <p class="section-desc">项目管理方法论之总纲，阐述PRINCE2之本源与架构</p>
+        <div class="chapter-grid">
+            
+            <div class="chapter-card">
+                <a href="chapters/ch01.html" class="chapter-link">
+                    <div class="chapter-title">第1章 简介</div>
+                    <div class="chapter-desc">何为项目、何为PRINCE2</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section-principle">
+        <div class="section-header">
+            <span class="section-icon">卷贰</span>
+            <h2 class="section-name">原则</h2>
+            <span class="section-count">1 篇</span>
+        </div>
+        <p class="section-desc">七大原则者，PRINCE2之基石也，不可违背</p>
+        <div class="chapter-grid">
+            
+            <div class="chapter-card">
+                <a href="chapters/ch02.html" class="chapter-link">
+                    <div class="chapter-title">第2章 原则</div>
+                    <div class="chapter-desc">确保持续业务理由、吸取经验教训、定义角色职责等七大原则</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section-people">
+        <div class="section-header">
+            <span class="section-icon">卷叁</span>
+            <h2 class="section-name">人员</h2>
+            <span class="section-count">1 篇</span>
+        </div>
+        <p class="section-desc">论领导力与团队，人为方法之本</p>
+        <div class="chapter-grid">
+            
+            <div class="chapter-card">
+                <a href="chapters/ch03.html" class="chapter-link">
+                    <div class="chapter-title">第3章 人员</div>
+                    <div class="chapter-desc">领导成功的变更、领导成功的团队、沟通</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section-practice">
+        <div class="section-header">
+            <span class="section-icon">卷肆</span>
+            <h2 class="section-name">实践</h2>
+            <span class="section-count">8 篇</span>
+        </div>
+        <p class="section-desc">七大实践者，项目管理之术也，贯穿项目始终</p>
+        <div class="chapter-grid">
+            
+            <div class="chapter-card">
+                <a href="chapters/ch04.html" class="chapter-link">
+                    <div class="chapter-title">第4章 PRINCE2实践简介</div>
+                    <div class="chapter-desc">实践总论</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch05.html" class="chapter-link">
+                    <div class="chapter-title">第5章 商业论证</div>
+                    <div class="chapter-desc">为何而做？投资之理据</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch06.html" class="chapter-link">
+                    <div class="chapter-title">第6章 组织</div>
+                    <div class="chapter-desc">谁来参与？管理之架构</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch07.html" class="chapter-link">
+                    <div class="chapter-title">第7章 计划</div>
+                    <div class="chapter-desc">如何而做？时间与资源</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch08.html" class="chapter-link">
+                    <div class="chapter-title">第8章 质量</div>
+                    <div class="chapter-desc">何为标准？质量之保证</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch09.html" class="chapter-link">
+                    <div class="chapter-title">第9章 风险</div>
+                    <div class="chapter-desc">若有变故？不确定之管控</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch10.html" class="chapter-link">
+                    <div class="chapter-title">第10章 问题</div>
+                    <div class="chapter-desc">遇事如何？问题之处置</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch11.html" class="chapter-link">
+                    <div class="chapter-title">第11章 进展</div>
+                    <div class="chapter-desc">行至何处？绩效之监控</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section-process">
+        <div class="section-header">
+            <span class="section-icon">卷伍</span>
+            <h2 class="section-name">流程</h2>
+            <span class="section-count">8 篇</span>
+        </div>
+        <p class="section-desc">七大流程者，项目生命周期之脉络也，从准备至收尾</p>
+        <div class="chapter-grid">
+            
+            <div class="chapter-card">
+                <a href="chapters/ch12.html" class="chapter-link">
+                    <div class="chapter-title">第12章 PRINCE2流程简介</div>
+                    <div class="chapter-desc">流程总论</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch13.html" class="chapter-link">
+                    <div class="chapter-title">第13章 项目准备</div>
+                    <div class="chapter-desc">万事俱备而后动</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch14.html" class="chapter-link">
+                    <div class="chapter-title">第14章 项目指导</div>
+                    <div class="chapter-desc">委员会之决策</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch15.html" class="chapter-link">
+                    <div class="chapter-title">第15章 项目启动</div>
+                    <div class="chapter-desc">奠基立业</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch16.html" class="chapter-link">
+                    <div class="chapter-title">第16章 阶段控制</div>
+                    <div class="chapter-desc">运筹帷幄</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch17.html" class="chapter-link">
+                    <div class="chapter-title">第17章 产品交付管理</div>
+                    <div class="chapter-desc">督工之道</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch18.html" class="chapter-link">
+                    <div class="chapter-title">第18章 阶段边界管理</div>
+                    <div class="chapter-desc">承前启后</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/ch19.html" class="chapter-link">
+                    <div class="chapter-title">第19章 项目收尾</div>
+                    <div class="chapter-desc">功成身退</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section-appendix">
+        <div class="section-header">
+            <span class="section-icon">别卷</span>
+            <h2 class="section-name">附录</h2>
+            <span class="section-count">3 篇</span>
+        </div>
+        <p class="section-desc">管理产品之详述、角色之描述、术语之释义</p>
+        <div class="chapter-grid">
+            
+            <div class="chapter-card">
+                <a href="chapters/appendix_a.html" class="chapter-link">
+                    <div class="chapter-title">附录A 管理产品</div>
+                    <div class="chapter-desc">26种管理产品详述</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/appendix_b.html" class="chapter-link">
+                    <div class="chapter-title">附录B 角色描述</div>
+                    <div class="chapter-desc">各角色职责详述</div>
+                </a>
+            </div>
+            <div class="chapter-card">
+                <a href="chapters/glossary.html" class="chapter-link">
+                    <div class="chapter-title">术语表</div>
+                    <div class="chapter-desc">全部专业术语释义</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+        <p>PRINCE2® is a registered trade mark of PeopleCert International Ltd.</p>
+    </footer>
+
+    <script>
+        function toggleIntro() {
+            var content = document.getElementById('introContent');
+            var icon = document.getElementById('introIcon');
+            content.classList.toggle('collapsed');
+            icon.textContent = content.classList.contains('collapsed') ? '▸' : '▾';
+        }
+    </script>
+</body>
+</html>

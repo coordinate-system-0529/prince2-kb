@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第9章 风险 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            background: #8B4513;
+            color: #faf6f0;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.8em;
+            color: #5c3d1a;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* 章节目录 */
+        .chapter-toc {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .toc-title {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-size: 1em;
+            user-select: none;
+        }
+        .toc-title:hover { color: #d4af37; }
+        .toc-icon { transition: transform 0.3s; display: inline-block; }
+        .toc-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .toc-list.collapsed { max-height: 0; margin-top: 0; }
+        .toc-list li {
+            padding: 3px 0;
+            border-bottom: 1px dotted #d4c8a8;
+        }
+        .toc-list a {
+            color: #8B4513;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .toc-list a:hover { color: #d4af37; }
+
+        /* 内容区 */
+        .section-heading {
+            color: #5c3d1a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d5c0;
+        }
+        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+        h3.section-heading { font-size: 1.2em; }
+        h4.section-heading { font-size: 1.05em; }
+
+        .pn-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.75em;
+            vertical-align: super;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .pn-link:hover { color: #8B4513; }
+
+        .section-content {
+            margin-bottom: 20px;
+        }
+        .section-content p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        /* 列表 */
+        .content-list {
+            list-style: none;
+            padding-left: 2em;
+            margin: 12px 0;
+        }
+        .content-list li {
+            position: relative;
+            padding-left: 1.2em;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .content-list li::before {
+            content: "●";
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 实体链接 */
+        .entity-link {
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            padding: 0 1px;
+            transition: all 0.2s;
+        }
+        .entity-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .entity-principle { color: #b8860b; border-color: #b8860b; }
+        .entity-practice { color: #8B4513; border-color: #8B4513; }
+        .entity-process { color: #2E8B57; border-color: #2E8B57; }
+        .entity-role { color: #4169E1; border-color: #4169E1; }
+        .entity-product { color: #8B008B; border-color: #8B008B; }
+        .entity-term { color: #A0522D; border-color: #A0522D; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #d4af37;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .chapter-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch08.html" class="nav-link">◁ 第8章 质量</a> | <a href="ch10.html" class="nav-link">第10章 问题 ▷</a></div>
+
+    <span class="category-tag">实践</span>
+    <h1 class="chapter-title">第9章 风险</h1>
+
+    
+        <nav class="chapter-toc">
+            <h3 class="toc-title" onclick="toggleToc()">
+                <span class="toc-icon">▸</span> 本章目录（36 节）
+            </h3>
+            <ul class="toc-list" id="tocList">
+                <li><a href="#pn-2">9.1 目的</a></li><li><a href="#pn-3">9.2 对有效风险管理的指导</a></li><li><a href="#pn-4">9.2.1 风险计划</a></li><li><a href="#pn-5">9.2.2 风险分析</a></li><li><a href="#pn-6">9.2.3 风险控制</a></li><li><a href="#pn-7">9.2.3.1 风险应对</a></li><li><a href="#pn-8">9.2.3.2 风险负责人和风险行动负责人</a></li><li><a href="#pn-9">9.2.3.3 风险预算</a></li><li><a href="#pn-10">9.2.4 风险文化</a></li><li><a href="#pn-11">9.3 技术</a></li><li><a href="#pn-12">9.3.1 风险管理 PRINCE2 技术</a></li><li><a href="#pn-13">9.3.1.1 识别</a></li><li><a href="#pn-14">9.3.1.1.1 定义情境和目标</a></li><li><a href="#pn-15">9.3.1.1.2 识别威胁和机会</a></li><li><a href="#pn-16">9.3.1.2 评估</a></li><li><a href="#pn-17">9.3.1.2.1 确定风险的优先级</a></li><li><a href="#pn-18">9.3.1.2.2 评估综合风险概况</a></li><li><a href="#pn-19">9.3.1.3 计划</a></li><li><a href="#pn-20">9.3.1.4 实施</a></li><li><a href="#pn-21">9.3.1.5 沟通</a></li><li><a href="#pn-22">9.3.2 支持技术</a></li><li><a href="#pn-23">9.3.2.1 因果图</a></li><li><a href="#pn-24">9.3.2.2 水平扫描/PESTLE/SWOT 分析</a></li><li><a href="#pn-25">9.3.2.3 提示清单</a></li><li><a href="#pn-26">9.3.2.4 事前预防</a></li><li><a href="#pn-27">9.3.2.5 瑞士奶酪模型</a></li><li><a href="#pn-28">9.3.2.6 数据使用</a></li><li><a href="#pn-29">9.4 应用实践</a></li><li><a href="#pn-30">9.4.1 组织情境</a></li><li><a href="#pn-31">9.4.2 商务情境</a></li><li><a href="#pn-32">9.4.3 交付方法</a></li><li><a href="#pn-33">9.4.4 可持续性</a></li><li><a href="#pn-34">9.4.5 规模</a></li><li><a href="#pn-35">9.5 为实践提供支持的管理产品</a></li><li><a href="#pn-36">9.6 实践中关键角色的重点</a></li><li><a href="#pn-37">9.7 与原则的关键关系</a></li>
+            </ul>
+        </nav>
+
+    <div class="chapter-content">
+        <div class="section-content"><p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 9.1 目的</h2>
+<div class="section-content"><p>关键信息 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>实践的目的是识别、评估和控制影响项目目标的不确定性，从而提高项目的成 功率。 所有项目在试图达成目标的过程中会遇到不确定性。这种不确定性可能源自<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>内部或外部的 事件。例如，业务内部可能对能否在特定<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a><a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内就项目范围达成共识，或关键人员和关键 资源是否<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>存在不确定性。业务外部也可能存在不确定性，如地缘政治事件、经济状况、立 法变更或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>对采购请求的响应是否在预期成本<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>内。 定义：风险 一个或一系列不确定事件，一旦发<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>将对目标的实现产生影响。衡量风险时需要 综合考虑<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>或机会发生的概率，以及风险对目标的影响程度。 风险一旦发生，可对目标造成消极或积极的影响。PR<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>CE2 术语“威胁”表示会对目标产生负 面影响的不确定事件，而“机会”表<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>目标产生积极影响的不确定事件。 威胁和机会可能会影响项目<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>标，即在协定的时间、成本和<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>以及在协定的可持续性目标 <a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内交付协定的范围和收益。 由于所有项目均涉及一定程度的风险承担，因此项目需要对风险进行<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>，并且管理方式要能 够支持高效决策。风险<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>为积极决策提供一个受控的环境。 PR<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>CE2 用于管理风险的方法符合 ISO 标准 ISO 31000。这是<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>的国际标准。该标准提 供全面的原则和指南，可帮助<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>进行风险分析和风险评估。PRINCE2 风险方法也与 ISO 标准 的区域变体保持一致，并且可以进行<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>以满足这些当地需求。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 9.2 对有效风险管理的指导</h2>
+<div class="section-content"><p>有效<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>可以树立信心，即项目能够达成目标、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由持续有效。这能支持决策，确保 项目团队了解个别<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>以及特定时间的总体风险暴露。 为<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>进行风险管理：</p>
+<ul class="content-list">
+  <li>需要识别、捕获和描述可能阻碍项目目标达成的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></li>
+</ul>
+<ul class="content-list">
+  <li>需要对每种<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>进行评估并确定优先级</li>
+</ul>
+<ul class="content-list">
+  <li>需要审查总体<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>暴露，同时评估风险对项目总体<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由的影响</li>
+</ul>
+<ul class="content-list">
+  <li>需要<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>对每种风险的应对，并将其分配给能够掌握<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>并执行必要行动的人员</li>
+</ul>
+<ul class="content-list">
+  <li>需要实施、监视和控制<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>措施</li>
+</ul>
+<ul class="content-list">
+  <li>将有关<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的信息传达给相关<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a></li>
+</ul>
+<ul class="content-list">
+  <li>每个<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>都需要分配<a href="../entities/term.html#entity-风险负责人" class="entity-link entity-term" title="术语：风险负责人">风险负责人</a>，并由其负责管理
+定义
+风险负责人<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>指派负责响应风险的人员。
+<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>：被指定为协定的风险应对行动负责的人。此<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>也称为风险执
+行<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>
+<a href="../entities/term.html#entity-风险概率" class="entity-link entity-term" title="术语：风险概率">风险概率</a>：发生风险的估算。概率通常通过考虑风险发生的可能性或频率来估算。
+<a href="../entities/term.html#entity-风险影响" class="entity-link entity-term" title="术语：风险影响">风险影响</a>：发生风险对目标产生的估算影响。
+风险临近度：离发生风险的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>的远近。
+<a href="../entities/term.html#entity-风险速度" class="entity-link entity-term" title="术语：风险速度">风险速度</a>：如果发生风险，风险对目标产生影响的速度有多快。
+风险暴露：特定目标“有风险”的程度。风险暴露是一个中性概念，因为暴露可以
+是正面的，也可以是负面的。
+风险偏好：<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>为实现目标而愿意承担的风险量和风险类型。
+<a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>：一笔资金，用于资助响应项目<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>和机会的具体<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>措施（例如，覆盖
+风险真正发生时的应急<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的成本）。
+<a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>：一个可测量的阈值，表示每个“有风险”目标的成果的可容忍范
+围，使用与衡量该目标的绩效相同的单位。</li>
+</ul>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 9.2.1 风险计划</h3>
+<div class="section-content"><p>使用<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>类别有助于识别项目风险并确定其优先级。PESTLE（政治、经济、社会、技术、法 律和情境）分析和 SWOT（优势、劣势、机会、<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>）分析等技术（均在本章后面描述） 可用 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>析内部和外部风险情境。这些技术还有<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>识别可能影响项目的不同类型的风险（例如， 可持续性、网络安全或系统集成）。了解风险类型也有助于识别最合适的负责人。 需要录入<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>的关键项包括<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>对承担风险的态度，这记录为风险容许偏 差。风险容许<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会依据业务的总体风险偏好设定。 识别风险的一个重要方面是能够清晰明确地描述每一风险。有效表达风险需要考虑每种风险的 以下几个方面：</p>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>原因：这应该描述风险的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>（例如，引发风险的事件或情况）。这通常<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>称为风
+险诱因。它们本身不是风险，而是风险的潜在触发点，可能存在于项目的内部或外部。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>事件：这应该从威胁或机会角度描述不确定性的领域。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>结果：这应该描述风险实际发生后，对项<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>标的影响。
+风险原因、事件和结果的关系也可以使用如下表述：</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>：人手不足（<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>原因）可能导致业务无法在<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>时限内安排足够的工作人员<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>用
+户培训（风险事件），进而<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>项目用时超出计划（风险结果）。</li>
+</ul>
+<ul class="content-list">
+  <li>机会：如果数据法规允许，公司可在每年更新<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>详细信息（<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>原因）时向电子邮件中<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>加折扣代码（风险事件），从<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>生收入、抵销监管需求的成本（风险结果）。</li>
+</ul></div>
+<h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 9.2.2 风险分析</h3>
+<div class="section-content"><p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>分析包括定性和定量方法。风险的定性分析至少<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>评估其概率（风险发生的可能性）及 其影响（如果风险发生，对一个或多个目标的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>大小）。其他定性评估包括分析风险的临近 度（可能发生的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>有多近）和速度（如果发生，风险对目标的影响的速度有多快）。 综合说明一组风险及其估算的有效方式是绘制其风险矩阵，如图 9.1 所示。风险矩<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>表某一 特定时间点的状况（例如风险环境快照）。矩阵中的数字标记代表其参照的<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>上的特 定风险标识符。分布在<a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>线右上方的风险是业务不能容忍的，除非有特殊情况。在 图中所示的案例中，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>需要向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>上报风险 1、3 和 4。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 很高 高 中等 低 很低 很低 低 中等 高 很高 影响 概率 <a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>线 威胁 机会 图 9<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 风险矩阵 风险矩阵也可以用来说明趋势。例如，风险 6 可能以前被记录为“低概率，高影响”，这就说 明它发生的概率正在<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。 也可以采用定量方法来确定风险的优先级。定量风险评估（例如，蒙特卡罗分析）涉及使用建 模技术来计算总体风险暴露水平并分析风险的影响。风险模型使用统计方法来分析不确定性对 目标的影响。定量风险评估可用于分析对成本（称为定量风险成本分析）或<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>目标（称为定 量风险进度表分析）的影响。</p></div>
+<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 9.2.3 风险控制</h3>
+<h4 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 9.2.3.1 风险应对</h4>
+<div class="section-content"><p>应对<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的最佳行动将取决于风险的具体情况和类型。对于<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>和机会，采用不同的应对措施 更为合理</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 表 9.1 <a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a> 应对选项 使用 规避<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a> 利用机<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>此选项是指消除风险，使不确定情况变为确定。这<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>可以通过消除 威胁的原因来实现，或者通过实施带来机会的因素来实现。只需变更 工作规划方式，即可采用此选<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>且不会产生额外成本。但是，针对 威胁和机会消除所有<a href="../entities/term.html#entity-剩余风险" class="entity-link entity-term" title="术语：剩余风险">剩余风险</a>会产生相应成本，这种情况更为常见。 在产生成本的情况下，必须证明其合理性。例如，发现响应的成本以 确定情况，这是可接受的。 降低威胁 强化机会<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>选项涉及马上采取明确行动，以变更风险的概率和/或影响。讨论降 低威胁时（即，降低威胁发生的可能性，或减轻威胁发生后带来的影 响），会用到术语“缓解”。强化机会则是相反的<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>（即，提高机 会发生的可能性，或加强机会发生后带来的影响。）另外，由于此选 项现在会使<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>产生降低或强化措施成本，应<a href="../entities/term.html#entity-剩余风险" class="entity-link entity-term" title="术语：剩余风险">剩余风险</a>须就剩余风险 变更而言确保合理。 转移风险 此选项旨在将部分风险转移给第三方。保险是转移的最常见形式，保 险公司承担风险成本，而被保险人依然会在其他目标上受到影响（例 如，<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>推迟）。转移可以适用于机会，第三方获得成本<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>，而主 要风险承担者获得另一种收益。这不是常用的选项，而通常使用威胁 转移。再次<a href="../entities/term.html#entity-剩余风险" class="entity-link entity-term" title="术语：剩余风险">剩余风险</a>移成本必须要结合剩余风险的变更判断是否合理 （例如，支付的保险费是否值得<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>。请注意，尽管业务可以选择将 <a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>工作授权给第三方，但风险的某些要素不可转移。 分担风险 该选项在性质上与转移应对不同，因为它寻求多方（通常在供<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a> 内）在损失或收益份额的基础上分担风险。风险很少能以这种方式全 部分担。例如，主要风险承担方始终需要保护自身品牌和声誉，但这 可以作为<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>开展风险管理活动的有效方式，尤其是在项目群和<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>项目中。 接受风险 此选项意味着业务以“碰运气”的方式迎接风险，并承受由此产生的 全部影响。接受选项不会变更剩余风险，也不会在当前产生任何<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 当前风险或未来准备管理风险的成本。例如，由汇率浮动造成的盈利 风险。业务可能决定碰运气，不做任何预防或其他准备来避免利润受 到汇率大幅波动的影响。如果风险暴露超过涉及活动的<a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a> 阈值，此选项就不适当。 请注意，在诸如币值变动等影响可正可负的情形中，存在两个风险， 因为风险是指不确定事件与其影响之间的关系<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>中，有导致损失的 风险，也有带来收益的风险。因此将不确定性分为两个风险有助分别 应对。 准备应急<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 此选项是指准备计划，但不马上采<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>动。准备应急计划最常与 “接受”选项相关。应急计划的编制是<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>前可以接受风险，但要制 定好计划，阐明在情况发生变化时该如何做。此选项同样适用于其他 应对策略，通常称为“后备”计划，即，原本应对策略不起作用时我 们会采取的计划。后备计划适用于所有其他策略，包括规避威胁和利 用机会，因为规避或利用计划尽管意图良好，但也可能失败。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 如果威胁被降低而非消除，则余下的风险的最大现实概率或影响大<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>称为“剩余”风险。 如果<a href="../entities/term.html#entity-剩余风险" class="entity-link entity-term" title="术语：剩余风险">剩余风险</a>较为重大，建议选择多种<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>策略。 在某些情况下，实施一种风险应对策略将降低或<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>其他<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>险。风险应对策略实施后 也有可能变更项目<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>面。相应地，实施风险应对策略也可能导致次生风险（因实施某 个风险应对策略而激发的新风险）。至关重要的是，这些次生风险也要与起初识别的风险一 样，用同样的方式进行识别、评估和控制。 风险应对策略必须平衡实施应对策略所需投入的成本以及容许风险发生的概率和影响，这一 点非常重要。一种评估方式为，比较风险应对成本以及风险预期货币价值的差异。即风险 应对之前和之后，估算的风险最有可能造成的财务影响及其估算概率的乘积。如果风险应对 成本低于预期货币价值缩减额，这项风险应对策略通常值得采取。然而，始终要记住所有风 险应对活动对项目团队的总体影响，因为这可能会将他们的重点从交付项目转移到风险应对 行动。 场景：机会应对示例 NowByou 受邀请参加一年一度的非政府<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>峰会，这是一次具有全国影响力的会 议，该行业的关键参与者汇聚一堂，并吸引了全国各地捐助者的兴趣。NowByou 获得了在会议上自由发言的机会。<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>将利用这个机会作为宣传新宣传活动的 另一种机制。 场景：风险应对组合措施示例 由于建筑的位置和周围建筑的历史性质，LouisShopping 项目存在安全风险。建筑 工作存在对 BuildyBrick 工作人员和合作伙伴运营不安全的风险。由于关系到财务和 声誉影响，这是一个重大风险。为了尽量降低<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>，LouisShop<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a> 的项目经理将 与 BuildyBricks 团队领导定期举行健<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>安全会议（降低威胁），<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>由独立承包 商进行现场检查（降低威胁），并在与 BuildTech 的合同安排中纳入赔偿条款 （转移风险）。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h4 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 9.2.3.2 风险负责人和风险行动负责人</h4>
+<div class="section-content"><p>作为控制<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的一部分，必须明确<a href="../entities/term.html#entity-风险负责人" class="entity-link entity-term" title="术语：风险负责人">风险负责人</a>、<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>及其职责。 风险负责人负责<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>、监视和控制<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>到的某一特定风险的各个层面，包括实施选定应对策略 以消除<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>或尽可能增加<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>负责人对用于消除风险的某一行动负<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 某些行<a href="../entities/term.html#entity-风险负责人" class="entity-link entity-term" title="术语：风险负责人">风险负责人</a>风险负责人明确控制的<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a><a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内。在这种情况下，应该有一个指定的行动负 责人来<a href="../entities/term.html#entity-风险负责人" class="entity-link entity-term" title="术语：风险负责人">风险负责人</a>他们需要让风险负责人及时了解风险情况。 场景：<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>险行动负责人的组合示例 NowByou 已被邀请免费参加非政府<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>峰会，希望有机会在峰会上发言。新宣传活动 的<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>是此机会的风险负责人。但是，安排 NowByou 参加会议组委会的人是合作 伙伴关系负责人。因此，合作伙伴负责人负责实施协定 NowByou 参与条款的行动，并 确保在事件中的自由立场。他们是风险行动负责人。</p></div>
+<h4 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 9.2.3.3 风险预算</h4>
+<div class="section-content"><p>在项目预算内识别并限定具体<a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>，或许是适当的。随着项目的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，有些以前已识别的 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>将会发生，另外一些则不<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>生。同时，新风险在项目生命周期中被识别，但这些新风险 的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>成本<a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>括在风险预算中。这意味着，稳妥的做法是在风险预算中纳入未知（有待 识<a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>险。 关键信息 风险预算作为项目预算的一部分，可能有一种倾向认为它是<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可以使用的另 一笔资金。这种<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>是不能鼓励的，而应该在<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>中定义此预算的控制机 制和访问机制。</p></div>
+<h3 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 9.2.4 风险文化</h3>
+<div class="section-content"><p><a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>文化应反映在其风险偏好中。支持性<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>文化认识到将风险视为决策的重要组成 部分的重要性。 <a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>中影响决策和<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>的一个方面是决策偏见，这是人们采用心理捷径或错误思维<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>来 处理情况和做出决策的固有趋势。决策偏见是很正常的，而且很大程度上是积极的，它使大脑 每天都能有效地做出快速的决定。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 然而，有时决策偏见会导致决策效率降低。决策偏见有多种类型，例如：</p>
+<ul class="content-list">
+  <li>乐观偏见：在这种心态下，人们会忽视不利<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，假设事情可能会成功。</li>
+</ul>
+<ul class="content-list">
+  <li>损失厌恶：在这种心态下，人们会重视避免损失而不是获得<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>群体思维：在这种心态下，人们更重视群体中的社会凝聚力，而不是表达另一种观点或做
+出正确的决策。</li>
+</ul>
+<ul class="content-list">
+  <li>临近度：在这种心态下，人们认为当前的情况比未来的情况<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>更高、更重要。
+在识别风险和潜在应对措施时，了解和克服这些因素是重要的考虑因素。
+场景：<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>示例
+与 Findef 的正常日常活动相比，构成 FindefTwo 项目群的项目的转型性质<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>涉及的
+业务风险需要不同的<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>态度。
+项目群经理知道，如果他们想让<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>发挥作用，就必须在领导团队中为成功建立
+<a href="../entities/term.html#entity-条件。" class="entity-link entity-term" title="术语：条件。">条件。</a>项目群经理认识到，人们通常会感受到同意“高层”观点的压力。因此，项目
+群经理利用外部顾问来阻止高级领导团队中的群体思维。这使高级领导团队能够有<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>我意<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>励在风险管理中建立批判性推理文化。</li>
+</ul></div>
+<h2 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 9.3 技术</h2>
+<h3 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 9.3.1 风险管理 PRINCE2 技术</h3>
+<div class="section-content"><p>PRINCE2 包括一种基于<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>：创造和保护价值的五步<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>管理技术（识别、评估、<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>、 实施和沟通），如图 9.2 所示。 如果需要，可以使用替代程序，例如，如果项目是具<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>范围风险管理技术的项目群的 一部分。应将使用替代程序的决策作为<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中的剪裁决策的一部分来记录。 实 施 识 别 评 估 计 划 沟通 图 <a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>PRINCE2 风险<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>技术</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 在“识别”步骤中，审查<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的情境和目标，以便识别<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>和机会。 “评<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>步骤涉及确定风险的优先级和评估综合<a href="../entities/term.html#entity-风险概况" class="entity-link entity-term" title="术语：风险概况">风险概况</a>。 “计划”步骤涉及决定<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>和监视安排。 “实施<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>骤涉及建立监视安排并针对优先风险或已发生的风险执行行动。 “沟通”步骤是指如何在项目生态系统<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>通有关机会和威胁的信息，并在需要时从外部与组 织生态系统的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>沟通。“沟通”步骤贯穿始终，因为<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中的任何时点都可能需要将 任何其他步骤的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>利益相关方。 所有步骤皆可重复。有额外信息可用时，通常需要根据新的信息来重复之前的步骤。下面将更 详细地介绍这些步骤。</p></div>
+<h4 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 9.3.1.1 识别</h4>
+<h4 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 9.3.1.1.1 定义情境和目标</h4>
+<div class="section-content"><p>这一步骤包括获取有关项目的信息，以确保对面临<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的具体目标有共同的了解，并制定适当 的<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>。 以下方面将会影响项目的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>方法：</p>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a></li>
+</ul>
+<ul class="content-list">
+  <li>涉及<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的数量及其相互关系</li>
+</ul>
+<ul class="content-list">
+  <li>项目<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的需求</li>
+</ul>
+<ul class="content-list">
+  <li>项目的重要性、复杂性和规模</li>
+</ul>
+<ul class="content-list">
+  <li>使用的交付方法（线性-顺序、迭代-增量、混合）</li>
+</ul>
+<ul class="content-list">
+  <li>提出了什么样的假定</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>自身所处的环境（法律法规或<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a><a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>政策、标准、<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>和步骤</li>
+</ul>
+<ul class="content-list">
+  <li>项目是否从属于某个项目群
+这些信息来自项目任务书、<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>以及项目产品描述。
+在完成此<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>之前尝试识别特定<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>是一个常见的错误。如果没有对面临风险的目标的共同
+了解，就有可能出现发现的不确定性与目标无关的情况。如果不确定性不影响一个或多个已
+定<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>目标，则没有风险。</li>
+</ul></div>
+<h4 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 9.3.1.1.2 识别威胁和机会</h4>
+<div class="section-content"><p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>可以在项目管理和交付期间随时加以识别。项目、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>或其他<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的任何成员都可 以提出风险。风险一经发现，就会记录在<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>中。有关风险的更多信息将通过后续步骤 收集和开发。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h4 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 9.3.1.2 评估</h4>
+<h4 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 9.3.1.2.1 确定风险的优先级</h4>
+<div class="section-content"><p>下一步是评估每种<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的概率及其影响，以确保<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>了解最重要的风险。这涉及评估：</p>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>发生的概率（通常通过考虑其概率或频率来估算）</li>
+</ul>
+<ul class="content-list">
+  <li>每种<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>对项目目标的影响（例如，如果目标用<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>和成本测量，影响也应该按照同样的
+单位测量）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>对<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>、<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>和<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的影响</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>和机会的影响在项目生命周期内可能会如何变更</li>
+</ul>
+<ul class="content-list">
+  <li>项目团队是否适合<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，或者风险是否需要上报<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>、任何总体项目群或
+法人团体
+应及时使用此信息更新<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>。</li>
+</ul></div>
+<h4 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 9.3.1.2.2 评估综合风险概况</h4>
+<div class="section-content"><p>需要理解个别<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的总体效果，从而判断项目的总体“风险暴露”是否保持在由<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>决定并由 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>应用的风险偏好内。如果<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>暴露超过总体风险偏好，则需要<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>控制行动来 做出应对。 根据 PRINCE2 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>续业务理由原则，项目理由应在风险暴露情境下进行评估。零风险的项目并 不存在，了解风险暴露与<a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>的对比情况，可告知投入多少努力来进行<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>。</p></div>
+<h4 id="pn-19" class="section-heading"><a href="#pn-19" class="pn-link" title="点击复制链接">[19]</a> 9.3.1.3 计划</h4>
+<div class="section-content"><p>此步骤涉及识别和评估相关<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>策略，以消除或降低威胁，并尽可能增加机会。常见的风 险应对措施见表 9.1。 所有选定的应对策略需要纳入适当级别的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>。对于较为重大的风险，不仅应制定早期预警信 号以识别<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>是否可能发生，还应指定风险发生后的相应<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>。 风险应对策略需要识别最适合<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>风险的部门。这可能不是项目团队，尤其在下列情况下：</p>
+<ul class="content-list">
+  <li>项目团队在其影响<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内无法实施适当的<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>策略。</li>
+</ul>
+<ul class="content-list">
+  <li>发生<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>会大幅影响项目的业务理由。</li>
+</ul>
+<ul class="content-list">
+  <li>该项目是项目群的一部分，在项目群层面<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>更为合适。例如，如果某个特定项目识
+别了该项目群内<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>目之间共有的风险。</li>
+</ul>
+<ul class="content-list">
+  <li>实施<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>策略会导致项目超出协定的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>。这通常可能发生于受监管的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>，
+比如业务可能需要上报特定<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，或者发生风险可能导致违规。
+如果风险在为项目设置的容差<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可以决定适当的应对措施。否则，决策将上报
+给<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>。根据风险容许偏差，风险可能会上报到<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a>面。上报风险是良好实践，
+<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>被视为失效。风险上报越早，实施<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>的时间越多。</li>
+</ul>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h4 id="pn-20" class="section-heading"><a href="#pn-20" class="pn-link" title="点击复制链接">[20]</a> 9.3.1.4 实施</h4>
+<div class="section-content"><p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>策略需要付诸行动，审查其有效性，并在应对策略未能达到预期时采取其他纠 正行动。确保识别并协定每种<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的<a href="../entities/term.html#entity-风险负责人" class="entity-link entity-term" title="术语：风险负责人">风险负责人</a>和<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>（有关风险负责人和风险行 动负责人的更多信息，请参见第 9.2.3.2 节）很关键<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>多数情况下，风险负<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>负责人可能是同一个人。<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>负责人应该是最有能力<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 该风险的人。应该避免将过多的风险分配给一个人处理。</p></div>
+<h4 id="pn-21" class="section-heading"><a href="#pn-21" class="pn-link" title="点击复制链接">[21]</a> 9.3.1.5 沟通</h4>
+<div class="section-content"><p>沟通应当持续进行。这一步骤确保与项目面临的<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>和机会相关的信息能够在项目生态系统内 部和外部传达给<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统中的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>。风险有如下沟通方式：</p>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-检查点报告" class="entity-link entity-product" title="管理产品：检查点报告">检查点报告</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-阶段竣工报告" class="entity-link entity-product" title="管理产品：阶段竣工报告">阶段竣工报告</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-例外报告" class="entity-link entity-product" title="管理产品：例外报告">例外报告</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>
+还有很多其他的沟通方式，如公告、布告栏、<a href="../entities/term.html#entity-仪表盘" class="entity-link entity-term" title="术语：仪表盘">仪表盘</a>、信息发射源、论坛主题、简报等，它们
+可以与 PRINCE2 的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>一起使用。项目团队应参考<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>，了解与利益相关方沟
+通<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>信息的最合适方法。
+项目的风险暴露情况不是静止不变的，<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>沟通是识别新风险或已有风险变化的关键。这依赖
+于良好沟通网络的维护，包括相关的联系人和信息来<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>从而促进识别可能影响项目整体风险
+暴露的变化。</li>
+</ul></div>
+<h3 id="pn-22" class="section-heading"><a href="#pn-22" class="pn-link" title="点击复制链接">[22]</a> 9.3.2 支持技术</h3>
+<div class="section-content"><p>表 9.2 显示了支持 PRINCE2 <a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>技术的其他技术的示例。<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>应记录在项目中 使用的具体技术。 <a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>2 风险管理技术 技术 识别 评估 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 实施 因果图 X X X 水平扫描/PESTLE/SWOT 分析 X 提示清单 X 事前预防分析 X X X 瑞士奶酪模型 X 数据使用 X X X X</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h4 id="pn-23" class="section-heading"><a href="#pn-23" class="pn-link" title="点击复制链接">[23]</a> 9.3.2.1 因果图</h4>
+<div class="section-content"><p>因果图，也称为鱼骨图或 石川图，有助于识别可能导致<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>发生的多种因素，这些风险对目 标有特殊影响。它们可以<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>项目团队识别风险的根本原因，然后可以有针对性地减少其影响 或概率。</p></div>
+<h4 id="pn-24" class="section-heading"><a href="#pn-24" class="pn-link" title="点击复制链接">[24]</a> 9.3.2.2 水平扫描/PESTLE/SWOT 分析</h4>
+<div class="section-content"><p>这些技术检查内部和外部环境，使人们能够了解可能给项目带来<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>和机会的当前和未来<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 状况。 优势 劣势 机会 威胁 ب “绿色城镇”荣誉 ب 资金雄厚 ب 城镇声誉卓著 ب 主承包商经验丰富 ب 与 Buildy Brick 协定的建筑标准 ب 城镇居民的信任度低 ب 基础架构已过时 ب 停车位短缺 ب 在市议会担任“智能<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>”的经验极少 ب 居民的可持续性意识提高 ب 游客人数增加 ب 有可能获得外部资金 ب 与结对城镇和伙伴城镇合作 ب 来自附近城镇的竞争 ب 经济危机迫在眉睫 ب 建材供应短缺 ب 国家法律和建筑行业法规的变更 ب 可能的考古发现 图 9.3 LouisShopping 项目的 SWOT 分析 PESTLE 分析通过查看导致项目不确定性的政治、经济、社会、技术、法律和环境因素来审查 当前的外部环境。SWOT 分析着眼于当前可<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>来机会或造成威胁的优势和劣势。水平扫描着 眼于未来，以收集数据<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>可能影响整体风险暴露水平的新趋势和潜在的未来发展。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h4 id="pn-25" class="section-heading"><a href="#pn-25" class="pn-link" title="点击复制链接">[25]</a> 9.3.2.3 提示清单</h4>
+<div class="section-content"><p>提示清单对于识别项目面临的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>情境和单个风险非常有用。提示清单的类型包括：</p>
+<ul class="content-list">
+  <li>PESTLE 或 SWOT 分析</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>分解结构，其中不同类型的风险被<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>用以识别特定风险</li>
+</ul>
+<ul class="content-list">
+  <li>根据<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>针对常见项目活动总结的经验教训<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>生成的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>提示清单（如办公室搬迁的
+风险提示清单）</li>
+</ul></div>
+<h4 id="pn-26" class="section-heading"><a href="#pn-26" class="pn-link" title="点击复制链接">[26]</a> 9.3.2.4 事前预防</h4>
+<div class="section-content"><p>这种技术从本应实现目标的未来点进行回顾，描绘出成功或失败的场景。对有助于实现未来结 果的步骤进行分析，有助于识别应该考虑的<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>或机会。</p></div>
+<h4 id="pn-27" class="section-heading"><a href="#pn-27" class="pn-link" title="点击复制链接">[27]</a> 9.3.2.5 瑞士奶酪模型</h4>
+<div class="section-content"><p>瑞士奶酪模型表明，要想真正发生<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，多个层面的控制必须失效（或者在瑞士奶酪的类比 中，奶酪上的洞必须对齐）。<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>术可用于考虑风险控制是否足够。</p></div>
+<h4 id="pn-28" class="section-heading"><a href="#pn-28" class="pn-link" title="点击复制链接">[28]</a> 9.3.2.6 数据使用</h4>
+<div class="section-content"><p>使用数据来识别、分析和控制<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>可以更深入地了解和理解项目面临的风险、它们之间<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 系以及缓解风险最适当的控制措施。例如，对包含类似项目、<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或任务的数据集使用数<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>分析可以更好地了解项目在特定风险方面的倾向，从而了解其概率、影响和优先级。机器人 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>自动化 (RPA) 可用于自动化风险程序的各个方面，来协助分配行动以及监视、<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>和上 报风险。</p></div>
+<h2 id="pn-29" class="section-heading"><a href="#pn-29" class="pn-link" title="点击复制链接">[29]</a> 9.4 应用实践</h2>
+<h3 id="pn-30" class="section-heading"><a href="#pn-30" class="pn-link" title="点击复制链接">[30]</a> 9.4.1 组织情境</h3>
+<div class="section-content"><p>项目需要使其<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>与组织、项目群或项目组合政策、标准或方法保持一致。这可能 包括：</p>
+<ul class="content-list">
+  <li>遵循所有集中定义的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>政策、标准和方法</li>
+</ul>
+<ul class="content-list">
+  <li>运用所有集中定义的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>技术</li>
+</ul>
+<ul class="content-list">
+  <li>使用所有集中部署的工具</li>
+</ul>
+<ul class="content-list">
+  <li>遵循所有集中定义的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>角色或胜任能力框架</li>
+</ul>
+<ul class="content-list">
+  <li>与任何行业或部门特定的政策、标准或方法保持一致，例如健康和安全。
+<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>通常要求在不同项目中强制使用统一的<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>，一般是为了确保业务能够评估自身在不同项
+目上的总体<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>暴露。</li>
+</ul>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 如果一个项目是某个项目群的一部分，<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>应该识别将在项目层面<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的风险类型。 <a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>应表明何时需要将风险上报至项目群，以便采取进一步行动。 场景：项目群的一部分 有效的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>需要一致的方法，特别是在不<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>目管理团队对风险持不同态度的项 目群情境下。在我们的例子中，FindefTwo 项目群的经理召集了组成该项目群的几个 项目的<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>。旨在共创和采用符合现有公<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>管理方法。该小组确保所 有项目都使用相同的<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>模板、类别、层面和阈值。他们还以这种方式定<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 上报和报告途径，从而澄清了风险的<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>并使风险管理方法与项目群层面保 持一致。</p></div>
+<h3 id="pn-31" class="section-heading"><a href="#pn-31" class="pn-link" title="点击复制链接">[31]</a> 9.4.2 商务情境</h3>
+<div class="section-content"><p>在商务情境中，可能需要不止一个<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>。某些项目风险可能是一方独有的，出于某些合 理的原因而不能向<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>风险登记单。在共用一份<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>登记单时，必须区分某风险到底是 谁的，并保证相应地指定了<a href="../entities/term.html#entity-风险负责人" class="entity-link entity-term" title="术语：风险负责人">风险负责人</a>。例如，在固定价合同下，任何成本超支都会影响供应 商的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>，而延期通常会影响客户的商业论证。 为了以最佳方式调整和<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a> PRINCE2，重要的是评估项目在情境和工作关系方面的情境。为了 帮助实现这一目标，可以使用诸如 PRINCE2 敏捷中的 Agilometer 之类的评估工具来回答“我 们在这个项目中的敏捷程度如何？”。</p></div>
+<h3 id="pn-32" class="section-heading"><a href="#pn-32" class="pn-link" title="点击复制链接">[32]</a> 9.4.3 交付方法</h3>
+<div class="section-content"><p><a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>必须配合并支持项目选定的交付方法。例如，包括每月<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>审查会议在内的风险 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法将难以支持具有两周<a href="../entities/term.html#entity-冲刺" class="entity-link entity-term" title="术语：冲刺">冲刺</a>的迭代-增量交付方法。 PRINCE2 方法不需要特定形式的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>产品或风险管理活动的具体<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>。重要的是，它们必 须匹配项目的形式和节奏。例如，在敏捷交付方法中，<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>可以誊写在白板上，在每日 站会上加以审查。在这种情境下，这种手动方法可能与使用专门的 IT <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>来捕获和审查风险 一样有效。 此外，还需要认识到项<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>付方法可能有助缓解或加剧特定风险。例如，敏捷工作方式本身可 以确保<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>不会在项目开始时提出过多<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，而在更线性的方法中，这方面可能存在风险。 尽管敏捷工作的特征是与直接参与项目的用<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>极互动，但若管理不善，可能导致协定基线变 更不受控。线性方法往往会强化“受控变更”的印象，但可能<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>得反应迟钝并疏远用户。风 险管理方法必须认识到这些固有的差异。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h3 id="pn-33" class="section-heading"><a href="#pn-33" class="pn-link" title="点击复制链接">[33]</a> 9.4.4 可持续性</h3>
+<div class="section-content"><p>项目将在其<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中纳入具体的可持续性目标和<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>。应评估这些风险。与可持续性 相关的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>考虑因素包括：</p>
+<ul class="content-list">
+  <li>定义<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>与项目工作可持续性相关的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的方法（例如，项目未达到其可持续性绩效
+目标）</li>
+</ul>
+<ul class="content-list">
+  <li>定义<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>与项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>可持续性相关的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的方法（例如，一个或多个产品不符合其可持
+续性绩效<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>）</li>
+</ul>
+<ul class="content-list">
+  <li>将响应可持续性<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的成本纳入<a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>（例如，可能影响项目或供应链弹性的极端
+天气事件）</li>
+</ul>
+<ul class="content-list">
+  <li>将与可持续性相关的具体<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和行动记录在<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>中，并将其纳入定期风险沟通</li>
+</ul></div>
+<h3 id="pn-34" class="section-heading"><a href="#pn-34" class="pn-link" title="点击复制链接">[34]</a> 9.4.5 规模</h3>
+<div class="section-content"><p>务必确保<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>适当，涵盖项目大小、规模和复杂性，以及项目可能受到的<a href="../entities/term.html#entity-风险影响" class="entity-link entity-term" title="术语：风险影响">风险影响</a>。 项目规模和影响需要单独考虑。例如，一个用于替换<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a> IT 网络基础架构元素的小规模项目 如果出现<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，可能会导致整个业务停顿。项目可能产生远远超出其表面大小、规模和复杂性 的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。 重<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>管理方法能够支持项目的有效决策，并且不会形成过重负担或官僚主义。总体 而言，项目越小、越简单，需要的相应<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>安排就越简单，项目越大、越复杂，就需要更 为全面的控制。例如，在简单的项目中，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>通常直接负责大多数风险<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>活动。不过， 在较为复杂的项目中，这些活动可能会<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>给专门<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>理或风险管理团队。类似地，可能 使用白板上的简单列表、电子<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>或专用系统保管风险<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>ITY_2⟧确保风险管理方法是适当 的，并且让参与项目的每个人都了解。 <a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>基于项目所有<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>计划的总成本。对于简<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>目，通<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>所有风险应对成本 相加。但对于比较复杂的项目，需要注意要素成本的汇总<a href="../entities/term.html#entity-风险影响" class="entity-link entity-term" title="术语：风险影响">风险影响</a>重大风险影响。</p></div>
+<h2 id="pn-35" class="section-heading"><a href="#pn-35" class="pn-link" title="点击复制链接">[35]</a> 9.5 为实践提供支持的管理产品</h2>
+<div class="section-content"><p>PRINCE2 包括用于<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目的 15 种<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。下面描述了特定于风险<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>的管理<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a> 风险管理方法是项目启动文件的一部分。<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>管理方法的目的是描述如何<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目风险。这包括要应用的具体程序、技术、标准和职责。 概括性<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>描述风险管理方法的范围 <a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>程序：项目风险管理活动（例如，识别、评估、<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>、实施、沟通）的描述（应突出显 示与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>标准的任何变化，以及任何变化的理由） <a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>指导：在商业论证中为项<a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>容许偏差提供额外指导 风险管理活动的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>：<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>正式风险管理活动的时间（ 例如，在<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>时） 职责：定义风险管理活动的职责（这应包括<a href="../entities/term.html#entity-风险负责人" class="entity-link entity-term" title="术语：风险负责人">风险负责人</a>和<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>的职责） 资源：用于风险管理活动，例如，所需的任何测试设备 支<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>具和技术：用于风险管理活动，包括要使用的任何系统及其使用方法，以及任何特<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 术，例如事前分析 标准：适用于风险管理的任何标准，例如用于对概率、影响、临近度和速度进行评级的分级系统 （标准还应指定<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>和其他风险记录的组成和格式） 参考资料：用于任何相关文件或<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，例如业务或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的风险管理系统</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a> 风险登记单是项目记录单的一部分<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>风险登记单的目的是提供一份与<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>相关的已识别风险记录，包括风险的状态和历史。其用于捕 获并维护与项目相关的所有已识<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>胁和机会的信息。 概括性内容 风险标识符：风险的唯一参考 风险描述：风险的原因、事件和影响的摘要 概率：对风险事件发生的可能性的估算 影响：<a href="../entities/term.html#entity-风险影响" class="entity-link entity-term" title="术语：风险影响">风险影响</a>的估算 临近度：离风险可能发生的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>的远近的估算 速度：如果发生风险，风险对目标产生影响的速度的估算 <a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>：选择处理风险的行动 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>剩余概率<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>假设风险应对有效的情况下，风险的概率和影响 <a href="../entities/term.html#entity-风险负责人" class="entity-link entity-term" title="术语：风险负责人">风险负责人</a>：用于风险 <a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>：用于风险应对 风险相关日期：例如，记录日期、上次审查日期和行动到期日期 记录：与风险关联的文件列表及其位置</p>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h2 id="pn-36" class="section-heading"><a href="#pn-36" class="pn-link" title="点击复制链接">[36]</a> 9.6 实践中关键角色的重点</h2>
+<div class="section-content"><p>PRINCE2 定义了项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的七项关键角色。下面描述了他们特定于<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>实践的职责。 表 9.3 与风险<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>有关的关键<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的重点领域 角色 重点领域 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a></p>
+<ul class="content-list">
+  <li>提供<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a><a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>政策、风险管理标准和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>管理框架（或类似文件）</li>
+</ul>
+<ul class="content-list">
+  <li>定义项目的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>偏好</li>
+</ul>
+<ul class="content-list">
+  <li>设置项目层面的<a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>和风险预算
+项目总监</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>，并确保其适合项目目标和<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>偏好。设置风
+险影响的规模、临近度和速度</li>
+</ul>
+<ul class="content-list">
+  <li>设置<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>层面的<a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a>和风险预算</li>
+</ul>
+<ul class="content-list">
+  <li>确保与<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>相关的风险被识别、评估、控制</li>
+</ul>
+<ul class="content-list">
+  <li>确保可持续性<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>被识别、评估和控制</li>
+</ul>
+<ul class="content-list">
+  <li>就上报的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>作出决定，特别关注持续<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由</li>
+</ul>
+<ul class="content-list">
+  <li>根据需要将<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>上报给业务
+<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a></li>
+</ul>
+<ul class="content-list">
+  <li>确保与<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>有关的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>被识别、评估和控制（例如对<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>、运营使用和
+维护的影响）。</li>
+</ul>
+<ul class="content-list">
+  <li>协定<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a></li>
+</ul>
+<ul class="content-list">
+  <li>对上报的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>做出决策，特别关注保证预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>
+<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a></li>
+</ul>
+<ul class="content-list">
+  <li>确保与<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>有关的风险被识别、评估和控制（例如<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的交付）。</li>
+</ul>
+<ul class="content-list">
+  <li>协定<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a></li>
+</ul>
+<ul class="content-list">
+  <li>对上报的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>做出决策，特别关注保证整套解决方案的完整性
+<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a></li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>以准备和维护<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a></li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>实施其<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中协定的风险管理程序</li>
+</ul>
+<ul class="content-list">
+  <li>在<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>中建立和维护风险</li>
+</ul>
+<ul class="content-list">
+  <li>确保在项目中，项目<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>被识别、评估和控制
+<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a></li>
+</ul>
+<ul class="content-list">
+  <li>实施其<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中协定的风险管理程序</li>
+</ul>
+<ul class="content-list">
+  <li>参与<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的识别、评估和控制
+<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a></li>
+</ul>
+<ul class="content-list">
+  <li>向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>的建议</li>
+</ul>
+<ul class="content-list">
+  <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>确认风险管理方法符合<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>政策</li>
+</ul>
+<ul class="content-list">
+  <li>当被问及时，协助<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目经理审查针对特定<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>建议的
+<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a></li>
+</ul>
+<ul class="content-list">
+  <li>通过审查<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>实践，确保风险按照项目的<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>执行，向项
+目管理委员会成员保证<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>得到妥善管理
+<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a></li>
+</ul>
+<ul class="content-list">
+  <li>为<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>控制提供行政支持</li>
+</ul>
+<ul class="content-list">
+  <li>准备和维护<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a></li>
+</ul>
+<ul class="content-list">
+  <li>协助项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队应用项目的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>程序
+所有角色都负责为分配的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>实施<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>（作为<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>）。</li>
+</ul>
+<p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></p></div>
+<h2 id="pn-37" class="section-heading"><a href="#pn-37" class="pn-link" title="点击复制链接">[37]</a> 9.7 与原则的关键关系</h2>
+<div class="section-content"><p><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>实践有助于在整个项目生命周期中遵守 PRINCE2 原<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 表 9.4 风险实践与原则之间的关键关系 原则 实现方式 导致<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>ENTITY_0⟧ 评估已识别的风险是否对<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>产 生实质性影响，从而评估<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由 增加了投资价值和可接受的风 险水平的信心 <a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a> 利用经验教训告知风险识别和<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 信息 相信<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>措施基于从以往 经验中发展起来的有效基础 定义<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、职责和 关系 通过项目的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>层，明确识别、管理 和<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>风险的职责 清楚地了解与<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>职责相 关的期望 <a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a> 确保在阶段边界做出的决策考虑到 风险 通过在项目生命周期的关键点使用阶 段来正式确定“交替运作”的决策， 从而降低项目投资的风险 相信项目投资继续与<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a> 保持一致，并且风险水平在整 个项目中仍是可接受的 <a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a> 授权最有能力承担风险并采取行<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>负责风险应对，确保将正确的风险 和行动分配给他们，并上报<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>超过 <a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>的风险 相信项目面临的<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>和机会能 得到上报并<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>应的层面得到 管理 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a> 了解与定义、开发和交付<a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>和 <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>相关的风险 清楚地了解与开发项目中的 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>相关的威胁和机会 <a href="../entities/principle.html#entity-根据项目剪裁" class="entity-link entity-principle" title="原则：根据项目剪裁">根据项目剪裁</a> 确保风险管理方法和相关程序适合项 目的类型、规模和复杂性 明确定义、高效和有<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>管 理符合相关组织标准的威胁 和机会</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+    </div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch08.html" class="nav-link">◁ 第8章 质量</a> | <a href="ch10.html" class="nav-link">第10章 问题 ▷</a>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+    </div>
+
+    <script>
+        function toggleToc() {
+            var list = document.getElementById('tocList');
+            var icon = document.querySelector('.toc-icon');
+            list.classList.toggle('collapsed');
+            icon.style.transform = list.classList.contains('collapsed')
+                ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+
+        // Purple Numbers: 点击复制链接
+        document.querySelectorAll('.pn-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href.split('#')[0] + link.getAttribute('href');
+                navigator.clipboard.writeText(url).then(function() {
+                    link.style.color = '#2E8B57';
+                    setTimeout(function() { link.style.color = ''; }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

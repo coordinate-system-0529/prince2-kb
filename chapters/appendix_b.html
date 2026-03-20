@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>附录B 角色描述 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            background: #8B4513;
+            color: #faf6f0;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.8em;
+            color: #5c3d1a;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* 章节目录 */
+        .chapter-toc {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .toc-title {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-size: 1em;
+            user-select: none;
+        }
+        .toc-title:hover { color: #d4af37; }
+        .toc-icon { transition: transform 0.3s; display: inline-block; }
+        .toc-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .toc-list.collapsed { max-height: 0; margin-top: 0; }
+        .toc-list li {
+            padding: 3px 0;
+            border-bottom: 1px dotted #d4c8a8;
+        }
+        .toc-list a {
+            color: #8B4513;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .toc-list a:hover { color: #d4af37; }
+
+        /* 内容区 */
+        .section-heading {
+            color: #5c3d1a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d5c0;
+        }
+        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+        h3.section-heading { font-size: 1.2em; }
+        h4.section-heading { font-size: 1.05em; }
+
+        .pn-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.75em;
+            vertical-align: super;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .pn-link:hover { color: #8B4513; }
+
+        .section-content {
+            margin-bottom: 20px;
+        }
+        .section-content p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        /* 列表 */
+        .content-list {
+            list-style: none;
+            padding-left: 2em;
+            margin: 12px 0;
+        }
+        .content-list li {
+            position: relative;
+            padding-left: 1.2em;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .content-list li::before {
+            content: "●";
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 实体链接 */
+        .entity-link {
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            padding: 0 1px;
+            transition: all 0.2s;
+        }
+        .entity-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .entity-principle { color: #b8860b; border-color: #b8860b; }
+        .entity-practice { color: #8B4513; border-color: #8B4513; }
+        .entity-process { color: #2E8B57; border-color: #2E8B57; }
+        .entity-role { color: #4169E1; border-color: #4169E1; }
+        .entity-product { color: #8B008B; border-color: #8B008B; }
+        .entity-term { color: #A0522D; border-color: #A0522D; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #d4af37;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .chapter-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="appendix_a.html" class="nav-link">◁ 附录A 管理产品</a> | <a href="glossary.html" class="nav-link">术语表 ▷</a></div>
+
+    <span class="category-tag">附录</span>
+    <h1 class="chapter-title">附录B 角色描述</h1>
+
+    
+
+    <div class="chapter-content">
+        <div class="section-content"><p>附录 B <a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a> 此附录包含对各种 PRINCE2 <a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的职责的描述。为满足不同<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的需求，这些角色可以根据 一分配给人员的职<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>有些角色可能兼职担任，而许多角色也可能根据项目<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>分担或组合。 <a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a> 概述 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>成员负责其各自关注领域（<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>、用户或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>）的<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会负责 确定项目保证的执行方式，确保在角色和职责方面有明确的规定，并确定被指定担任保证角色的 人员彼此之间如何互动。根据是否拥有为项目团队提供支持所需的知识、技能和精力，保证任务 可以由<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会成员自己承担，从更广泛的业务中任命，或从外部方选拔。 职责</p>
+<ul class="content-list">
+  <li>就<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>、<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和<a href="../entities/product.html#entity-例外报告" class="entity-link entity-product" title="管理产品：例外报告">例外报告</a>的评估和解决，向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目经理提供建议，并对照
+<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>检查其影响。</li>
+</ul>
+<ul class="content-list">
+  <li>就项目小组成员的挑选向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提供建议。</li>
+</ul>
+<ul class="content-list">
+  <li>就<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提供建议。</li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目经理审查产品描述。</li>
+</ul>
+<ul class="content-list">
+  <li>审查数据<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>实践，以确保数据管理按照项<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>数字化和数据管理方法执行，从而向项目
+<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会成员保证数据得到了妥善管理。</li>
+</ul>
+<ul class="content-list">
+  <li>审查<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>实践，以确保这些实践按照项目的<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>执行，从而向项目管
+<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>员会成员保证问题得到了妥善<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>审查<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>实践，以确保这些实践按照项目的<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>执行，从而向项目管理委员
+会成员保证<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>得到妥善管理。</li>
+</ul>
+<ul class="content-list">
+  <li>根据协定的目标及其<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，确保阶段和<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的可行性。</li>
+</ul>
+<ul class="content-list">
+  <li>确保对<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和项目计划的潜在变更执行影响评估。</li>
+</ul>
+<ul class="content-list">
+  <li>根据外部事件和项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，检查和监视<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>检查<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的变更，以识别任何对<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>或<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的影响。</li>
+</ul>
+<ul class="content-list">
+  <li>代表<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>检查项目财务状况。</li>
+</ul>
+<ul class="content-list">
+  <li>检查项目是否符合总体业<a href="../entities/term.html#entity-务目标。" class="entity-link entity-term" title="术语：务目标。">务目标。</a></li>
+</ul>
+<ul class="content-list">
+  <li>根据项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>和任何外部事件检查<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>根据协定的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>确认阶段和项目进展。</li>
+</ul>
+<ul class="content-list">
+  <li>确认<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法符合业务政策，并就管理方法的实施向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>做出保证。</li>
+</ul>
+<p>附录 B <a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a> <a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a> 概述 项目总监由业务任命，是项目的唯一问责制责任人，最终对项目的成功问责。这种问责制<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>权。项目总监负责确保项目资金，并对项目的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和持续业务理由负责。他们负责 以符合<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>战略的方式有效治理项目，包括确保从长远视角考虑诸如环境、社会和经济影响 等方面。 职责</p>
+<ul class="content-list">
+  <li>在项目期间对<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>问责（除非由业务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>）。</li>
+</ul>
+<ul class="content-list">
+  <li>在项目开展过程中对<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>问责。监督可行商业论证的开发，确保项目与<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>保持
+一致。</li>
+</ul>
+<ul class="content-list">
+  <li>在项目的可持续性<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>方面对业务问责。确保可持续性<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>被识别、评估和控制。</li>
+</ul>
+<ul class="content-list">
+  <li>在与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>分享从项目中吸取的经验教训方面问责。</li>
+</ul>
+<ul class="content-list">
+  <li>审查并确认项目方法和<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>的选择，并确保它们与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的 ESG 目标兼容。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>、管理方法、项目管理团队结构、<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>、<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>、项目
+计划、阶段计划和任何<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>（在预测超过阶段层面<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>时）。</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>指定的收益具有性价比、与<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>一致并且可以实现。</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>提议的交付方法和成本的性价比。</li>
+</ul>
+<ul class="content-list">
+  <li>确认项目的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>设计。任命<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>（如果业务未完成此任命），并确认对项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队
+的任命。向项目投入人员和<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>资源。</li>
+</ul>
+<ul class="content-list">
+  <li>决定是否需要项目层面<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>，并指定预算金额。决定是否需要<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>变更的被授权的职
+权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>。为每个阶段设<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>差和变更预算。</li>
+</ul>
+<ul class="content-list">
+  <li>确保与<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>相关的风险被识别、评估、控制。就上报的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>作出决策，特别关注持
+续<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。根据需要将风险上报给业务。为分配的风<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>施<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>（作为风险行动
+负责人）。</li>
+</ul>
+<ul class="content-list">
+  <li>确定<a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>确保项目资金。</li>
+</ul>
+<ul class="content-list">
+  <li>确保实现成果的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>与商业视角保持一致。</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出的建议做出响应，就上报的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>做出决策，特别关注持续<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由。</li>
+</ul>
+<ul class="content-list">
+  <li>在<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>将超出<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>层面<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>时，对<a href="../entities/product.html#entity-例外报告" class="entity-link entity-product" title="管理产品：例外报告">例外报告</a>作出决策。根据需要将<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>上报给业务。</li>
+</ul>
+<ul class="content-list">
+  <li>确保项目是可取、可行且可实现的。</li>
+</ul>
+<ul class="content-list">
+  <li>确认<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>和项目产品验收。通知<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>。</li>
+</ul>
+<p>附录 B <a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a> <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a> 概述 项目经理拥有代表<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>在协定的项目容许偏差和<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>内开展<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>权。项目经理 负责项目的日常<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。 职责</p>
+<ul class="content-list">
+  <li>咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>，以准备和维护产品描述和<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法。</li>
+</ul>
+<ul class="content-list">
+  <li>在项目的整个生命周期内中咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>，以检查是否有任何目标发生了变更。</li>
+</ul>
+<ul class="content-list">
+  <li>设计<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>。决定如何应用阶段和交付步骤。</li>
+</ul>
+<ul class="content-list">
+  <li>设计、审查和更新项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构和<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>。准备角色描述。</li>
+</ul>
+<ul class="content-list">
+  <li>准备<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和管理方法。在每个阶段结束时对其进行评估和更新。</li>
+</ul>
+<ul class="content-list">
+  <li>准备<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>、阶段计划和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>，并根据需要进行更新。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a><a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>，并设置工作包<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>确保在项目中，项目<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>被识别、评估和控制。</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>实施其小组计划中协定的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法。</li>
+</ul>
+<ul class="content-list">
+  <li>建立和维护健康的项目生态系统，并确保项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队的福利。</li>
+</ul>
+<ul class="content-list">
+  <li>建立和维护项目记录单，在可能的情况下，由<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>提供协助。</li>
+</ul>
+<ul class="content-list">
+  <li>为分配的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>实施<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>和<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>（作为<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>）。</li>
+</ul>
+<ul class="content-list">
+  <li>在<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>到要超出<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>层面<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>时，指示<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法所需的程序加以管理，在可能的情况下，由<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>提供协助。</li>
+</ul>
+<ul class="content-list">
+  <li>按<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>监视进展。审查<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>持续可行性的问题及风险的影响。</li>
+</ul>
+<ul class="content-list">
+  <li>在<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>将超出<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>层面或项目层面<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>时，为<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>编制例外报告。</li>
+</ul>
+<ul class="content-list">
+  <li>准备<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>，以实施应对例外报告的决策。</li>
+</ul>
+<ul class="content-list">
+  <li>编制经验教训<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>、<a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a>、例外报告、<a href="../entities/product.html#entity-阶段竣工报告" class="entity-link entity-product" title="管理产品：阶段竣工报告">阶段竣工报告</a>和项目竣工报告。从项目视角继<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>负责可持续性报告。</li>
+</ul>
+<ul class="content-list">
+  <li>在<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>时，评估并报告项目绩效。</li>
+</ul>
+<p>附录 B <a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a> <a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a> 概述 项目支持负责提供各种服务，例如行政支持、就项目工具提供建议和指导、<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>支持、风险管 理和<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>。 这一角色的职责由<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>负责履行，但也可以将其<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>给<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>、个人、业务内部的团体 或其他小组成员。这取决于项目的规模<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>以及项目经理的技能、知识和精力。有些组 织会建立可履行此<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的项目办公室，以支持项目的交付（见项目组合、项目群和项目办公 室<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>）。项目支持可帮助在整个项目生态系统中进行集成，包括获得反馈以帮助改进工作方 式、演进<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a>和建立社会凝聚力。 职责</p>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>专业工具以支持数字化和数据管理方法（例如<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>、控制和报告工具）。</li>
+</ul>
+<ul class="content-list">
+  <li>监管<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>和问题处理程序。向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>报告影响<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的任何拟议或实际产品
+变更。</li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>和成员应用项目程序。</li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>维护项目记录单。</li>
+</ul>
+<ul class="content-list">
+  <li>协助编制<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>、阶段计划、<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>和小组计划。</li>
+</ul>
+<ul class="content-list">
+  <li>协助编制、宣传和存储<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>（<a href="../entities/product.html#entity-检查点报告" class="entity-link entity-product" title="管理产品：检查点报告">检查点报告</a>、例外报告、经验教训报告、<a href="../entities/product.html#entity-阶段竣工报告" class="entity-link entity-product" title="管理产品：阶段竣工报告">阶段竣工报告</a>和
+项目竣工报告）。</li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>准备问题报告。</li>
+</ul>
+<ul class="content-list">
+  <li>为<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>、阶段计划、小组计划和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>提供基线，并确定存储和分发它们的
+方法。</li>
+</ul>
+<ul class="content-list">
+  <li>为<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>、<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>、管理方法和项目启动文件提供基线，并确定存储和分发它
+们的方法。</li>
+</ul>
+<ul class="content-list">
+  <li>贡献专业知识（例如，<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>工具）。</li>
+</ul>
+<ul class="content-list">
+  <li>为分配的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>实施<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>（作为<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>）。</li>
+</ul>
+<ul class="content-list">
+  <li>维护项目基线。</li>
+</ul>
+<ul class="content-list">
+  <li>为<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>、风险控制、<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>活动、商务管理活动和沟通<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>活动提供行政支持。</li>
+</ul>
+<ul class="content-list">
+  <li>提供就职和离职方面的帮助。</li>
+</ul>
+<ul class="content-list">
+  <li>提供<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>分析方面的帮助。</li>
+</ul>
+<p>附录 B <a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a> <a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a> 概述 高级供应商代表参与项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>交付各个方面工作的供<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>高级供应商对供应商交付的产 品<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>和项目的技术完整性问责。 职责</p>
+<ul class="content-list">
+  <li>就<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>团队的人员方面提供建议，例如，特定的健康、安全和福利<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>协定关键<a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>协定<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法（如适用）。</li>
+</ul>
+<ul class="content-list">
+  <li>如<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中所定义，协定产品开发中采用的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>技术和工具。提供人员和
+资源以执行<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>质量活动。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>（如适用）。</li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>准备项目计划、阶段计划和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>问责（如适用）。</li>
+</ul>
+<ul class="content-list">
+  <li>投入人员和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>资源。</li>
+</ul>
+<ul class="content-list">
+  <li>确认能够在预期成本<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内交付所要求的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，并且具备可行性。</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>团体人员的适当参与。</li>
+</ul>
+<ul class="content-list">
+  <li>确保与<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>有关的风险被识别、评估和控制（如<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>交付）。</li>
+</ul>
+<ul class="content-list">
+  <li>确保实现成果的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>与<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>视角保持一致。</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>和阶段计划与供应商视角保持一致。</li>
+</ul>
+<ul class="content-list">
+  <li>为分配的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>实施<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>（作为<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>）。</li>
+</ul>
+<ul class="content-list">
+  <li>对上报的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>做出决策，特别关注保证整套解决方案的完整性。</li>
+</ul>
+<ul class="content-list">
+  <li>从<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>视角继续负责可持续性<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出的建议做出响应，就上报的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>做出决策，特别关注保证整套解决方案的
+完整性。</li>
+</ul>
+<p>附录 B <a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a> <a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a> 概述 高级用户代表<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>团体，并且对捕捉用户<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的方法以及与<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>一致的收益规格问责。 高级用户负责：</p>
+<ul class="content-list">
+  <li>确保方法获得<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>对项目的认同</li>
+</ul>
+<ul class="content-list">
+  <li>监视<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>是否符合<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中的需求</li>
+</ul>
+<ul class="content-list">
+  <li>向<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>证明<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中预测的收益正在逐步实现</li>
+</ul>
+<ul class="content-list">
+  <li>根据<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>控制变更（无论是由用户、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>还是项目本身引起的变更）</li>
+</ul>
+<ul class="content-list">
+  <li>在项目结束后，确保成功地将<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>移交给业务、加以采用，并促进 继续实现<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>
+<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>必须确保用户团体中的人员作出充分且持续的承诺来支持这些活动，特别是在项目生
+命周期结束后还需要作出<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>承诺（如实现收益）的情况下。
+职责</li>
+</ul>
+<ul class="content-list">
+  <li>协定<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法（如适用）。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>和专业产品的产品描述。提供<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>和验收准则。分配人员和
+资源来执行<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>活动和产品验收。</li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>准备项目计划和阶段计划。</li>
+</ul>
+<ul class="content-list">
+  <li>对指定所需成果和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>问责（<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的依据）。从用户视角定义可持续性<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>
+要求。</li>
+</ul>
+<ul class="content-list">
+  <li>投入人员和<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>资源。</li>
+</ul>
+<ul class="content-list">
+  <li>为<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>分析做出贡献。就用户团体的人员方面提供建议，例如，谁是关键影响者。
+确保来自<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>团体的人员的适当参与。</li>
+</ul>
+<ul class="content-list">
+  <li>确保实现成果的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>与用户视角保持一致。</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>和阶段计划与用户视角保持一致。</li>
+</ul>
+<ul class="content-list">
+  <li>确保与<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>有关的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>被识别、评估和控制（例如对<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>、运营使用和维护的影<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。对
+上报的风险做出决策<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>别关注保证预期收益。为分配的风险实施<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>（作为风险行
+动负责人）。</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出的建议做出响应，就上报的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>做出决策，特别关注保证预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>在<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>评审中，提供实际收益与<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>收益的比较说明。</li>
+</ul>
+<ul class="content-list">
+  <li>对实现<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>问责，并确保项目生<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>产品，且该产品可交付期望成果，并且这些<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>可产
+生期望收益。确认预期收益（来源于项目成果）已实现或能够实现。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>并对项目产品的性能问责。</li>
+</ul>
+<p>附录 B <a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a> <a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a> 概述 小组经理负责在与<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>协定的容许偏差和约束<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内交付分配给<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>作。项目经理按 照商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法，以<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的形式<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>配给小组经理。 职责</p>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>准备和维护产品描述和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>。与项目经理就工作包描述达成协定。</li>
+</ul>
+<ul class="content-list">
+  <li>就小组成员在项目中的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>选择提供建议。<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>小组成员。确保团队的福利。</li>
+</ul>
+<ul class="content-list">
+  <li>汇编<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>范围内产品的质量记录。在收到请求时，向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>报告产品质量状态。</li>
+</ul>
+<ul class="content-list">
+  <li>参与<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的识别、评估和控制。为分配的风险实施<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>（作为<a href="../entities/term.html#entity-风险行动负责人" class="entity-link entity-term" title="术语：风险行动负责人">风险行动负责人</a>）。</li>
+</ul>
+<ul class="content-list">
+  <li>实施<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>实施<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>中协定的管理程序。</li>
+</ul>
+<ul class="content-list">
+  <li>告知<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>问题、风险、经验教训、已完成的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>活动和已完成的产品。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>范围内的产品的质量控制。</li>
+</ul>
+<ul class="content-list">
+  <li>为每个<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>准备进度表。准备<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>将<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>的任何预测偏差通知<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>编制<a href="../entities/product.html#entity-检查点报告" class="entity-link entity-product" title="管理产品：检查点报告">检查点报告</a>，并负责向团队提供可持续性<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>在其<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>范围内生产与其<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>一致的产品。</li>
+</ul>
+<p>术语表</p></div>
+    </div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="appendix_a.html" class="nav-link">◁ 附录A 管理产品</a> | <a href="glossary.html" class="nav-link">术语表 ▷</a>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+    </div>
+
+    <script>
+        function toggleToc() {
+            var list = document.getElementById('tocList');
+            var icon = document.querySelector('.toc-icon');
+            list.classList.toggle('collapsed');
+            icon.style.transform = list.classList.contains('collapsed')
+                ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+
+        // Purple Numbers: 点击复制链接
+        document.querySelectorAll('.pn-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href.split('#')[0] + link.getAttribute('href');
+                navigator.clipboard.writeText(url).then(function() {
+                    link.style.color = '#2E8B57';
+                    setTimeout(function() { link.style.color = ''; }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

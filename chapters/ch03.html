@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第3章 人员 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            background: #8B4513;
+            color: #faf6f0;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.8em;
+            color: #5c3d1a;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* 章节目录 */
+        .chapter-toc {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .toc-title {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-size: 1em;
+            user-select: none;
+        }
+        .toc-title:hover { color: #d4af37; }
+        .toc-icon { transition: transform 0.3s; display: inline-block; }
+        .toc-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .toc-list.collapsed { max-height: 0; margin-top: 0; }
+        .toc-list li {
+            padding: 3px 0;
+            border-bottom: 1px dotted #d4c8a8;
+        }
+        .toc-list a {
+            color: #8B4513;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .toc-list a:hover { color: #d4af37; }
+
+        /* 内容区 */
+        .section-heading {
+            color: #5c3d1a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d5c0;
+        }
+        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+        h3.section-heading { font-size: 1.2em; }
+        h4.section-heading { font-size: 1.05em; }
+
+        .pn-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.75em;
+            vertical-align: super;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .pn-link:hover { color: #8B4513; }
+
+        .section-content {
+            margin-bottom: 20px;
+        }
+        .section-content p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        /* 列表 */
+        .content-list {
+            list-style: none;
+            padding-left: 2em;
+            margin: 12px 0;
+        }
+        .content-list li {
+            position: relative;
+            padding-left: 1.2em;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .content-list li::before {
+            content: "●";
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 实体链接 */
+        .entity-link {
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            padding: 0 1px;
+            transition: all 0.2s;
+        }
+        .entity-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .entity-principle { color: #b8860b; border-color: #b8860b; }
+        .entity-practice { color: #8B4513; border-color: #8B4513; }
+        .entity-process { color: #2E8B57; border-color: #2E8B57; }
+        .entity-role { color: #4169E1; border-color: #4169E1; }
+        .entity-product { color: #8B008B; border-color: #8B008B; }
+        .entity-term { color: #A0522D; border-color: #A0522D; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #d4af37;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .chapter-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch02.html" class="nav-link">◁ 第2章 原则</a> | <a href="ch04.html" class="nav-link">第4章 PRINCE2实践简介 ▷</a></div>
+
+    <span class="category-tag">人员</span>
+    <h1 class="chapter-title">第3章 人员</h1>
+
+    
+        <nav class="chapter-toc">
+            <h3 class="toc-title" onclick="toggleToc()">
+                <span class="toc-icon">▸</span> 本章目录（14 节）
+            </h3>
+            <ul class="toc-list" id="tocList">
+                <li><a href="#pn-2">3.1 情境</a></li><li><a href="#pn-3">3.2 领导成功的变更</a></li><li><a href="#pn-4">3.2.1 项目需要变更管理</a></li><li><a href="#pn-5">3.2.2 利益相关方</a></li><li><a href="#pn-6">3.2.3 文化</a></li><li><a href="#pn-7">3.3 领导成功的团队</a></li><li><a href="#pn-8">3.3.1 跨组织边界领导</a></li><li><a href="#pn-9">3.3.2 建立有效的团队</a></li><li><a href="#pn-10">3.3.3 将团队凝聚在一起</a></li><li><a href="#pn-11">3.4 沟通</a></li><li><a href="#pn-12">3.5 人是方法的核心</a></li><li><a href="#pn-13">3.5.1 人员和 PRINCE2 原则</a></li><li><a href="#pn-14">3.5.2 人员和 PRINCE2 实践</a></li><li><a href="#pn-15">3.5.3 人员和 PRINCE2 流程</a></li>
+            </ul>
+        </nav>
+
+    <div class="chapter-content">
+        <div class="section-content"><p>人员</p></div>
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 3.1 情境</h2>
+<div class="section-content"><p>关键信息 项目的目的是交付变更，这将影响开展正常经营 (BAU) 活动、例行工作和履行职责 的人员。变更实施情况以及项目执行情况，取决于项目团队的能力、成员之间关系 的密切程度以及受变更影响的人员。 在 PRINCE2 中，“人员”涵盖了参与项目的人员、他们之间的关系，以及受项目影响的人员。 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>是一个关系不断变化的复杂生态系统。无论项目的主要目的是不是变更，项目都会引发组 织变更。项目能否成功取决于是否<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>持项目交付的组织建立<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>健的关系，以及项目是否适 合组织生态系统，可以交付变更。 项目可在有限的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>内，将不同业务、用户和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>小组的人员聚集在一起，形成独特组合。 为了成功交付项目，各级领导层必须建立激励人心的项目<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>。 应尽可能在拥有相关知识的团队<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内做出决策。仅当需要考虑对项目生态系统、组织生态系 统其他部分产生的影响或管控更广泛的政治影响时，才应上报决策。 项目生态系统 组织生态系统 关系 人员或团体 生态系统 生态系统的交叉/交互 图 3.1 组织和项目生态系统</p>
+<p>人员 定义 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统：组织的内部元素（包括工作人员、董事会、负责人和其他利<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>相关方）以及组织的外部关系，如<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>、合作伙伴、<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>、监管机构和竞争 对手。 项目生态系统：涉及项目或受项目直接影响的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>要素以及<a href="../entities/term.html#entity-相关的用户和供应商。" class="entity-link entity-term" title="术语：相关的用户和供应商。">相关的用户和供应商。</a> 场景：在最合适的级别做出决策 Findef 建立了<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>的四个层级，以监督项目群交付、解决<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，并确保在适当的级别 做出决策。该模式以“<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>”原则为基础，即每个治理主体在指定的<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>级别 内运作。该原<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>通过适当治理层次赋予人员自我组织和控制的权利的核心。 本地层面涵盖了单个项目生命周期内的日常运营事项，并将其作为<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>的 关键职责，例如阶段关口批<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>围变更或供应商选择。 还建立了项目群委员会来监督 FindefTwo 项目群的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>和运行状况，该委员会有职 权在项目群层面做出决策（例如协定项目群和项目<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，并签核每个阶段的完 成情况，包括交付物）。 如果需要对超过原项目群预算 20% 的投资额外做出变更，投资委员会必须参与决 策，并保留<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>目群财务的最终职权。 最后，战略决策必须上报给领导层委员会，该委员会处于 Findef 层级顶端。战略决 策包括：进入最终<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>市场，而不是只<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>业务对业务 (B2B)，使用新技术，或在 公司结构中引入新的 <a href="../entities/term.html#entity-DevOps" class="entity-link entity-term" title="术语：DevOps">DevOps</a> 部门，这需要更高层<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>关注，包括缓解业务和声誉 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。</p></div>
+<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 3.2 领导成功的变更</h2>
+<h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 3.2.1 项目需要变更管理</h3>
+<div class="section-content"><p>所有项目都会导致人员、<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>和系统变更当前运作状态，变成使用项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的未来目标状态。 交付这类变更需要有效的领导。</p>
+<p>人员 定义：<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a> 变更管理是指组织从当前状态转换到目标状态的方式。 可以捕获当前状态和目标状态，并将其描述为一组例行工作、职责、关系、<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>和能力。 确定从当前状态转换为目标状态时，<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的哪些领域会受到项目影响，这有助于描述项目将交 付的变更。对于某些项目，可能存在<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>转换过程中经历的临时状态，这些状态也可以描述。 PRINCE2 通过为项<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>维护变更管理方法来解决变更<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>。确定要在变更管理方法中捕获 的信息的详细程度时，请考虑以下方面：</p>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>方法支持项目团队做出哪些决策</li>
+</ul>
+<ul class="content-list">
+  <li>从当前状态转换到目标状态期间和之后所需的技能和能力</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统的哪些领域可能会受到项目影响</li>
+</ul>
+<ul class="content-list">
+  <li>要考虑的关键关系</li>
+</ul>
+<ul class="content-list">
+  <li>不断演变的<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a></li>
+</ul>
+<ul class="content-list">
+  <li>如何更好地实现转换；例如，通过学习或提升技能、转换项目团队的知识或招募新人加入
+<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>
+<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>方法
+变更管理方法是<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的一部分。
+目的
+建立项目实现其目标所需的目标<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>状态，以及业务从当前状态以及任何临时状态转变的方式。
+概括性内容
+<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>：项目将交付哪些变更；任何排除项
+变更状态：当前、临时和目标状态描述
+状态特征：对于每种状态，凸显正在变更的状态：例如，例行工作、<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>、<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>、文化、
+职责、结构、能力
+促成活动：转换前、转换期间、转换后；例如，咨询、试验、培训和热线
+资源：促成活动
+职责：促成活动
+辅助工具和技术：促成活动；例如，建模
+<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>用于变更管理活动的所有标准
+参考资料：任何相关文件或<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。</li>
+</ul>
+<p>人员</p></div>
+<h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 3.2.2 利益相关方</h3>
+<div class="section-content"><p>项目将影响整个<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统中的人员。因此，项目需要让在项目团队中担任正式<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的人 员，以及受项目影响或对项目成功至关重要的关键人员（他<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>能不担任正式角色）参与进 来。这些人是项目中的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>，将涵盖所有用户、供应<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>利益相关方可以是项目 团队和<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>。 定义：利益相关方 任何能够影响项目或受项目影响（或自认为会受影响<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>个人、团体或组织。 领导成功的变更<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>大基本要素是：深刻了解项目和组织生态系统之间的关系，并具备在两者 之间的接口处识别关键利益相关方的能力。 这些利益相关方是关键影响者，他们可能是：</p>
+<ul class="content-list">
+  <li>高级<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>、<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>或组织内更广泛的运营社区中执行日常任务和做出决策的人员</li>
+</ul>
+<ul class="content-list">
+  <li>可通过跨接口考虑信息、知识和现金流瓶颈来识别的人员（例如，文件控制者、技术专
+家和商务经理）；以及通过与受项目影响的领域的人员交谈，了解谁拥有其所在领域的
+知识，并充分了解事务的实际运作方式</li>
+</ul>
+<ul class="content-list">
+  <li>能够在项目生态系统中影响大多数人看法的人员</li>
+</ul>
+<ul class="content-list">
+  <li>这些人可以通过自己的网络，对采用项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和实现项目收益产生最大影响</li>
+</ul>
+<ul class="content-list">
+  <li>花<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>了解他们对项目的看法以及他们遇到的任何<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>将有助于改善项目交付</li>
+</ul>
+<ul class="content-list">
+  <li>为了确保项目成功，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队需要与之密切合作的人员
+随着项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>和关系演变，与项目相关的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>可能会随着时间的推移而变更。
+应以支持在各个接口建立关系的方式建立项目。这可以通过定期举行的会议和工作组来实现，
+通过这些会议和工作<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>利益相关方协定的不同观点、项目数据和知识达成共识。</li>
+</ul>
+<p>人员 项目生态系统 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统 <a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a> 业务 用户 关系 人员或团体 生态系统 生态系统的交叉/交互 主要项目<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>团体 图 3.2 三种项目利益 在图 3.2 中，气泡大小可能会有所不同。例如，对于某些项目而言，多<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>户可能就处在组织 生态系统中。对于<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>目，所有供应商可能都属于项目生态系统，因为他们会以独特的方式 参与特定项目，并且与<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>有其他关系。了解业务、供应商和<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>利益在各个生态系统中的 位置，有助于确定如何在项目中代表他们以及他们参与项目的方式。</p></div>
+<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 3.2.3 文化</h3>
+<div class="section-content"><p>项目通常会将来自<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统不同部分的人员聚集在一起，这可能带来不同的工作<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>。 项目团队可能需要<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>一种不同于业务文化的项目文化<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>要与更广泛的组织生态系统保持 一致。 必须与关键影响者就所开展的项目达成共识，并记录在<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>中。综合这种项目共识以 及对外部法律、监管义务和相关<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>承诺（如可持续性目标）的了解，可以为多层次决策提供 指南。 基于与关键影响者达成的共识，可以建立工<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>式，以确保在项目进展过程中，组织生态系统 所有受影响的领域中都能适当参与。项目的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法会体现工作方式。也可通过为人员分配项 目<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>来达成共识（参见第 6 章），这些人员包括<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>中代表业务、用户和供应商 利益<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>策者。 项目管理团队结构以及 PRINCE2 中的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>和<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>实践可确保充分代表用户，或让其参与<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a> 的定义、开发、<a href="../entities/term.html#entity-质量控制" class="entity-link entity-term" title="术语：质量控制">质量控制</a>，并在决策流程中咨询他们的意见。 达<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>识可确保行为保持一致，并营造项目文化。</p>
+<p>人员 定义：<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a> 文化是指一组人的共同态度、价值观、目标和工作方式的特征。 <a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>目开始时，项目文化往往会反映<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的文化。但是，随着项目的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，可能会出现独特的 项目文化。重要的是，正式工作<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>务必要不断发展，以反映新兴的项目文化，并支持与项目 需要<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>交互的更广泛组织生态系统保持<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>。 随着项目进展，项目的关键影响者可能会发生变更，关键关系也可能会发生变更。重要的是要 确保对项目达成的共识仍然有效，并就项目不断发展的文化提供支持。项目团队应在项目的每 个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>结束时以及关键影响者发生变更时，检查共识是否仍然有效。 规定的工作方式应与人们的实际工作方式保持一致。持续不遵守项目<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>通常是一个先行指 标，表明商定的工作方式已与新兴的项目文化不一致。虽然人们很容易认为不合规是由于不良 行为造成的，但可能存在值得探讨的潜在脱节。工作方式应该不断发展，以与所需的项<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>化 以及项目与之交互的更广泛组织生态系统保持一致。 场景：在组织内外嵌入共识的理解/<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a> 对 NowByou 来说，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>这门学科是一种全新的理念。因此，签约编制初始项 目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>并指导未来项目管理团队的专业<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>正在经历一些初步的挑战，包括向 NowByou 介绍新的术语<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>签约项目经理决定通过展示在组<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>部工作人员和 用户（如捐助者和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>）之间达成共识的必要性，来契合 NowByou 的文化。 为此，她建立了一个<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>社区，即“项目俱乐部”，旨在定期召集所有人，并通过使 用当前可用的工件，以<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>可能与行业最佳实践保持一致，来<a href="../entities/term.html#entity-共创" class="entity-link entity-term" title="术语：共创">共创</a>未来的项目工具 包。例如，“宣传活动概述文件”现在称为“<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>”，这是具有与之前相同 的品牌信息和布局<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>板，但进行了更新，现在还涵盖项目管理基础信息，例如项目 <a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>或明确的里<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>具包最终确定后，项目经理<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>进行一系列内部路演，旨在 实际推行和将新概念深入人心。</p>
+<p>人员</p></div>
+<h2 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 3.3 领导成功的团队</h2>
+<div class="section-content"><p>定义 协作：整个项目生态系统的人员共同努力实现项目目标。 <a href="../entities/term.html#entity-共创" class="entity-link entity-term" title="术语：共创">共创</a>：一种特定的协作形式，将让<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和关键影响者参与<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>设计以及协定工作方 式，以确保获得项目和<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统的采用。 领导力：激励人们实现项目目标。在项目中，这最好通过整个项目生态系统的协 <a href="../entities/term.html#entity-作、说服、影响和共同创造来实现，重点" class="entity-link entity-term" title="术语：作、说服、影响和共同创造来实现，重点">作、说服、影响和共同创造来实现，重点</a>是管理关键关系并寻求定期反馈，以确保 小组成员与项目目标保持一致并协定共同的工作方式。 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>：指示人们按照协定的工作方式执行任务。通过与项目小组成员（和利益相关 方）共同创建工作方式，可以显著改善人们按照<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>工作方式接受管理的意愿。 项目由临时团队中的人员<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>，通常需要跨组织边界工作。因此，分配的项目工作人员通常需 要多线<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>。在限定时间内<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>报告线可以是为项目分配人员的组织的一部分。也可以是供应 商的组织，由外部人员提供项目技能和能力。有时，具有特定技能和能力的人员会被分配到多 个项目中，或者以兼职的形式获分配参与某个项目<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>创建了多人的报告线。 要成功领导项目团队，请务必了解以下几点：</p>
+<ul class="content-list">
+  <li>尽管<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>设定的容许偏差范围内拥有正式<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>，但项目中出现的实
+际权力结构不会总是反映正式协定的内容。</li>
+</ul>
+<ul class="content-list">
+  <li>由于项目的临时性特点以及从事项目的人员的多个<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>线，因此除了确立项目的共同目标
+外，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>通常还需要利用自身能力，通过一致的利益和关系技能来影响和激励人员。</li>
+</ul>
+<ul class="content-list">
+  <li>PRINCE2 定义的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>可能与某人的职位不一致。</li>
+</ul>
+<ul class="content-list">
+  <li>小组成员的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>和注意力优先级经常会发生冲突，这有时可能会与项目<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>相不符。</li>
+</ul>
+<ul class="content-list">
+  <li>项目团队成员职级高于<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>的情况并不罕见，这可能会导致层级关系紧张。</li>
+</ul>
+<ul class="content-list">
+  <li>一些激励因素可能超出了<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>的职权范围。例如，项目小组成员的薪酬和职业<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>。
+这些因素意味着，项目团队需要采用与成熟的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>团队不同的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>和领导方式，否则临时领导
+者或经理可能更加难以行使自己的<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>。</li>
+</ul>
+<p>人员</p></div>
+<h3 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 3.3.1 跨组织边界领导</h3>
+<div class="section-content"><p>除了正式分配到项目的人员之外，<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>中还有一些人会受到项目影响，但不在所定义的项目团 队中工作。他们通常可以发挥作用，例如通过定<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>保证和接受在业务中采用<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>等活动直接 为项目做出贡献。他们可以通过在其业务领域内开展活动来间接做出贡献，以适应项目或从中 受益，例如提升工作人员技能、变更<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>方式，或将新产品集成到所属的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>领域。 当这些活动超出定义的项目<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>时，必须确保清楚地了解这些活动的依赖关系、开展活动的负 责人，以及这些活动的资金来源和监视方式。如果不仔细<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>此类工作，项目可能会推迟或无 法实现其<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。 领导超越项目直接<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>（通常会跨越组织边界）需要一<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>度的文化智商。文化智商是 在组织生态系统中跨<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>联系和工作的能力。成功跨文化开展工作需要：</p>
+<ul class="content-list">
+  <li>团队适应并找到成功相互沟通的方法</li>
+</ul>
+<ul class="content-list">
+  <li>设定明确的项目边界，让人们可以在边界内灵活调整</li>
+</ul>
+<ul class="content-list">
+  <li>创造适合人员取得成功的条件</li>
+</ul>
+<ul class="content-list">
+  <li>意识到并有意考虑项目中可能存在的许多不同视角（这种意识通常称为情商）</li>
+</ul>
+<ul class="content-list">
+  <li>意识到人们工作的<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>，包括分散他们<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>和注意力的不同因素</li>
+</ul></div>
+<h3 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 3.3.2 建立有效的团队</h3>
+<div class="section-content"><p>有效的团队需要符合项目要求的多元化能力、胜任能力和视角。 理想情况下，<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>要选择履行每个必要角色所需的人员，但这通常是不可能的。请务必了解招 聘或分配到项目的人员的胜任能力和能力，并识别所有差距并确立相应的缓解措施，例如提升 技能或将某些任务的职责改分给更合适的人员。即使人员在技术层面具有相同的能力和胜任能 力，他们也可能会以不同的方式执行相同的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>。有时，同一个人的表现也可能会有所不同， 具体取决于他们与谁一起<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>。 作为临时组织，项目团队以前可能没有合作过，可能需要快速发掘如何有效地合作。可以通过 使用结构化练习来帮助加快团队建设，这些练习不仅侧重于建立自我意识和自我<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>，还会着 力了解他人的视角。这可以建立信任并找到兼<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>工作方式。 角色和职责应反映承担工作的个人的能力、<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>和可用性，并应从其关键关系的角度加以考 虑。如果<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>关键关系发生任何变化，应审查角色和职责，并相应地做出更新。 建立有效团队必不可少的一个环节是：使小组成员感到获得接纳、尊重，并且能够表达不同的 观点，而不必担心产生负面后果。项目团队的所有成员都有职责通过日常互动和关心彼此的福 祉，来为彼此营造这种心理安全感。小组成员可能<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>要空间来试验、检查、适应、自组织和 调整自己的工作方式。</p>
+<p>人员 PRINCE2 通过以下方式支持建立有效的团队：</p>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>：这解释了团队的目标，以创造明确的目的感，并提供回答<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>问题的
+能力。</li>
+</ul>
+<ul class="content-list">
+  <li>项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构和<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>：这些解释了团队的结构及相关的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、职责和关系，以支
+持建立关键关系并确定所有辅导或培训<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>（例如影响技能和如何处理对变更的抵制）。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>：此方法说明了小组成员将如何积极地互相沟通和提供支持，以及如何在更
+广阔的项目生态系统中发展不同团体之间的关系。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>：说明了协定的工作方式，使团队能够继续专注于交付项目成果。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-基于产品的规划" class="entity-link entity-term" title="术语：基于产品的规划">基于产品的规划</a>：这种方法非常重视就满足<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a><a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的内容达成一致（<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>），同时
+还会明确阐明关键<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>（产品）的依赖关系和顺序。</li>
+</ul></div>
+<h3 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 3.3.3 将团队凝聚在一起</h3>
+<div class="section-content"><p>无论项目以虚拟方式交付、当面交付还是通过混合方法交付，都需要仔细考虑人员彼此合作的 方式，以更好地利用人员的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>并建立社会凝聚力。社会凝聚力通过以下方式建立：</p>
+<ul class="content-list">
+  <li>人员定期以有目的的方式会面，并在<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>或项目孤岛之间建立信任</li>
+</ul>
+<ul class="content-list">
+  <li>考虑如何在项目期间建立和维护关键关系，以在遇到不可避免的障碍时弹性应对</li>
+</ul>
+<ul class="content-list">
+  <li>考虑将以办公室为单位的项目团队放在同一地点的好处，以推动在非结构化活动（例如越
+过办公桌隔断、在公用厨房、会议间隙在走廊的对话、共享午餐和社交活动）期间自然建
+立关系。
+如果团队是彼此相距很远的虚拟团队，或是混合团队，则建立社会凝聚力可能需要额外的活
+动，例如：</li>
+</ul>
+<ul class="content-list">
+  <li>在关键人员和团队之间同步在同一地点汇合的日子，并着重建立关键关系</li>
+</ul>
+<ul class="content-list">
+  <li>留出<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>在线进行结构化程度较低的对话</li>
+</ul>
+<ul class="content-list">
+  <li>为虚拟团队留出“休假日”</li>
+</ul>
+<ul class="content-list">
+  <li>使用虚拟协作工具提高虚拟工作方式的有效性和效率</li>
+</ul>
+<ul class="content-list">
+  <li>为人员提供面对面交流和社交的机会或激励措施</li>
+</ul>
+<p>人员 场景：将团队凝聚在一起/社会凝聚力 参与新<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>开发（FindefTwo 项目群的一部分）的每个人都面临着交付项目第二<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 的压力。这是因为项目群委员会希望在下一次季度领导层委员会会议之前完成高阶 设计。 尽管团队设法按时交付，但还是出现了<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>。人们发现，跨多个时区和以虚拟团队的 形式工作会使个人筋疲力尽，导致团队士气低落。 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>意识到了这一点，在开始细致设计产品 1 之前，决定将团队聚集在一起进行 一天的“暂停和反思”。这是一整天的团队建设活动，提供了一个分享经验教训的机 <a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>为即将到来的阶段重新注入活力，并在团队中建立社会凝聚力。 为了确保团队不会在“暂停和反思”日之后失去凝聚力，已同意进行某些变更。将在 一天中的不同<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>定期举办项目最新动态网络研讨会，以允许不同时区的人员参加。 内部社交网络平台还<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>置“虚拟咖啡时间”，让团队成员有机会以非正式方式相互 交流。</p></div>
+<h2 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 3.4 沟通</h2>
+<div class="section-content"><p>无论是项目主要功能还是副<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，项目都会给<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>带来变更。因此，项目往往受到高度审查， 并且容易对其目的和影响产生误解。如果没有明确的沟通方法，可能会为实施变更带来不必要 的障碍，因为人们致力于维持当前情况或限制项目的已知负面影响。 PRINCE2 会解决在<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>中的沟通问题。</p>
+<p>人员 <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a> 沟通管理方法是项目启动文件的一部分。 目的 定义和描述与整个项目生态系统进行沟通以及从中接收反馈的方式和频率，帮助确保一致性并 影响项目。其通过建立一种受控的双向信息交流方式，促进<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的参与。 概括性内容 <a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>：描述项目将管理<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>利益相关方分析：识别和分析受项目成果或项目交付<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>影响的人员，以及对项目成功或失败 有影响的人员 沟通进度<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>：针对每个利益相关方群体：目的、频率、渠道/形式、消息传达等 职责：沟通活动 资源：沟通活动；例如，公共事务或内部沟通 辅助工具和技术：沟通活动；例如，用于分析或自动化的沟通平台或工具 标准：适用于沟通活动的所有标准；例如，公众参与标准和道德标准 参考资料：任何相关文件<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>管理方法同等对待倾听和传播信息。该方法旨在了解项目生态系统中的看法和<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>，以便 在它们变成更重大的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>之前解决它们。此外，通过此方法，还可以根据项目生态系统和更广 泛的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统中不同群体的关注和利益<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>要传达的消息。 泛泛的消息传达方式很难奏效，因为人们可通过各种渠道获取信息。识别<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>、<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>和业务 利益相关方群体中的关键影响者并与之合作，帮助根据不同的视角做出调整。这可以确保形成 强有力的反馈循环，<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>能力为每个群体剪裁消息传递方式。 考虑到沟通渠道的数量以及数字环境的互联程度，尝试控制项目的消息传递方式可能并非易事。 这可以通过确保关键影响者帮助确定消息传递方式并为沟通提供支持，更轻<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>进行管理。 组织内的大多数沟通都是在正式渠道之外进行的。因此，最好接受这一点，并以人们可以轻松 共享的多种形式提供信息，并为人们提供多种反馈途径。 项目团队的沟通方式还取决于他们是位<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>一地点、远程还是采用混合团队组织方式：</p>
+<ul class="content-list">
+  <li>位于同一地点的团队：信息往往通过正式和非正式网络自然而然地共享。重点是：</li>
+</ul>
+<ul class="content-list">
+  <li>提供多种形式的信息，以便通过这些网络轻松共享</li>
+</ul>
+<ul class="content-list">
+  <li>监视信息是否在整个项目生态系统中自由流动</li>
+</ul>
+<ul class="content-list">
+  <li>识别任何脱节的小组成员或组，并努力重新与他们建立联系</li>
+</ul>
+<ul class="content-list">
+  <li>远程团队：需要一种更加深思熟虑和结构化的方法，以确保信息在项目生态系统中流动。
+重点是：</li>
+</ul>
+<ul class="content-list">
+  <li>及时构建，以允许非结构化倾听和信息共享</li>
+</ul>
+<ul class="content-list">
+  <li>明确信息如何在项目生态系统中流动，并以适当的形式提供信息以推动信息流动</li>
+</ul>
+<ul class="content-list">
+  <li>识别关键关系并协定它们将如何共同确立结构化和非结构化<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a></li>
+</ul>
+<p>人员</p>
+<ul class="content-list">
+  <li>混合团队：混合团队的沟通方式必须确保项目不会形成单独的组，这些组因其所处位置而
+较多或较少参与。
+场景：两个团队领导相约喝咖啡会谈
+Data Knowledge 为了开发新的考勤解决方案而采用的迭代方法允许纳入早期反
+馈。因此，数据科学团队领导者和开发团队领导者意识到他们需要保持一致。他们
+协定每两周见一次面喝杯咖啡，在当地公园里大致聊聊，因为他们通常是通过虚拟
+方式碰面。该公司提供一家中央咖啡馆的咖啡券，鼓励人们在城里时一起约着喝杯
+咖啡。
+有一次，数据科学团队领导者不确定要在解决方案和相关<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>中捕获的信息的详细
+程度。具体来说，他们必须决定记录每个资源在执行每个项目时花费的小时数是否
+足够，或在任务级别提供这些信息是否也很有用。
+一<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>，在任务一级报告将向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提供保证，团队会将时间分配给优先任<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>另
+一方面，在这种较低的级别报告将是一项重大<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>变更，工作人员可能不习惯这种程
+度的审查。
+两位团队领导边喝咖啡边交换了想法，并一致认为在任务级别进行报告太过了。他们
+轻松做出了决定，只在项目一级报告<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>。
+随着项目的发展和变得更加明确，<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>可能会不断发展。对于具有广泛影响的复杂
+项目，在有时被称为“静默<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>”的时期，与较小的一组关键影响者一起开发项目可能会很<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>用。
+“静默阶段”将尽可能减少更大<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>的沟通，直到项目进一步明确，并尽量减少错误信息或谣
+言散播为止（当项目具有政治敏感性并且可能引发公众兴趣时，这一点尤其重要）。
+仅仅依靠定期报告来确定项目的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>情况是不够的。报告可能会受到偏见的影响，因为人们可
+能会下意识地根据被认为是可接受的、预期的或可取的内容来操纵信息。
+开放透明的环境可以降低偏见程度。但是，在项目中拥有其他获得反馈的途径非常重要，例如
+与关键影响者建立牢固的关系以及监视项目生态系统中关键关系的运行状况。
+对项目的零星抵抗是实用指标，说明了沟通应<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>重的方面。在花时间倾听所提出的<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>时，
+可以识别误解，并解决<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>。</li>
+</ul>
+<p>人员 场景：静默<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的概念 很显然，LouisShopping 可能会在建筑施工期间对居民和<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>造成一些干扰。为了尽 量降低分享错误信息和谣言散播的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，项目团队决定在明确项目之前，尽量减少更 大<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>的沟通。然后，BuildyBrick 确立了完整的沟通战略。 为此，项目团队邀请了当地社区的关键影响者参加每月的沟通<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>会议。选出的这些 影响者将共同提出想法建议，并与项目团队密切合作，确定沟通信息内容、形式和途 径，向当地社区传达明确的信息。</p></div>
+<h2 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 3.5 人是方法的核心</h2>
+<div class="section-content"><p>本章介绍了三个以人为本的活动：领导成功的变更、领导成功的团队和沟通。 这些不是独立的活动，因为它们会影响项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的各个方面。如图 3.3 所示，领导成功的变 更、领导成功的团队和沟通是 PRINCE2 方法的核心。 PRINC<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 是一种项目管理方法，由五个集成元素组成：原则、人员、<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>、<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>和项目情境。 以下各节解<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>原则、实践和流程将如何解决本章介绍的人员因素。 领导成功的变更 领导成功的团队 沟通 人是 方法的核心 图 3.3 人是方法的核心</p>
+<p>人员</p></div>
+<h3 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 3.5.1 人员和 PRINCE2 原则</h3>
+<div class="section-content"><p>PRINCE2 基于七项原则，其中之一是所有 PRINCE2 项目都必须<a href="../entities/principle.html#entity-定义角色、职责和关系" class="entity-link entity-principle" title="原则：定义角色、职责和关系">定义角色、职责和关系</a>。这可 确保在整个项目生命周期中不断解决人员因素。 人员因素会渗透到其他原则中，如下所示。 <a href="../entities/principle.html#entity-确保持续业务理由" class="entity-link entity-principle" title="原则：确保持续业务理由">确保持续业务理由</a></p>
+<ul class="content-list">
+  <li>从根本上来讲，<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>是围绕其核心目标相互交互的人员的集合。项目的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由需要满足
+所有三种<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>利益：用户、业务和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>。定义符合所有这些利益的项目可能需要<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>和
+精力。因此，务必要考虑与这些利益相关的关键关系的动态变化，因为它们会影响如何达
+成协议并确定项目是否继续有效。此外，还务必认识到，当<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>变更时，正当的理由可能
+会发生变更。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由可能会基于感知，因此<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>是通过管理关键关系和展示<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>以证明价
+值，来确保持续感知业务理由的关键促成因素。
+<a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a></li>
+</ul>
+<ul class="content-list">
+  <li>从可见的知识（例如<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>书籍和获得经验教训）中学习非常重要，但项目生态系统中也隐
+藏着有价值的知识。这需要一个协作环境，鼓励在项目的整个寿命内共享知识。知识共享
+使人们能够从彼此的经验中受益。</li>
+</ul>
+<ul class="content-list">
+  <li>特别是，行为、<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>和关系等人员因素很难记录，最好通过社会学习来获得。例如，
+小组成员相互联系，并向在早期<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>参与项目或参与过具有类似特征的其他项目的人员
+学习。
+<a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a></li>
+</ul>
+<ul class="content-list">
+  <li>项目的<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>通常标志着影响者和关键关系的变更。阶段是审查项目按<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>交付情况的有效
+时间点，可确保与人员之间的互动方式以及更广泛的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统持续保持一致。阶段<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>界通常标志着组织设计的转换（见第 6 章）。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>边界提供了一种更可控的方式<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>审查下一交付阶段所需的技能并做出变更，甚至对
+<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>做出变更。最好让合适的人员来<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目，而不是让那些无法有<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>献的
+人员来管理。
+<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a></li>
+</ul>
+<ul class="content-list">
+  <li>决策应该在最基层做出，这些层级拥有做出和负责这些决策所需的知识。当决策有可能影
+响项目的其他领域时，决策应通过各个级别推进。因此，需要考虑不同的视角，否则它将
+在项目边界之外产生更广泛的影响。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>的程度通常取决于关键关系中的信心和信任度水平，并将在项目的整个生命周期中根
+据个人的技能和能力进行调整。提高信心和信任度可以提高<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>的能力。</li>
+</ul>
+<p>人员 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a></p>
+<ul class="content-list">
+  <li>与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>、用户和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>小组共创符合协定<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>的产品，将他们的不同视角统一<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>。
+这改进了业务对<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的开发和采用情况，降低了移交<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，并确保充分考虑了运营和维护
+<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>。
+根据项目情境剪裁</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>能力方面的支持，使 PRINCE2 方法适应所涉及的人员和<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>，而不是试图使他们适
+应方法。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>基于能力水平或项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>成熟度，随着人们对 PRINCE2 原则、<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>和<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>的深入了
+解，将随着<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>的推移而发展。
+场景：<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>原则
+NowByou 项目团队由具有不同背景和经验水平的人员组成。总体而言，他们都具备
+同一种动力，即利用自己的胜任能力打造更加公平的世界。作为新加入 NowByou 的
+人员，指导项目团队的签约<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>要求小组成员完成胜任能<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>估。项目经理
+还发起了一系列个人对话，以熟悉团队的胜任能力和经验水平<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>及他们的项目管理
+和宣传活动管理知识水<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>显然，即将任命的项目经理（目前是捐赠团队的一员）是一个技能娴熟的人，知
+道团队的优势和劣<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>他们学习速度快，已展现出项目管理意识。因此，签约项目<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>按例外管理方式，要求团队在没有太多监督的情况下做出决定，并告知自
+己偏差与<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>的对比情况。
+相比之下，宣传活动<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>是活动专家，但缺乏计划和协调技能。签约项目经理已
+经决定需要更紧密的管理方式，<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>级别将基于直接指示、辅导，以及在完成项目任
+务的过程中缓慢授予更多自主权。</li>
+</ul></div>
+<h3 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 3.5.2 人员和 PRINCE2 实践</h3>
+<div class="section-content"><p>PRINCE2 定义了七种<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>（见第 4 章），这些实践是项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的基本方面，必须在项目的整 个生命周期中持续并行应用。“<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>”实践解释了人们在临时<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>管理团队中的组织方式。 通过这种方式确保<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>、<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>和业务的利益在项目中得到体现，并确立项目组织的设计和 开发。<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>员因素在所有实践中都得以体现。例如，<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的开发需要考虑整个组织生态系统（<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>、用户和供应商小组）的多层次视角。这是为了明确项目的目的，并使整个项目团队达成 共识。</p>
+<p>人员</p></div>
+<h3 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 3.5.3 人员和 PRINCE2 流程</h3>
+<div class="section-content"><p>PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>分为四个层级：业务、指导、<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>和交付。诸如行为、文化和关系等人<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>素都 包含在流程中，解释各个层级之间的人员如何交互（见第 12 章）。</p>
+<p>PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>简介</p></div>
+    </div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch02.html" class="nav-link">◁ 第2章 原则</a> | <a href="ch04.html" class="nav-link">第4章 PRINCE2实践简介 ▷</a>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+    </div>
+
+    <script>
+        function toggleToc() {
+            var list = document.getElementById('tocList');
+            var icon = document.querySelector('.toc-icon');
+            list.classList.toggle('collapsed');
+            icon.style.transform = list.classList.contains('collapsed')
+                ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+
+        // Purple Numbers: 点击复制链接
+        document.querySelectorAll('.pn-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href.split('#')[0] + link.getAttribute('href');
+                navigator.clipboard.writeText(url).then(function() {
+                    link.style.color = '#2E8B57';
+                    setTimeout(function() { link.style.color = ''; }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

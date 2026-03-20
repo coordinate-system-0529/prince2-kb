@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第2章 原则 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            background: #8B4513;
+            color: #faf6f0;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.8em;
+            color: #5c3d1a;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* 章节目录 */
+        .chapter-toc {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .toc-title {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-size: 1em;
+            user-select: none;
+        }
+        .toc-title:hover { color: #d4af37; }
+        .toc-icon { transition: transform 0.3s; display: inline-block; }
+        .toc-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .toc-list.collapsed { max-height: 0; margin-top: 0; }
+        .toc-list li {
+            padding: 3px 0;
+            border-bottom: 1px dotted #d4c8a8;
+        }
+        .toc-list a {
+            color: #8B4513;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .toc-list a:hover { color: #d4af37; }
+
+        /* 内容区 */
+        .section-heading {
+            color: #5c3d1a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d5c0;
+        }
+        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+        h3.section-heading { font-size: 1.2em; }
+        h4.section-heading { font-size: 1.05em; }
+
+        .pn-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.75em;
+            vertical-align: super;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .pn-link:hover { color: #8B4513; }
+
+        .section-content {
+            margin-bottom: 20px;
+        }
+        .section-content p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        /* 列表 */
+        .content-list {
+            list-style: none;
+            padding-left: 2em;
+            margin: 12px 0;
+        }
+        .content-list li {
+            position: relative;
+            padding-left: 1.2em;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .content-list li::before {
+            content: "●";
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 实体链接 */
+        .entity-link {
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            padding: 0 1px;
+            transition: all 0.2s;
+        }
+        .entity-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .entity-principle { color: #b8860b; border-color: #b8860b; }
+        .entity-practice { color: #8B4513; border-color: #8B4513; }
+        .entity-process { color: #2E8B57; border-color: #2E8B57; }
+        .entity-role { color: #4169E1; border-color: #4169E1; }
+        .entity-product { color: #8B008B; border-color: #8B008B; }
+        .entity-term { color: #A0522D; border-color: #A0522D; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #d4af37;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .chapter-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch01.html" class="nav-link">◁ 第1章 简介</a> | <a href="ch03.html" class="nav-link">第3章 人员 ▷</a></div>
+
+    <span class="category-tag">原则</span>
+    <h1 class="chapter-title">第2章 原则</h1>
+
+    
+        <nav class="chapter-toc">
+            <h3 class="toc-title" onclick="toggleToc()">
+                <span class="toc-icon">▸</span> 本章目录（7 节）
+            </h3>
+            <ul class="toc-list" id="tocList">
+                <li><a href="#pn-2">2.1 确保持续业务理由</a></li><li><a href="#pn-3">2.2 吸取经验教训</a></li><li><a href="#pn-4">2.3 定义角色、职责和关系</a></li><li><a href="#pn-5">2.4 按阶段管理</a></li><li><a href="#pn-6">2.5 按例外管理</a></li><li><a href="#pn-7">2.6 关注产品</a></li><li><a href="#pn-8">2.7 根据项目剪裁</a></li>
+            </ul>
+        </nav>
+
+    <div class="chapter-content">
+        <div class="section-content"><p>原则 定义：PRINCE2 原则 PRINCE2 原则是确定项目是否真正使用 PRINCE2 进行<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的指导义务，并确保 PRINCE2 在任何项目中的有效应用和<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>。 PRINCE2 适用于所有项目，无论项目类型、规模、复杂性、重要性、<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>级别或交付方法（线 性-顺序、迭代-增量或混合）如何。此外，它还可用于各种类型的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>，包括商务、政府和非 营利组织。它还适用于全世界任意地方的项目，能够融合特定国家/地区的法规、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>模式和 <a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>。 为使 PRINCE2 方法能够用于如此广泛的项目，该方法在用于任何给定项目的方式方面具有灵 活性。PRINCE2 没有规定如何使方法与特定项目保持一致，而是通过若干原则提供指导。<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 原则使项目管理团队就如何在项目中使用 PRINCE2 做出决定。 PRINCE2 的 7 个原则是：</p>
+<ul class="content-list">
+  <li><a href="../entities/principle.html#entity-确保持续业务理由" class="entity-link entity-principle" title="原则：确保持续业务理由">确保持续业务理由</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/principle.html#entity-定义角色、职责和关系" class="entity-link entity-principle" title="原则：定义角色、职责和关系">定义角色、职责和关系</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/principle.html#entity-根据项目剪裁" class="entity-link entity-principle" title="原则：根据项目剪裁">根据项目剪裁</a>
+如何应用和剪裁该方法取决于项目的性质以及<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>内部和外部的因素，如图 2.1 所示。
+<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>情境
+（例如，行业、能力、<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>、
+政策）
+可持续性情境
+（例如，业务驱动因素和
+优先事项）
+商务情境
+（例如，合同、关系）
+交付方法
+（例如，生命周期模型、
+开发技术、术语）
+项目规模
+（例如，复杂性、持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>）
+外部（对项目而言）
+内部（对项目而言）
+典型情境
+<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>
+变更该方法。
+例如，使用替代
+术语或替换
+PRINCE2 技术
+应用
+使用该方法。
+例如，分配<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、
+阶段数、
+团队/<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>数、
+设置<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>或
+选择支持技术
+项目具体安排记录在…
+<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>
+（例如，管理方法）
+<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>
+阶段计划
+小组计划
+图 2.1 <a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>为项目应用和剪裁 PRINCE2</li>
+</ul>
+<p>原则 这七项原则提供了灵活性，它们为如何应用和<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>方法的集成元素，以找到最适合项目及其情 境的方法提供了指导，同时保持了方法的完整性。只要遵循这些原则，PRINCE2 就会得到有效 利用。</p></div>
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 2.1 确保持续业务理由</h2>
+<div class="section-content"><p>关键信息 PRINCE2 项目应具有充足的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由，以使从<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>、持续开展直至成功完成这 一过程中的投资具有合理性。如果不符合此要求，则应予以停止。 启动项目必须有合理的理由，并且该理由必须在项目的整个生命周期中保持有效并不<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>行重 新验证。业务理由驱动决策，确保项目始终与有助实现<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>的期望收益保持一致。 在业务理由方面缺乏严密性的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>可能会发现，有些项目在几<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>有真正<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>或与业务战略不 太相关的情况下，仍在继续进行。项目与业务战略缺乏一致<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>也有可能导致组织的项目组合 中出现项目目标不一致或重复的情况。 强制性项目（例如由立法或法规驱动的项目）也需要为所选择的方法提供理由，以确保其物有 所值。参与项目的所<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>方将需要在预期收益、成本和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>之间取得平衡，以便他们有参与项 目的业务理由。 项目的业务理由可能会发生变更，因此，需要保证项目交付的内容始终与不断变化的理由保持 一致。如果继续开展项目不再具有合理性，则应以受控方式停止并终止项目。在这种情况下， 取消项目对业务有益，因为项目的资金和资源可以重新投入其他更有价值的项目。 项目完成后，应对项目进行审查，以评价相关效益是否已充分实现，足以说明最终投资合理得 当，以及可以从项目中吸取哪些经验教训。 以下是应用“确保业务理由”原则的一些示例。 对于具有一个或多个<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的商务项目，每一方都需具备明确的业务理由才能承接项目 <a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>续开展项目。客户可能希望通过推出新<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>来<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>场份额。供应商的业务理由可能包括 非经济<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>，例如出于促销目的获得可观的客户参考或在应用新技术方面积累经验。 对于共同拥有的项目（例如跨多个机构联合开发新 IT 系统的政府项目），如果一方或多方失去 业务理由，这些方应考虑终止参与该项目。在这种情况下，终止或退出参与项目的后果（例如 履行合同义务），将告知该决定和任何提早关闭项目的方法。在整个项目中，每个投资方都需 要不断监视自己的业务理由，以确保项目对他们来说仍然值得。</p>
+<p>原则</p></div>
+<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 2.2 吸取经验教训</h2>
+<div class="section-content"><p>关键信息 PRINCE2 项目团队根据从先前项目和整个项目生命周期中吸取的相关经验教训，积 极寻求、记录和实施改进。该团队将这些改进应用于未来的项目中，并共享它们供 其他人运用。 项目的一个普遍特征是它们包含独特性要素。由于临时团队可能没有从事类似项目的经验， 因此这种独特性会使项目充满挑战性。 为了克服这些挑战，项目团队需要设法学习他人的经验以及从项目发展中获得的经验。 在项目的整个生命周期中，都可以<a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a>：</p>
+<ul class="content-list">
+  <li>在准备项目时：应该回顾以前的或者类似的项目，看看是否可以应用相关经验教训。 如
+果项目对于<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>内部人员来说是“第一个”，或者有任何新出现或新奇的内容，那么向
+他人学习会更加重要<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>可能包括参考业务外部人员或<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>交付的项目，识别相关经验
+教训。</li>
+</ul>
+<ul class="content-list">
+  <li>在项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>过程中：项目团队应该继续学习。经验教训应包含在相关的<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>和审查中，以
+及每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的末尾。其目标是在项目的生命周期内寻找实施改进的机会。回顾技术是在敏
+捷方法中汲取经验教训的一个示例。</li>
+</ul>
+<ul class="content-list">
+  <li>在<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>时：项目团队应共享在项目期间获得的见解。
+学习的基础是数据及从中获得见解的能力。项目应明确说明需要哪些数据、如何分析这些数据
+以便获得和应用见解，以及<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>间和项目收尾时如何处理这些数据。
+项目团队需要考虑如何有效地与参与项目的所有人共享经验教训，因为不同的人可能有不同的
+学习<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>和偏好。有些人可能通过观察来学习时效果最好，而另一些人通过实验来学习时效果
+最好。
+从错误和成功中吸取教训，不断改进和创新非常重要。主动识别经验教训，而不是等待其他人
+来识别这些经验教训，是参与项目的每一个人的职责。没有用于改进当前项目或未来项目的经
+验教训只是“识别的经验教训”，而不是实际“吸取的经验教训”。
+以下是应用“<a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a>”原则的一些示例。
+在一个同地办公团队的小型项目中，可以定期在团队会议上讨论“吸取的经验教训”。在本例
+中，团队成员会在工作中学习，并且可能每天都会学习。
+在大型复杂项目中，学习<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>将涉及许多项目小组成员，他们可能分布在多个团队和地点。这
+种大规模的方法会使确保每个人都能获得相同的学习体验变得更加困难。
+在大型项目中学习可能需要更高级的沟通工具，例如解说视频、项目团队经理的演示工具包或
+子组中的<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>研讨会。此类项目也可以将实地考察、试点、模拟或现场排练作为学习的来源，
+并从中受益。</li>
+</ul>
+<p>原则</p></div>
+<h2 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 2.3 定义角色、职责和关系</h2>
+<div class="section-content"><p>关键信息 PRINCE2 项目已定义并协定<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>结构中的角色和职责，组织结构涉及<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>、用户和 <a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a><a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的利益。此外，PRINCE2 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队负责发起和建立<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>利益相关方的关系，以及内部和外部利益相关方彼此之间的关系。 项目的开展离不开人员。重要的是，要让合适的人员参与其中，让他们了解自己应该做些什么， 以及可以对项目的其他参与人员抱有何种期望。成功的项目需要了解与利益相关者之间的关系， 以及持续开展的活动以加强这些关系。因此，“人员”是 PRINCE2 的 5<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>素之一。 利益相关方可以是业务内部或<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的个人或团体。业务内部的利益相关方可以是工作委员会、 可持续性委员会、多样性委员会<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>责人、部门领导者或其他项目团队；业务外部的利益相关 方可<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>会、客户、供应商、社区、利益团体、银行或媒体。 所有项目都有<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>要利益相关方：业务、<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和供应商（见第 1.5.1 节）。这三个利益相关 方<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>益都需要在项目管理团队中得到有效体现；这反映在 PRINCE2 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>的设计中 （见第 6.2.1 节）。 定义<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>和职责尤其具有挑战性，因为项目是跨职能<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>可能会涉及多个组织，通常混合使用 全职和兼职资源，并且可<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>分布在多个地点。参与项目的各方的管理结构可能各不相同，具 有不同的优先排序、目标和需要保护的利益。业务日常的管理结构不是为了项目而设计的，或 者不适合项目工作。 在整个项目生命周<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>，为个人分配的角色以及个人承担的职责必须清晰、明确且可接受。为 取得成功，项目必须具有明确的项目管理团队结构，其中包<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>确定义且达成共识的项目参与 人员角色和职责。此外，项目还必须了解这些构成要素之间的关系以及有效沟通的方法。 目标是清晰阐明角色和职责，以提供一个清晰、有条理的结构，让所有利益相关方都能理解， 并适合于根据项目<a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>实现有效的项目交付绩效。 以下是应用“<a href="../entities/principle.html#entity-定义角色、职责和关系" class="entity-link entity-principle" title="原则：定义角色、职责和关系">定义角色、职责和关系</a>”原则的一些示例。 如果某个项目是项目群的一部分，那么该项目的某些职责可能由项目群管理团队中的人员承担。 在这种情况下，项目群的业务变更经理 (BCM) <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会中承担项目总监或<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a> 角色，以帮助将项目与项目群保持一致。项目群管理办公室 (PMO) 可以提供<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>，或者项目 群的设计机构可以承担决策职责，负责<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>项目层面变更的职权。需要就谁接受哪个项目角色以 及他们各自拥有的<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>和职责达成协议。目标是增强项目与项目群之间的一致性和连贯性。 项目的性质将决定利益相关方的数量，以及它为每个利益相关方带来的变更量。如果某个项目利 益相关方数量较少且影响较大，则在与利益相关方互动方面，将采用高度集中的方法，例如在单 独和个人基础上进行互动。如果某个项目利益相关方数量众多且影响广泛，则可能必须混合使用 多种方法，包括个性化参与以及通过调查和广播渠道（例如电子邮件）进行更常规的参与。 对于开发团队使用敏捷开发方法的项目，PRINCE2 <a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>角色可以由开发团队共同担任。</p>
+<p>原则</p></div>
+<h2 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 2.4 按阶段管理</h2>
+<div class="section-content"><p>关键信息 PRINCE2 项目按照<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>进行<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>、监视和控制。 定义：阶段 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可以全时代表<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>管理的项目部分。 关注<a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a>可确保在项目产出交付工作开始前正确启动项目。每个 PRINCE2 项<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>少应 有两个阶段：启动阶段和后续阶<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>许多项目都可从拥有两个以上的阶段<a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a>按阶段管理的优势是：</p>
+<ul class="content-list">
+  <li>有助于适应项目或<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>情境中的变更。</li>
+</ul>
+<ul class="content-list">
+  <li>提供审查和决策点，以便<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>有机会定期评估项目可行性，而非放任项目继续
+以不受控制的方式进行。</li>
+</ul>
+<ul class="content-list">
+  <li>可以确保先制定关键决策，再开展实施决策所需的具体工作。</li>
+</ul>
+<ul class="content-list">
+  <li>允许澄清已识别外部因素会造成的影响，如<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>预算编制流程或立法定稿。</li>
+</ul>
+<ul class="content-list">
+  <li>在每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>授权职权，进而贯彻<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>原则。
+对适当项目阶段的选择将取决于一系列因素（见 7.2.3），包括：</li>
+</ul>
+<ul class="content-list">
+  <li>在整个项目生命周期中最大限度地减少<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>暴露</li>
+</ul>
+<ul class="content-list">
+  <li>项目的规模和复杂性（较短的<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>会提供更多控制，而较长的阶段会减少高级<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层的工
+作量）</li>
+</ul>
+<ul class="content-list">
+  <li>项目生命周期所需的所有重大决策和控制点；这些往往与关键投资、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>或技术决策有关</li>
+</ul>
+<ul class="content-list">
+  <li>部门或<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>政策和标准
+<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>一次授权项目的一个阶段，并<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在协定的容许偏差范围内对<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>
+实施日常控制的职权。只要阶段<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>会保持在容许<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>内，项目经理就有权按需调整<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>只有在有充分的业务理由和资金支持项目继续的情<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会才会授权下一个阶
+段。如果项目不再有有效<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会将决定是否以及如何恢复项目或提前
+结束项目。
+“<a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a>”原则的一个应用示例是，团队在“<a href="../entities/term.html#entity-冲刺" class="entity-link entity-term" title="术语：冲刺">冲刺</a>”或“<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>”中工作，同时以增量和
+迭代方式运营以实现协定的特征和<a href="../entities/term.html#entity-用户故事" class="entity-link entity-term" title="术语：用户故事">用户故事</a>。可以将 PRINCE2 <a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a><a href="../entities/term.html#entity-用户故事" class="entity-link entity-term" title="术语：用户故事">用户故事</a>刺和用户故事，
+<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>作包和产品描述。项目经理将<a href="../entities/term.html#entity-冲刺" class="entity-link entity-term" title="术语：冲刺">冲刺</a>每个阶段需要的冲刺数量。这样一来，项<a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a>按阶段管理的原则。</li>
+</ul>
+<p>原则</p></div>
+<h2 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 2.5 按例外管理</h2>
+<div class="section-content"><p>关键信息 PRINCE2 项目根据其<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>定义绩效<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，以此确定被授权的职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的限<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>义：容许偏差 超出或低于计划的<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>目标、成本目标、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>目标、<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>目标、范围目标、可持续 性目标和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>目标且不<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>一级管理层报告的容许偏差。容许偏差适用于项 目、<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>以及小组层面。 PRINCE2 通过定义指导、<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>和交付项目的不同职责，以及明确定义每一层面的问责制，确保 适当<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>。 通过以下方式建立问责制：</p>
+<ul class="content-list">
+  <li>通过对相应级别（项目、<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>、团队）的七个绩效方面（<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>、成本、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>、范
+围、可持续性和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>）设置<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，将职权从一级管理层委派到下一级<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层</li>
+</ul>
+<ul class="content-list">
+  <li>建立控制，如果<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>将超出<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，就应标记为例外情况，并立即向更高一级<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层上
+报，决定项目如何继续</li>
+</ul>
+<ul class="content-list">
+  <li>建立保证机制，以便各级<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层能对有效进行例外控制抱有信心
+需要定义<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>的计划绩效的七个方面是：</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>：未足额交付收益或超额交付收益的容许程度；例如，以增加收入的正负 2% <a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>建
+模的销售改进项目的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>成本：成本高于或低于协定预算（人员工时和财务）的容许程度。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>：与<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>、阶段计划或<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>相比，对时间早于或迟于协定目标完成日期交
+付项目的容许程度。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>：相比协定<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>的容许差异程度；例如，某个生产新型运动手表的项目可能会设
+定一个目标，要求手表可在深度 50 米（<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>为 ±5 米）的水下正常工作。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>：<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>中产品的容许变化；例如，某个项目要求交付所有必须满足的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，但允许仅
+交付其应该和可以交付的要求的 60% 或以上。</li>
+</ul>
+<ul class="content-list">
+  <li>可持续性：交付项目所需的项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或项目活动可与可持续性目标不同的程度；例如，一
+条新生产线在排放目标的 5% 以内运行，并且使用来自当地社区的约 70% 的劳动力交付。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>：对<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>总体风险的限制；例如，一项要求如下的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>：总体威胁成本必须始终
+低于协定预算的 10%，单个<a href="../entities/term.html#entity-威胁" class="entity-link entity-term" title="术语：威胁">威胁</a>成本不得超过协定预算的 5%。</li>
+</ul>
+<p>原则 “<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>”的实施，可以高效利用高级<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层的时间，这是因为这既可降低高级经理的时 间负担，又不会取消他们的控制。这可确保决策是在<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的正确级别做出。目标是尽早提<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 目中的下一级管理层，相关工作将超出协定的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，并且需要决定是否以及如何继续进 行。决策者可以决定接受偏差及其后果，也可以采取行动来消除或减少偏差。 使用具有定义<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>的迭代-增量交付方法的项目通常会固定<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>和成本，并在<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内有所变 化。在这种情况下，<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>本的容许偏差将比范围严格<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>按例外管理”原则的一个应用示例<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>不同的项目情境，容许偏差的使用将有所不同， 例如<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>之间有商务安排的项目，在此类项目中，容许偏差将反映在合同中。在此示 例中，如果<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>了解到采购的材料将延迟交付，并且该<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>无法在容许偏差范围内予以<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>那么项目经理将需要尽快提醒<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>。合同可以定义客户和供应商之间可用的任 何成本补救措施，但推迟可能会对项目的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>带来多种后果。在这种情况下，项目管理 委员会需<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>取何种行动，并向项目经理提供指导。通过在每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>结束时审查容许偏 差，项目<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>适应和修改下一阶段的活动，以反映不断变化的<a href="../entities/term.html#entity-运营环境。" class="entity-link entity-term" title="术语：运营环境。">运营环境。</a></p></div>
+<h2 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 2.6 关注产品</h2>
+<div class="section-content"><p>关键信息 PRINCE2 项目<a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>的定义与交付，特别是<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>期望和要求。 定义：<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a> 可以预先描述、创造和测试的有形或无形的输入或<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>。PRINCE2 包括四种产品： • <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：通常是支持项目管理所需的文件或信息，例如<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>或计划。 • 专业产品：用户为实现项目所<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的效益而需要的产品。 • 项目产品：<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>描述项目的总产出，定义见<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>（见第 7.3.2.1 节）。 • <a href="../entities/term.html#entity-外部产品" class="entity-link entity-term" title="术语：外部产品">外部产品</a>：在项目控制之外开发或提供的产品，但项目依赖于这些产品，例如， 新标准的发布。 在本<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>中，<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>区分管理产品和专业产品，否则<a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>将简称为“产品”。 术语“项目产品”指的是<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>创建的专业产品和管理产品。</p>
+<p>原则 与重点<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>工作活动的项目相比，重点关注其需要生产的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的项目更有可能更高效，避免浪 费。这是因为项目的目的是根据<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由满足<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的期望。因此，必须对所要求的产<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和用户对这些产品的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>期望达成共识。 除非对待生产产品及其逐件<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>标准有明确的了解，否则项目的目的可以用许多不同的方式 来解读。PRINCE2 要求项目以<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>为导向，而不是以工作为导向。PRI<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>E2 把这些产出称为 “产品 ”。 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>可以：</p>
+<ul class="content-list">
+  <li>确保项目仅执行直接促成<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>交付的工作（也就是说，除了交付协定产品所需工作，项目
+不会开展其他工作）</li>
+</ul>
+<ul class="content-list">
+  <li>确保所有变更对项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的影响达成一致，对管理不受控变更（“<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>蔓
+延”）会有所帮助</li>
+</ul>
+<ul class="content-list">
+  <li>通过（在项目一开始）对项目的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>达成共识，降低出现用户不满和<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>争议的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>协助暂停或结束项目。在某些<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>完成后，可以更轻松地达成暂停或关闭项目的协议。这
+样还可以更轻松、可控地恢复项目。
+以<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>为导向的项目是指在必要生产活动<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>前，先要对项目产品达<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>识，并加以定义。达
+成共识的一套产品定义了项目的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>，并提供了<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和控制的基础。
+PRINCE2 项目使用的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>提供了确定工作量估值、资源<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>、依赖关系以及活动进度表
+的方法。<a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>几乎支持 PRINCE2<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>每一方面，包括计划、职责、<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>报告、<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>、变更
+控制、验收和<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a><a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>是“关注产品”原则的应用示例。
+在简单的小型项目中，例如出版一本新的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>书籍，单个<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>可能就足够了。除其他
+特征外，此描述将确定需要多少章节、所需的总页数、语言以及彩色图形和黑白图形的数量。
+对于使用迭代-增量交付方法（例如敏捷方<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>目，产品描述可以采用需求、特征、史诗
+和<a href="../entities/term.html#entity-用户故事" class="entity-link entity-term" title="术语：用户故事">用户故事</a>的形式。
+对于更大、更<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>NTITY_2⟧产品描述将分为子产品，然后进一步细分到细节级别，以了解
+每个产品的采购、开发和<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>方式。产品细分得越精细，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>就越难确定产品描述
+是否正确。原因在于，内容逐渐变得更具技术性，需要专业知识才能理解。在这种情况下，重
+要的是<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>具有在每个级别定义正确产品的专业知识，而<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>则利用必要的知识建立项目保
+证，以确保产品符合规格。</li>
+</ul>
+<p>原则</p></div>
+<h2 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 2.7 根据项目剪裁</h2>
+<div class="section-content"><p>关键信息 PRINCE2 根据项目环境、规模、复杂性、重要性、交付方法、团队能力和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>级别 进行应用和剪裁。 PRINCE2 的价值在于它是一种通用的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法，可用于考虑项目的情境、规模或大小、交 付方法、<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>环境、复杂性、重要性、团队能力和风险级别。此外，它还可用于任何项 目类型、地理位置或<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>。基于设计理念，此方法可根据每一项目的特定<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>及情境进行应用 和<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>，因此，能够应用于任何项目。 剪裁的目的是确保：</p>
+<ul class="content-list">
+  <li>所用项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法适合项目（例如，将此方法与人力资源、财务和采购等<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>和支持项目
+的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>保持一致）</li>
+</ul>
+<ul class="content-list">
+  <li>项目控制适应项目的规模、复杂性、重要性、交付方法、团队能力和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>（例如，报告与
+审查的频度与正式程度）
+<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>需要<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目经理积极选择并决定如何应用 PRINCE2。它还可能需要调整术
+语以匹配有关<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>使用的术语，或用替代程序（例如<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>已经使用的程序）取代某些
+PRINCE2 技术（例如<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>技术）。
+剪裁 PRINCE2 时要谨记，施行有效的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>需要信息（但未必需要文件）和决策（但未必需要
+<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>）。
+如果没有剪裁 PR<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>CE2，项目管理工作及管理方法不太可能匹配项目<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。这就可能造<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>种
+极端 ，一种是粗疏的项目管理（不假思索地遵循 PRINCE2），另一种是“英雄式”项目管理
+（完全不遵循 PRIN<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>2）。
+<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>负责剪裁，并在参考相关经验教训和标准后提出<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会问责并需要在
+启动<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>结束时以及每次有针对管理方法的提议变更时<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>建议。
+<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中记录了将如何为特定项目应用和剪裁 PRINCE2。这可确保参与项目的所有相关
+人员都了解如何使用 PRINCE2 以及如何履行自身的职责。应注意，提议的剪裁应符合 PRINCE2
+的七项原则，并且最终确定的方法应保持其完整性。</li>
+</ul>
+<p>原则 “<a href="../entities/principle.html#entity-根据项目剪裁" class="entity-link entity-principle" title="原则：根据项目剪裁">根据项目剪裁</a>”原则的一个应用示例是具有商务<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>-<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>关系的项目。该项目可能需要 使项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>流程、实践和文件与两个或多个<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>体系（一个来自<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>一个来自供应商）保持 一致。例如，供应商可能希望使用基于迭代-增量交<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>法（使用敏捷管理方法）的内部<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a> 开发框架。为避免可能会出现的混淆，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可能会建议：</p>
+<ul class="content-list">
+  <li>映射和定义 PRINCE2 与<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的敏捷管理方法之间的术语</li>
+</ul>
+<ul class="content-list">
+  <li>将“<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>主题专家 (SME)”和“<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>主题专家 (SME)”项目团队<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>添加到敏捷团队
+中，<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>表客户和供应商</li>
+</ul>
+<ul class="content-list">
+  <li>添加教练以指导团队结合使用 PRINCE2 和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的内部敏捷方法有效工作</li>
+</ul>
+<ul class="content-list">
+  <li>根据敏捷工作方式进行协作和沟通，例如每日站会和支持敏捷<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>工具（例如信息
+发射源）</li>
+</ul>
+<ul class="content-list">
+  <li>定义项目程序（例如使用<a href="../entities/term.html#entity-冲刺" class="entity-link entity-term" title="术语：冲刺">冲刺</a>或<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>、<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>或用户故事），以及如何在项目中
+使用这些程序</li>
+</ul>
+<p>人员</p></div>
+    </div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch01.html" class="nav-link">◁ 第1章 简介</a> | <a href="ch03.html" class="nav-link">第3章 人员 ▷</a>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+    </div>
+
+    <script>
+        function toggleToc() {
+            var list = document.getElementById('tocList');
+            var icon = document.querySelector('.toc-icon');
+            list.classList.toggle('collapsed');
+            icon.style.transform = list.classList.contains('collapsed')
+                ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+
+        // Purple Numbers: 点击复制链接
+        document.querySelectorAll('.pn-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href.split('#')[0] + link.getAttribute('href');
+                navigator.clipboard.writeText(url).then(function() {
+                    link.style.color = '#2E8B57';
+                    setTimeout(function() { link.style.color = ''; }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第10章 问题 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            background: #8B4513;
+            color: #faf6f0;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.8em;
+            color: #5c3d1a;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* 章节目录 */
+        .chapter-toc {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .toc-title {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-size: 1em;
+            user-select: none;
+        }
+        .toc-title:hover { color: #d4af37; }
+        .toc-icon { transition: transform 0.3s; display: inline-block; }
+        .toc-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .toc-list.collapsed { max-height: 0; margin-top: 0; }
+        .toc-list li {
+            padding: 3px 0;
+            border-bottom: 1px dotted #d4c8a8;
+        }
+        .toc-list a {
+            color: #8B4513;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .toc-list a:hover { color: #d4af37; }
+
+        /* 内容区 */
+        .section-heading {
+            color: #5c3d1a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d5c0;
+        }
+        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+        h3.section-heading { font-size: 1.2em; }
+        h4.section-heading { font-size: 1.05em; }
+
+        .pn-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.75em;
+            vertical-align: super;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .pn-link:hover { color: #8B4513; }
+
+        .section-content {
+            margin-bottom: 20px;
+        }
+        .section-content p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        /* 列表 */
+        .content-list {
+            list-style: none;
+            padding-left: 2em;
+            margin: 12px 0;
+        }
+        .content-list li {
+            position: relative;
+            padding-left: 1.2em;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .content-list li::before {
+            content: "●";
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 实体链接 */
+        .entity-link {
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            padding: 0 1px;
+            transition: all 0.2s;
+        }
+        .entity-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .entity-principle { color: #b8860b; border-color: #b8860b; }
+        .entity-practice { color: #8B4513; border-color: #8B4513; }
+        .entity-process { color: #2E8B57; border-color: #2E8B57; }
+        .entity-role { color: #4169E1; border-color: #4169E1; }
+        .entity-product { color: #8B008B; border-color: #8B008B; }
+        .entity-term { color: #A0522D; border-color: #A0522D; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #d4af37;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .chapter-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch09.html" class="nav-link">◁ 第9章 风险</a> | <a href="ch11.html" class="nav-link">第11章 进展 ▷</a></div>
+
+    <span class="category-tag">实践</span>
+    <h1 class="chapter-title">第10章 问题</h1>
+
+    
+        <nav class="chapter-toc">
+            <h3 class="toc-title" onclick="toggleToc()">
+                <span class="toc-icon">▸</span> 本章目录（26 节）
+            </h3>
+            <ul class="toc-list" id="tocList">
+                <li><a href="#pn-2">10.1 目的</a></li><li><a href="#pn-3">10.2 对有效问题管理的指导</a></li><li><a href="#pn-4">10.2.1 基线</a></li><li><a href="#pn-5">10.2.2 问题解决</a></li><li><a href="#pn-6">10.2.3 变更控制</a></li><li><a href="#pn-7">10.2.4 授权变更职权</a></li><li><a href="#pn-8">10.2.5 变更预算</a></li><li><a href="#pn-9">10.3 技术</a></li><li><a href="#pn-10">10.3.1 PRINCE2 问题管理技术</a></li><li><a href="#pn-11">10.3.1.1 捕获问题</a></li><li><a href="#pn-12">10.3.1.2 评估问题</a></li><li><a href="#pn-13">10.3.1.3 提供解决建议</a></li><li><a href="#pn-14">10.3.1.4 做出变更决策</a></li><li><a href="#pn-15">10.3.1.5 实施变更</a></li><li><a href="#pn-16">10.3.2 支持技术</a></li><li><a href="#pn-17">10.4 应用实践</a></li><li><a href="#pn-18">10.4.1 组织情境</a></li><li><a href="#pn-19">10.4.2 商务情境</a></li><li><a href="#pn-20">10.4.3 交付方法</a></li><li><a href="#pn-21">10.4.3.1 线性-顺序项目</a></li><li><a href="#pn-22">10.4.3.2 迭代-增量项目</a></li><li><a href="#pn-23">10.4.4 可持续性</a></li><li><a href="#pn-24">10.4.5 规模</a></li><li><a href="#pn-25">10.5 为实践提供支持的管理产品</a></li><li><a href="#pn-26">10.6 实践中关键角色的重点</a></li><li><a href="#pn-27">10.7 与原则的关键关系</a></li>
+            </ul>
+        </nav>
+
+    <div class="chapter-content">
+        <div class="section-content"><p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 10.1 目的</h2>
+<div class="section-content"><p>关键信息 <a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>实践的目的是收集和评估问题并控制对项目基线的变更。 项目在持续的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>和环境变更情境之下发生。项目的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>越大，持续时<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>长，需要响应问题 和潜在变更的概率就越大。 问题<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>是项目监视功能的核心，如果<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理团队的任何成员过滤或审查问题，项<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>无法 响应其组织和环境情境中的变更。 定义<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>题 与需要项目管理考虑的项目相关的事件。 在项目期间的任何<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>，任何小组成员或<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>都可以提出问题，并将其记录在项目记录 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。 在 PRINCE2 中，问题管理包括<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>。 定义：变更 变更定义为对构成项目基线的任何已<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>进行的修改。 在被授权相应<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>的个人或<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>批准变更之前，变更不会合并到项目基线中。 定义：项<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>纳入变更控制范围的管理产品<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>目产品的当前已批准版本。 在评估问题之前，不要对问题妄下判断，这一点非常重要。变更并不是应该回避的事情。所 有的项目都会遇到变更，必须解决这些变更，而不是忽略它们。关键在于以一种响应迅速但 受控的方式来处理变更。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 10.2 对有效问题管理的指导</h2>
+<div class="section-content"><p>PRINCE2 <a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>包括：</p>
+<ul class="content-list">
+  <li>基线：描述纳入<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>范围的内容</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>解决：如何识别、捕获和评估问题，以及提供解决建议</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>：描述如何控制对项目基线的变更</li>
+</ul>
+<ul class="content-list">
+  <li>委派变更<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>：从<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>向下分配职权，支持以响应迅速但受控的方式来处理
+变更</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>：为应对变更而在计划中预留的资金</li>
+</ul></div>
+<h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 10.2.1 基线</h3>
+<div class="section-content"><p>变更只能根据<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>理解和批准的对项目的影响进行评估。在项目生命周期的任何阶 段，项目都由一系列<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>和专业产品组成。在任何<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>点，每个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>都处于正在准备、开 发或已获<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的状态。在所有情况下，它们都将受到<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>。 有效的问题管理和变更控制的先<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>件是一种创建产品基线的方式，以便能够分析<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>制变 更。每次批准和实施变更时，都会创建产<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>本。变更控制使相关人员能够识别变更时 间，并将其追溯到由相应的<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>做出的决策。 项目的<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>由要交付的产品的性质（“什么”）和<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的交付活动（“如何”）决定。 因此，通常在准备好<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>后，才制定这种方法。 无论大小、规模及复杂性如何，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队都需要决定：</p>
+<ul class="content-list">
+  <li>需为<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>建立基线的适当层面</li>
+</ul>
+<ul class="content-list">
+  <li>为了决定该层面，通常需要分解项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，直至达到每个组件均可独立发布、安装、
+替换或修改的层面</li>
+</ul>
+<ul class="content-list">
+  <li>实施控制的水平还受项目重要性以及<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>之间关系复杂性的影响</li>
+</ul>
+<ul class="content-list">
+  <li>如何识别<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>及其版本</li>
+</ul>
+<ul class="content-list">
+  <li>通常，需要建立某种类型的系统，为每个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>提供唯一标识符</li>
+</ul>
+<ul class="content-list">
+  <li>需要在项目记录单中捕获和维护有关<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的哪些信息（例如，版本<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>态以及与其他产品的
+关系）。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>和确定基线所需的具体<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>和<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a></li>
+</ul>
+<ul class="content-list">
+  <li>捕获和<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和变更需遵循的程序
+良好<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>是定期验证<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的实际状态是否反映产品的<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>状态，并寻找差异。这通常在每个阶
+段竣工时及项目竣工时通过审查或审计进行。</li>
+</ul>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 项目基线通常通过各种系统进行<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>可以作为文件进行维护，并以一种简单的方法 来指示每个版本及其<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>日期。<a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>可能需要专用系统。但是，每个系统都应确保，在<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>经过适当级别批准的情况下不能引入变更，并为所有变更提供审计跟踪。此外，项目记录单的 <a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>部分应记录项目基线的所有变更的批准和实施情况。</p></div>
+<h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 10.2.2 问题解决</h3>
+<div class="section-content"><p>PRINCE2 建议将所有<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>分类为：</p>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>或关注</li>
+</ul>
+<ul class="content-list">
+  <li>项目外部的事件</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-商业机会" class="entity-link entity-term" title="术语：商业机会">商业机会</a></li>
+</ul>
+<ul class="content-list">
+  <li>变更请求</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>
+这有助于评估，同时也提供了关于不断提出的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>类型的重要数据，这可以指示项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>他方面是否存在问题。在评估如何对问题进行分类时，检查问题实际上是否属于<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>是一种良
+好实践。二者的区分在于风<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>有不确定性。如果是这种情况，应将问题转移到<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>，
+并应遵循<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>中的程序。同样，审查并检查风险登记单是否包含任何不确定的条目，
+并相应将这<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>目作为问题进行管理，也是一种良好<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>。
+定义：<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>或关注
+难点问题是具有直接和负面影响的问题。
+<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>是需要评估其时效性和影响的问题。
+通常，问题会先在项目团队成员之间的对话或沟通中以非正式方式提<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>构成难点问题、
+关注或<a href="../entities/term.html#entity-商业机会" class="entity-link entity-term" title="术语：商业机会">商业机会</a>的问题，<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>如此。
+如何处理难点问题和关注往往需要做出判断。若<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>多的难点问题和关注都捕获为问题，可能
+会使项目管理团队因琐碎的决策而感到不堪重负，并在处理最重要的决策时分心。另一方面，
+<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应该避免过滤或预先判断难点问题和关注。当问题通常可以在<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>范围内
+解决时，尽早识别问题是最有效的。
+在某些情况下，问题是项目外部的事件，但可能会以某种方式影响项目。例如，<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>破产超
+出了项目的控制<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>，但可能会迫使项目管理团队分析其产生的影响，并考虑寻找替代供应
+商。因此，我们总是建议定期监视项目的外部环境。</li>
+</ul>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 场景：正式问题与非正式问题 在 LouisShopping 项目中，总承包商 BuildyBrick 没有按照楼层平面图的要求完成储 水箱的安装，因为在挖掘过程中发现了一条老旧的管道，难以与现有基础架构集成。 由于这是<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>，因此需要进行正式处理，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>已将此问题记录在<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a> 中，并计划在下周向市议会提交一份打印版<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>。此外，项目办公室的一名成员报告 说，项目打印机无法<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>工作。由于这个问题可以由项目团队<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>员轻松解决，因此 它是一个非正式问题，将添加到<a href="../entities/product.html#entity-日志" class="entity-link entity-product" title="管理产品：日志">日志</a>中。 定义：<a href="../entities/term.html#entity-商业机会" class="entity-link entity-term" title="术语：商业机会">商业机会</a> 代表项目或用户组织未预料到的正面影响的问题。 并非所有问题都会产生负面影响。在某些情况下，问题的出<a href="../entities/term.html#entity-商业机会" class="entity-link entity-term" title="术语：商业机会">商业机会</a>表着商业机会，会产生正 面影响。例如，可以节省大量商品或服务成本，或者所提供的新设备<a href="../entities/term.html#entity-商业机会" class="entity-link entity-term" title="术语：商业机会">商业机会</a>越的功能。此类 商业机会的影响不一定局限于项目本身，因此在准备评估其影响和可能的解决方案时，征求项 目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会的建议可能会很有帮助。 问<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>问题登记单中。对于某些问题，根据问题登记单中捕获的细节便足以对问题进行 评估并协定行动。但是，某些问题可能需要进行更详细的分析，并需创建<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>。在问题报 告中，应识别问题的类型，评估问题对项目基线的影响，并提出解决问题的建议。与问题有关 <a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>动应记录在问题登记单中。 在某些情况下，问题或其解决方案将导致对项目基线的变更。然后，需要通过<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>程序来 解决。</p></div>
+<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 10.2.3 变更控制</h3>
+<div class="section-content"><p>定义 <a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>：用于识别、评估和批准、拒绝或推迟可能影响项目基线的变更的<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>。 变更请求：对基线提出的变更提案。 <a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>：不符合质量规格的产品。 <a href="../entities/term.html#entity-特许" class="entity-link entity-term" title="术语：特许">特许</a>：由<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>认可且无需纠正行动的不合格项。 所有项目都需要一种适当的方法来控制对项目基线的变更。<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>描述了项目的变更控 制程序，包括如何记录和决定变更项目基线的提案。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> PRINCE2 将变更项目基线的提案描述为变更请求或<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>。 变更请求必须识别提议变更的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>，并为变更提供理由。如果存在变更相关成本，则必须 将其资金来源识别为已<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>或额外资金。 不合格项最常出现在<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>未能交付完全符合<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>的产品之时。但是，在发现无<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a> 定的质量规格时，<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>出现不合格项。无论是哪<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>况，这都表示已批准的项目基线与交 付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>之间存在差异，必须通过<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>程序予以解决。 如果接受不合格项，则必须变更项目基线以反映受影响的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>。被接受的不合格项称为特 许，需要<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>批准，或由授权变更职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的人员批准。如果不合格项遭拒，小组 经理需在与<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>协商后，探究如何纠正这种情况，这<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>使用变更预算或提交例外报 告（见第 11 章）。<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>题需要变更请求或不合格项，则<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>应包括所提议的变更的详细信息，以便及时做 出决策。 场景：不合格项示例 在 LouisShopping 场景中，如果确定停车场的车位数量不足以满足预期的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，则不 仅需要识别增加容量的成本，还需要确定如何为这一变更筹集资金。 <a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>些情况下，出现问题的原<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>品不符合或将不符合其<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>规格。这称为不合 格项。在 LouisShopping 场景中，如果确定建筑承包商未能提供所需数量的停车位， 这将被视为不合格项。</p></div>
+<h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 10.2.4 授权变更职权</h3>
+<div class="section-content"><p><a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>是审查和批准变更请求和<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>的最终职权组织。<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会 可以授权职权<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>变更。为进行有效的<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>而授权职权需要在效率和控制之间取得平 衡。如<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会可能会拖慢<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，或者被要求审查更适合由其他人决定 的变更。然而，如果<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>过多，特别是向过多不同的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>授权，则由于与业务理由的一致性 会被削弱，因此项目整体利益减弱的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>会增加。 如果项目预测只有很少的变更，把这一<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>保留在项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会手中是合理的。但是，对可 能会有很多变<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目来说，项目管理委员会<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>就部分决策进行授权。 在<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>中，大多数变更是将在<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>层面产生。请务必确保有足够的被授权的职<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>来批 准工作包的变更。这样<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>，可以在不必总是将决策上<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>项目管理委员会批准的情况下做 出变更。 根据项目的规模<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>杂性，向项目管理团队中的多个层级授权<a href="../entities/role.html#entity-变更职权组织" class="entity-link entity-role" title="角色：变更职权组织">变更职权组织</a>可能会很有帮助。 这取决于<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>中指定的参数。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h3 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 10.2.5 变更预算</h3>
+<div class="section-content"><p>定义：<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a> 在计划中留出的资金或<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>的约束，以应对变更。它由具有被授权的<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的人 员分配，用于交付已授权的变更。 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应确保被授权的职权组<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>当的变更预算，以支持交付已<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的变更。变更预算 通常是一笔专门用于资助变<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>。但是，也可以将变更预算定义为一组授权的<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>，在该 约束<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内可以进行权衡。<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>可能需要面对面的用户培训，但同时也允许使用虚拟 培训作为替代方案（只要<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>在规定的时间范围内培训相同数量的人即可）。</p></div>
+<h2 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 10.3 技术</h2>
+<h3 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 10.3.1 PRINCE2 问题管理技术</h3>
+<div class="section-content"><p>如图 10.1 所示，PRINCE2 包括一种五步<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理技术（捕获问题、评估问题、提出变更建 议、做出变更决策、实施变更）。 如果需要，可以使用替代程序，比如以下情况：<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>属于具有既定问题管理程序的项目群，该 程序将由项目群内的所有项目使用。应将使用替代程序的决策作为<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中的剪裁决策 的一部分来记录。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>/变更批准职权 捕获 评估 推荐 决定<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>施 • 决定问题类型 •<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>定严重性/ 优先级 • 登记问题 • 评估对项目 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和 项目风险概况 的影响 • 检查严重性/ 优先级 • 识别选项 • 评价选项 • 推荐选项 • 在超出<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a> 职权时上报 • <a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>、拒绝、 请求<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a> <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>，并要求 提供更多信息 • 采取<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a> • 更新记录和 项目基线 (如果需要) 项目记录单：<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a> 请求建议 请求建议或<a href="../entities/product.html#entity-例外报告" class="entity-link entity-product" title="管理产品：例外报告">例外报告</a> 图 10.1 PRINCE2 问题<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>技术</p></div>
+<h4 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 10.3.1.1 捕获问题</h4>
+<div class="section-content"><p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>可以通过项目期间可用的任何正式或非正式沟通渠道来捕获。然而，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应确保，将 这些渠道中的问题转换为<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>的方法既高效又不会增加<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理负担。对新问题和未处理 问题的审查应成为所有项目审查（从定期状态会议到<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>边界审查）的一部分。 场景：捕获问题的不同方法 Findef 公司开发首个网络安全<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的项目团队的一名成员抱怨说，项目数据未按规定 进行备份。随后，一位 IT 分析师受命识别<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>，该分析师意识到用于备份的硬 盘已损坏，需要彻底更<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>一个难点问题<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可由项目经理立即进行处理， 而不会给项目增加大量成本。因此，无需在<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>中登记该问题/关注，但可以 将其记录在<a href="../entities/product.html#entity-日志" class="entity-link entity-product" title="管理产品：日志">日志</a>中。 在项目后期，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>要求将新网络安全产品中显示的标识变更为最近<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的 公司标识。这是一个变更请求<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>容易适应，并且在项目经理的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>水平范 围内，但需要正式处理并<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>问题登记单中。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h4 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 10.3.1.2 评估问题</h4>
+<div class="section-content"><p>审查<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>旨在回答以下三个问题：</p>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>属于哪种类型（<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>或关注、项目外部事件、<a href="../entities/term.html#entity-商业机会" class="entity-link entity-term" title="术语：商业机会">商业机会</a>、变更请求还是不合
+格项）？</li>
+</ul>
+<ul class="content-list">
+  <li>此<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>是否会影响项目？</li>
+</ul>
+<ul class="content-list">
+  <li>如果会影响，具体有哪些影响？
+许多<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>无需广泛评估，也无需准备变更<a href="../entities/term.html#entity-请求。" class="entity-link entity-term" title="术语：请求。">请求。</a>但是，在某些情况下，第一个问题不能用简
+单的“是或否”来回答，而必须在项目<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>和优先级的情境下进行回答。对于容许偏差
+受到严格限制的项目，可能<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>限制所考虑的问题类型。另一方面，有些问题纯粹是信息性
+或建议性的，例如工作<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>的变更，不会导致交付活<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>加速或推迟。
+项目基线的主要问题或潜在变更需要进行综合评估，结合对整个<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的影响情境加以考
+虑<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>型的容许偏差代表了项目中相互关联的方面，主要问题和变更很少仅影响一个方
+面。因此，评估应考虑问题或变更对以下方面的影响：</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的目标和<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a></li>
+</ul>
+<ul class="content-list">
+  <li>项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></li>
+</ul>
+<ul class="content-list">
+  <li>其他<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>
+在可能的情况下，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应致力于向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>提供多种方式来响应问题或变更。通
+常情况下，可以在<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>或<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>之间进行权衡或给出特许，例如，为使产品具有更好的性
+能，可以接受推迟交付。尽管应对所有<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>进行评估，但并非所有问题都需要变更。拒绝而
+不采取任何<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>可以作为应对问题的一种有<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>式。
+最好以合作的方式来评估问题并制定解决方案，方法是收集来自各种项目团队成员和利益
+相关方的意见和想法。当问题的影响和应对选项超出项目本身的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>时，尤其应采用这种
+方式。
+在完成评估和提出方案之<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会征求建议，以确认他们对问题优先级或严重
+性的了解可能会有所帮助。</li>
+</ul></div>
+<h4 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 10.3.1.3 提供解决建议</h4>
+<div class="section-content"><p>根据评估，向具有所需<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>的相应个人或团体提出推荐。无论推荐是<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>还是拒绝变更请求， 都应明确说明这两种选择的影响。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 选项<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 选项成本/ 持续时间 提高了<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>/ 扩大了范围 更多<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a> 减少<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>本/ 时间/风险 获得的优势 实施的影响 图10.2 建议选项的影响</p></div>
+<h4 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 10.3.1.4 做出变更决策</h4>
+<div class="section-content"><p>表 10.1 概述了应对变更提案（变更请求或<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>）的典型决策选项。 表10.1 变更提案的应对选项 类型 应对 相关情况 变更请求 <a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a> 进行变更的成本可以通过以下方式筹集：</p>
+<ul class="content-list">
+  <li>使用<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a></li>
+</ul>
+<ul class="content-list">
+  <li>缩小项目其他要素的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a></li>
+</ul>
+<ul class="content-list">
+  <li>申请额外资金
+拒绝
+如果变更遭拒，<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由是否仍然能得到满足，预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>是
+否仍能实现？
+要求提供<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>
+<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>
+如果<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>源于过于严格的质量规格或<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>，并且可
+以通过变更已<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>来解决，那么这可能是一种合
+适的应对方式。
+要求提供更多
+信息
+这一选项实际上会<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>决策，但如果批准或拒绝变更请求的
+影响很复杂，则可能是适当的应对方式。
+<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>
+接受
+对业务理由和预期收益有何影响？项目基线会更新，并且不
+合格项会标记为<a href="../entities/term.html#entity-特许" class="entity-link entity-term" title="术语：特许">特许</a>
+拒绝
+如何解决这个<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>？</li>
+</ul>
+<ul class="content-list">
+  <li>通过<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a></li>
+</ul>
+<ul class="content-list">
+  <li>通过<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a></li>
+</ul>
+<ul class="content-list">
+  <li>通过合同补救措施（如果<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>负责）</li>
+</ul>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h4 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 10.3.1.5 实施变更</h4>
+<div class="section-content"><p>应将已<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的变更请求和<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>记录在项目记录单中，并反映在受影响的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>中。可 以使用不同的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>不同管理产品的基线，但每个系统都应通过提供变更记录和被取代版 本的存档来实现配置控制。</p></div>
+<h3 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 10.3.2 支持技术</h3>
+<div class="section-content"><p>可以使用各种解决<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>的技术来评估和解决问题。示例包括：</p>
+<ul class="content-list">
+  <li>根本原因分析：将<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>拆解为其促成原因，旨在将一个或多个主要原因与其他次要或
+衍生原因区分开来。</li>
+</ul>
+<ul class="content-list">
+  <li>帕累托分析：使用 80/20 规则（也称为帕累托原则）收集可能的原因并确定有最可能的原
+因，该规则认为 80% 的成果是由 20% 的原因造成的。</li>
+</ul>
+<ul class="content-list">
+  <li>当存在多个原因并且没有一个明显的主要原因时，这种技术很有用。</li>
+</ul>
+<ul class="content-list">
+  <li>因果分析：将可能的原因分类到与原始<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>不同的各种类别，旨在识别最重要的
+因素。</li>
+</ul>
+<ul class="content-list">
+  <li>有时使用鱼骨图或石川图进行此类分析。</li>
+</ul>
+<ul class="content-list">
+  <li>失效模式分析：一种逐步方法，用于识别<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或流程中所有可能的失效并评估每种失效的
+后果。</li>
+</ul>
+<ul class="content-list">
+  <li>这通常需要某种形式的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，可以是临时形式（例如原型）或最终形式。</li>
+</ul>
+<ul class="content-list">
+  <li>五问分析法：使用一系列<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>（例如“为什么会发生这种情况？”）<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>层研究难点
+问题。</li>
+</ul>
+<ul class="content-list">
+  <li>每个<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>的答案成为下一个“为什么？”问题的基础。这种工具很简单，在不需要或
+无法获得详细统计数据时非常有用。
+为了有效使用这些<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>解决技术，必须系统地应用它们，通常需要团队合作。</li>
+</ul></div>
+<h2 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 10.4 应用实践</h2>
+<h3 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 10.4.1 组织情境</h3>
+<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应决定是否有任何必须应用的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>或外部政策、标准和程序，并将它们整合到项目自 有的<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>中。 如果项目是项目群或项目组合的一部分，则项目可能需要使用项目群或项目组合定义的政策和 程序。许多项目群采用一种共同的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理能力，以及项目必须使用的<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>系统。项目群 或项目<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>还可能会规定问题的评估方式，并对需要上报到其层面的问题提供指导。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h3 id="pn-19" class="section-heading"><a href="#pn-19" class="pn-link" title="点击复制链接">[19]</a> 10.4.2 商务情境</h3>
+<div class="section-content"><p>在商务环境中，项目可能需要采用合同中定义的<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>程序。供应商通常会有自己的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a><a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>法和变更控制系统。如果要求<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>参与项目的<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>，请使用其问题登记单或变 更控制工具。这需要在适用的合同或协议中指定。 场景<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>管理方法 LouisShopping 项目中储水箱未完成安装的状态触发了<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>，需由项目管理团队 处理。对于在不寻常的环境（历史发现可能会给挖掘工作带来<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>）中建造购物中心 一事，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>表示理解。然而，蓄水站是关乎健康和安全的必备<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，因此 必须立即予以解决。 BuildyBrick 有意与 LouisTown 市议会建立伙伴关系和信任关系，因为一个成功的项 目可以用作潜在<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的案例研究和参考点。因此，双方已协定采取协作<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>来解决这 一问题。尽管这会增加项目建筑成本，但 BuildyBrick 依然会完成储水箱的安装，并 已同意直接承担该成本，而未要求 LouisTown 市议会提供额外的完成资金。项目<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>理委员会已同意解决储水箱安装问题所需的额外<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>，而不会对 BuildyBrick 因此产 生的推迟进行任何处罚。</p></div>
+<h3 id="pn-20" class="section-heading"><a href="#pn-20" class="pn-link" title="点击复制链接">[20]</a> 10.4.3 交付方法</h3>
+<h4 id="pn-21" class="section-heading"><a href="#pn-21" class="pn-link" title="点击复制链接">[21]</a> 10.4.3.1 线性-顺序项目</h4>
+<div class="section-content"><p>选择线性-顺序方法的一个关键<a href="../entities/term.html#entity-假设" class="entity-link entity-term" title="术语：假设">假设</a>是，随着项目生命周期的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，变更的数量和规模将缩 减。这是因为在项目早期对项目基线进行变更通常更容易，而且成本也较低。例如，在建筑项 目中，在建筑物的设计<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>变更房间大小可能是一件微不足道的事情，但在建筑物即将完工 时，这将是一项成本高昂且耗时的工作。 出于这个原因，<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>可能会建议剪裁容许偏差，以便在早期阶段（例如在设计期间） 提供更多<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>性，因为在此阶段，变更<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>响可能相对较小。然后，在后期阶段（例如在建筑 期间），<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>可能会受到更严格的限制，而且，由于即使是微小的变更也会产生潜在成 本，因此大部分<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>会在此阶段提供。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 场景：评估问题的速度 在得知 LouisShopping 项目中储水箱安装未完成的状况后，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>决定评估项目中 其他<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>对储水箱的依<a href="../entities/term.html#entity-赖关系。" class="entity-link entity-term" title="术语：赖关系。">赖关系。</a>他们将评估总体项目<a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>，如有必要，还将评估 项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。他们发现，虽然储水箱不在关键路径上，但会导致两周以上的推迟， 从而导致整个项目<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>。 项目经理立即将该问题上报给<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>，项目管理委员会同意为项目经理的 一项建<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>外资金支持。如果项目经理对问题的评估不充分或速度缓慢，以及/ 或者推迟将其<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会，则实施建议的补救措施就会为时已晚。这将 导致一系列的推迟和额外成本。</p></div>
+<h4 id="pn-22" class="section-heading"><a href="#pn-22" class="pn-link" title="点击复制链接">[22]</a> 10.4.3.2 迭代-增量项目</h4>
+<div class="section-content"><p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理和<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>是迭代-增量方法的固有要素。频繁审查<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>和较短周期的交付工作（例 如敏捷方法）<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>快速发现和解决问题。这样做是为了确保<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>基线（有时称为<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>待办事 项）能够逐渐演进，<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>需求和所开发的产品功能之间保持紧密一致。 如果<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>交付活动的整个范围都采用了迭代-增量方法，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可能只需确保始终如一地捕 获和评估问题并就问题做出决策即可。这应该以能够追溯到<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>，并保持有效控制水 平的方式进行。 在<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>下，项目经理应考虑构建<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>，以允许<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>保留对管理产品的 变更<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>授权。同时，将对<a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>特征和功能的变更职权<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>给在 PRINCE2 敏捷等框 架下工作<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>管理方法可能包括针对交易/交换特征采用敏捷技术，以应对问<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>从 而保持在<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>范围内。 敏捷方法支持在产品开发生命周期的后期进行变更，以交付<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>合用户期望且具有最大潜在价 值的产品。此理念适用于难以在项目早期详细定义的产品。</p></div>
+<h3 id="pn-23" class="section-heading"><a href="#pn-23" class="pn-link" title="点击复制链接">[23]</a> 10.4.4 可持续性</h3>
+<div class="section-content"><p>可持续性可能是重大<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和变更的根源，来自项目外部，特别是在监管要求和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>能力方 面。如果可持续性和环境影响是项目的主要方面，则<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>应确保项目管理团队中的某<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>负责监视潜在问题和变更的外部来源。</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h3 id="pn-24" class="section-heading"><a href="#pn-24" class="pn-link" title="点击复制链接">[24]</a> 10.4.5 规模</h3>
+<div class="section-content"><p>在制定<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>时，项目经理应考虑以下事项：</p>
+<ul class="content-list">
+  <li>项目的规模以及<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的数量或多样性：在小型项目中，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可能能够在没有
+支持的情况下<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和变更，而在较大的项目中，问题管理和<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>可能需要专门
+支持。</li>
+</ul>
+<ul class="content-list">
+  <li>要交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>及其<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>的不确定性或波动性程度：如果<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>及对交付产品所涉及
+的活动的了解成熟且易于理解，那么<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和变更就不太可能频繁并大量出现。如果项目产
+品和交付方法比较新颖，或者要交付的产<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>合很复杂，则问题管理和<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>可能需要
+大量的工作。</li>
+</ul>
+<ul class="content-list">
+  <li>项目<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>工具和相关数据的特征：某些项目（例如软件开发）可能由允许在单个集成
+环境中支<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>理和变更控制的工具提供支持。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>的敏感性和项目基线：如果项目的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>可能涉及一些也许会被某些<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>视为负
+面的负收益或成果，项目团队可能希望对其<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>的访问施行严格控制。
+场景：规模示例
+NowByou 目前有一个关于反歧视宣传活动的项目。这是一个简单的项目，会将专
+业的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>实践引入<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>中。在第一次项目团队会<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，该项目遵循了问题管理
+方法。
+在总体项目状态更<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>议中，项目团队在演示幻灯片中记录问题，并每周与宣传活动
+经理进行一次讨论。每当出现<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>或变更请求时，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>都会评估问题的关键
+性，并制定要在项目状态更新会议中讨论的解决方案<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>。获得批准后，项目团队将
+实施变更，这也记录在幻灯片中。
+相比之下，Findef 项目比较复杂，并在具有一<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>目管理成熟度的组织内的项目群情
+境下实施，因而具有额外的<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>制。项目经理编制了一份<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>方法文件，其
+中描述了在项目期间如何管理变更。还为该项目<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>问题登记单，并以表单形
+式在 F<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>def 的项目管理系统中提供。
+标记为需要上报或审查的新问题的相关通知会自动发送到<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>，并在每周
+会议上进行跟进。在有主题专家 (SME) 参与的情况下进行变更请求评估，并提交一份
+独立<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>，在其中提供首选行动建议<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>批准变更请求后，项目经理将更新项目
+管理系统中<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>记录中的记录。</li>
+</ul>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h2 id="pn-25" class="section-heading"><a href="#pn-25" class="pn-link" title="点击复制链接">[25]</a> 10.5 为实践提供支持的管理产品</h2>
+<div class="section-content"><p>PRINCE2 包括用于<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目的 15 种<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。下面描述了特定于问题<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。 管理产品：<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a> 问题管理方法是项目启动文件的一部分。<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>管理方法的目的是描述如何捕获和<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，并解释如何评估和控制项目基线的变更。 概括性<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>描述问题管理方法的范围 项目基线<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：构成项目基线的管理<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>清单 <a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>和解决程序：描述如何提出、报告和解决问题（应重点说明与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>标准的任何差异，以 及出现任何差异的理由） <a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>程序：描述如何请求、决定、合并并验证项目基线的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>（应重点说明与业务标准的任 何差异，以及出现任何差异的理由） <a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>：授权变更预算以及阶段或<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>层面的任何分配 正式的问题管理活动的时<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>排：审查和决定问题的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>和频率 职责：<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>谁将负责与问题管理方法相关的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>，包括授权<a href="../entities/role.html#entity-变更职权组织" class="entity-link entity-role" title="角色：变更职权组织">变更职权组织</a> 支持工具或系统：将用于执行或支持问题管理方法的任何工具或<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，例如版本控制系统 标准：适用于问题管理的任何标准，例如用于对问题进行优先级和严重性评级的分级系统（标准 还应指定<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>和其他变更控制记录的组成和格式） 参考资<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>任何相关文件或产品</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a> 管理产品：问题报告 问题登记单是项目记录单的一部分<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>问题登记单的目的是，记录在项目生命周期中提交的所有<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>、报告的当前状态和关闭 日<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 概括性内容 问题标识符：<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>的唯一参考 问题描述：问题摘要 问题类型：<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>、关注、外部事件、商业机会、变更请求和<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a> 分级：优先级和严重性的评级 问题负责人：负责问题的方方面面 决策：应对问题时所做决策的记录<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>对于不合格项，它可以记录<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>情况并提供所给<a href="../entities/term.html#entity-特许" class="entity-link entity-term" title="术语：特许">特许</a> 的摘要 状态：问题的当前状态，例如，已记录、已审查、已采取行动、已上报和已解决 问题相关日期：例如，提出日期、上次审查日期、行动截止日期和解决日期 记录：与问题关联的文件列表及其<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>的 问题报告的目的是描述问题对项目基线的<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>定解决问题或处理不合格项的方法，并提供决 策建议。 概括性内容 唯一标识符：问题的唯一参考 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>标识符：受问题影响的产品的标识符 提出日期：首次记录问题的日期<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>型：难点问题或关注、外部事件、<a href="../entities/term.html#entity-商业机会" class="entity-link entity-term" title="术语：商业机会">商业机会</a>、变更请求和不合格项 分级：严重性和优先级（如果使用） 描述：问题来源、原因和影响的摘要 影响分析：分析难点对项目基线的影响 选项：项目、<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>响应问题的方式 推荐：<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>或小组经理推荐的决定 决策：应对问题时所做决策的记录，例如，对于不合格项，它可以记录<a href="../entities/term.html#entity-特许" class="entity-link entity-term" title="术语：特许">特许</a>情况并提供所给特许 的摘要</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></p></div>
+<h2 id="pn-26" class="section-heading"><a href="#pn-26" class="pn-link" title="点击复制链接">[26]</a> 10.6 实践中关键角色的重点</h2>
+<div class="section-content"><p>PRINCE2 定义了项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的七项关键角色。下面描述了他们特定于<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>实践的职责。 表 10.2 与问题<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>有关的关键<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的重点领域 角色 职责 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a></p>
+<ul class="content-list">
+  <li>为<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理和<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>提供任何业务层策略、标准或程序</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>项目层面<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>（如果使用）</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>提出的建议和上报的问<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>应
+项目总监</li>
+</ul>
+<ul class="content-list">
+  <li>决定是否需要项目层面<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>以及变更预算金额</li>
+</ul>
+<ul class="content-list">
+  <li>设置<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>层面<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a></li>
+</ul>
+<ul class="content-list">
+  <li>决定是否需要以及在何处需要<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>变更的被授权的职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>并确保其适合项目目标（设置用于对<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>的严重
+性和优先级进行评级的量表。）</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出的建议做出响应，就上报的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>做出决策，特别
+关注持续<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由
+<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a></li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出的建议做出响应，就上报的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>做出决策，特别
+关注保证预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a></li>
+</ul>
+<ul class="content-list">
+  <li>协定<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>
+高级供应商</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出的建议做出响应，就上报的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>做出决策，特别
+关注保证整套解决方案的完整性</li>
+</ul>
+<ul class="content-list">
+  <li>协定<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>
+项目经理</li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>，以准备和维护<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>，协定产品的基线
+水平</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>程序，有条件时由<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>来协助开展相关
+工作</li>
+</ul>
+<ul class="content-list">
+  <li>确保<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>实施<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中协定的问题和变更控制程序</li>
+</ul>
+<ul class="content-list">
+  <li>维护<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>，有条件时由项目支持来协助开展相关工作</li>
+</ul>
+<ul class="content-list">
+  <li>实施<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>
+<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a></li>
+</ul>
+<ul class="content-list">
+  <li>实施其<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中协定的问题和变更控制程序</li>
+</ul>
+<ul class="content-list">
+  <li>实施<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>
+（接下页）</li>
+</ul>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 角色 职责 <a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a></p>
+<ul class="content-list">
+  <li>向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提出<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>的建议</li>
+</ul>
+<ul class="content-list">
+  <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>确认问题管理方法符合<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>政策</li>
+</ul>
+<ul class="content-list">
+  <li>对<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>的评估和解决提供建议</li>
+</ul>
+<ul class="content-list">
+  <li>在有需要时，协助<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目经理审查问题报告和<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>
+<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a></li>
+</ul>
+<ul class="content-list">
+  <li>审查<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>实践，以确保问题按照项目的<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>执
+行，从而向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>成员保证问题得到了妥善<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>
+<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a></li>
+</ul>
+<ul class="content-list">
+  <li>通过以下措施监管<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>和问题处理程序：</li>
+</ul>
+<ul class="content-list">
+  <li>维护<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a></li>
+</ul>
+<ul class="content-list">
+  <li>维护项目基线</li>
+</ul>
+<ul class="content-list">
+  <li>协助<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>准备问题报告</li>
+</ul>
+<ul class="content-list">
+  <li>协助项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队应用项目的<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>程序</li>
+</ul></div>
+<h2 id="pn-27" class="section-heading"><a href="#pn-27" class="pn-link" title="点击复制链接">[27]</a> 10.7 与原则的关键关系</h2>
+<div class="section-content"><p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>实践有助于在整个项目生命周期中遵守 PRINCE2 原则。<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 10.3 问题实践与 PRINCE2 原则之间的关键关系 原则 实现方式 导致<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>ENTITY_0⟧ 开发一种问题管理方法，确保根据 问题和变更对<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的影响以及 对项目的理由来评估问题和变更 问题和变更得以解决，项目与总体 <a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>战略保持一致 <a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a> 使用问题管理作为在整个项目生命 周期中获取经验教训的一种手段， 并利用这些经验教训来为问题应对 告知信息 确保项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和交付活动能够根据 反馈以可控的方式不断演变和改进 定义<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、职责和 关系 在项目<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>内建立问题管理和变更 控制的角色及其各自的职责 明确问题<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>和项目基线变更的问 责制 <a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a> 使问题和变更能够在<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>内和阶段 边界内进行识别和审查 及早发现问题并避免不受控变更带 来的成本 <a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a> 确立问题管理的职权和程序 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>授权的 职权范围内管理问题、做出决策和 <a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>例外的高效方法 （续） （接下页）</p>
+<p><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 原则 实现方式 导致 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a> 将问题和请求的变更关联到项目 基线 确保变更具有可追溯性并与<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>具 有清晰联系 根据项目情境<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a> 只需要与项目的重要性和复杂性、 所<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>交付方法以及产品特征相契 合的<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>级别 控制和响应能力之间的适当平衡 （续）</p>
+<p><a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a></p></div>
+    </div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch09.html" class="nav-link">◁ 第9章 风险</a> | <a href="ch11.html" class="nav-link">第11章 进展 ▷</a>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+    </div>
+
+    <script>
+        function toggleToc() {
+            var list = document.getElementById('tocList');
+            var icon = document.querySelector('.toc-icon');
+            list.classList.toggle('collapsed');
+            icon.style.transform = list.classList.contains('collapsed')
+                ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+
+        // Purple Numbers: 点击复制链接
+        document.querySelectorAll('.pn-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href.split('#')[0] + link.getAttribute('href');
+                navigator.clipboard.writeText(url).then(function() {
+                    link.style.color = '#2E8B57';
+                    setTimeout(function() { link.style.color = ''; }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

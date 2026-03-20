@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第15章 项目启动 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            background: #8B4513;
+            color: #faf6f0;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.8em;
+            color: #5c3d1a;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* 章节目录 */
+        .chapter-toc {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .toc-title {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-size: 1em;
+            user-select: none;
+        }
+        .toc-title:hover { color: #d4af37; }
+        .toc-icon { transition: transform 0.3s; display: inline-block; }
+        .toc-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .toc-list.collapsed { max-height: 0; margin-top: 0; }
+        .toc-list li {
+            padding: 3px 0;
+            border-bottom: 1px dotted #d4c8a8;
+        }
+        .toc-list a {
+            color: #8B4513;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .toc-list a:hover { color: #d4af37; }
+
+        /* 内容区 */
+        .section-heading {
+            color: #5c3d1a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d5c0;
+        }
+        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+        h3.section-heading { font-size: 1.2em; }
+        h4.section-heading { font-size: 1.05em; }
+
+        .pn-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.75em;
+            vertical-align: super;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .pn-link:hover { color: #8B4513; }
+
+        .section-content {
+            margin-bottom: 20px;
+        }
+        .section-content p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        /* 列表 */
+        .content-list {
+            list-style: none;
+            padding-left: 2em;
+            margin: 12px 0;
+        }
+        .content-list li {
+            position: relative;
+            padding-left: 1.2em;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .content-list li::before {
+            content: "●";
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 实体链接 */
+        .entity-link {
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            padding: 0 1px;
+            transition: all 0.2s;
+        }
+        .entity-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .entity-principle { color: #b8860b; border-color: #b8860b; }
+        .entity-practice { color: #8B4513; border-color: #8B4513; }
+        .entity-process { color: #2E8B57; border-color: #2E8B57; }
+        .entity-role { color: #4169E1; border-color: #4169E1; }
+        .entity-product { color: #8B008B; border-color: #8B008B; }
+        .entity-term { color: #A0522D; border-color: #A0522D; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #d4af37;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .chapter-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch14.html" class="nav-link">◁ 第14章 项目指导</a> | <a href="ch16.html" class="nav-link">第16章 阶段控制 ▷</a></div>
+
+    <span class="category-tag">流程</span>
+    <h1 class="chapter-title">第15章 项目启动</h1>
+
+    
+        <nav class="chapter-toc">
+            <h3 class="toc-title" onclick="toggleToc()">
+                <span class="toc-icon">▸</span> 本章目录（16 节）
+            </h3>
+            <ul class="toc-list" id="tocList">
+                <li><a href="#pn-2">15.1 目的</a></li><li><a href="#pn-3">15.2 目标</a></li><li><a href="#pn-4">15.3 情境</a></li><li><a href="#pn-5">15.4 活动</a></li><li><a href="#pn-6">15.4.1 协定剪裁要求</a></li><li><a href="#pn-7">15.4.2 协定管理方法</a></li><li><a href="#pn-8">15.4.3 建立项目控制</a></li><li><a href="#pn-9">15.4.4 准备项目计划</a></li><li><a href="#pn-10">15.4.5 准备完整的商业论证</a></li><li><a href="#pn-11">15.4.6 汇编项目启动文件</a></li><li><a href="#pn-12">15.4.7 请求项目授权</a></li><li><a href="#pn-13">15.5 应用流程</a></li><li><a href="#pn-14">15.5.1 一般注意事项</a></li><li><a href="#pn-15">15.5.2 剪裁项目启动流程中的角色</a></li><li><a href="#pn-16">15.6 职责</a></li><li><a href="#pn-17">15.7 为此流程应用实践</a></li>
+            </ul>
+        </nav>
+
+    <div class="chapter-content">
+        <div class="section-content"><p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a></p></div>
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 15.1 目的</h2>
+<div class="section-content"><p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程的目的，是为项目建立坚实的基础，使<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>在承诺大笔支出或资源前，能够了解 为了交付项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>需要完成的工作。</p></div>
+<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 15.2 目标</h2>
+<div class="section-content"><p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程的目标是确保在以下各方面达成共识：</p>
+<ul class="content-list">
+  <li>开展项目的理由、预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>和相关<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>（记录在完整的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中）</li>
+</ul>
+<ul class="content-list">
+  <li>工作的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>和交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>交付的方式、时间和成本</li>
+</ul>
+<ul class="content-list">
+  <li>谁将参与项目的决策</li>
+</ul>
+<ul class="content-list">
+  <li>如何达到所要求的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></li>
+</ul>
+<ul class="content-list">
+  <li>如何建立和控制基线</li>
+</ul>
+<ul class="content-list">
+  <li>如何识别、评估和控制<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和问题</li>
+</ul>
+<ul class="content-list">
+  <li>如何监督和控制<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a></li>
+</ul>
+<ul class="content-list">
+  <li>需要信息的人员、形式和<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a></li>
+</ul>
+<ul class="content-list">
+  <li>项目如何应用<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>政策、方法和指导</li>
+</ul>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a></p></div>
+<h2 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 15.3 情境</h2>
+<div class="section-content"><p><a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a> 启动项目授权 项目<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>请求 协定<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>要求 协定<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法 建立项目控制 准备<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> 准备完整的 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 汇编项目启动 文件 <a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>边界临近 <a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a> 项目启动 请求项目授权 图 15.1 <a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程概述</p>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a> 项目启动为实现成功的项目奠定了基础。确切地说，所有相关方都必须清楚项目想要取得什么 成果、为什么需要项目、如何取得项目成果以及相关方各自的职责，这样各相关方才能真正承 <a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>目。 项目启动流程支持<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>通过项目指导流程（见第 14 章 ）判断项目是否与<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a> 十分一致，以<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>目继续的合理性。 在项目启动<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a><a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会指定的控制水平，创建所要求的一整套 <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。项<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会协定他们将<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>和批准管理产品。例如，他 们应该在每个<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>准备<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>行审查，还是等到全套管理产品准备好时作为一个套件 进行审查？ 如果<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>之间的关系是商务关系，项目启动流程中的所有活动需要进一步考虑，因为 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>、奖励和开展项目的理由对用<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>为客户）和供应商来说有所不同。 表 15.1 项目启动的输入、活动和<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a> 输入 活动 产出 项目<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>已授权（触发此流程） <a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>（审查） 项目记录单（检查） <a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>（审查） 阶段计划（启动）（审查<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>协定剪裁要求 管理方法（创建） <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>NTITY_15⟧（创建） 协定管理方法 建立<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> 准备项目计划 <a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a> 准备完整的商业论证 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>（创建） 商<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>概述文件 项目产品描述 项目<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 管理方法 汇编<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a> 项目启动文件（创建） 项目记录单（更新） <a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>临近结束（触发阶段边界 管理<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>启动文件 请求项目授权 项目授<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>求（触发<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a> 流程）</p></div>
+<h2 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 15.4 活动</h2>
+<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 15.4.1 协定剪裁要求</h3>
+<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可能需要剪裁 PRINCE2，以便发现影响项目交付方式的内部和外部因素。<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>可 能已经有基于<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>版本 PRINCE2 的标准项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>框架，准备应用于项目。必须记录并协定 PRINCE2 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>务的标准项目管理框架的应用和/或剪裁方式。</p>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a> 推荐项目经理采取的行动：</p>
+<ul class="content-list">
+  <li>审查<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>，以了解概要剪裁方法（若已定义）。</li>
+</ul>
+<ul class="content-list">
+  <li>从以前类似项目、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>和外部<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>吸取有关剪裁应用方式的经验教训。</li>
+</ul>
+<ul class="content-list">
+  <li>定义任何<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>要求，作为<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的一部分，包括任何相关的项目控制。</li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>，检查提出的剪裁是否满足<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>或业务的需要。</li>
+</ul>
+<ul class="content-list">
+  <li>请求<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>批准任何剪裁（尽管项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会可能倾向于稍后将其作为项目启
+动文件的一部分进行审查）。</li>
+</ul></div>
+<h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 15.4.2 协定管理方法</h3>
+<div class="section-content"><p>这些建立项目方法的活动可以并行实施，但是推荐<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>在最后完成，因为它将包括其 他方法所需的沟通环节。 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法来源于项目必须遵循的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>战略、标准或<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>，以及在<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中捕获的用户 的质量和可持续性期望。只有对方法进行了定义，才有可能建立项目控制和创建<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>。 九种不同的管理方法是：</p>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>方法（见第 3 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>（见第 3 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a>（见第 5 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>（见第 5 章）</li>
+</ul>
+<ul class="content-list">
+  <li>商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法（见第 6 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>（见第 8 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>（见第 9 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>（见第 10 章）</li>
+</ul>
+<ul class="content-list">
+  <li>数字化和数据<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法（见第 11 章）
+推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</li>
+</ul>
+<ul class="content-list">
+  <li>审查 PRINCE2 的<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>方式及其对<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法的影响。</li>
+</ul>
+<ul class="content-list">
+  <li>审查<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>，以便了解项目期间是否需要应用与<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法相关的业务战略、标准或
+者<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>（包括任何合同中的需求）。</li>
+</ul>
+<ul class="content-list">
+  <li>从以前类似项目、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>和外部<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>吸取有关管理方法的经验教训。（其中一些可能已在项
+目记录单中捕获。）</li>
+</ul>
+<ul class="content-list">
+  <li>审查项目记录单中有关<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法的所有<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>如果识别到新<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>或问题（或存在的风险或<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>发生变更），则需要更新项目记录单。</li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>，以检查所提出的管理方法是否满足<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>或业务的需求。</li>
+</ul>
+<ul class="content-list">
+  <li>请求<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>批准管理方法（尽管项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会可能倾向于稍后将其作为项目启
+动文件的一部分进行审查）。</li>
+</ul>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a></p></div>
+<h3 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 15.4.3 建立项目控制</h3>
+<div class="section-content"><p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>后，需要协定<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>所要求的控制水平，也需要为这些控制建立机制，正如 建立<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>对小组经理承担的工作所要求的控制水平机制一样。项目控制使项目可以得到与 其规模、<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>、复杂性和重要性相一致的富有效率和效益的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。 有效的项目控制是<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>管理的先决<a href="../entities/term.html#entity-条件。" class="entity-link entity-term" title="术语：条件。">条件。</a>项目控制包括：</p>
+<ul class="content-list">
+  <li>项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层各个层次之间和内部的沟通频度和形式（见第 6 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>数量（见第 7 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>的捕获和分析机制（见第 10 章）</li>
+</ul>
+<ul class="content-list">
+  <li>设定被<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>的职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>（见第 10 章）</li>
+</ul>
+<ul class="content-list">
+  <li>如何监视各个<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层之间的被授权的职权<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>（见第 11 章）</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>上报机制（见第 11 章）
+许多控制可能已在<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法中定义，但未必已经建立。本活动的重点就是建立这些控制方法，
+并确保它们作为一个整体是合理的。
+面向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和项目支持的推荐操作：</li>
+</ul>
+<ul class="content-list">
+  <li>确认交付方法（线性-顺序、迭代-增量、混合），并评估其对项目控制的影响。</li>
+</ul>
+<ul class="content-list">
+  <li>审查 PRINCE2 在<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中的剪裁和包含方式及其对项目控制的影响。</li>
+</ul>
+<ul class="content-list">
+  <li>审查<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法以识别需要建立哪些控制。</li>
+</ul>
+<ul class="content-list">
+  <li>积极地从以前类似项目、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>和外部<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>吸取有关项目控制的经验教训：一些可能已经在
+项目记录单中捕获。</li>
+</ul>
+<ul class="content-list">
+  <li>审查项目记录单是否有与项目控制相关的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和问题。（总体的风险将会影响控制活动
+的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>和力度。）</li>
+</ul>
+<ul class="content-list">
+  <li>确认并记录提供适当水平的控制所要求的<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>边界。</li>
+</ul>
+<ul class="content-list">
+  <li>将项目所要求的各个层面的决策分配给最适当的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层次。</li>
+</ul>
+<ul class="content-list">
+  <li>建立适当的决策程序，这可能通过<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>现有<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>管理体系内的程序或其他标准程序来实现。</li>
+</ul>
+<ul class="content-list">
+  <li>在合适的情况下，将协定的决策<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>和职责纳入项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构和<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>；这可能
+包括最终确定之前尚未分配的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、重新分配之前有人担任的角色，以及在必要<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>新
+设计项目管理团队，以包含所有需要的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>并建立团结一致的团队（见第 3 章和</li>
+</ul>
+<ul class="content-list">
+  <li>确认项目的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>和上报程序（从<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>到<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>，项目经理到<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>，
+以及项目管理委员会到<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>）。</li>
+</ul>
+<ul class="content-list">
+  <li>描述<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>中的项目控制。</li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>，检查提出的项目控制是否符合项目特性并满足<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>或业务的
+需求。</li>
+</ul>
+<ul class="content-list">
+  <li>如果识别到新<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>或问题（或存在的风险或<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>发生变更），则需要更新项目记录单。</li>
+</ul>
+<ul class="content-list">
+  <li>请求<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>批准项目控制（管理委员会可能稍后将其作为<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的一部
+分进行审查）。</li>
+</ul>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a></p></div>
+<h3 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 15.4.4 准备项目计划</h3>
+<div class="section-content"><p>在承诺为项目<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>大笔支出之前 ， 必须明确<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、资源和人员需求 。该信息保存在<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> 中，以便准备<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>以及<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>控制项目。 计划不是由<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>单独完成的活动，而应该是在<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>紧密配合下共同完成<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> 建项目计划。举办计划编制专题研讨会，通常有助识别所需<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>及其细节和依赖<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>推荐项目经理采取的行动：</p>
+<ul class="content-list">
+  <li>确认交付方法（线性-顺序、迭代-增量、混合），并评估其对<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的影响。</li>
+</ul>
+<ul class="content-list">
+  <li>审查<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>以了解范围和任何计划<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>审查 PRINCE2 如何针对项目进行<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>以及纳入<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>及其对计划的影响。</li>
+</ul>
+<ul class="content-list">
+  <li>从以前类似项目、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>和外部<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>吸取有关计划的经验教训。（其中一些可能已在项目
+记录单中捕获。）</li>
+</ul>
+<ul class="content-list">
+  <li>审查项目记录单是否有与<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>相关的风险和问题。</li>
+</ul>
+<ul class="content-list">
+  <li>确定项目要使用的任何<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和控制工具，并记录如何在<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>中使用这些工具。</li>
+</ul>
+<ul class="content-list">
+  <li>选择<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的估算方法。</li>
+</ul>
+<ul class="content-list">
+  <li>审查<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法以了解要执行的工作的资源、标准、方法和成本。</li>
+</ul>
+<ul class="content-list">
+  <li>为项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>及其主要组件创建产品分解结构，编写这些对象的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>，并设计产品流程
+图（将它们全部纳入<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>）。</li>
+</ul>
+<ul class="content-list">
+  <li>确定将项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>转换到运营用途的安排。（如果项目产品在运营中可能要求维护，就要在
+支持团队和<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>之间拟定合适的服务协议；在这种情况下，有必<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>任何协议作为产品纳
+入<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>。）</li>
+</ul>
+<ul class="content-list">
+  <li>考虑<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>是否需要更新（例如，<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>过程中对验收准则的了解是否已经变更或
+完善）。</li>
+</ul>
+<ul class="content-list">
+  <li>在项目记录单中创建或更新<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>记录，以便按计划交付每一<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>识别并确认所要求的人员和资源。</li>
+</ul>
+<ul class="content-list">
+  <li>确认所选人员是否有<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、是否同意担任这个<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>并承诺执行（详见第 6 章）。</li>
+</ul>
+<ul class="content-list">
+  <li>识别项目控制的活动、资源、人员和<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>，并将它们纳入<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>根据<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的受众和使用方式，记录和决定<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的形式和展示（例如，使用<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>核查清
+单向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>展示计划是否足够）。（有关详细信息，可参见附录 A 的 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>0 节中
+的计划<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>。）</li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>，以检查所提出的项目<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>是否满足<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和业务的需求。</li>
+</ul>
+<ul class="content-list">
+  <li>如果识别到新<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>或问题（或存在的风险或<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>发生变更），则需要更新项目记录单。</li>
+</ul>
+<ul class="content-list">
+  <li>请求<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>批准项目计划（尽管项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会可能倾向于稍后将其作为项目启
+动文件的一部分进行审查）。</li>
+</ul>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a></p></div>
+<h3 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 15.4.5 准备完整的商业论证</h3>
+<div class="section-content"><p>在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流程中完成的<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a>需要更新，以反映项目<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>决定的估算时间和成本以及 更新的项目记录单中的总体<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。 准备完整的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>不是项目经理单独执行的活动，而是应该在<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>的密切参与下<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>共创商业论证。完整的商业论证将由<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>用于授权项目，并可提供依据以便持续检 查项目是否仍然可行。（有关<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由的更多详细信息，请参见第 5 章。） 推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p>
+<ul class="content-list">
+  <li>审查<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>，以检查业务是否对商业论证的形式和内容有任何<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>从以前类似项目、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>和外部<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>吸取有关<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>开发的经验教训。（其中一些可能已
+在项目记录单中捕获。）</li>
+</ul>
+<ul class="content-list">
+  <li>根据获得的其他详细信息，创建更为详细的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>如果识别到新<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>或问题（或存在的风险或<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>发生变更），则需要更新项目记录单。</li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>，以检查所提出的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>是否满足<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>或业务的需求。</li>
+</ul>
+<ul class="content-list">
+  <li>请求<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>批准商业论证（尽管项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会可能倾向于稍后将其作为项目启
+动文件的一部分进行审查）。</li>
+</ul></div>
+<h3 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 15.4.6 汇编项目启动文件</h3>
+<div class="section-content"><p>项目有关“什么、为什么、谁、如何、哪里、什么<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>和多少”等<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>的信息应该：</p>
+<ul class="content-list">
+  <li>收集到一起以得到关键<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>的认可</li>
+</ul>
+<ul class="content-list">
+  <li>为项目参与人员和<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>提供指导和信息
+此类信息汇总在<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中。项目启动文件是在启动<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中创建或更新的多个<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>的
+汇总，用于获得继续推进项目的<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>。它未必是一份单独文件，而是一系列文件或其他形式的
+信息（例如，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>工具的工作簿或目录）<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>启动文件版本在项目启动流程中创建，且用于获<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>续推进项目的授权，则必须设定
+基线并且应该被置于<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>之下。之后，它将用作一种比较手段，对比项目实际绩效与最初
+形成项目<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>基础的预测。
+推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</li>
+</ul>
+<ul class="content-list">
+  <li>提取并在必要时修改<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>中的信息。</li>
+</ul>
+<ul class="content-list">
+  <li>包含或参考下列各项中的信息：</li>
+</ul>
+<ul class="content-list">
+  <li>项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构和<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a></li>
+</ul>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a></p>
+<ul class="content-list">
+  <li>包含或参考项目控制并总结项目如何<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a> PRINCE2。</li>
+</ul>
+<ul class="content-list">
+  <li>汇编<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>。</li>
+</ul>
+<ul class="content-list">
+  <li>执行交叉检查不同元素中的信息，确保彼此兼容。</li>
+</ul>
+<ul class="content-list">
+  <li>咨询<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>，以检查汇编的<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>是否满足<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>或业务的需求。</li>
+</ul>
+<ul class="content-list">
+  <li>准备下一<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>（触发<a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a>流程）。</li>
+</ul></div>
+<h3 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 15.4.7 请求项目授权</h3>
+<div class="section-content"><p>为完成<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程，即启动阶段，项目经理联系<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>以请求项目授权。正式理由 可以在<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中找到。 推荐项目经理采取的行动：</p>
+<ul class="content-list">
+  <li>与<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>分享最终版本商业论证、<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>和项目计划。</li>
+</ul>
+<ul class="content-list">
+  <li>正式请求<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>授权交付项目的职权，以确保所需的人员和资源。</li>
+</ul></div>
+<h2 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 15.5 应用流程</h2>
+<h3 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 15.5.1 一般注意事项</h3>
+<div class="section-content"><p>为适应项目环境，此<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中的活动可以合并、拆分或并行。 此流程中创建的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>数量可能令人生畏，可能包含一些并不总<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>要的细节。此流程奠定 了基础，项目<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>在此时间点初步确定。 剪裁是适应项目环境的需要，但在启动<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>开始时，相关因素可能并不总是明<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>项目的早期 阶段可能没有足够的信息；随着<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>工作的推进，剪裁需求才会逐渐出现。因此，最好是从 “简单”开始，然后根据需要逐渐细化，而不是创建一个适合假想的大型项目的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>环境。 一些项目过于复杂，以至于直到此流程结束时仍然无法商定项目<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>（以及项目最终产品） 的全面定义。这种情况下，通<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>在项目生命周期内包含多个调查阶段 ， 以便观察可选方案 并挑选解决方案。<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>类情况下，<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程仅在第一阶段开始时使用，以建立管理和控 制环境。</p></div>
+<h3 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 15.5.2 剪裁项目启动流程中的角色</h3>
+<div class="section-content"><p>本手册表明<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>负责创建管理产品。项目支持可以对某些支持性<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>负责，但<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>， 项目经理就项目执行情况对<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>负责。因此，项目经理可以将各种<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>分配给适合任务的 人员。支持往往由更高层次的项目群办公室或类似<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>提供。 有关角色的更多指导，可参见第 6 章。</p>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a></p></div>
+<h2 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 15.6 职责</h2>
+<div class="section-content"><p>表 15.2 总结了完成<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中每项活动的问责制和职责，以及应咨询和告知的人员。 表 15.2 <a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>的 RACI 图表 活动 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a> <a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>高级用户<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>项目经理小组经理项目保证 <a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a> 协定剪裁要求 A C C R C C I 协定<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法 A C C R C C I 建立项目控制 A C C R C C I 准备<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> A C C R C C C 准备完整的商 业论证 A C C R C <a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>汇编项目启动 文件 C C C A C C R 请求项目<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a> I A C C R I C I R = 负责人，A = 问责人，C = 咨询人，I = 知情人</p>
+<p><a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a></p></div>
+<h2 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 15.7 为此流程应用实践</h2>
+<div class="section-content"><p>表 15.3 总结了每项<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>如何支持<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程的活动。 表 15.3 为项目启动<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>应用实践<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>应用于项目启动流程 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> <a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>中的概要商业论证将进一<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>完整的商业论证，以供项目管 理委员会在更好地了解项目和拟议选项后进行<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>。开发<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和可持 续性管理方法，以便支持商业论证并为建立控制提供输入信息。 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 项目管理团队结构进行了更新，进一步详细说明了从一层到下一层的<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>职权级 别，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队的其他成员得到任命和入职。根据<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>考虑工作分解结 构，把有关组织的工作信息提供给团队，并确定将向外部提供哪<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>素。创建沟 通管理方<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>方法和商务管理方法，并为建立项目控制提供输入信息。 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> <a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>用于开发产品分解结构和<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>流程图<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>于创建项目计划。 项目计划定义项目所需的<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>。 <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 创建<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>。创建产品描述，并在必<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>产品描述。产品描述中 的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>有助于创建<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>，为建立控制提供输入信息。创建质量登 记单。 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 创建<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>，为建立项目控制提供输入<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。根据类别创建风险登记 <a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>管理方法中定义分级体系<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>商业论证、项目计划和其他地方 识别的风险将记录在<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>中并进行评估。如果需要，则考虑并创建风 险预算。 <a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 创建<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>，为建立变更控制和问题管理的项目控制提供输入信<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 根据类别创建问题登记<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>管理方法中定义分级体系。在<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>论证、 项目计划和其他地方识别的问题将记录在<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>中并进行评估。如果需 要，则考虑并创建<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>。 进展 创建数字化和数据管理方法，为建立项目控制提供输入信息。 建立所有管理方法的项目控制，为<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>管理奠定基础。 使用<a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a>，以显示启动阶段的进展。</p>
+<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a></p></div>
+    </div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch14.html" class="nav-link">◁ 第14章 项目指导</a> | <a href="ch16.html" class="nav-link">第16章 阶段控制 ▷</a>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+    </div>
+
+    <script>
+        function toggleToc() {
+            var list = document.getElementById('tocList');
+            var icon = document.querySelector('.toc-icon');
+            list.classList.toggle('collapsed');
+            icon.style.transform = list.classList.contains('collapsed')
+                ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+
+        // Purple Numbers: 点击复制链接
+        document.querySelectorAll('.pn-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href.split('#')[0] + link.getAttribute('href');
+                navigator.clipboard.writeText(url).then(function() {
+                    link.style.color = '#2E8B57';
+                    setTimeout(function() { link.style.color = ''; }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

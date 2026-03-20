@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第12章 PRINCE2流程简介 - PRINCE2 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background-color: #faf6f0;
+            color: #3e2a1a;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            padding: 12px 0;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+        }
+        .nav-link {
+            color: #8B4513;
+            text-decoration: none;
+            padding: 4px 8px;
+        }
+        .nav-link:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            background: #8B4513;
+            color: #faf6f0;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        /* 章节标题 */
+        .chapter-title {
+            font-size: 1.8em;
+            color: #5c3d1a;
+            border-bottom: 3px double #d4af37;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* 章节目录 */
+        .chapter-toc {
+            background: #f0e8d8;
+            border: 1px solid #d4c8a8;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .toc-title {
+            cursor: pointer;
+            color: #5c3d1a;
+            font-size: 1em;
+            user-select: none;
+        }
+        .toc-title:hover { color: #d4af37; }
+        .toc-icon { transition: transform 0.3s; display: inline-block; }
+        .toc-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .toc-list.collapsed { max-height: 0; margin-top: 0; }
+        .toc-list li {
+            padding: 3px 0;
+            border-bottom: 1px dotted #d4c8a8;
+        }
+        .toc-list a {
+            color: #8B4513;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .toc-list a:hover { color: #d4af37; }
+
+        /* 内容区 */
+        .section-heading {
+            color: #5c3d1a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0d5c0;
+        }
+        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+        h3.section-heading { font-size: 1.2em; }
+        h4.section-heading { font-size: 1.05em; }
+
+        .pn-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.75em;
+            vertical-align: super;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .pn-link:hover { color: #8B4513; }
+
+        .section-content {
+            margin-bottom: 20px;
+        }
+        .section-content p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        /* 列表 */
+        .content-list {
+            list-style: none;
+            padding-left: 2em;
+            margin: 12px 0;
+        }
+        .content-list li {
+            position: relative;
+            padding-left: 1.2em;
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+        .content-list li::before {
+            content: "●";
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 实体链接 */
+        .entity-link {
+            text-decoration: none;
+            border-bottom: 1px dashed;
+            padding: 0 1px;
+            transition: all 0.2s;
+        }
+        .entity-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .entity-principle { color: #b8860b; border-color: #b8860b; }
+        .entity-practice { color: #8B4513; border-color: #8B4513; }
+        .entity-process { color: #2E8B57; border-color: #2E8B57; }
+        .entity-role { color: #4169E1; border-color: #4169E1; }
+        .entity-product { color: #8B008B; border-color: #8B008B; }
+        .entity-term { color: #A0522D; border-color: #A0522D; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 2px solid #d4af37;
+            text-align: center;
+            font-size: 0.85em;
+            color: #8B7355;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .chapter-title { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch11.html" class="nav-link">◁ 第11章 进展</a> | <a href="ch13.html" class="nav-link">第13章 项目准备 ▷</a></div>
+
+    <span class="category-tag">流程</span>
+    <h1 class="chapter-title">第12章 PRINCE2流程简介</h1>
+
+    
+        <nav class="chapter-toc">
+            <h3 class="toc-title" onclick="toggleToc()">
+                <span class="toc-icon">▸</span> 本章目录（8 节）
+            </h3>
+            <ul class="toc-list" id="tocList">
+                <li><a href="#pn-2">12.1 PRINCE2 之旅</a></li><li><a href="#pn-3">12.1.1 项目前</a></li><li><a href="#pn-4">12.1.2 启动阶段</a></li><li><a href="#pn-5">12.1.3 后续阶段</a></li><li><a href="#pn-6">12.1.4 最后阶段</a></li><li><a href="#pn-7">12.1.5 项目后</a></li><li><a href="#pn-8">12.2 PRINCE2 流程模型</a></li><li><a href="#pn-9">12.3 流程章节格式</a></li>
+            </ul>
+        </nav>
+
+    <div class="chapter-content">
+        <div class="section-content"><p>PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>简介 定义：流程 一组结构化的活动，用于定义实现特定目标的一系列行动及其输入和<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>。 PRINCE2 是一种基于流程的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法。PRINCE2 有 7 个流程，它们提供<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>功地指导、 管理和交付项目所需的一系列活动。 图 1<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>1 显示了每个流程如何在项目生命周期中应用。所示生命周期具有 3 个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>：启动阶 段、后续阶段及最后阶段。项<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>总是至少有两个阶段：启动阶段和最后阶段；两者之间<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>NTITY_10⟧ 有任意数量的阶段。 指导 管理 交付 <a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a> 项目指导 项目启动 <a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a> 阶段控制 <a href="../entities/process.html#entity-产品交付管理" class="entity-link entity-process" title="流程：产品交付管理">产品交付管理</a> 产品交付管理 阶段边界 管理 阶段边界 管理 <a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a><a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>· 项目准备由指导和管理层面使用。 · 至少应该有两个阶段，第一个阶段是启动阶段。 · <a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a>在启动阶段结束时第一次使用，并在每个后续阶段（最后阶段除外）结束时重复。它还用于准备<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>，可以在任何时间完成，</p>
+<p>包括在最后<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>。 项目前 启动阶段<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>续阶段 最后阶段 图 12.1 PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a></p>
+<p>PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>简介</p></div>
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 12.1 PRINCE2 之旅</h2>
+<h3 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 12.1.1 项目前</h3>
+<div class="section-content"><p>在项目开始之前，通常会有人提出一个想法或<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。PRINCE2 中项目的触发因素（可能有多种 方式）被称为项目任务书。项目任务书由<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>（委托项目的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>）提供，其形式可能会各不相 同大，包括口头指令以至明确合理的项目定义。 在正式开始一个项目之前，必须要评估并确认该项目是否有价值且可行。此工作在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流 程中完成（见第 13 章），在此<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>会任命<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>，并创建项目概述文件 和启动阶段的<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>。继续进行<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>的<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会使用他们自己的<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a> 流程做出（见第 14 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会审查项目概述文件和阶段<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>，并决定是否 以及如何启动项目并分配所需的人员和资源。</p></div>
+<h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 12.1.2 启动阶段</h3>
+<div class="section-content"><p>在做出项目推进决策后，需要适当细致<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>。<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程包括编制计划、确定项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法 和控制、开发可靠的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和收益审查方法等（见第 15 章）。而且，在启<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>段，阶段边 界管理流程（见第 18 章）用于详<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>制下一阶段的计划。 当<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>审查项目启动文件时，启动<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>即告结束<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会再次使用自 己的<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>（<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a>）来决定是否授权项目以<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>否继续进行下一阶段。<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的内容 在项目生命周期中可能会变更（在<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>下），因此这<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>启动文件需要作为后续 审查的原始基线予以保存。</p></div>
+<h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 12.1.3 后续阶段</h3>
+<div class="section-content"><p><a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>授权项目经理对阶段逐个进行日常控制。<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>需确保进展与已批准的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 一致，而且对项目的<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>在协定的容许<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>内。项目经理通过定期<a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a>向项目管理委 员会上报<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>。用于控制每个阶段的活动包括在<a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>流程中（见第 16 章）。 项目经理需将要完成的工作分配给执行分配的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>或成员。相应地，他们通<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>点报告将进展告知项目经理。这项工作包含在<a href="../entities/process.html#entity-产品交付管理" class="entity-link entity-process" title="流程：产品交付管理">产品交付管理</a>流程中（见第 17 章）。 在每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>临近结束时，项目经理通过<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>当前阶段的绩效状况，提供对<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的更新，以 及编制下一阶段的详细计划<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会批准将项目推进到下一阶段。项<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会所需信息，用于评估项目的持续<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>性以及做出下一阶段的<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>决定。项目管 理委员会必须始终确保项目与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>战略<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>一致。<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>每个阶段边界的活动包含在阶段边界管 理<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中（见第 18 章）。</p>
+<p>PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>简介</p></div>
+<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 12.1.4 最后阶段</h3>
+<div class="section-content"><p>由于项目是一项临时工作，因此在最后<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>临近结束时，应开始<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程（见第 19 章）。 在项目的整个生命周期中，项目可能一直在将各个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>转移和转换到运营用途。现在，项目管 理委<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>需要确保每个产品的接受者可以拥有并持续使用项目产品，并且<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>能够拥有项目产 品的所有权。如果符合这种情况，则可以结束项目。应将项目文件存档，根据最初的<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> 对项目进行绩效评估，并需要将分配给项目的人员和资源释放出来。收尾活动包括确认或修订 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>，以便编制项目后收益评审计划，此计划针对仅在项目产品投入使用后（因此在项目结束 后）接受评估的<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。</p></div>
+<h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 12.1.5 项目后</h3>
+<div class="section-content"><p>即便部分<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>可以在项目期间实现，但大多数情<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>，许多或全部收益可能要等到项目完成后 才能实现。<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>，可能会进行一次或多次项目后收益评审。该项目的<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>将记录进行 此类审查的方法和<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>，以及此类审查的负责和问责人员。</p></div>
+<h2 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 12.2 PRINCE2 流程模型</h2>
+<div class="section-content"><p>PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>模型如图 12.2 所示。这些流程与<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a>、指导、管理和交付的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层面保持一 致。流程之间的触发关系如图所示。</p>
+<p>PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>简介 指导 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 交付 业务 项目任务书 来自<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的 建议和决策 启动通知 收尾通知 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>授权通知 项目管理 委员会的 建议请求 已<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>项目 启动 <a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>请求 已授权例外 计划 已授权<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 项目管理 委员会的 建议和决策 <a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a>通知 <a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>请求 下一阶段请求 项目授权请求 <a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>请求 例外计划批准 请求 <a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>批准 请求 建议请求 阶段边界临近 项目竣工临近 新<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 或<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 已授权<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a> 已完成工作包 通知 <a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a> 项目启动 <a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a> 项目收尾 阶段控制 <a href="../entities/process.html#entity-产品交付管理" class="entity-link entity-process" title="流程：产品交付管理">产品交付管理</a> 项目准备 图 12.2<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>RINCE2 流程模型</p>
+<p>PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>简介 关键信息 PRINCE2 方法的五个集成元素协同工作。借助这些<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>，可以确保在流程中以特定 于项目情境的方式持续应用这些原则，并考虑项目生态系统和<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统内人员 和小组的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。</p></div>
+<h2 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 12.3 流程章节格式</h2>
+<div class="section-content"><p>PRINCE2 的每个<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>采用以下结构和格式进行描述：</p>
+<ul class="content-list">
+  <li>目的：应该有执行<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>的理由。</li>
+</ul>
+<ul class="content-list">
+  <li>目标：应该有<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>所要达到的具体目标。</li>
+</ul>
+<ul class="content-list">
+  <li>情境：每个<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>都在项目和业务中进行的其他流程和活动的情境中描述。情境包括每个活
+动的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>的输入/产出表。</li>
+</ul>
+<ul class="content-list">
+  <li>活动：每个 PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>由一组活动组成，这些活动在项目期间可能按顺序执行或并行
+执行。<a href="../entities/term.html#entity-PRINCE2 活动由为了获得特定结果而设计的" class="entity-link entity-term" title="术语：PRINCE2 活动由为了获得特定结果而设计的">PRINCE2 活动由为了获得特定结果而设计的</a>一组推荐行动组成。</li>
+</ul>
+<ul class="content-list">
+  <li>职责：每个<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>章节中的 RACI 表描述了每个流程的职责。</li>
+</ul>
+<ul class="content-list">
+  <li><a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>在<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中的应用：了解每种实践如何应用于<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>非常重要。
+流程章节包含许多流程图。这些流程图使用以下规则：
+<a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a>
+评估之前的经验教训
+<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>请求
+这是一个 PRINCE2 流程。每个流程包含若<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>动。
+这是 PRINCE2 流程中的一个活动。每个活动都包含若干操作。
+这是一个事件或决策，会触发 PRINCE2 流程。箭头的方向指示正在
+触发的流程。箭头指向<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a>的位置，用于就更新或请求向<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>层
+发送通知。双触发表示某流程有替代触发。
+图 12.3 流程图的关键</li>
+</ul>
+<p><a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a></p></div>
+    </div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch11.html" class="nav-link">◁ 第11章 进展</a> | <a href="ch13.html" class="nav-link">第13章 项目准备 ▷</a>
+    </div>
+
+    <div class="footer">
+        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+    </div>
+
+    <script>
+        function toggleToc() {
+            var list = document.getElementById('tocList');
+            var icon = document.querySelector('.toc-icon');
+            list.classList.toggle('collapsed');
+            icon.style.transform = list.classList.contains('collapsed')
+                ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+
+        // Purple Numbers: 点击复制链接
+        document.querySelectorAll('.pn-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = window.location.href.split('#')[0] + link.getAttribute('href');
+                navigator.clipboard.writeText(url).then(function() {
+                    link.style.color = '#2E8B57';
+                    setTimeout(function() { link.style.color = ''; }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
