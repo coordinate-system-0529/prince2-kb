@@ -835,10 +835,7 @@ function toggleDetail(id) {
         currentOpen = id;
         var node = document.getElementById('node-' + id);
         if (node) node.classList.add('active');
-        // 滚动到面板
-        setTimeout(function() {
-            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
+        // 不自动滚动，保持当前视口位置
     }
 }
 </script>
