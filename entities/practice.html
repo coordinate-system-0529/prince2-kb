@@ -215,37 +215,67 @@
             </div>
             <div class="entity-desc">为什么要做这个项目？记录项目的业务理由，评估投资的可行性和收益。</div>
             <div class="entity-detail-toggle" onclick="this.nextElementSibling.classList.toggle('open')">▸ 查看详情</div>
+        <div class="entity-detail-toggle" onclick="this.nextElementSibling.classList.toggle('open')">▸ 查看详情</div>
         <div class="entity-detail">
-            <h4>🔑 核心目的</h4>
-            <p>商业论证是PRINCE2的首要原则——"持续业务理由"的具体体现。它确保项目从立项到收尾始终有正当的商业理由支撑，一旦理由不再成立，项目应及时终止。</p>
-            <h4>📋 关键内容</h4>
+            <h4>🔑 目的</h4>
+            <p>商业论证实践的目的是建立一种机制，作为继续投资项目的决策支持手段，判断项目是否（并且仍然是）可取、可行且可实现。</p>
+            <p>组织通过项目来实现其业务的可测量改进，这些改进被称为<b>收益</b>。PRINCE2 项目以产品的形式交付产出，用以促成组织的变更，这些变更创建了可带来成果的能力，成果可帮助组织实现商业论证中说明的收益。</p>
+            
+            <h4>📊 产出、成果与收益的关系</h4>
             <ul>
-                <li><b>预期收益</b>：项目完成后将为组织带来的可量化与不可量化收益</li>
-                <li><b>成本估算</b>：项目全生命周期的投入成本，包括直接成本与间接成本</li>
-                <li><b>风险评估</b>：可能影响商业论证成立的主要威胁与机会</li>
-                <li><b>时间规划</b>：收益实现的时间框架与投资回收期</li>
-                <li><b>投资评估</b>：净现值(NPV)、内部收益率(IRR)、投资回报率(ROI)等财务指标</li>
+                <li><b>产出</b>：活动的有形或无形交付物，在PRINCE2中是将用于促成变更的专业产品</li>
+                <li><b>能力</b>：已完成的项目产出，交付成果所需</li>
+                <li><b>成果</b>：变更的结果，通常会对现实世界中的行为和环境产生影响</li>
+                <li><b>收益</b>：由成果引致的可测量的改进，被投资组织视为优势</li>
+                <li><b>负收益</b>：由于被视为负面的成果导致的可测量的下降</li>
+                <li><b>业务目标</b>：可测量的组织成果，展示与组织战略相关的进展</li>
             </ul>
-            <h4>🔄 生命周期</h4>
+            
+            <h4>🔄 商业论证生命周期</h4>
+            <p>商业论证在项目开始时以概况形式制定，依据项目任务书中提供的信息。<b>概要商业论证</b>记录在项目概述文件中，随着项目计划更加详细，将发展为<b>完整商业论证</b>。</p>
             <ul>
-                <li><b>项目准备 SU</b>：由项目发起人初步编制，验证项目值得启动</li>
-                <li><b>项目启动 IP</b>：项目经理细化，建立完整商业论证基线</li>
-                <li><b>阶段边界 SB</b>：每个阶段结束时更新，确认项目仍然有商业价值</li>
-                <li><b>项目收尾 CP</b>：最终评审，评估实际收益与预期收益的差距</li>
+                <li><b>开发</b>：探索各种选项并获得正确信息，做出投资评估决策</li>
+                <li><b>检查</b>：评估项目目前是否（仍然）值得</li>
+                <li><b>维护</b>：根据实际进展和当前预测及时更新商业论证</li>
+                <li><b>确认</b>：评估预期收益是否已经（或将要）实现</li>
             </ul>
-            <h4>👥 关键角色</h4>
+            
+            <h4>🎯 三种业务选项</h4>
             <ul>
-                <li><b>项目发起人</b>：商业论证的最终责任人，确保持续有效</li>
-                <li><b>高级用户</b>：提供收益预期与用户需求</li>
-                <li><b>项目经理</b>：编制与更新商业论证文档</li>
+                <li><b>不做任何不同的行动</b>：始终是首选项，充当量化其他选项的基础</li>
+                <li><b>做最低限度的行动</b>：利用现有资源和工具</li>
+                <li><b>做超过最低限度的行动</b>：需要额外投资，但可产生更大收益</li>
             </ul>
+            
+            <h4>💰 投资评估技术</h4>
+            <ul>
+                <li><b>净现值 (NPV)</b>：考虑货币时间价值的投资金额评估</li>
+                <li><b>内部收益率 (IRR)</b>：净现值为零时的投资回报率</li>
+                <li><b>投资回报 (ROI)</b>：投资产生的利润或节约占初始投资的百分比</li>
+                <li><b>回报期</b>：投资获得回报的时间</li>
+                <li><b>敏感性分析</b>：调整输入因素以模拟投资合理性临界点</li>
+                <li><b>选项分析</b>：根据加权评估标准对每个选项进行评分比较</li>
+            </ul>
+            
+            <h4>👥 关键职责</h4>
+            <ul>
+                <li><b>项目总监</b>：在项目开展过程中对商业论证问责，确保项目与业务目标保持一致</li>
+                <li><b>高级用户</b>：指定所需成果和收益，确认预期收益已实现或能够实现</li>
+                <li><b>高级供应商</b>：确认能够在预期成本范围内交付所要求的产品</li>
+                <li><b>项目经理</b>：开发商业论证，每个阶段结束时评估和更新</li>
+                <li><b>项目保证</b>：检查项目是否符合总体业务目标，监视商业论证</li>
+            </ul>
+            
             <h4>📎 相关管理产品</h4>
             <ul>
-                <li>商业论证（管理产品）</li>
-                <li>收益评审计划</li>
+                <li><b>商业论证</b>：记录开展项目的业务理由，基于成本与收益的比较</li>
+                <li><b>项目概述文件</b>：包含概要商业论证</li>
+                <li><b>收益管理方法</b>：定义收益管理行动和收益评审</li>
+                <li><b>可持续性管理方法</b>：定义可持续性绩效目标的行动和控制措施</li>
             </ul>
-        </div>
-            <div class="entity-sources">出处：<span class="source-chapter">第1章 简介 <a href="../chapters/ch01.html#pn-6" class="pn-ref">[6]</a>, <a href="../chapters/ch01.html#pn-7" class="pn-ref">[7]</a>, <a href="../chapters/ch01.html#pn-11" class="pn-ref">[11]</a>, <a href="../chapters/ch01.html#pn-15" class="pn-ref">[15]</a>, <a href="../chapters/ch01.html#pn-16" class="pn-ref">[16]</a></span> <span class="source-chapter">第2章 原则 <a href="../chapters/ch02.html#pn-5" class="pn-ref">[5]</a>, <a href="../chapters/ch02.html#pn-6" class="pn-ref">[6]</a>, <a href="../chapters/ch02.html#pn-7" class="pn-ref">[7]</a></span> <span class="source-chapter">第3章 人员 <a href="../chapters/ch03.html#pn-14" class="pn-ref">[14]</a></span> <span class="source-chapter">第4章 PRINCE2实践简介 <a href="../chapters/ch04.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch04.html#pn-5" class="pn-ref">[5]</a>, <a href="../chapters/ch04.html#pn-7" class="pn-ref">[7]</a></span> <span class="source-chapter">第5章 商业论证 <a href="../chapters/ch05.html#pn-1" class="pn-ref">[1]</a>, <a href="../chapters/ch05.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch05.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch05.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch05.html#pn-5" class="pn-ref">[5]</a></span> <span class="source-chapter">第6章 组织 <a href="../chapters/ch06.html#pn-7" class="pn-ref">[7]</a>, <a href="../chapters/ch06.html#pn-9" class="pn-ref">[9]</a>, <a href="../chapters/ch06.html#pn-10" class="pn-ref">[10]</a>, <a href="../chapters/ch06.html#pn-12" class="pn-ref">[12]</a>, <a href="../chapters/ch06.html#pn-30" class="pn-ref">[30]</a></span> <span class="source-chapter">第7章 计划 <a href="../chapters/ch07.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch07.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch07.html#pn-15" class="pn-ref">[15]</a>, <a href="../chapters/ch07.html#pn-21" class="pn-ref">[21]</a>, <a href="../chapters/ch07.html#pn-43" class="pn-ref">[43]</a></span> <span class="source-chapter">第8章 质量 <a href="../chapters/ch08.html#pn-19" class="pn-ref">[19]</a>, <a href="../chapters/ch08.html#pn-34" class="pn-ref">[34]</a></span> <span class="source-chapter">第9章 风险 <a href="../chapters/ch09.html#pn-17" class="pn-ref">[17]</a>, <a href="../chapters/ch09.html#pn-31" class="pn-ref">[31]</a>, <a href="../chapters/ch09.html#pn-33" class="pn-ref">[33]</a>, <a href="../chapters/ch09.html#pn-35" class="pn-ref">[35]</a>, <a href="../chapters/ch09.html#pn-36" class="pn-ref">[36]</a></span> <span class="source-chapter">第10章 问题 <a href="../chapters/ch10.html#pn-10" class="pn-ref">[10]</a>, <a href="../chapters/ch10.html#pn-12" class="pn-ref">[12]</a>, <a href="../chapters/ch10.html#pn-21" class="pn-ref">[21]</a>, <a href="../chapters/ch10.html#pn-27" class="pn-ref">[27]</a></span> <span class="source-chapter">第11章 进展 <a href="../chapters/ch11.html#pn-2" class="pn-ref">[2]</a>, <a href="../chapters/ch11.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch11.html#pn-17" class="pn-ref">[17]</a>, <a href="../chapters/ch11.html#pn-30" class="pn-ref">[30]</a>, <a href="../chapters/ch11.html#pn-31" class="pn-ref">[31]</a></span> <span class="source-chapter">第12章 PRINCE2流程简介 <a href="../chapters/ch12.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch12.html#pn-5" class="pn-ref">[5]</a></span> <span class="source-chapter">第13章 项目准备 <a href="../chapters/ch13.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch13.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch13.html#pn-7" class="pn-ref">[7]</a>, <a href="../chapters/ch13.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch13.html#pn-10" class="pn-ref">[10]</a></span> <span class="source-chapter">第14章 项目指导 <a href="../chapters/ch14.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch14.html#pn-6" class="pn-ref">[6]</a>, <a href="../chapters/ch14.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch14.html#pn-11" class="pn-ref">[11]</a>, <a href="../chapters/ch14.html#pn-14" class="pn-ref">[14]</a></span> <span class="source-chapter">第15章 项目启动 <a href="../chapters/ch15.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch15.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch15.html#pn-10" class="pn-ref">[10]</a>, <a href="../chapters/ch15.html#pn-11" class="pn-ref">[11]</a>, <a href="../chapters/ch15.html#pn-12" class="pn-ref">[12]</a></span> <span class="source-chapter">第16章 阶段控制 <a href="../chapters/ch16.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch16.html#pn-12" class="pn-ref">[12]</a>, <a href="../chapters/ch16.html#pn-18" class="pn-ref">[18]</a></span> <span class="source-chapter">第17章 产品交付管理 <a href="../chapters/ch17.html#pn-14" class="pn-ref">[14]</a></span> <span class="source-chapter">第18章 阶段边界管理 <a href="../chapters/ch18.html#pn-3" class="pn-ref">[3]</a>, <a href="../chapters/ch18.html#pn-4" class="pn-ref">[4]</a>, <a href="../chapters/ch18.html#pn-8" class="pn-ref">[8]</a>, <a href="../chapters/ch18.html#pn-9" class="pn-ref">[9]</a>, <a href="../chapters/ch18.html#pn-10" class="pn-ref">[10]</a></span> <span class="source-chapter">第19章 项目收尾 <a href="../chapters/ch19.html#pn-5" class="pn-ref">[5]</a>, <a href="../chapters/ch19.html#pn-16" class="pn-ref">[16]</a></span> <span class="source-chapter">附录A 管理产品 <a href="../chapters/appendix_a.html#pn-1" class="pn-ref">[1]</a></span> <span class="source-chapter">附录B 角色描述 <a href="../chapters/appendix_b.html#pn-1" class="pn-ref">[1]</a></span> <span class="source-chapter">术语表 <a href="../chapters/glossary.html#pn-1" class="pn-ref">[1]</a></span></div>
+            
+            <h4>📖 原文出处</h4>
+            <p>以上内容提取自 <a href="../chapters/ch05.html" style="color:#8B4513">第5章 商业论证</a>（共24节）</p>
         </div>
 
         <div class="entity-entry" id="entity-组织">
