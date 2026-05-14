@@ -1,878 +1,501 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>流程知识图谱 - PRINCE2® 7 知识库</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
-            background: #1a0f0a;
-            color: #e8d5b0;
-            min-height: 100vh;
-        }
-
-        /* 顶部栏 */
-        .top-bar {
-            background: #2c1810;
-            border-bottom: 2px solid #d4af37;
-            padding: 14px 24px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .top-bar a {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        .top-bar a:hover { text-decoration: underline; }
-        .top-bar h1 {
-            font-size: 1.2em;
-            color: #d4af37;
-            letter-spacing: 0.05em;
-        }
-        .top-bar .spacer { flex: 1; }
-        .top-bar .hint {
-            font-size: 0.8em;
-            color: #6b5a45;
-        }
-
-        /* 图例 */
-        .legend {
-            display: flex;
-            gap: 20px;
-            padding: 12px 24px;
-            background: #241510;
-            border-bottom: 1px solid #3a2515;
-            font-size: 0.85em;
-            flex-wrap: wrap;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .legend-line {
-            width: 30px;
-            height: 3px;
-            border-radius: 2px;
-        }
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        /* 主容器 */
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px 24px;
-        }
-
-        /* ── 流程图主体 ───────────────────────────── */
-        .flow-wrapper {
-            position: relative;
-        }
-
-        /* 项目指导（贯穿条） */
-        .directing-bar {
-            background: linear-gradient(90deg, #2E8B57, #3cb371);
-            border: 2px solid #2E8B57;
-            border-radius: 8px;
-            padding: 16px 24px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .directing-bar:hover {
-            box-shadow: 0 0 20px rgba(46,139,87,0.3);
-            transform: translateY(-2px);
-        }
-        .directing-bar .icon {
-            font-size: 2em;
-            min-width: 50px;
-            text-align: center;
-        }
-        .directing-bar .info h2 {
-            font-size: 1.2em;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        .directing-bar .info p {
-            font-size: 0.9em;
-            color: #c8e6c9;
-        }
-        .directing-bar .badge {
-            margin-left: auto;
-            background: rgba(255,255,255,0.2);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            color: #fff;
-        }
-
-        /* 流程行 */
-        .flow-row {
-            display: flex;
-            gap: 0;
-            align-items: stretch;
-            margin-bottom: 24px;
-            position: relative;
-        }
-
-        /* 流程节点 */
-        .process-node {
-            flex: 1;
-            background: #2c1810;
-            border: 2px solid #5c3d1a;
-            border-radius: 10px;
-            padding: 24px 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-        }
-        .process-node:hover {
-            border-color: #d4af37;
-            box-shadow: 0 4px 20px rgba(212,175,55,0.15);
-            transform: translateY(-3px);
-        }
-        .process-node.active {
-            border-color: #d4af37;
-            border-width: 3px;
-            background: #4a3020;
-            box-shadow: 0 0 25px rgba(212,175,55,0.35), inset 0 0 30px rgba(212,175,55,0.08);
-            transform: translateY(-5px);
-            z-index: 10;
-        }
-        .process-node.active h3 {
-            color: #fff;
-            text-shadow: 0 0 10px rgba(212,175,55,0.5);
-        }
-        .process-node.active .step-num {
-            background: #fff;
-            color: #1a0f0a;
-            box-shadow: 0 0 10px rgba(212,175,55,0.5);
-        }
-        /* 当有节点激活时，未激活的节点变暗 */
-        .flow-row:has(.process-node.active) .process-node:not(.active) {
-            opacity: 0.45;
-            filter: grayscale(0.3);
-            transform: scale(0.97);
-        }
-        /* 项目指导激活时，整行流程变暗 */
-        .flow-wrapper:has(.directing-bar.active) .flow-row .process-node {
-            opacity: 0.45;
-            filter: grayscale(0.3);
-            transform: scale(0.97);
-        }
-        .directing-bar.active {
-            box-shadow: 0 0 30px rgba(46,139,87,0.5);
-            border-color: #fff;
-            transform: translateY(-3px);
-        }
-        .process-node .step-num {
-            position: absolute;
-            top: -12px;
-            left: 16px;
-            background: #d4af37;
-            color: #1a0f0a;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
-        .process-node h3 {
-            font-size: 1.15em;
-            color: #d4af37;
-            margin-bottom: 8px;
-        }
-        .process-node .subtitle {
-            font-size: 0.9em;
-            color: #8B7355;
-            margin-bottom: 12px;
-            font-style: italic;
-        }
-        .process-node .desc {
-            font-size: 0.88em;
-            color: #8B7355;
-            line-height: 1.4;
-        }
-        .process-node .roles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: auto;
-        }
-        .role-tag {
-            font-size: 0.72em;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: #4169E1;
-            color: #fff;
-        }
-
-        /* 连接箭头 */
-        .flow-arrow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            min-width: 30px;
-            color: #d4af37;
-            font-size: 1.3em;
-        }
-
-        /* ── 展开详情面板 ─────────────────────────── */
-        .detail-panel {
-            background: #241510;
-            border: 2px solid #d4af37;
-            border-radius: 8px;
-            margin: 0 0 24px 0;
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
-        }
-        .detail-panel.open {
-            max-height: 800px;
-            opacity: 1;
-            padding: 24px;
-        }
-        .detail-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #3a2515;
-        }
-        .detail-header h3 {
-            font-size: 1.2em;
-            color: #d4af37;
-        }
-        .detail-header .close-btn {
-            margin-left: auto;
-            background: none;
-            border: 1px solid #5c3d1a;
-            color: #8B7355;
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8em;
-        }
-        .detail-header .close-btn:hover {
-            border-color: #d4af37;
-            color: #d4af37;
-        }
-
-        /* 详情三栏 */
-        .detail-cols {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-        }
-        .detail-col h4 {
-            font-size: 0.9em;
-            color: #d4af37;
-            margin-bottom: 10px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #3a2515;
-        }
-        .detail-col ul {
-            list-style: none;
-            padding: 0;
-        }
-        .detail-col li {
-            font-size: 0.85em;
-            padding: 4px 0;
-            color: #c4a882;
-            border-bottom: 1px dotted #3a2515;
-        }
-        .detail-col li:last-child { border-bottom: none; }
-        .detail-col .product-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .product-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .product-dot.input { background: #4169E1; }
-        .product-dot.output { background: #2E8B57; }
-        .product-dot.update { background: #d4af37; }
-
-        /* 数据流动示意 */
-        .data-flow-section {
-            margin-top: 30px;
-            padding: 24px;
-            background: #241510;
-            border: 1px solid #3a2515;
-            border-radius: 8px;
-        }
-        .data-flow-section h3 {
-            color: #d4af37;
-            font-size: 1.1em;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #3a2515;
-        }
-        .flow-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85em;
-        }
-        .flow-table th {
-            background: #2c1810;
-            color: #d4af37;
-            padding: 10px 12px;
-            text-align: left;
-            border-bottom: 2px solid #d4af37;
-            font-weight: normal;
-        }
-        .flow-table td {
-            padding: 8px 12px;
-            border-bottom: 1px dotted #3a2515;
-            color: #c4a882;
-        }
-        .flow-table tr:hover td { background: #2c1810; }
-        .flow-table .arrow-cell {
-            color: #d4af37;
-            text-align: center;
-            font-size: 1.2em;
-        }
-
-        /* 页脚 */
-        .footer {
-            margin-top: 40px;
-            padding: 20px 0;
-            border-top: 2px solid #3a2515;
-            text-align: center;
-            font-size: 0.8em;
-            color: #5c3d1a;
-        }
-
-        /* 响应式 */
-        @media (max-width: 900px) {
-            .flow-row { flex-direction: column; gap: 12px; }
-            .flow-arrow { transform: rotate(90deg); width: auto; min-width: auto; height: 30px; }
-            .detail-cols { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="top-bar">
-    <a href="index.html">◁ 首页</a>
-    <h1>🌐 PRINCE2® 7 流程知识图谱</h1>
-    <span class="spacer"></span>
-    <span class="hint">点击流程节点查看详情</span>
-</div>
-
-<div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#2E8B57"></div> 项目指导（贯穿）</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#d4af37"></div> 流程节点</div>
-    <div class="legend-item"><div class="legend-line" style="background:#4169E1"></div> 输入管理产品</div>
-    <div class="legend-item"><div class="legend-line" style="background:#2E8B57"></div> 输出管理产品</div>
-    <div class="legend-item"><div class="legend-line" style="background:#d4af37"></div> 更新管理产品</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#4169E1"></div> 角色标签</div>
-</div>
-
-<div class="container">
-    <div class="flow-wrapper">
-
-        <!-- 项目指导（贯穿条） -->
-        <div class="directing-bar" id="node-directing" onclick="toggleDetail('directing')">
-            <div class="icon">🏛️</div>
-            <div class="info">
-                <h2>项目指导 DP</h2>
-                <p>项目委员会的决策中枢 — 授权启动、审批计划、监控进展、处理例外、授权收尾</p>
-            </div>
-            <span class="badge">贯穿全程</span>
-        </div>
-        <div class="detail-panel" id="detail-directing">
-            <div class="detail-header">
-                <h3>🏛️ 项目指导 DP</h3>
-                <span>项目委员会的决策与授权流程</span>
-                <button class="close-btn" onclick="toggleDetail('directing')">关闭</button>
-            </div>
-            <div class="detail-cols">
-                <div class="detail-col">
-                    <h4>🔑 关键活动</h4>
-                    <ul>
-                        <li>授权项目启动</li>
-                        <li>授权项目交付</li>
-                        <li>审批阶段计划</li>
-                        <li>审批例外计划</li>
-                        <li>给予 ad hoc 指导</li>
-                        <li>确认收益已实现</li>
-                        <li>授权项目收尾</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>📥 输入产品</h4>
-                    <ul>
-                        <li><span class="product-dot input"></span>项目启动文档</li>
-                        <li><span class="product-dot input"></span>阶段计划</li>
-                        <li><span class="product-dot input"></span>亮点报告</li>
-                        <li><span class="product-dot input"></span>例外报告</li>
-                        <li><span class="product-dot input"></span>项目收尾建议</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>👥 主要角色</h4>
-                    <ul>
-                        <li><span class="role-tag">项目发起人</span> 最终决策</li>
-                        <li><span class="role-tag">高级用户</span> 用户需求</li>
-                        <li><span class="role-tag">高级供应商</span> 技术能力</li>
-                        <li><span class="role-tag">项目保证</span> 独立监督</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- 流程行 -->
-        <div class="flow-row">
-            <div class="process-node" onclick="toggleDetail('su')" id="node-su">
-                <span class="step-num">1</span>
-                <h3>项目准备 SU</h3>
-                <p class="subtitle">万事俱备而后动</p>
-                <p class="desc">确保项目启动的先决条件已满足，建立项目治理结构</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">项目发起人</span>
-                </div>
-            </div>
-
-            <div class="flow-arrow">→</div>
-
-            <div class="process-node" onclick="toggleDetail('ip')" id="node-ip">
-                <span class="step-num">2</span>
-                <h3>项目启动 IP</h3>
-                <p class="subtitle">奠基立业</p>
-                <p class="desc">建立项目基线：计划、商业论证、质量策略、风险策略</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">项目保证</span>
-                </div>
-            </div>
-
-            <div class="flow-arrow">→</div>
-
-            <div class="process-node" onclick="toggleDetail('cs')" id="node-cs">
-                <span class="step-num">3</span>
-                <h3>阶段控制 CS</h3>
-                <p class="subtitle">运筹帷幄</p>
-                <p class="desc">日常管理：分配工作、监督进展、处理问题和风险</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">团队经理</span>
-                </div>
-            </div>
-
-            <div class="flow-arrow">→</div>
-
-            <div class="process-node" onclick="toggleDetail('mp')" id="node-mp">
-                <span class="step-num">4</span>
-                <h3>产品交付 MP</h3>
-                <p class="subtitle">督工之道</p>
-                <p class="desc">团队执行工作包，交付产品，报告完成情况</p>
-                <div class="roles">
-                    <span class="role-tag">团队经理</span>
-                    <span class="role-tag">项目保证</span>
-                </div>
-            </div>
-
-            <div class="flow-arrow">→</div>
-
-            <div class="process-node" onclick="toggleDetail('sb')" id="node-sb">
-                <span class="step-num">5</span>
-                <h3>阶段边界 SB</h3>
-                <p class="subtitle">承前启后</p>
-                <p class="desc">评审本阶段成果，更新商业论证，计划下一阶段</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">项目保证</span>
-                </div>
-            </div>
-
-            <div class="flow-arrow">→</div>
-
-            <div class="process-node" onclick="toggleDetail('cp')" id="node-cp">
-                <span class="step-num">6</span>
-                <h3>项目收尾 CP</h3>
-                <p class="subtitle">功成身退</p>
-                <p class="desc">移交产品、总结经验教训、评估项目绩效</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">项目发起人</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 各流程详情面板 -->
-        <div class="detail-panel" id="detail-su">
-            <div class="detail-header">
-                <h3>📋 项目准备 SU</h3>
-                <span>确保项目值得做、做得了、有人管</span>
-                <button class="close-btn" onclick="toggleDetail('su')">关闭</button>
-            </div>
-            <div class="detail-cols">
-                <div class="detail-col">
-                    <h4>🔑 关键活动</h4>
-                    <ul>
-                        <li>任命项目发起人和项目经理</li>
-                        <li>捕捉项目经验教训</li>
-                        <li>设计和任命项目管理团队</li>
-                        <li>编制项目概述文件</li>
-                        <li>编制启动阶段计划</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>📥 输入 → 📤 输出</h4>
-                    <ul>
-                        <li><span class="product-dot input"></span>项目任务书 → 项目概述文件</li>
-                        <li><span class="product-dot output"></span>启动阶段计划</li>
-                        <li><span class="product-dot output"></span>经验教训记录</li>
-                        <li><span class="product-dot output"></span>日志（风险/问题/质量）</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>➡️ 流向</h4>
-                    <ul>
-                        <li>→ 项目指导：申请授权启动</li>
-                        <li>→ 项目启动：提供项目概述文件</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="detail-panel" id="detail-ip">
-            <div class="detail-header">
-                <h3>📋 项目启动 IP</h3>
-                <span>建立项目基线，获得正式授权</span>
-                <button class="close-btn" onclick="toggleDetail('ip')">关闭</button>
-            </div>
-            <div class="detail-cols">
-                <div class="detail-col">
-                    <h4>🔑 关键活动</h4>
-                    <ul>
-                        <li>制定项目管理策略</li>
-                        <li>编制项目计划</li>
-                        <li>细化商业论证</li>
-                        <li>建立质量管理方法</li>
-                        <li>建立风险管理方法</li>
-                        <li>编制项目启动文档</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>📥 输入 → 📤 输出</h4>
-                    <ul>
-                        <li><span class="product-dot input"></span>项目概述文件</li>
-                        <li><span class="product-dot output"></span>项目计划</li>
-                        <li><span class="product-dot output"></span>商业论证</li>
-                        <li><span class="product-dot output"></span>项目启动文档 PID</li>
-                        <li><span class="product-dot output"></span>收益评审计划</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>➡️ 流向</h4>
-                    <ul>
-                        <li>→ 项目指导：申请授权交付</li>
-                        <li>→ 阶段控制：提供阶段计划</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="detail-panel" id="detail-cs">
-            <div class="detail-header">
-                <h3>📋 阶段控制 CS</h3>
-                <span>日常项目管理，确保阶段目标达成</span>
-                <button class="close-btn" onclick="toggleDetail('cs')">关闭</button>
-            </div>
-            <div class="detail-cols">
-                <div class="detail-col">
-                    <h4>🔑 关键活动</h4>
-                    <ul>
-                        <li>授权工作包</li>
-                        <li>监督工作包进展</li>
-                        <li>接收已完成工作包</li>
-                        <li>审查问题和风险</li>
-                        <li>上报问题和例外</li>
-                        <li>编制亮点报告</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>📥 输入 → 📤 输出</h4>
-                    <ul>
-                        <li><span class="product-dot input"></span>阶段计划</li>
-                        <li><span class="product-dot update"></span>工作包（授权）</li>
-                        <li><span class="product-dot update"></span>风险登记册</li>
-                        <li><span class="product-dot update"></span>问题登记册</li>
-                        <li><span class="product-dot output"></span>亮点报告</li>
-                        <li><span class="product-dot output"></span>例外报告</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>➡️ 流向</h4>
-                    <ul>
-                        <li>→ 产品交付：授权工作包</li>
-                        <li>→ 项目指导：提交亮点/例外报告</li>
-                        <li>→ 阶段边界：阶段即将结束时</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="detail-panel" id="detail-mp">
-            <div class="detail-header">
-                <h3>📋 产品交付 MP</h3>
-                <span>团队执行工作，交付产品</span>
-                <button class="close-btn" onclick="toggleDetail('mp')">关闭</button>
-            </div>
-            <div class="detail-cols">
-                <div class="detail-col">
-                    <h4>🔑 关键活动</h4>
-                    <ul>
-                        <li>接受工作包</li>
-                        <li>执行工作</li>
-                        <li>交付产品</li>
-                        <li>报告工作包完成</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>📥 输入 → 📤 输出</h4>
-                    <ul>
-                        <li><span class="product-dot input"></span>工作包</li>
-                        <li><span class="product-dot output"></span>已完成产品</li>
-                        <li><span class="product-dot output"></span>质量记录</li>
-                        <li><span class="product-dot update"></span>经验教训记录</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>➡️ 流向</h4>
-                    <ul>
-                        <li>→ 阶段控制：报告完成</li>
-                        <li>→ 质量实践：提交质量审查</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="detail-panel" id="detail-sb">
-            <div class="detail-header">
-                <h3>📋 阶段边界 SB</h3>
-                <span>评审阶段成果，规划下一阶段</span>
-                <button class="close-btn" onclick="toggleDetail('sb')">关闭</button>
-            </div>
-            <div class="detail-cols">
-                <div class="detail-col">
-                    <h4>🔑 关键活动</h4>
-                    <ul>
-                        <li>编制下一阶段计划</li>
-                        <li>更新项目计划</li>
-                        <li>更新商业论证</li>
-                        <li>报告阶段结束</li>
-                        <li>编制例外计划（如需要）</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>📥 输入 → 📤 输出</h4>
-                    <ul>
-                        <li><span class="product-dot input"></span>当前阶段计划</li>
-                        <li><span class="product-dot update"></span>项目计划（更新）</li>
-                        <li><span class="product-dot update"></span>商业论证（更新）</li>
-                        <li><span class="product-dot output"></span>下一阶段计划</li>
-                        <li><span class="product-dot output"></span>更新的风险登记册</li>
-                        <li><span class="product-dot output"></span>阶段结束报告</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>➡️ 流向</h4>
-                    <ul>
-                        <li>→ 项目指导：申请下一阶段授权</li>
-                        <li>→ 项目收尾：最后阶段结束时</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="detail-panel" id="detail-cp">
-            <div class="detail-header">
-                <h3>📋 项目收尾 CP</h3>
-                <span>移交产品，总结经验，正式关闭项目</span>
-                <button class="close-btn" onclick="toggleDetail('cp')">关闭</button>
-            </div>
-            <div class="detail-cols">
-                <div class="detail-col">
-                    <h4>🔑 关键活动</h4>
-                    <ul>
-                        <li>移交产品给运营方</li>
-                        <li>评估项目绩效</li>
-                        <li>总结经验教训</li>
-                        <li>建议项目收尾</li>
-                        <li>通知项目收尾</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>📥 输入 → 📤 输出</h4>
-                    <ul>
-                        <li><span class="product-dot input"></span>最终产品</li>
-                        <li><span class="product-dot update"></span>商业论证（最终评审）</li>
-                        <li><span class="product-dot update"></span>经验教训报告</li>
-                        <li><span class="product-dot output"></span>项目收尾通知</li>
-                        <li><span class="product-dot output"></span>收益评审计划（更新）</li>
-                    </ul>
-                </div>
-                <div class="detail-col">
-                    <h4>➡️ 流向</h4>
-                    <ul>
-                        <li>→ 项目指导：建议收尾</li>
-                        <li>→ 运营方：移交产品</li>
-                        <li>→ 组织：经验教训沉淀</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- 管理产品流转表 -->
-    <div class="data-flow-section">
-        <h3>📊 核心管理产品流转</h3>
-        <table class="flow-table">
-            <thead>
-                <tr>
-                    <th>管理产品</th>
-                    <th>创建</th>
-                    <th class="arrow-cell"></th>
-                    <th>主要更新</th>
-                    <th class="arrow-cell"></th>
-                    <th>最终确认</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>商业论证</td>
-                    <td>项目准备 SU</td>
-                    <td class="arrow-cell">→</td>
-                    <td>项目启动 IP、阶段边界 SB</td>
-                    <td class="arrow-cell">→</td>
-                    <td>项目收尾 CP</td>
-                </tr>
-                <tr>
-                    <td>项目计划</td>
-                    <td>项目启动 IP</td>
-                    <td class="arrow-cell">→</td>
-                    <td>阶段边界 SB</td>
-                    <td class="arrow-cell">→</td>
-                    <td>项目收尾 CP</td>
-                </tr>
-                <tr>
-                    <td>风险登记册</td>
-                    <td>项目准备 SU</td>
-                    <td class="arrow-cell">→</td>
-                    <td>阶段控制 CS、阶段边界 SB</td>
-                    <td class="arrow-cell">→</td>
-                    <td>项目收尾 CP</td>
-                </tr>
-                <tr>
-                    <td>问题登记册</td>
-                    <td>项目准备 SU</td>
-                    <td class="arrow-cell">→</td>
-                    <td>阶段控制 CS</td>
-                    <td class="arrow-cell">→</td>
-                    <td>项目收尾 CP</td>
-                </tr>
-                <tr>
-                    <td>质量登记册</td>
-                    <td>项目启动 IP</td>
-                    <td class="arrow-cell">→</td>
-                    <td>产品交付 MP</td>
-                    <td class="arrow-cell">→</td>
-                    <td>项目收尾 CP</td>
-                </tr>
-                <tr>
-                    <td>经验教训记录</td>
-                    <td>项目准备 SU</td>
-                    <td class="arrow-cell">→</td>
-                    <td>所有流程持续更新</td>
-                    <td class="arrow-cell">→</td>
-                    <td>项目收尾 CP</td>
-                </tr>
-                <tr>
-                    <td>工作包</td>
-                    <td>阶段控制 CS</td>
-                    <td class="arrow-cell">→</td>
-                    <td>产品交付 MP</td>
-                    <td class="arrow-cell">→</td>
-                    <td>阶段控制 CS</td>
-                </tr>
-                <tr>
-                    <td>亮点报告</td>
-                    <td>阶段控制 CS</td>
-                    <td class="arrow-cell">→</td>
-                    <td>—</td>
-                    <td class="arrow-cell">→</td>
-                    <td>项目指导 DP</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<footer class="footer">
-    <p>PRINCE2® 7 流程知识图谱 | 基于 PRINCE2 第7版官方手册</p>
-    <p>PRINCE2® is a registered trade mark of PeopleCert International Ltd.</p>
-</footer>
-
-<script>
-var currentOpen = null;
-
-function toggleDetail(id) {
-    var panel = document.getElementById('detail-' + id);
-    if (!panel) return;
-
-    // 关闭其他
-    if (currentOpen && currentOpen !== id) {
-        var prev = document.getElementById('detail-' + currentOpen);
-        if (prev) prev.classList.remove('open');
-        var prevNode = document.getElementById('node-' + currentOpen);
-        if (prevNode) prevNode.classList.remove('active');
-    }
-
-    if (panel.classList.contains('open')) {
-        panel.classList.remove('open');
-        currentOpen = null;
-        var node = document.getElementById('node-' + id);
-        if (node) node.classList.remove('active');
-    } else {
-        panel.classList.add('open');
-        currentOpen = id;
-        var node = document.getElementById('node-' + id);
-        if (node) node.classList.add('active');
-        // 不自动滚动，保持当前视口位置
-    }
-}
-</script>
-</body>
-</html>
+     1|<!DOCTYPE html>
+     2|<html lang="zh-CN">
+     3|<head>
+     4|    <meta charset="UTF-8">
+     5|    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     6|    <title>流程知识图谱 - PRINCE2® 7 知识库</title>
+     7|    <style>
+     8|        * { margin: 0; padding: 0; box-sizing: border-box; }
+     9|        body {
+    10|            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+    11|            background: var(--bg-main);
+    12|            color: var(--text-main);
+    13|            min-height: 100vh;
+    14|        }
+    15|
+    16|        /* 顶部栏 */
+    17|        .top-bar {
+    18|            background: var(--bg-card);
+    19|            border-bottom: 2px solid var(--accent);
+    20|            padding: 14px 24px;
+    21|            display: flex;
+    22|            align-items: center;
+    23|            gap: 16px;
+    24|            position: sticky;
+    25|            top: 0;
+    26|            z-index: 100;
+    27|        }
+    28|        .top-bar a {
+    29|            color: var(--text-heading);
+    30|            text-decoration: none;
+    31|            font-size: 0.9em;
+    32|        }
+    33|        .top-bar a:hover { text-decoration: underline; }
+    34|        .top-bar h1 {
+    35|            font-size: 1.2em;
+    36|            color: var(--text-heading);
+    37|            letter-spacing: 0.05em;
+    38|        }
+    39|        .top-bar .spacer { flex: 1; }
+    40|        .top-bar .hint {
+    41|            font-size: 0.8em;
+    42|            color: var(--text-muted);
+    43|        }
+    44|
+    45|        /* 图例 */
+    46|        .legend {
+    47|            display: flex;
+    48|            gap: 20px;
+    49|            padding: 12px 24px;
+    50|            background: var(--bg-panel);
+    51|            border-bottom: 1px solid var(--border-subtle);
+    52|            font-size: 0.85em;
+    53|            flex-wrap: wrap;
+    54|        }
+    55|        .legend-item {
+    56|            display: flex;
+    57|            align-items: center;
+    58|            gap: 6px;
+    59|        }
+    60|        .legend-line {
+    61|            width: 30px;
+    62|            height: 3px;
+    63|            border-radius: 2px;
+    64|        }
+    65|        .legend-dot {
+    66|            width: 10px;
+    67|            height: 10px;
+    68|            border-radius: 50%;
+    69|        }
+    70|
+    71|        /* 主容器 */
+    72|        .container {
+    73|            max-width: 1600px;
+    74|            margin: 0 auto;
+    75|            padding: 30px 24px;
+    76|        }
+    77|
+    78|        /* ── 流程图主体 ───────────────────────────── */
+    79|        .flow-wrapper {
+    80|            position: relative;
+    81|        }
+    82|
+    83|        /* 项目指导（贯穿条） */
+    84|        .directing-bar {
+    85|            background: linear-gradient(90deg, var(--green), var(--green-light));
+    86|            border: 2px solid #2E8B57;
+    87|            border-radius: 8px;
+    88|            padding: 16px 24px;
+    89|            margin-bottom: 30px;
+    90|            display: flex;
+    91|            align-items: center;
+    92|            gap: 16px;
+    93|            cursor: pointer;
+    94|            transition: all 0.3s;
+    95|        }
+    96|        .directing-bar:hover {
+    97|            box-shadow: 0 0 20px var(--green-glow);
+    98|            transform: translateY(-2px);
+    99|        }
+   100|        .directing-bar .icon {
+   101|            font-size: 2em;
+   102|            min-width: 50px;
+   103|            text-align: center;
+   104|        }
+   105|        .directing-bar .info h2 {
+   106|            font-size: 1.2em;
+   107|            color: #fff;
+   108|            margin-bottom: 4px;
+   109|        }
+   110|        .directing-bar .info p {
+   111|            font-size: 0.9em;
+   112|            color: var(--green-light);
+   113|        }
+   114|        .directing-bar .badge {
+   115|            margin-left: auto;
+   116|            background: rgba(255,255,255,0.2);
+   117|            padding: 4px 12px;
+   118|            border-radius: 12px;
+   119|            font-size: 0.8em;
+   120|            color: #fff;
+   121|        }
+   122|
+   123|        /* 流程行 */
+   124|        .flow-row {
+   125|            display: flex;
+   126|            gap: 0;
+   127|            align-items: stretch;
+   128|            margin-bottom: 24px;
+   129|            position: relative;
+   130|        }
+   131|
+   132|        /* 流程节点 */
+   133|        .process-node {
+   134|            flex: 1;
+   135|            background: var(--bg-card);
+   136|            border: 2px solid var(--border-card);
+   137|            border-radius: 10px;
+   138|            padding: 24px 20px;
+   139|            cursor: pointer;
+   140|            transition: all 0.3s;
+   141|            position: relative;
+   142|            min-height: 180px;
+   143|            display: flex;
+   144|            flex-direction: column;
+   145|        }
+   146|        .process-node:hover {
+   147|            border-color: var(--text-heading);
+   148|            box-shadow: 0 4px 20px var(--accent-glow);
+   149|            transform: translateY(-3px);
+   150|        }
+   151|        .process-node.active {
+   152|            border-color: var(--text-heading);
+   153|            border-width: 3px;
+   154|            background: var(--bg-card-active);
+   155|            box-shadow: 0 0 25px var(--accent-glow), inset 0 0 30px var(--accent-glow);
+   156|            transform: translateY(-5px);
+   157|            z-index: 10;
+   158|        }
+   159|        .process-node.active h3 {
+   160|            color: #fff;
+   161|            text-shadow: 0 0 10px var(--accent-glow);
+   162|        }
+   163|        .process-node.active .step-num {
+   164|            background: #fff;
+   165|            color: #1a0f0a;
+   166|            box-shadow: 0 0 10px var(--accent-glow);
+   167|        }
+   168|        /* 当有节点激活时，未激活的节点变暗 */
+   169|        .flow-row:has(.process-node.active) .process-node:not(.active) {
+   170|            opacity: 0.45;
+   171|            filter: grayscale(0.3);
+   172|            transform: scale(0.97);
+   173|        }
+   174|        /* 项目指导激活时，整行流程变暗 */
+   175|        .flow-wrapper:has(.directing-bar.active) .flow-row .process-node {
+   176|            opacity: 0.45;
+   177|            filter: grayscale(0.3);
+   178|            transform: scale(0.97);
+   179|        }
+   180|        .directing-bar.active {
+   181|            box-shadow: 0 0 30px var(--green-glow);
+   182|            border-color: #fff;
+   183|            transform: translateY(-3px);
+   184|        }
+   185|        .process-node .step-num {
+   186|            position: absolute;
+   187|            top: -12px;
+   188|            left: 16px;
+   189|            background: #d4af37;
+   190|            color: #1a0f0a;
+   191|            width: 24px;
+   192|            height: 24px;
+   193|            border-radius: 50%;
+   194|            display: flex;
+   195|            align-items: center;
+   196|            justify-content: center;
+   197|            font-size: 0.8em;
+   198|            font-weight: bold;
+   199|        }
+   200|        .process-node h3 {
+   201|            font-size: 1.15em;
+   202|            color: var(--text-heading);
+   203|            margin-bottom: 8px;
+   204|        }
+   205|        .process-node .subtitle {
+   206|            font-size: 0.9em;
+   207|            color: var(--text-muted);
+   208|            margin-bottom: 12px;
+   209|            font-style: italic;
+   210|        }
+   211|        .process-node .desc {
+   212|            font-size: 0.88em;
+   213|            color: var(--text-muted);
+   214|            line-height: 1.4;
+   215|        }
+   216|        .process-node .roles {
+   217|            display: flex;
+   218|            flex-wrap: wrap;
+   219|            gap: 4px;
+   220|            margin-top: auto;
+   221|        }
+   222|        .role-tag {
+   223|            font-size: 0.72em;
+   224|            padding: 2px 8px;
+   225|            border-radius: 10px;
+   226|            background: var(--blue);
+   227|            color: #fff;
+   228|        }
+   229|
+   230|        /* 连接箭头 */
+   231|        .flow-arrow {
+   232|            display: flex;
+   233|            align-items: center;
+   234|            justify-content: center;
+   235|            width: 30px;
+   236|            min-width: 30px;
+   237|            color: var(--text-heading);
+   238|            font-size: 1.3em;
+   239|        }
+   240|
+   241|        /* ── 展开详情面板 ─────────────────────────── */
+   242|        .detail-panel {
+   243|            background: var(--bg-panel);
+   244|            border: 2px solid var(--border-panel);
+   245|            border-radius: 8px;
+   246|            margin: 0 0 24px 0;
+   247|            overflow: hidden;
+   248|            max-height: 0;
+   249|            opacity: 0;
+   250|            transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+   251|        }
+   252|        .detail-panel.open {
+   253|            max-height: 800px;
+   254|            opacity: 1;
+   255|            padding: 24px;
+   256|        }
+   257|        .detail-header {
+   258|            display: flex;
+   259|            align-items: center;
+   260|            gap: 12px;
+   261|            margin-bottom: 20px;
+   262|            padding-bottom: 12px;
+   263|            border-bottom: 1px solid var(--border-subtle);
+   264|        }
+   265|        .detail-header h3 {
+   266|            font-size: 1.2em;
+   267|            color: var(--text-heading);
+   268|        }
+   269|        .detail-header .close-btn {
+   270|            margin-left: auto;
+   271|            background: none;
+   272|            border: 1px solid #5c3d1a;
+   273|            color: var(--text-muted);
+   274|            padding: 4px 10px;
+   275|            border-radius: 4px;
+   276|            cursor: pointer;
+   277|            font-size: 0.8em;
+   278|        }
+   279|        .detail-header .close-btn:hover {
+   280|            border-color: var(--text-heading);
+   281|            color: var(--text-heading);
+   282|        }
+   283|
+   284|        /* 详情三栏 */
+   285|        .detail-cols {
+   286|            display: grid;
+   287|            grid-template-columns: 1fr 1fr 1fr;
+   288|            gap: 20px;
+   289|        }
+   290|        .detail-col h4 {
+   291|            font-size: 0.9em;
+   292|            color: var(--text-heading);
+   293|            margin-bottom: 10px;
+   294|            padding-bottom: 6px;
+   295|            border-bottom: 1px solid var(--border-subtle);
+   296|        }
+   297|        .detail-col ul {
+   298|            list-style: none;
+   299|            padding: 0;
+   300|        }
+   301|        .detail-col li {
+   302|            font-size: 0.85em;
+   303|            padding: 4px 0;
+   304|            color: var(--text-body);
+   305|            border-bottom: 1px dotted #3a2515;
+   306|        }
+   307|        .detail-col li:last-child { border-bottom: none; }
+   308|        .detail-col .product-item {
+   309|            display: flex;
+   310|            align-items: center;
+   311|            gap: 8px;
+   312|        }
+   313|        .product-dot {
+   314|            width: 8px;
+   315|            height: 8px;
+   316|            border-radius: 50%;
+   317|            flex-shrink: 0;
+   318|        }
+   319|        .product-dot.input { background: var(--blue); }
+   320|        .product-dot.output { background: var(--green); }
+   321|        .product-dot.update { background: #d4af37; }
+   322|
+   323|        /* 数据流动示意 */
+   324|        .data-flow-section {
+   325|            margin-top: 30px;
+   326|            padding: 24px;
+   327|            background: var(--bg-panel);
+   328|            border: 1px solid var(--border-subtle);
+   329|            border-radius: 8px;
+   330|        }
+   331|        .data-flow-section h3 {
+   332|            color: var(--text-heading);
+   333|            font-size: 1.1em;
+   334|            margin-bottom: 16px;
+   335|            padding-bottom: 8px;
+   336|            border-bottom: 1px solid var(--border-subtle);
+   337|        }
+   338|        .flow-table {
+   339|            width: 100%;
+   340|            border-collapse: collapse;
+   341|            font-size: 0.85em;
+   342|        }
+   343|        .flow-table th {
+   344|            background: var(--bg-card);
+   345|            color: var(--text-heading);
+   346|            padding: 10px 12px;
+   347|            text-align: left;
+   348|            border-bottom: 2px solid var(--accent);
+   349|            font-weight: normal;
+   350|        }
+   351|        .flow-table td {
+   352|            padding: 8px 12px;
+   353|            border-bottom: 1px dotted #3a2515;
+   354|            color: var(--text-body);
+   355|        }
+   356|        .flow-table tr:hover td { background: var(--bg-card); }
+   357|        .flow-table .arrow-cell {
+   358|            color: var(--text-heading);
+   359|            text-align: center;
+   360|            font-size: 1.2em;
+   361|        }
+   362|
+   363|        /* 页脚 */
+   364|        .footer {
+   365|            margin-top: 40px;
+   366|            padding: 20px 0;
+   367|            border-top: 2px solid var(--border-subtle);
+   368|            text-align: center;
+   369|            font-size: 0.8em;
+   370|            color: var(--text-muted);
+   371|        }
+   372|
+   373|        /* 响应式 */
+   374|        @media (max-width: 900px) {
+   375|            .flow-row { flex-direction: column; gap: 12px; }
+   376|            .flow-arrow { transform: rotate(90deg); width: auto; min-width: auto; height: 30px; }
+   377|            .detail-cols { grid-template-columns: 1fr; }
+   378|        }
+   379|    </style>
+   380|</head>
+   381|<body>
+   382|
+   383|<div class="top-bar">
+   384|    <a href="index.html">◁ 首页</a>
+   385|    <h1>🌐 PRINCE2® 7 流程知识图谱</h1>
+   386|    <span class="spacer"></span>
+   387|    <span class="hint">点击流程节点查看详情</span>
+   388|</div>
+   389|
+   390|<div class="legend">
+   391|    <div class="legend-item"><div class="legend-dot" style="background:#2E8B57"></div> 项目指导（贯穿）</div>
+   392|    <div class="legend-item"><div class="legend-dot" style="background:#d4af37"></div> 流程节点</div>
+   393|    <div class="legend-item"><div class="legend-line" style="background:#4169E1"></div> 输入管理产品</div>
+   394|    <div class="legend-item"><div class="legend-line" style="background:#2E8B57"></div> 输出管理产品</div>
+   395|    <div class="legend-item"><div class="legend-line" style="background:#d4af37"></div> 更新管理产品</div>
+   396|    <div class="legend-item"><div class="legend-dot" style="background:#4169E1"></div> 角色标签</div>
+   397|</div>
+   398|
+   399|<div class="container">
+   400|    <div class="flow-wrapper">
+   401|
+   402|        <!-- 项目指导（贯穿条） -->
+   403|        <div class="directing-bar" id="node-directing" onclick="toggleDetail('directing')">
+   404|            <div class="icon">🏛️</div>
+   405|            <div class="info">
+   406|                <h2>项目指导 DP</h2>
+   407|                <p>项目委员会的决策中枢 — 授权启动、审批计划、监控进展、处理例外、授权收尾</p>
+   408|            </div>
+   409|            <span class="badge">贯穿全程</span>
+   410|        </div>
+   411|        <div class="detail-panel" id="detail-directing">
+   412|            <div class="detail-header">
+   413|                <h3>🏛️ 项目指导 DP</h3>
+   414|                <span>项目委员会的决策与授权流程</span>
+   415|                <button class="close-btn" onclick="toggleDetail('directing')">关闭</button>
+   416|            </div>
+   417|            <div class="detail-cols">
+   418|                <div class="detail-col">
+   419|                    <h4>🔑 关键活动</h4>
+   420|                    <ul>
+   421|                        <li>授权项目启动</li>
+   422|                        <li>授权项目交付</li>
+   423|                        <li>审批阶段计划</li>
+   424|                        <li>审批例外计划</li>
+   425|                        <li>给予 ad hoc 指导</li>
+   426|                        <li>确认收益已实现</li>
+   427|                        <li>授权项目收尾</li>
+   428|                    </ul>
+   429|                </div>
+   430|                <div class="detail-col">
+   431|                    <h4>📥 输入产品</h4>
+   432|                    <ul>
+   433|                        <li><span class="product-dot input"></span>项目启动文档</li>
+   434|                        <li><span class="product-dot input"></span>阶段计划</li>
+   435|                        <li><span class="product-dot input"></span>亮点报告</li>
+   436|                        <li><span class="product-dot input"></span>例外报告</li>
+   437|                        <li><span class="product-dot input"></span>项目收尾建议</li>
+   438|                    </ul>
+   439|                </div>
+   440|                <div class="detail-col">
+   441|                    <h4>👥 主要角色</h4>
+   442|                    <ul>
+   443|                        <li><span class="role-tag">项目发起人</span> 最终决策</li>
+   444|                        <li><span class="role-tag">高级用户</span> 用户需求</li>
+   445|                        <li><span class="role-tag">高级供应商</span> 技术能力</li>
+   446|                        <li><span class="role-tag">项目保证</span> 独立监督</li>
+   447|                    </ul>
+   448|                </div>
+   449|            </div>
+   450|        </div>
+   451|
+   452|        <!-- 流程行 -->
+   453|        <div class="flow-row">
+   454|            <div class="process-node" onclick="toggleDetail('su')" id="node-su">
+   455|                <span class="step-num">1</span>
+   456|                <h3>项目准备 SU</h3>
+   457|                <p class="subtitle">万事俱备而后动</p>
+   458|                <p class="desc">确保项目启动的先决条件已满足，建立项目治理结构</p>
+   459|                <div class="roles">
+   460|                    <span class="role-tag">项目经理</span>
+   461|                    <span class="role-tag">项目发起人</span>
+   462|                </div>
+   463|            </div>
+   464|
+   465|            <div class="flow-arrow">→</div>
+   466|
+   467|            <div class="process-node" onclick="toggleDetail('ip')" id="node-ip">
+   468|                <span class="step-num">2</span>
+   469|                <h3>项目启动 IP</h3>
+   470|                <p class="subtitle">奠基立业</p>
+   471|                <p class="desc">建立项目基线：计划、商业论证、质量策略、风险策略</p>
+   472|                <div class="roles">
+   473|                    <span class="role-tag">项目经理</span>
+   474|                    <span class="role-tag">项目保证</span>
+   475|                </div>
+   476|            </div>
+   477|
+   478|            <div class="flow-arrow">→</div>
+   479|
+   480|            <div class="process-node" onclick="toggleDetail('cs')" id="node-cs">
+   481|                <span class="step-num">3</span>
+   482|                <h3>阶段控制 CS</h3>
+   483|                <p class="subtitle">运筹帷幄</p>
+   484|                <p class="desc">日常管理：分配工作、监督进展、处理问题和风险</p>
+   485|                <div class="roles">
+   486|                    <span class="role-tag">项目经理</span>
+   487|                    <span class="role-tag">团队经理</span>
+   488|                </div>
+   489|            </div>
+   490|
+   491|            <div class="flow-arrow">→</div>
+   492|
+   493|            <div class="process-node" onclick="toggleDetail('mp')" id="node-mp">
+   494|                <span class="step-num">4</span>
+   495|                <h3>产品交付 MP</h3>
+   496|                <p class="subtitle">督工之道</p>
+   497|                <p class="desc">团队执行工作包，交付产品，报告完成情况</p>
+   498|                <div class="roles">
+   499|                    <span class="role-tag">团队经理</span>
+   500|                    <span class="role-tag">项目保证</span>
+   501|
