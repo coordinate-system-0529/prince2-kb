@@ -171,6 +171,17 @@
             filter: grayscale(0.3);
             transform: scale(0.97);
         }
+        /* 项目指导激活时，整行流程变暗 */
+        .flow-wrapper:has(.directing-bar.active) .flow-row .process-node {
+            opacity: 0.45;
+            filter: grayscale(0.3);
+            transform: scale(0.97);
+        }
+        .directing-bar.active {
+            box-shadow: 0 0 30px rgba(46,139,87,0.5);
+            border-color: #fff;
+            transform: translateY(-3px);
+        }
         .process-node .step-num {
             position: absolute;
             top: -12px;
@@ -384,7 +395,7 @@
     <div class="flow-wrapper">
 
         <!-- 项目指导（贯穿条） -->
-        <div class="directing-bar" onclick="toggleDetail('directing')">
+        <div class="directing-bar" id="node-directing" onclick="toggleDetail('directing')">
             <div class="icon">🏛️</div>
             <div class="info">
                 <h2>项目指导 DP</h2>
