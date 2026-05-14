@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRINCE2® 7 配色方案预览</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background: #1a1a2e;
+            color: #e8e8e8;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 0.95em;
+            margin-bottom: 40px;
+        }
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .scheme-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+        .scheme-card:hover { transform: translateY(-5px); }
+        .scheme-label {
+            padding: 16px 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+        }
+        .scheme-preview {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            height: 320px;
+        }
+        /* 迷你侧边栏 */
+        .mini-sidebar {
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .mini-sidebar .logo {
+            font-size: 0.9em;
+            font-weight: bold;
+            text-align: center;
+            padding-bottom: 10px;
+            margin-bottom: 6px;
+        }
+        .mini-nav {
+            font-size: 0.7em;
+            padding: 5px 8px;
+            border-radius: 4px;
+            cursor: default;
+        }
+        .mini-nav.active {
+            font-weight: bold;
+        }
+        /* 迷你主内容 */
+        .mini-main {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .mini-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+        }
+        .mini-title {
+            font-size: 1em;
+            font-weight: bold;
+        }
+        .mini-badge {
+            font-size: 0.65em;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .mini-card {
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.75em;
+        }
+        .mini-card .card-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .mini-card .card-desc {
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+        .mini-section-title {
+            font-size: 0.85em;
+            font-weight: bold;
+            padding-bottom: 6px;
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            margin-top: 4px;
+        }
+
+        /* ═══════════════════════════════════════════════
+           方案1: 古籍经典 (当前)
+           ═══════════════════════════════════════════════ */
+        .scheme-1 .scheme-label {
+            background: #2c1810;
+            color: #d4af37;
+        }
+        .scheme-1 .mini-sidebar {
+            background: #2c1810;
+            color: #e8d5b0;
+            border-right: 3px solid #d4af37;
+        }
+        .scheme-1 .logo { color: #d4af37; border-bottom: 1px solid #5c3d1a; }
+        .scheme-1 .mini-nav { color: #c4a882; }
+        .scheme-1 .mini-nav:hover { background: #3a2515; color: #d4af37; }
+        .scheme-1 .mini-nav.active { color: #d4af37; background: #3a2515; border-left: 2px solid #d4af37; }
+        .scheme-1 .mini-main { background: #faf6f0; color: #3e2a1a; }
+        .scheme-1 .mini-header { border-bottom: 2px solid #d4af37; }
+        .scheme-1 .mini-title { color: #5c3d1a; }
+        .scheme-1 .mini-badge { background: #d4af37; color: #fff; }
+        .scheme-1 .mini-section-title { color: #5c3d1a; border-bottom-color: #d4af37; }
+        .scheme-1 .mini-card { background: #fff; border: 1px solid #e0d5c0; }
+        .scheme-1 .mini-card .card-title { color: #3e2a1a; }
+        .scheme-1 .mini-card .card-desc { color: #8B7355; }
+
+        /* ═══════════════════════════════════════════════
+           方案2: 深邃蓝黑
+           ═══════════════════════════════════════════════ */
+        .scheme-2 .scheme-label {
+            background: #0d1b2a;
+            color: #64ffda;
+        }
+        .scheme-2 .mini-sidebar {
+            background: #0d1b2a;
+            color: #a8b2d1;
+            border-right: 3px solid #64ffda;
+        }
+        .scheme-2 .logo { color: #64ffda; border-bottom: 1px solid #1b2838; }
+        .scheme-2 .mini-nav { color: #8892b0; }
+        .scheme-2 .mini-nav:hover { background: #1b2838; color: #64ffda; }
+        .scheme-2 .mini-nav.active { color: #64ffda; background: #1b2838; border-left: 2px solid #64ffda; }
+        .scheme-2 .mini-main { background: #f0f4f8; color: #1a2332; }
+        .scheme-2 .mini-header { border-bottom: 2px solid #1565c0; }
+        .scheme-2 .mini-title { color: #0d1b2a; }
+        .scheme-2 .mini-badge { background: #1565c0; color: #fff; }
+        .scheme-2 .mini-section-title { color: #0d1b2a; border-bottom-color: #1565c0; }
+        .scheme-2 .mini-card { background: #fff; border: 1px solid #d0d8e4; }
+        .scheme-2 .mini-card .card-title { color: #1a2332; }
+        .scheme-2 .mini-card .card-desc { color: #5a6a7a; }
+
+        /* ═══════════════════════════════════════════════
+           方案3: 森林绿意
+           ═══════════════════════════════════════════════ */
+        .scheme-3 .scheme-label {
+            background: #1a3a2a;
+            color: #a8d5ba;
+        }
+        .scheme-3 .mini-sidebar {
+            background: #1a3a2a;
+            color: #c8e6c9;
+            border-right: 3px solid #4caf50;
+        }
+        .scheme-3 .logo { color: #81c784; border-bottom: 1px solid #2e5a3a; }
+        .scheme-3 .mini-nav { color: #a5d6a7; }
+        .scheme-3 .mini-nav:hover { background: #2e5a3a; color: #81c784; }
+        .scheme-3 .mini-nav.active { color: #81c784; background: #2e5a3a; border-left: 2px solid #4caf50; }
+        .scheme-3 .mini-main { background: #f1f8e9; color: #2e3b2e; }
+        .scheme-3 .mini-header { border-bottom: 2px solid #4caf50; }
+        .scheme-3 .mini-title { color: #1a3a2a; }
+        .scheme-3 .mini-badge { background: #4caf50; color: #fff; }
+        .scheme-3 .mini-section-title { color: #1a3a2a; border-bottom-color: #4caf50; }
+        .scheme-3 .mini-card { background: #fff; border: 1px solid #c8e6c9; }
+        .scheme-3 .mini-card .card-title { color: #2e3b2e; }
+        .scheme-3 .mini-card .card-desc { color: #5a6b5a; }
+
+        /* ═══════════════════════════════════════════════
+           方案4: 赤陶暖阳
+           ═══════════════════════════════════════════════ */
+        .scheme-4 .scheme-label {
+            background: #3d2b1f;
+            color: #e8a87c;
+        }
+        .scheme-4 .mini-sidebar {
+            background: #3d2b1f;
+            color: #d4a574;
+            border-right: 3px solid #e07a5f;
+        }
+        .scheme-4 .logo { color: #e8a87c; border-bottom: 1px solid #5a3d2a; }
+        .scheme-4 .mini-nav { color: #c49a6c; }
+        .scheme-4 .mini-nav:hover { background: #5a3d2a; color: #e8a87c; }
+        .scheme-4 .mini-nav.active { color: #e8a87c; background: #5a3d2a; border-left: 2px solid #e07a5f; }
+        .scheme-4 .mini-main { background: #fdf6f0; color: #3d2b1f; }
+        .scheme-4 .mini-header { border-bottom: 2px solid #e07a5f; }
+        .scheme-4 .mini-title { color: #3d2b1f; }
+        .scheme-4 .mini-badge { background: #e07a5f; color: #fff; }
+        .scheme-4 .mini-section-title { color: #3d2b1f; border-bottom-color: #e07a5f; }
+        .scheme-4 .mini-card { background: #fff; border: 1px solid #e8d5c0; }
+        .scheme-4 .mini-card .card-title { color: #3d2b1f; }
+        .scheme-4 .mini-card .card-desc { color: #8b6b4a; }
+
+        /* ═══════════════════════════════════════════════
+           方案5: 薰衣草梦境
+           ═══════════════════════════════════════════════ */
+        .scheme-5 .scheme-label {
+            background: #2d2640;
+            color: #c4b5fd;
+        }
+        .scheme-5 .mini-sidebar {
+            background: #2d2640;
+            color: #c4b5fd;
+            border-right: 3px solid #a78bfa;
+        }
+        .scheme-5 .logo { color: #c4b5fd; border-bottom: 1px solid #4a3d6b; }
+        .scheme-5 .mini-nav { color: #a594c4; }
+        .scheme-5 .mini-nav:hover { background: #4a3d6b; color: #c4b5fd; }
+        .scheme-5 .mini-nav.active { color: #c4b5fd; background: #4a3d6b; border-left: 2px solid #a78bfa; }
+        .scheme-5 .mini-main { background: #f5f3ff; color: #2d2640; }
+        .scheme-5 .mini-header { border-bottom: 2px solid #a78bfa; }
+        .scheme-5 .mini-title { color: #2d2640; }
+        .scheme-5 .mini-badge { background: #a78bfa; color: #fff; }
+        .scheme-5 .mini-section-title { color: #2d2640; border-bottom-color: #a78bfa; }
+        .scheme-5 .mini-card { background: #fff; border: 1px solid #e0d8f0; }
+        .scheme-5 .mini-card .card-title { color: #2d2640; }
+        .scheme-5 .mini-card .card-desc { color: #6b5a8a; }
+
+        /* ═══════════════════════════════════════════════
+           方案6: 极简黑白
+           ═══════════════════════════════════════════════ */
+        .scheme-6 .scheme-label {
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .scheme-6 .mini-sidebar {
+            background: #1a1a1a;
+            color: #ccc;
+            border-right: 3px solid #fff;
+        }
+        .scheme-6 .logo { color: #fff; border-bottom: 1px solid #333; }
+        .scheme-6 .mini-nav { color: #999; }
+        .scheme-6 .mini-nav:hover { background: #333; color: #fff; }
+        .scheme-6 .mini-nav.active { color: #fff; background: #333; border-left: 2px solid #fff; }
+        .scheme-6 .mini-main { background: #fafafa; color: #111; }
+        .scheme-6 .mini-header { border-bottom: 2px solid #111; }
+        .scheme-6 .mini-title { color: #111; }
+        .scheme-6 .mini-badge { background: #111; color: #fff; }
+        .scheme-6 .mini-section-title { color: #111; border-bottom-color: #111; }
+        .scheme-6 .mini-card { background: #fff; border: 1px solid #ddd; }
+        .scheme-6 .mini-card .card-title { color: #111; }
+        .scheme-6 .mini-card .card-desc { color: #666; }
+
+        .color-swatches {
+            display: flex;
+            gap: 6px;
+            padding: 12px 16px;
+            flex-wrap: wrap;
+        }
+        .swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .swatch-label {
+            font-size: 0.65em;
+            text-align: center;
+            margin-top: 2px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🎨 PRINCE2® 7 配色方案</h1>
+<p class="subtitle">选择一个你喜欢的风格，我会应用到整个知识库</p>
+
+<div class="schemes-grid">
+
+    <!-- 方案1: 古籍经典 (当前) -->
+    <div class="scheme-card scheme-1">
+        <div class="scheme-label">📜 方案一 · 古籍经典（当前）</div>
+        <div class="scheme-preview">
+            <div class="mini-sidebar">
+                <div class="logo">PRINCE2® 7</div>
+                <div class="mini-nav active">▶ 卷伍 · 流程</div>
+                <div class="mini-nav">◈ 卷肆 · 实践</div>
+                <div class="mini-nav">◆ 卷贰 · 原则</div>
+                <div class="mini-nav">◉ 附录</div>
+            </div>
+            <div class="mini-main">
+                <div class="mini-header">
+                    <div class="mini-title">PRINCE2® 7 知识库</div>
+                    <div class="mini-badge">199 个概念</div>
+                </div>
+                <div class="mini-section-title">卷伍 · 流程</div>
+                <div class="mini-card">
+                    <div class="card-title">第13章 项目准备</div>
+                    <div class="card-desc">万事俱备而后动</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第15章 项目启动</div>
+                    <div class="card-desc">奠基立业</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第16章 阶段控制</div>
+                    <div class="card-desc">运筹帷幄</div>
+                </div>
+            </div>
+        </div>
+        <div class="color-swatches">
+            <div><div class="swatch" style="background:#2c1810"></div><div class="swatch-label">侧栏</div></div>
+            <div><div class="swatch" style="background:#d4af37"></div><div class="swatch-label">强调</div></div>
+            <div><div class="swatch" style="background:#faf6f0"></div><div class="swatch-label">背景</div></div>
+            <div><div class="swatch" style="background:#3e2a1a"></div><div class="swatch-label">文字</div></div>
+            <div><div class="swatch" style="background:#e0d5c0"></div><div class="swatch-label">边框</div></div>
+        </div>
+    </div>
+
+    <!-- 方案2: 深邃蓝黑 -->
+    <div class="scheme-card scheme-2">
+        <div class="scheme-label">🌊 方案二 · 深邃蓝黑</div>
+        <div class="scheme-preview">
+            <div class="mini-sidebar">
+                <div class="logo">PRINCE2® 7</div>
+                <div class="mini-nav active">▶ 卷伍 · 流程</div>
+                <div class="mini-nav">◈ 卷肆 · 实践</div>
+                <div class="mini-nav">◆ 卷贰 · 原则</div>
+                <div class="mini-nav">◉ 附录</div>
+            </div>
+            <div class="mini-main">
+                <div class="mini-header">
+                    <div class="mini-title">PRINCE2® 7 知识库</div>
+                    <div class="mini-badge">199 个概念</div>
+                </div>
+                <div class="mini-section-title">卷伍 · 流程</div>
+                <div class="mini-card">
+                    <div class="card-title">第13章 项目准备</div>
+                    <div class="card-desc">万事俱备而后动</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第15章 项目启动</div>
+                    <div class="card-desc">奠基立业</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第16章 阶段控制</div>
+                    <div class="card-desc">运筹帷幄</div>
+                </div>
+            </div>
+        </div>
+        <div class="color-swatches">
+            <div><div class="swatch" style="background:#0d1b2a"></div><div class="swatch-label">侧栏</div></div>
+            <div><div class="swatch" style="background:#1565c0"></div><div class="swatch-label">强调</div></div>
+            <div><div class="swatch" style="background:#f0f4f8"></div><div class="swatch-label">背景</div></div>
+            <div><div class="swatch" style="background:#1a2332"></div><div class="swatch-label">文字</div></div>
+            <div><div class="swatch" style="background:#64ffda"></div><div class="swatch-label">高亮</div></div>
+        </div>
+    </div>
+
+    <!-- 方案3: 森林绿意 -->
+    <div class="scheme-card scheme-3">
+        <div class="scheme-label">🌿 方案三 · 森林绿意</div>
+        <div class="scheme-preview">
+            <div class="mini-sidebar">
+                <div class="logo">PRINCE2® 7</div>
+                <div class="mini-nav active">▶ 卷伍 · 流程</div>
+                <div class="mini-nav">◈ 卷肆 · 实践</div>
+                <div class="mini-nav">◆ 卷贰 · 原则</div>
+                <div class="mini-nav">◉ 附录</div>
+            </div>
+            <div class="mini-main">
+                <div class="mini-header">
+                    <div class="mini-title">PRINCE2® 7 知识库</div>
+                    <div class="mini-badge">199 个概念</div>
+                </div>
+                <div class="mini-section-title">卷伍 · 流程</div>
+                <div class="mini-card">
+                    <div class="card-title">第13章 项目准备</div>
+                    <div class="card-desc">万事俱备而后动</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第15章 项目启动</div>
+                    <div class="card-desc">奠基立业</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第16章 阶段控制</div>
+                    <div class="card-desc">运筹帷幄</div>
+                </div>
+            </div>
+        </div>
+        <div class="color-swatches">
+            <div><div class="swatch" style="background:#1a3a2a"></div><div class="swatch-label">侧栏</div></div>
+            <div><div class="swatch" style="background:#4caf50"></div><div class="swatch-label">强调</div></div>
+            <div><div class="swatch" style="background:#f1f8e9"></div><div class="swatch-label">背景</div></div>
+            <div><div class="swatch" style="background:#2e3b2e"></div><div class="swatch-label">文字</div></div>
+            <div><div class="swatch" style="background:#81c784"></div><div class="swatch-label">高亮</div></div>
+        </div>
+    </div>
+
+    <!-- 方案4: 赤陶暖阳 -->
+    <div class="scheme-card scheme-4">
+        <div class="scheme-label">🌅 方案四 · 赤陶暖阳</div>
+        <div class="scheme-preview">
+            <div class="mini-sidebar">
+                <div class="logo">PRINCE2® 7</div>
+                <div class="mini-nav active">▶ 卷伍 · 流程</div>
+                <div class="mini-nav">◈ 卷肆 · 实践</div>
+                <div class="mini-nav">◆ 卷贰 · 原则</div>
+                <div class="mini-nav">◉ 附录</div>
+            </div>
+            <div class="mini-main">
+                <div class="mini-header">
+                    <div class="mini-title">PRINCE2® 7 知识库</div>
+                    <div class="mini-badge">199 个概念</div>
+                </div>
+                <div class="mini-section-title">卷伍 · 流程</div>
+                <div class="mini-card">
+                    <div class="card-title">第13章 项目准备</div>
+                    <div class="card-desc">万事俱备而后动</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第15章 项目启动</div>
+                    <div class="card-desc">奠基立业</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第16章 阶段控制</div>
+                    <div class="card-desc">运筹帷幄</div>
+                </div>
+            </div>
+        </div>
+        <div class="color-swatches">
+            <div><div class="swatch" style="background:#3d2b1f"></div><div class="swatch-label">侧栏</div></div>
+            <div><div class="swatch" style="background:#e07a5f"></div><div class="swatch-label">强调</div></div>
+            <div><div class="swatch" style="background:#fdf6f0"></div><div class="swatch-label">背景</div></div>
+            <div><div class="swatch" style="background:#3d2b1f"></div><div class="swatch-label">文字</div></div>
+            <div><div class="swatch" style="background:#e8a87c"></div><div class="swatch-label">高亮</div></div>
+        </div>
+    </div>
+
+    <!-- 方案5: 薰衣草梦境 -->
+    <div class="scheme-card scheme-5">
+        <div class="scheme-label">💜 方案五 · 薰衣草梦境</div>
+        <div class="scheme-preview">
+            <div class="mini-sidebar">
+                <div class="logo">PRINCE2® 7</div>
+                <div class="mini-nav active">▶ 卷伍 · 流程</div>
+                <div class="mini-nav">◈ 卷肆 · 实践</div>
+                <div class="mini-nav">◆ 卷贰 · 原则</div>
+                <div class="mini-nav">◉ 附录</div>
+            </div>
+            <div class="mini-main">
+                <div class="mini-header">
+                    <div class="mini-title">PRINCE2® 7 知识库</div>
+                    <div class="mini-badge">199 个概念</div>
+                </div>
+                <div class="mini-section-title">卷伍 · 流程</div>
+                <div class="mini-card">
+                    <div class="card-title">第13章 项目准备</div>
+                    <div class="card-desc">万事俱备而后动</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第15章 项目启动</div>
+                    <div class="card-desc">奠基立业</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第16章 阶段控制</div>
+                    <div class="card-desc">运筹帷幄</div>
+                </div>
+            </div>
+        </div>
+        <div class="color-swatches">
+            <div><div class="swatch" style="background:#2d2640"></div><div class="swatch-label">侧栏</div></div>
+            <div><div class="swatch" style="background:#a78bfa"></div><div class="swatch-label">强调</div></div>
+            <div><div class="swatch" style="background:#f5f3ff"></div><div class="swatch-label">背景</div></div>
+            <div><div class="swatch" style="background:#2d2640"></div><div class="swatch-label">文字</div></div>
+            <div><div class="swatch" style="background:#c4b5fd"></div><div class="swatch-label">高亮</div></div>
+        </div>
+    </div>
+
+    <!-- 方案6: 极简黑白 -->
+    <div class="scheme-card scheme-6">
+        <div class="scheme-label">⚫ 方案六 · 极简黑白</div>
+        <div class="scheme-preview">
+            <div class="mini-sidebar">
+                <div class="logo">PRINCE2® 7</div>
+                <div class="mini-nav active">▶ 卷伍 · 流程</div>
+                <div class="mini-nav">◈ 卷肆 · 实践</div>
+                <div class="mini-nav">◆ 卷贰 · 原则</div>
+                <div class="mini-nav">◉ 附录</div>
+            </div>
+            <div class="mini-main">
+                <div class="mini-header">
+                    <div class="mini-title">PRINCE2® 7 知识库</div>
+                    <div class="mini-badge">199 个概念</div>
+                </div>
+                <div class="mini-section-title">卷伍 · 流程</div>
+                <div class="mini-card">
+                    <div class="card-title">第13章 项目准备</div>
+                    <div class="card-desc">万事俱备而后动</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第15章 项目启动</div>
+                    <div class="card-desc">奠基立业</div>
+                </div>
+                <div class="mini-card">
+                    <div class="card-title">第16章 阶段控制</div>
+                    <div class="card-desc">运筹帷幄</div>
+                </div>
+            </div>
+        </div>
+        <div class="color-swatches">
+            <div><div class="swatch" style="background:#1a1a1a"></div><div class="swatch-label">侧栏</div></div>
+            <div><div class="swatch" style="background:#111"></div><div class="swatch-label">强调</div></div>
+            <div><div class="swatch" style="background:#fafafa"></div><div class="swatch-label">背景</div></div>
+            <div><div class="swatch" style="background:#111"></div><div class="swatch-label">文字</div></div>
+            <div><div class="swatch" style="background:#fff"></div><div class="swatch-label">高亮</div></div>
+        </div>
+    </div>
+
+</div>
+
+<footer style="text-align:center; margin-top:50px; color:#555; font-size:0.85em;">
+    <p>选择一个方案，告诉我编号即可应用到整个知识库</p>
+</footer>
+
+</body>
+</html>
