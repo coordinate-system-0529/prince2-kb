@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识图谱 - PRINCE2® 7 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+            background: #1a0f0a;
+            color: #e8d5b0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* 顶部栏 */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 50px;
+            background: #2c1810;
+            border-bottom: 2px solid #d4af37;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            gap: 16px;
+        }
+        .top-bar a {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .top-bar a:hover { text-decoration: underline; }
+        .top-bar h1 {
+            font-size: 1.1em;
+            color: #d4af37;
+            letter-spacing: 0.05em;
+        }
+        .top-bar .spacer { flex: 1; }
+
+        /* 图例 */
+        .legend {
+            display: flex;
+            gap: 16px;
+            font-size: 0.8em;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+        .legend-item.dimmed { opacity: 0.3; }
+        .legend-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+        }
+
+        /* SVG 容器 */
+        .graph-container {
+            position: fixed;
+            top: 50px; left: 0; right: 0; bottom: 0;
+        }
+        svg { width: 100%; height: 100%; }
+
+        /* 节点 */
+        .node circle {
+            stroke-width: 2px;
+            cursor: pointer;
+            transition: r 0.2s;
+        }
+        .node text {
+            font-family: "Noto Serif SC", serif;
+            font-size: 11px;
+            fill: #e8d5b0;
+            pointer-events: none;
+        }
+        .node.highlighted circle {
+            stroke-width: 3px;
+            filter: drop-shadow(0 0 6px rgba(212,175,55,0.6));
+        }
+
+        /* 连线 */
+        .link {
+            stroke-opacity: 0.4;
+            transition: stroke-opacity 0.2s;
+        }
+        .link.highlighted {
+            stroke-opacity: 0.9;
+            stroke-width: 2px;
+        }
+
+        /* 提示框 */
+        .tooltip {
+            position: fixed;
+            background: #2c1810;
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 0.85em;
+            color: #e8d5b0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            max-width: 300px;
+            z-index: 200;
+        }
+        .tooltip.show { opacity: 1; }
+        .tooltip h3 { color: #d4af37; margin-bottom: 6px; font-size: 1em; }
+        .tooltip p { margin-bottom: 4px; line-height: 1.5; }
+        .tooltip .label { color: #8B7355; }
+
+        /* 控制按钮 */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+        .ctrl-btn {
+            background: #2c1810;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            width: 36px; height: 36px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover { background: #d4af37; color: #1a0f0a; }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href="index.html">◁ 返回首页</a>
+    <h1>🌐 PRINCE2® 7 知识图谱</h1>
+    <span class="spacer"></span>
+    <div class="legend">
+        <div class="legend-item" data-type="principle" onclick="toggleType('principle')">
+            <div class="legend-dot" style="background:#d4af37"></div> 原则
+        </div>
+        <div class="legend-item" data-type="practice" onclick="toggleType('practice')">
+            <div class="legend-dot" style="background:#8B4513"></div> 实践
+        </div>
+        <div class="legend-item" data-type="process" onclick="toggleType('process')">
+            <div class="legend-dot" style="background:#2E8B57"></div> 流程
+        </div>
+        <div class="legend-item" data-type="role" onclick="toggleType('role')">
+            <div class="legend-dot" style="background:#4169E1"></div> 角色
+        </div>
+        <div class="legend-item" data-type="product" onclick="toggleType('product')">
+            <div class="legend-dot" style="background:#8B008B"></div> 管理产品
+        </div>
+    </div>
+</div>
+
+<div class="graph-container">
+    <svg id="graph"></svg>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div class="controls">
+    <button class="ctrl-btn" onclick="zoomIn()" title="放大">+</button>
+    <button class="ctrl-btn" onclick="zoomOut()" title="缩小">−</button>
+    <button class="ctrl-btn" onclick="resetView()" title="重置">⟳</button>
+</div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+// ── 数据定义 ─────────────────────────────────────────
+var nodes = [
+    // 原则 (7)
+    {id:"p1", name:"持续业务验证", type:"principle", desc:"项目必须始终有合理的业务理由支撑", link:"chapters/ch02.html"},
+    {id:"p2", name:"汲取经验教训", type:"principle", desc:"团队应持续学习，从经验中改进", link:"chapters/ch02.html"},
+    {id:"p3", name:"明确定义角色", type:"principle", desc:"每个利益相关方的责任必须清晰界定", link:"chapters/ch02.html"},
+    {id:"p4", name:"分阶段管理", type:"principle", desc:"项目应划分为可管理的阶段", link:"chapters/ch02.html"},
+    {id:"p5", name:"例外管理", type:"principle", desc:"设定容许偏差，逐级授权管理", link:"chapters/ch02.html"},
+    {id:"p6", name:"聚焦产品", type:"principle", desc:"项目以交付产品为核心导向", link:"chapters/ch02.html"},
+    {id:"p7", name:"依项目环境剪裁", type:"principle", desc:"方法论应适应项目的规模和复杂度", link:"chapters/ch02.html"},
+
+    // 实践 (7)
+    {id:"pr1", name:"商业论证", type:"practice", desc:"投资之理据，为何而做？", link:"chapters/ch05.html"},
+    {id:"pr2", name:"组织", type:"practice", desc:"管理之架构，谁来参与？", link:"chapters/ch06.html"},
+    {id:"pr3", name:"计划", type:"practice", desc:"时间与资源，如何而做？", link:"chapters/ch07.html"},
+    {id:"pr4", name:"质量", type:"practice", desc:"质量之保证，何为标准？", link:"chapters/ch08.html"},
+    {id:"pr5", name:"风险", type:"practice", desc:"不确定之管控，若有变故？", link:"chapters/ch09.html"},
+    {id:"pr6", name:"问题", type:"practice", desc:"问题之处置，遇事如何？", link:"chapters/ch10.html"},
+    {id:"pr7", name:"进展", type:"practice", desc:"绩效之监控，行至何处？", link:"chapters/ch11.html"},
+
+    // 流程 (7)
+    {id:"pc1", name:"项目准备", type:"process", desc:"万事俱备而后动", link:"chapters/ch13.html"},
+    {id:"pc2", name:"项目指导", type:"process", desc:"委员会之决策", link:"chapters/ch14.html"},
+    {id:"pc3", name:"项目启动", type:"process", desc:"奠基立业", link:"chapters/ch15.html"},
+    {id:"pc4", name:"阶段控制", type:"process", desc:"运筹帷幄", link:"chapters/ch16.html"},
+    {id:"pc5", name:"产品交付管理", type:"process", desc:"督工之道", link:"chapters/ch17.html"},
+    {id:"pc6", name:"阶段边界管理", type:"process", desc:"承前启后", link:"chapters/ch18.html"},
+    {id:"pc7", name:"项目收尾", type:"process", desc:"功成身退", link:"chapters/ch19.html"},
+
+    // 角色 (10)
+    {id:"r1", name:"项目发起人", type:"role", desc:"项目最高负责人，拥有商业决策权", link:"chapters/appendix_b.html"},
+    {id:"r2", name:"项目委员会", type:"role", desc:"项目治理机构，由发起人、高级用户、高级供应商组成", link:"chapters/appendix_b.html"},
+    {id:"r3", name:"项目经理", type:"role", desc:"日常项目管理，对项目委员会负责", link:"chapters/appendix_b.html"},
+    {id:"r4", name:"团队经理", type:"role", desc:"管理技术团队，交付工作包", link:"chapters/appendix_b.html"},
+    {id:"r5", name:"项目保证", type:"role", desc:"独立监督，确保项目按计划进行", link:"chapters/appendix_b.html"},
+    {id:"r6", name:"变更权限", type:"role", desc:"评估和审批变更请求", link:"chapters/appendix_b.html"},
+    {id:"r7", name:"高级用户", type:"role", desc:"代表用户需求，确保产品满足用户期望", link:"chapters/appendix_b.html"},
+    {id:"r8", name:"高级供应商", type:"role", desc:"代表供应商，确保资源和技术能力", link:"chapters/appendix_b.html"},
+    {id:"r9", name:"项目支持", type:"role", desc:"行政和工具支持", link:"chapters/appendix_b.html"},
+    {id:"r10", name:"变更 authority", type:"role", desc:"变更控制委员会", link:"chapters/appendix_b.html"},
+
+    // 核心管理产品 (5)
+    {id:"mp1", name:"商业论证", type:"product", desc:"项目投资理由和收益", link:"chapters/appendix_a.html"},
+    {id:"mp2", name:"项目计划", type:"product", desc:"项目时间表和资源分配", link:"chapters/appendix_a.html"},
+    {id:"mp3", name:"风险登记册", type:"product", desc:"已识别风险及应对策略", link:"chapters/appendix_a.html"},
+    {id:"mp4", name:"质量登记册", type:"product", desc:"质量标准和验收记录", link:"chapters/appendix_a.html"},
+    {id:"mp5", name:"经验教训记录", type:"product", desc:"项目经验教训的积累", link:"chapters/appendix_a.html"},
+];
+
+var links = [
+    // 原则 → 实践
+    {source:"p1", target:"pr1", label:"支撑"},
+    {source:"p3", target:"pr2", label:"定义"},
+    {source:"p4", target:"pr3", label:"驱动"},
+    {source:"p6", target:"pr4", label:"导向"},
+    {source:"p5", target:"pr7", label:"机制"},
+
+    // 实践 → 流程
+    {source:"pr1", target:"pc1", label:"输入"},
+    {source:"pr1", target:"pc3", label:"基线"},
+    {source:"pr2", target:"pc1", label:"架构"},
+    {source:"pr2", target:"pc3", label:"组建"},
+    {source:"pr3", target:"pc3", label:"制定"},
+    {source:"pr3", target:"pc6", label:"更新"},
+    {source:"pr4", target:"pc4", label:"执行"},
+    {source:"pr4", target:"pc5", label:"验收"},
+    {source:"pr5", target:"pc4", label:"监控"},
+    {source:"pr6", target:"pc4", label:"处置"},
+    {source:"pr7", target:"pc6", label:"评估"},
+
+    // 流程链
+    {source:"pc1", target:"pc3", label:"启动"},
+    {source:"pc2", target:"pc1", label:"授权"},
+    {source:"pc2", target:"pc3", label:"授权"},
+    {source:"pc2", target:"pc4", label:"指导"},
+    {source:"pc3", target:"pc4", label:"执行"},
+    {source:"pc4", target:"pc5", label:"交付"},
+    {source:"pc5", target:"pc4", label:"回报"},
+    {source:"pc4", target:"pc6", label:"边界"},
+    {source:"pc6", target:"pc2", label:"审批"},
+    {source:"pc6", target:"pc7", label:"收尾"},
+
+    // 角色 → 流程
+    {source:"r1", target:"pc2", label:"决策"},
+    {source:"r2", target:"pc2", label:"治理"},
+    {source:"r3", target:"pc4", label:"管理"},
+    {source:"r3", target:"pc3", label:"计划"},
+    {source:"r4", target:"pc5", label:"交付"},
+    {source:"r5", target:"pc2", label:"监督"},
+
+    // 管理产品 → 流程
+    {source:"mp1", target:"pc1", label:"创建"},
+    {source:"mp1", target:"pc6", label:"更新"},
+    {source:"mp2", target:"pc3", label:"创建"},
+    {source:"mp3", target:"pc4", label:"维护"},
+    {source:"mp5", target:"pc7", label:"总结"},
+];
+
+// ── 颜色映射 ─────────────────────────────────────────
+var colors = {
+    principle: "#d4af37",
+    practice: "#8B4513",
+    process: "#2E8B57",
+    role: "#4169E1",
+    product: "#8B008B"
+};
+
+var typeNames = {
+    principle: "原则",
+    practice: "实践",
+    process: "流程",
+    role: "角色",
+    product: "管理产品"
+};
+
+// ── 初始化 SVG ───────────────────────────────────────
+var svg = d3.select("#graph");
+var width = window.innerWidth;
+var height = window.innerHeight - 50;
+
+var g = svg.append("g");
+
+// 缩放
+var zoom = d3.zoom()
+    .scaleExtent([0.3, 3])
+    .on("zoom", function(event) {
+        g.attr("transform", event.transform);
+    });
+svg.call(zoom);
+
+// 箭头定义
+svg.append("defs").selectAll("marker")
+    .data(["arrow"])
+    .enter().append("marker")
+    .attr("id", "arrow")
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 20)
+    .attr("refY", 0)
+    .attr("markerWidth", 8)
+    .attr("markerHeight", 8)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M0,-5L10,0L0,5")
+    .attr("fill", "#d4af37");
+
+// ── 力导向图 ─────────────────────────────────────────
+var simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(function(d) { return d.id; }).distance(120))
+    .force("charge", d3.forceManyBody().strength(-400))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collision", d3.forceCollide().radius(30));
+
+// 连线
+var link = g.append("g")
+    .selectAll("line")
+    .data(links)
+    .enter().append("line")
+    .attr("class", "link")
+    .attr("stroke", "#d4af37")
+    .attr("stroke-width", 1.5)
+    .attr("marker-end", "url(#arrow)");
+
+// 连线标签
+var linkLabel = g.append("g")
+    .selectAll("text")
+    .data(links)
+    .enter().append("text")
+    .attr("font-size", "9px")
+    .attr("fill", "#6b5a45")
+    .attr("text-anchor", "middle")
+    .text(function(d) { return d.label; });
+
+// 节点
+var node = g.append("g")
+    .selectAll("g")
+    .data(nodes)
+    .enter().append("g")
+    .attr("class", "node")
+    .call(d3.drag()
+        .on("start", dragStarted)
+        .on("drag", dragged)
+        .on("end", dragEnded));
+
+node.append("circle")
+    .attr("r", function(d) {
+        if (d.type === "principle") return 14;
+        if (d.type === "process") return 12;
+        return 10;
+    })
+    .attr("fill", function(d) { return colors[d.type]; })
+    .attr("stroke", "#e8d5b0")
+    .on("mouseover", showTooltip)
+    .on("mouseout", hideTooltip)
+    .on("click", function(event, d) {
+        if (d.link) window.open(d.link, "_blank");
+    });
+
+node.append("text")
+    .attr("dx", 16)
+    .attr("dy", 4)
+    .text(function(d) { return d.name; });
+
+// ── 模拟更新 ─────────────────────────────────────────
+simulation.on("tick", function() {
+    link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    linkLabel
+        .attr("x", function(d) { return (d.source.x + d.target.x) / 2; })
+        .attr("y", function(d) { return (d.source.y + d.target.y) / 2; });
+
+    node.attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+    });
+});
+
+// ── 交互函数 ─────────────────────────────────────────
+function showTooltip(event, d) {
+    var tt = document.getElementById("tooltip");
+    tt.innerHTML = "<h3>" + d.name + "</h3>" +
+        "<p><span class='label'>类型：</span>" + typeNames[d.type] + "</p>" +
+        "<p>" + d.desc + "</p>";
+    tt.style.left = (event.pageX + 15) + "px";
+    tt.style.top = (event.pageY - 10) + "px";
+    tt.classList.add("show");
+
+    // 高亮关联
+    highlightNode(d);
+}
+
+function hideTooltip() {
+    document.getElementById("tooltip").classList.remove("show");
+    resetHighlight();
+}
+
+function highlightNode(d) {
+    var connectedIds = new Set();
+    connectedIds.add(d.id);
+    links.forEach(function(l) {
+        var sid = typeof l.source === "object" ? l.source.id : l.source;
+        var tid = typeof l.target === "object" ? l.target.id : l.target;
+        if (sid === d.id) connectedIds.add(tid);
+        if (tid === d.id) connectedIds.add(sid);
+    });
+
+    node.classed("highlighted", function(n) { return connectedIds.has(n.id); });
+    node.selectAll("circle").style("opacity", function(n) {
+        return connectedIds.has(n.id) ? 1 : 0.2;
+    });
+    node.selectAll("text").style("opacity", function(n) {
+        return connectedIds.has(n.id) ? 1 : 0.2;
+    });
+
+    link.classed("highlighted", function(l) {
+        var sid = typeof l.source === "object" ? l.source.id : l.source;
+        var tid = typeof l.target === "object" ? l.target.id : l.target;
+        return sid === d.id || tid === d.id;
+    });
+    link.style("opacity", function(l) {
+        var sid = typeof l.source === "object" ? l.source.id : l.source;
+        var tid = typeof l.target === "object" ? l.target.id : l.target;
+        return (sid === d.id || tid === d.id) ? 1 : 0.1;
+    });
+    linkLabel.style("opacity", function(l) {
+        var sid = typeof l.source === "object" ? l.source.id : l.source;
+        var tid = typeof l.target === "object" ? l.target.id : l.target;
+        return (sid === d.id || tid === d.id) ? 1 : 0.1;
+    });
+}
+
+function resetHighlight() {
+    node.classed("highlighted", false);
+    node.selectAll("circle").style("opacity", 1);
+    node.selectAll("text").style("opacity", 1);
+    link.classed("highlighted", false);
+    link.style("opacity", null);
+    linkLabel.style("opacity", 1);
+}
+
+var hiddenTypes = new Set();
+function toggleType(type) {
+    var item = document.querySelector('.legend-item[data-type="' + type + '"]');
+    if (hiddenTypes.has(type)) {
+        hiddenTypes.delete(type);
+        item.classList.remove("dimmed");
+    } else {
+        hiddenTypes.add(type);
+        item.classList.add("dimmed");
+    }
+
+    node.style("opacity", function(d) {
+        return hiddenTypes.has(d.type) ? 0.05 : 1;
+    });
+    node.selectAll("circle").style("opacity", function(d) {
+        return hiddenTypes.has(d.type) ? 0.05 : 1;
+    });
+    node.selectAll("text").style("opacity", function(d) {
+        return hiddenTypes.has(d.type) ? 0.05 : 1;
+    });
+
+    link.style("opacity", function(l) {
+        var sid = typeof l.source === "object" ? l.source : nodes.find(function(n){return n.id===l.source;});
+        var tid = typeof l.target === "object" ? l.target : nodes.find(function(n){return n.id===l.target;});
+        if (!sid || !tid) return 0.1;
+        return (hiddenTypes.has(sid.type) || hiddenTypes.has(tid.type)) ? 0.05 : null;
+    });
+}
+
+// 拖拽
+function dragStarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x; d.fy = d.y;
+}
+function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+function dragEnded(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null; d.fy = null;
+}
+
+// 缩放控制
+function zoomIn() { svg.transition().duration(300).call(zoom.scaleBy, 1.3); }
+function zoomOut() { svg.transition().duration(300).call(zoom.scaleBy, 0.7); }
+function resetView() { svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity); }
+
+// 窗口大小变化
+window.addEventListener("resize", function() {
+    width = window.innerWidth;
+    height = window.innerHeight - 50;
+    simulation.force("center", d3.forceCenter(width / 2, height / 2));
+    simulation.alpha(0.3).restart();
+});
+</script>
+</body>
+</html>
