@@ -150,7 +150,26 @@
         }
         .process-node.active {
             border-color: #d4af37;
-            background: #3a2515;
+            border-width: 3px;
+            background: #4a3020;
+            box-shadow: 0 0 25px rgba(212,175,55,0.35), inset 0 0 30px rgba(212,175,55,0.08);
+            transform: translateY(-5px);
+            z-index: 10;
+        }
+        .process-node.active h3 {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(212,175,55,0.5);
+        }
+        .process-node.active .step-num {
+            background: #fff;
+            color: #1a0f0a;
+            box-shadow: 0 0 10px rgba(212,175,55,0.5);
+        }
+        /* 当有节点激活时，未激活的节点变暗 */
+        .flow-row:has(.process-node.active) .process-node:not(.active) {
+            opacity: 0.45;
+            filter: grayscale(0.3);
+            transform: scale(0.97);
         }
         .process-node .step-num {
             position: absolute;
