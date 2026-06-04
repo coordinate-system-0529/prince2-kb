@@ -137,13 +137,48 @@
             color: #fff;
         }
 
-        /* 流程行 */
-        .flow-row {
-            display: flex;
-            gap: 0;
-            align-items: stretch;
-            margin-bottom: 24px;
+        /* ── 分层布局 ─────────────────────────────────── */
+        .layers-wrapper {
             position: relative;
+            margin-bottom: 8px;
+        }
+        .layer-row {
+            display: flex;
+            align-items: stretch;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+        .layer-row:last-of-type {
+            border-bottom: none;
+            margin-bottom: 24px;
+        }
+        .layer-label {
+            width: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            font-size: 0.82em;
+            color: var(--text-muted);
+            letter-spacing: 0.15em;
+            border-right: 1px solid var(--border-subtle);
+            padding: 16px 0;
+            margin-right: 16px;
+            user-select: none;
+        }
+        .layer-body {
+            flex: 1;
+            display: flex;
+            align-items: stretch;
+            padding: 16px 0;
+            gap: 0;
+        }
+        .layer--directing .layer-body {
+            padding: 12px 0;
+        }
+        .layer--directing .directing-bar {
+            flex: 1;
+            margin-bottom: 0;
         }
 
         /* 流程节点 */
@@ -156,9 +191,13 @@
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
-            min-height: 180px;
+            min-height: 160px;
             display: flex;
             flex-direction: column;
+        }
+        .layer--controlling .process-node,
+        .layer--delivery .process-node {
+            min-height: 130px;
         }
         .process-node:hover {
             border-color: var(--text-heading);
@@ -177,19 +216,14 @@
             color: #fff;
             text-shadow: 0 0 10px var(--accent-glow);
         }
-        .process-node.active .step-num {
-            background: #fff;
-            color: #1a0f0a;
-            box-shadow: 0 0 10px var(--accent-glow);
-        }
-        /* 当有节点激活时，未激活的节点变暗 */
-        .flow-row:has(.process-node.active) .process-node:not(.active) {
+        /* 同层有节点激活时，其他节点变暗 */
+        .layer-row:has(.process-node.active) .process-node:not(.active) {
             opacity: 0.45;
             filter: grayscale(0.3);
             transform: scale(0.97);
         }
-        /* 项目指导激活时，整行流程变暗 */
-        .flow-wrapper:has(.directing-bar.active) .flow-row .process-node {
+        /* DP激活时，所有流程节点变暗 */
+        .layers-wrapper:has(.directing-bar.active) .process-node {
             opacity: 0.45;
             filter: grayscale(0.3);
             transform: scale(0.97);
@@ -198,21 +232,6 @@
             box-shadow: 0 0 30px var(--green-glow);
             border-color: #fff;
             transform: translateY(-3px);
-        }
-        .process-node .step-num {
-            position: absolute;
-            top: -12px;
-            left: 16px;
-            background: #d4af37;
-            color: #1a0f0a;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8em;
-            font-weight: bold;
         }
         .process-node h3 {
             font-size: 1.15em;
@@ -244,7 +263,7 @@
             color: #fff;
         }
 
-        /* 连接箭头 */
+        /* 水平连接箭头 */
         .flow-arrow {
             display: flex;
             align-items: center;
@@ -253,6 +272,46 @@
             min-width: 30px;
             color: var(--text-heading);
             font-size: 1.3em;
+        }
+
+        /* 占位元素（对齐控制层/交付层节点与管理层列位置） */
+        .flow-spacer {
+            flex: 1;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .arrow-spacer {
+            width: 30px;
+            min-width: 30px;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* 层间垂直连接箭头行 */
+        .layer-connector-row {
+            display: flex;
+            align-items: center;
+            height: 32px;
+            flex-shrink: 0;
+        }
+        .connector-label-space {
+            width: 60px;   /* layer-label 44px + margin-right 16px */
+            min-width: 60px;
+            flex-shrink: 0;
+        }
+        .v-connector {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-heading);
+            font-size: 1.2em;
+            gap: 5px;
+        }
+        .v-connector-text {
+            font-size: 0.68em;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
         }
 
         /* ── 展开详情面板 ─────────────────────────── */
@@ -389,8 +448,11 @@
 
         /* 响应式 */
         @media (max-width: 900px) {
-            .flow-row { flex-direction: column; gap: 12px; }
+            .layer-row { flex-direction: column; }
+            .layer-label { writing-mode: horizontal-tb; width: auto; border-right: none; border-bottom: 1px solid var(--border-subtle); margin-right: 0; margin-bottom: 8px; padding: 6px 16px; letter-spacing: 0.1em; }
+            .layer-body { flex-direction: column; gap: 12px; }
             .flow-arrow { transform: rotate(90deg); width: auto; min-width: auto; height: 30px; }
+            .flow-spacer, .arrow-spacer { display: none; }
             .detail-cols { grid-template-columns: 1fr; }
         }
     </style>
@@ -405,25 +467,27 @@
 </div>
 
 <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#2E8B57"></div> 项目指导（贯穿）</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#d4af37"></div> 流程节点</div>
-    <div class="legend-item"><div class="legend-line" style="background:#4169E1"></div> 输入管理产品</div>
-    <div class="legend-item"><div class="legend-line" style="background:#2E8B57"></div> 输出管理产品</div>
-    <div class="legend-item"><div class="legend-line" style="background:#d4af37"></div> 更新管理产品</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#4169E1"></div> 角色标签</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2E8B57"></div> 项目指导（贯穿全程）</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d4af37"></div> 流程节点（点击展开）</div>
+    <div class="legend-item"><span style="color:var(--text-muted);font-size:0.9em">指导 / 管理 / 控制 / 交付 — 四层架构</span></div>
 </div>
 
 <div class="container">
-    <div class="flow-wrapper">
+    <div class="layers-wrapper">
 
-        <!-- 项目指导（贯穿条） -->
-        <div class="directing-bar" id="node-directing" onclick="toggleDetail('directing')">
-            <div class="icon">🏛️</div>
-            <div class="info">
-                <h2>项目指导 DP</h2>
-                <p>项目委员会的决策中枢 — 授权启动、审批计划、监控进展、处理例外、授权收尾</p>
+        <!-- 指导层 -->
+        <div class="layer-row layer--directing">
+            <div class="layer-label">指导</div>
+            <div class="layer-body">
+                <div class="directing-bar" id="node-directing" onclick="toggleDetail('directing')">
+                    <div class="icon">🏛️</div>
+                    <div class="info">
+                        <h2>项目指导 DP</h2>
+                        <p>项目委员会的决策中枢 — 授权启动、审批计划、监控进展、处理例外、授权收尾</p>
+                    </div>
+                    <span class="badge">贯穿全程</span>
+                </div>
             </div>
-            <span class="badge">贯穿全程</span>
         </div>
         <div class="detail-panel" id="detail-directing">
             <div class="detail-header">
@@ -466,82 +530,115 @@
             </div>
         </div>
 
-        <!-- 流程行 -->
-        <div class="flow-row">
-            <div class="process-node" onclick="toggleDetail('su')" id="node-su">
-                <span class="step-num">1</span>
-                <h3>项目准备 SU</h3>
-                <p class="subtitle">万事俱备而后动</p>
-                <p class="desc">确保项目启动的先决条件已满足，建立项目治理结构</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">项目发起人</span>
+        <!-- 管理层：SU → IP → SB → CP -->
+        <div class="layer-row layer--managing">
+            <div class="layer-label">管理</div>
+            <div class="layer-body">
+                <div class="process-node" onclick="toggleDetail('su')" id="node-su">
+                    <h3>项目准备 SU</h3>
+                    <p class="subtitle">万事俱备而后动</p>
+                    <p class="desc">确保项目启动的先决条件已满足，建立项目治理结构</p>
+                    <div class="roles">
+                        <span class="role-tag">项目经理</span>
+                        <span class="role-tag">项目发起人</span>
+                    </div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="process-node" onclick="toggleDetail('ip')" id="node-ip">
+                    <h3>项目启动 IP</h3>
+                    <p class="subtitle">奠基立业</p>
+                    <p class="desc">建立项目基线：计划、商业论证、质量策略、风险策略</p>
+                    <div class="roles">
+                        <span class="role-tag">项目经理</span>
+                        <span class="role-tag">项目保证</span>
+                    </div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="process-node" onclick="toggleDetail('sb')" id="node-sb">
+                    <h3>阶段边界 SB</h3>
+                    <p class="subtitle">承前启后</p>
+                    <p class="desc">评审本阶段成果，更新商业论证，计划下一阶段</p>
+                    <div class="roles">
+                        <span class="role-tag">项目经理</span>
+                        <span class="role-tag">项目保证</span>
+                    </div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="process-node" onclick="toggleDetail('cp')" id="node-cp">
+                    <h3>项目收尾 CP</h3>
+                    <p class="subtitle">功成身退</p>
+                    <p class="desc">移交产品、总结经验教训、评估项目绩效</p>
+                    <div class="roles">
+                        <span class="role-tag">项目经理</span>
+                        <span class="role-tag">项目发起人</span>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="flow-arrow">→</div>
+        <!-- SB → CS 连接箭头 -->
+        <div class="layer-connector-row">
+            <div class="connector-label-space"></div>
+            <div class="flow-spacer"></div>
+            <div class="arrow-spacer"></div>
+            <div class="flow-spacer"></div>
+            <div class="arrow-spacer"></div>
+            <div class="v-connector">↓ <span class="v-connector-text">DP 授权后启动阶段控制</span></div>
+            <div class="arrow-spacer"></div>
+            <div class="flow-spacer"></div>
+        </div>
 
-            <div class="process-node" onclick="toggleDetail('ip')" id="node-ip">
-                <span class="step-num">2</span>
-                <h3>项目启动 IP</h3>
-                <p class="subtitle">奠基立业</p>
-                <p class="desc">建立项目基线：计划、商业论证、质量策略、风险策略</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">项目保证</span>
+        <!-- 控制层：CS（与 SB 列对齐） -->
+        <div class="layer-row layer--controlling">
+            <div class="layer-label">控制</div>
+            <div class="layer-body">
+                <div class="flow-spacer"></div>
+                <div class="arrow-spacer"></div>
+                <div class="flow-spacer"></div>
+                <div class="arrow-spacer"></div>
+                <div class="process-node" onclick="toggleDetail('cs')" id="node-cs">
+                    <h3>阶段控制 CS</h3>
+                    <p class="subtitle">运筹帷幄</p>
+                    <p class="desc">日常管理：分配工作、监督进展、处理问题和风险</p>
+                    <div class="roles">
+                        <span class="role-tag">项目经理</span>
+                    </div>
                 </div>
+                <div class="arrow-spacer"></div>
+                <div class="flow-spacer"></div>
             </div>
+        </div>
 
-            <div class="flow-arrow">→</div>
+        <!-- CS ↔ MP 工作包双向箭头 -->
+        <div class="layer-connector-row">
+            <div class="connector-label-space"></div>
+            <div class="flow-spacer"></div>
+            <div class="arrow-spacer"></div>
+            <div class="flow-spacer"></div>
+            <div class="arrow-spacer"></div>
+            <div class="v-connector">↕ <span class="v-connector-text">工作包（授权 / 完成回报）</span></div>
+            <div class="arrow-spacer"></div>
+            <div class="flow-spacer"></div>
+        </div>
 
-            <div class="process-node" onclick="toggleDetail('cs')" id="node-cs">
-                <span class="step-num">3</span>
-                <h3>阶段控制 CS</h3>
-                <p class="subtitle">运筹帷幄</p>
-                <p class="desc">日常管理：分配工作、监督进展、处理问题和风险</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">团队经理</span>
+        <!-- 交付层：MP（与 CS 列对齐） -->
+        <div class="layer-row layer--delivery">
+            <div class="layer-label">交付</div>
+            <div class="layer-body">
+                <div class="flow-spacer"></div>
+                <div class="arrow-spacer"></div>
+                <div class="flow-spacer"></div>
+                <div class="arrow-spacer"></div>
+                <div class="process-node" onclick="toggleDetail('mp')" id="node-mp">
+                    <h3>产品交付 MP</h3>
+                    <p class="subtitle">督工之道</p>
+                    <p class="desc">团队执行工作包，交付产品，报告完成情况</p>
+                    <div class="roles">
+                        <span class="role-tag">团队经理</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="flow-arrow">→</div>
-
-            <div class="process-node" onclick="toggleDetail('mp')" id="node-mp">
-                <span class="step-num">4</span>
-                <h3>产品交付 MP</h3>
-                <p class="subtitle">督工之道</p>
-                <p class="desc">团队执行工作包，交付产品，报告完成情况</p>
-                <div class="roles">
-                    <span class="role-tag">团队经理</span>
-                    <span class="role-tag">项目保证</span>
-                </div>
-            </div>
-
-            <div class="flow-arrow">→</div>
-
-            <div class="process-node" onclick="toggleDetail('sb')" id="node-sb">
-                <span class="step-num">5</span>
-                <h3>阶段边界 SB</h3>
-                <p class="subtitle">承前启后</p>
-                <p class="desc">评审本阶段成果，更新商业论证，计划下一阶段</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">项目保证</span>
-                </div>
-            </div>
-
-            <div class="flow-arrow">→</div>
-
-            <div class="process-node" onclick="toggleDetail('cp')" id="node-cp">
-                <span class="step-num">6</span>
-                <h3>项目收尾 CP</h3>
-                <p class="subtitle">功成身退</p>
-                <p class="desc">移交产品、总结经验教训、评估项目绩效</p>
-                <div class="roles">
-                    <span class="role-tag">项目经理</span>
-                    <span class="role-tag">项目发起人</span>
-                </div>
+                <div class="arrow-spacer"></div>
+                <div class="flow-spacer"></div>
             </div>
         </div>
 
