@@ -38,7 +38,7 @@
         .legend-swatch { padding:2px 8px; border-radius:8px; font-size:0.85em; }
 
         /* ── 主容器 ── */
-        .container { max-width:1500px; margin:0 auto; padding:20px 24px; display:flex; flex-direction:column; gap:0; }
+        .container { max-width:1500px; margin:0 auto; padding:20px 24px; display:flex; flex-direction:column; gap:0; position:relative; }
 
         /* ── 层区块 ── */
         .layer-section { display:flex; align-items:stretch; border-radius:10px; border:1px solid var(--border-subtle); overflow:hidden; }
@@ -63,6 +63,16 @@
         .band-item.up   { background:rgba(46,139,87,0.18); border:1px solid rgba(46,139,87,0.45); color:#90c8a0; }
         .band-item.down { background:rgba(212,175,55,0.14); border:1px solid rgba(212,175,55,0.4); color:var(--text-heading); }
         .band-item.bi   { background:rgba(65,105,225,0.14); border:1px solid rgba(65,105,225,0.4); color:#8aabf0; }
+        /* 信息流带 2 行盒（起点→终点 + 名称，仿连接器框样式） */
+        .band-2line { flex-direction:column; align-items:center; gap:1px; padding:4px 14px; white-space:normal; text-align:center; line-height:1.3; }
+        .band-2line .band-route { font-size:0.86em; opacity:0.72; }
+        .band-2line .band-name { font-weight:bold; }
+        /* CS↔MP 信息流带：做成对齐到 CS/MP 列、上下带箭头的连接器 */
+        .cs-mp-band { flex-direction:row; align-items:stretch; }
+        .cs-mp-band::before { display:none; }
+        .cs-mp-col { flex:1; min-width:0; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center; align-items:stretch; gap:10px; }
+        .cs-mp-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
+        .cs-mp-wrap .band-item { flex:0 0 auto; }
 
         /* ── 业务层 ── */
         .ext-products { display:flex; gap:16px; flex-wrap:wrap; align-items:stretch; }
@@ -76,6 +86,9 @@
         .dp-flow-block { display:flex; flex-direction:column; gap:4px; }
         .dp-flow-title { font-size:0.72em; color:var(--text-muted); letter-spacing:0.05em; margin-bottom:2px; }
         .dp-flow-row { display:flex; gap:6px; flex-wrap:wrap; }
+        /* 上行请求按来源流程列对齐（与下行连接器上下对称，列结构同管理层） */
+        .up-flow-row { display:flex; align-items:flex-start; }
+        .up-col { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:5px; }
         .directing-bar { background:linear-gradient(90deg,var(--green),var(--green-light)); border:2px solid #2E8B57; border-radius:8px; padding:14px 20px; display:flex; align-items:center; gap:14px; }
         .directing-bar .icon { font-size:1.8em; flex-shrink:0; }
         .directing-bar h2 { font-size:1.1em; color:#fff; }
@@ -88,13 +101,15 @@
         .flow-arrow { display:flex; align-items:center; justify-content:center; width:28px; min-width:28px; color:var(--text-heading); font-size:1.2em; padding-top:18px; flex-shrink:0; }
         .flow-spacer { flex:1; }
         .arrow-spacer { width:28px; min-width:28px; flex-shrink:0; }
+        /* IP↔SB 之间加宽的通道（gap2），供 DP→CS 连线穿过；所有列对齐行同步使用 */
+        .gap-wide { width:90px; min-width:90px; flex-shrink:0; }
 
-        /* SB→CS 连接行 */
-        .sb-cs-row { display:flex; align-items:center; padding:4px 0; }
+        /* SB→CS 连接行：顶部留出间隙，供 DP→CS 通道横线落在 SB 下方、CS 框上方 */
+        .sb-cs-row { display:flex; align-items:center; padding:4px 0; margin-top:34px; }
         .sb-cs-connector { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; font-size:0.73em; color:var(--text-muted); border-left:2px dashed rgba(212,175,55,0.3); padding:3px 8px; margin:0 2px; }
 
         /* ── 流程节点 ── */
-        .proc-node { flex:1; background:var(--bg-card); border:2px solid var(--border-card); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; cursor:pointer; transition:all 0.3s; }
+        .proc-node { flex:1; background:var(--bg-card); border:2px solid var(--border-card); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; min-height:200px; cursor:pointer; transition:all 0.3s; }
         .proc-node:hover { border-color:var(--text-heading); box-shadow:0 4px 20px var(--accent-glow); transform:translateY(-2px); }
         .proc-node.active { border-color:var(--text-heading); border-width:3px; background:rgba(212,175,55,0.07); box-shadow:0 0 20px var(--accent-glow); transform:translateY(-3px); }
         .proc-header { display:flex; align-items:flex-start; gap:8px; }
@@ -147,19 +162,44 @@
         .footer { margin-top:32px; padding:16px 0; border-top:2px solid var(--border-subtle); text-align:center; font-size:0.78em; color:var(--text-muted); }
 
         /* ── 授权事件连接器 ── */
-        .auth-connector-row { position:relative; height:68px; margin:2px 0; }
-        .auth-event-col { position:absolute; top:0; display:flex; flex-direction:column; align-items:center; box-sizing:border-box; }
+        .auth-connector-row { position:relative; height:84px; margin:2px 0; }
+        .auth-event-col { position:absolute; top:0; bottom:0; display:flex; flex-direction:column; align-items:center; justify-content:space-between; box-sizing:border-box; }
         .auth-v-arrow { color:var(--text-heading); font-size:1em; line-height:1.3; opacity:0.75; }
         .auth-event-box { display:flex; flex-direction:column; align-items:center; gap:2px; padding:5px 14px; background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.45); border-radius:6px; margin:1px 0; white-space:nowrap; }
         .auth-event-src { font-size:0.65em; color:var(--text-muted); }
         .auth-event-name { font-size:0.78em; color:var(--text-heading); letter-spacing:0.02em; font-weight:bold; }
+        /* CS 列授权事件（DP→CS 的3个授权，并排横排，居中对齐到 CS 列，溢出落在两侧空白占位区） */
+        .cs-auth-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:2px 0; min-width:0; }
+        .cs-auth-boxes { display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center; align-items:stretch; gap:10px; }
+        .cs-auth-boxes .auth-event-box { flex:0 0 auto; margin:0; }
+        /* SB 上行连接器（位于 DP 下方，↑ 向上连入 DP）；桌面用连接器，移动端回退到上方 pill */
+        .auth-up-pills { display:flex; flex-direction:row; flex-wrap:nowrap; gap:10px; width:100%; justify-content:center; align-items:center; }
+        .auth-up-pills .band-item { flex:0 0 auto; display:inline-block; white-space:normal; text-align:center; line-height:1.3; }
+        /* 同列上下行连接器左右并排（IP 列：上行↑ + 下行↓） */
+        .auth-pair-col { flex-direction:row; justify-content:center; align-items:stretch; gap:10px; }
+        .auth-sub { display:flex; flex-direction:column; align-items:center; justify-content:space-between; min-width:0; }
+        /* 上行项移动端回退（桌面隐藏，窄屏显示为上方列表） */
+        .up-fb { display:none; }
+        .up-sb-fallback { display:none; }
+        /* DP→CS 通道连线（JS 定位，相对 .container 绝对定位） */
+        .corridor-line-v, .corridor-line-h, .corridor-line-v2 { position:absolute; background:var(--accent); z-index:2; opacity:0.8; }
+        .corridor-arrow { position:absolute; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:7px solid var(--accent); z-index:2; opacity:0.85; }
+        .corridor-label { position:absolute; transform:translateX(-50%); background:rgba(212,175,55,0.14); border:1px solid rgba(212,175,55,0.5); color:var(--text-heading); font-size:0.66em; font-weight:bold; letter-spacing:0.04em; padding:2px 9px; border-radius:8px; white-space:nowrap; z-index:3; }
+        /* DP 下行授权列表：桌面端改用连接器，故隐藏；移动端作为回退显示 */
+        .dp-downflow { display:none; }
 
         /* ── 响应式 ── */
         @media (max-width:960px) {
             .auth-connector-row { display:none; }
+            .sb-cs-row { display:none; }
+            .corridor-line-v, .corridor-line-h, .corridor-line-v2, .corridor-arrow, .corridor-label { display:none; }
+            .dp-downflow { display:flex; }
+            .up-flow-row { flex-direction:column; align-items:stretch; gap:5px; }
+            .up-sb-fallback { display:flex; flex-direction:column; gap:5px; }
+            .up-fb { display:flex; flex-direction:column; gap:5px; }
             .managing-row { flex-direction:column; gap:8px; }
             .flow-arrow { transform:rotate(90deg); width:auto; height:28px; padding-top:0; align-self:center; }
-            .flow-spacer, .arrow-spacer, .delivery-spacer, .delivery-gap { display:none; }
+            .flow-spacer, .arrow-spacer, .delivery-spacer, .delivery-gap, .gap-wide { display:none; }
             .summary-grid { grid-template-columns:1fr; }
             .info-band { padding-left:16px; }
             .info-band::before { display:none; }
@@ -238,15 +278,36 @@
             <div class="dp-wrapper">
                 <!-- 发往DP -->
                 <div class="dp-flow-block">
-                    <div class="dp-flow-title">▲ 管理层发往 DP（上行请求与报告）</div>
-                    <div class="dp-flow-row">
-                        <span class="band-item up">↑ 项目启动请求（SU）</span>
-                        <span class="band-item up">↑ 项目授权请求·PID（IP）</span>
-                        <span class="band-item up">↑ 要点报告（CS）</span>
-                        <span class="band-item up">↑ 例外报告（CS，例外时）</span>
-                        <span class="band-item up">↑ 下一阶段请求（SB）</span>
-                        <span class="band-item up">↑ 例外计划批准请求（SB，例外时）</span>
-                        <span class="band-item up">↑ 项目收尾建议（CP）</span>
+                    <div class="dp-flow-title">▲ 管理层发往 DP（上行请求与报告，按来源流程列对齐）</div>
+                    <div class="up-flow-row">
+                        <!-- SU 列（桌面改用 DP 下方连接器，此处仅移动端回退） -->
+                        <div class="up-col">
+                            <div class="up-fb">
+                                <span class="band-item up">↑ 项目启动请求（SU → DP）</span>
+                            </div>
+                        </div>
+                        <div class="arrow-spacer"></div>
+                        <!-- IP 列（桌面改用 DP 下方连接器，此处仅移动端回退） -->
+                        <div class="up-col">
+                            <div class="up-fb">
+                                <span class="band-item up">↑ 项目授权请求·PID（IP → DP）</span>
+                            </div>
+                        </div>
+                        <div class="gap-wide"></div>
+                        <!-- SB / CS 列（CS 与 SB 同列）；SB 两项桌面端改用 DP 下方连接器，此处仅移动端回退 -->
+                        <div class="up-col">
+                            <div class="up-sb-fallback">
+                                <span class="band-item up">↑ 下一阶段请求（SB → DP）</span>
+                                <span class="band-item up">↑ 例外计划批准请求（SB → DP，例外时）</span>
+                            </div>
+                            <span class="band-item up">↑ 要点报告（CS → DP）</span>
+                            <span class="band-item up">↑ 例外报告（CS → DP，例外时）</span>
+                        </div>
+                        <div class="arrow-spacer"></div>
+                        <!-- CP 列 -->
+                        <div class="up-col">
+                            <span class="band-item up">↑ 项目收尾建议（CP → DP）</span>
+                        </div>
                     </div>
                 </div>
                 <!-- DP贯穿条 -->
@@ -258,8 +319,8 @@
                     </div>
                     <span class="badge">贯穿全程</span>
                 </div>
-                <!-- DP发出 -->
-                <div class="dp-flow-block">
+                <!-- DP发出（桌面端用层间连接器展示，此列表仅作移动端回退） -->
+                <div class="dp-flow-block dp-downflow">
                     <div class="dp-flow-title">▼ DP 发出（下行授权与指导）</div>
                     <div class="dp-flow-row">
                         <span class="band-item down">↓ 已授权项目启动（→IP）</span>
@@ -273,15 +334,50 @@
         </div>
     </div>
 
-    <!-- DP ↓ 已授权项目启动 ↓ IP（JS定位到IP列） -->
+    <!-- DP↔管理层 连接器（JS 定位到各流程列；上行↑ / 下行↓） -->
     <div class="auth-connector-row" id="auth-connector-dp-ip">
-        <div class="auth-event-col" id="auth-event-ip">
+        <!-- IP 列：上行（IP→DP 请求）+ 下行（DP→IP 授权）左右并排 -->
+        <div class="auth-event-col auth-pair-col" id="auth-event-ip">
+            <div class="auth-sub">
+                <span class="auth-v-arrow">↑</span>
+                <div class="auth-up-pills">
+                    <span class="band-item up">项目授权请求·PID<br>（IP → DP）</span>
+                </div>
+                <span class="auth-v-arrow">↑</span>
+            </div>
+            <div class="auth-sub">
+                <span class="auth-v-arrow">↓</span>
+                <div class="auth-event-box">
+                    <span class="auth-event-src">DP 授权 → IP</span>
+                    <span class="auth-event-name">已授权项目启动</span>
+                </div>
+                <span class="auth-v-arrow">↓</span>
+            </div>
+        </div>
+        <div class="auth-event-col" id="auth-event-cp">
             <span class="auth-v-arrow">↓</span>
             <div class="auth-event-box">
-                <span class="auth-event-src">DP 授权</span>
-                <span class="auth-event-name">已授权项目启动</span>
+                <span class="auth-event-src">DP 通知 → CP · 例外时</span>
+                <span class="auth-event-name">提前收尾通知</span>
             </div>
             <span class="auth-v-arrow">↓</span>
+        </div>
+        <!-- SB 上行连接器：↑ 向上连入 DP，对齐到 SB 列 -->
+        <div class="auth-event-col" id="auth-up-sb">
+            <span class="auth-v-arrow">↑</span>
+            <div class="auth-up-pills">
+                <span class="band-item up">下一阶段请求<br>（SB → DP）</span>
+                <span class="band-item up">例外计划批准请求<br>（SB → DP，例外时）</span>
+            </div>
+            <span class="auth-v-arrow">↑</span>
+        </div>
+        <!-- SU 上行连接器：↑ 向上连入 DP，对齐到 SU 列（该列无下行） -->
+        <div class="auth-event-col" id="auth-up-su">
+            <span class="auth-v-arrow">↑</span>
+            <div class="auth-up-pills">
+                <span class="band-item up">项目启动请求<br>（SU → DP）</span>
+            </div>
+            <span class="auth-v-arrow">↑</span>
         </div>
     </div>
 
@@ -337,7 +433,7 @@
                         </div>
                     </div>
 
-                    <div class="flow-arrow">→</div>
+                    <div class="gap-wide"></div>
 
                     <!-- SB -->
                     <div class="proc-node" id="node-sb" onclick="toggleDetail('sb')">
@@ -374,13 +470,29 @@
 
                 </div><!-- /managing-row top -->
 
-                <!-- SB → CS 连接行 -->
+                <!-- DP → CS 授权连接器（3个下行授权，经 spacer 对齐到 CS 列） -->
                 <div class="sb-cs-row">
                     <div class="flow-spacer"></div>
                     <div class="arrow-spacer"></div>
                     <div class="flow-spacer"></div>
-                    <div class="arrow-spacer"></div>
-                    <div class="sb-cs-connector">↓ 经 DP 授权后触发阶段控制</div>
+                    <div class="gap-wide"></div>
+                    <div class="cs-auth-col">
+                        <div class="cs-auth-boxes">
+                            <div class="auth-event-box">
+                                <span class="auth-event-src">DP 授权 → CS · 首次</span>
+                                <span class="auth-event-name">已授权项目</span>
+                            </div>
+                            <div class="auth-event-box">
+                                <span class="auth-event-src">DP 授权 → CS · 每阶段</span>
+                                <span class="auth-event-name">已授权阶段</span>
+                            </div>
+                            <div class="auth-event-box">
+                                <span class="auth-event-src">DP 批准 → CS · 例外时</span>
+                                <span class="auth-event-name">例外计划批准</span>
+                            </div>
+                        </div>
+                        <span class="auth-v-arrow">↓</span>
+                    </div>
                     <div class="arrow-spacer"></div>
                     <div class="flow-spacer"></div>
                 </div>
@@ -390,7 +502,7 @@
                     <div class="flow-spacer"></div>
                     <div class="arrow-spacer"></div>
                     <div class="flow-spacer"></div>
-                    <div class="arrow-spacer"></div>
+                    <div class="gap-wide"></div>
 
                     <!-- CS -->
                     <div class="proc-node" id="node-cs" onclick="toggleDetail('cs')">
@@ -418,13 +530,40 @@
         </div>
     </div>
 
-    <!-- 管理 ↔ 交付 信息流带 (CS ↔ MP) -->
-    <div class="info-band">
-        <div class="band-row">
-            <span class="band-item down">↓ 工作包描述（CS → MP）</span>
-            <span class="band-item bi">↕ 检查点报告（MP → CS）</span>
-            <span class="band-item bi">↕ 已完成工作包通知（MP → CS）</span>
+    <!-- 管理 ↔ 交付 信息流带 (CS ↔ MP)：对齐 CS/MP 列，每框上下带方向箭头连到 CS（上）/ MP（下） -->
+    <div class="info-band cs-mp-band">
+        <div class="flow-spacer"></div>
+        <div class="arrow-spacer"></div>
+        <div class="flow-spacer"></div>
+        <div class="gap-wide"></div>
+        <div class="cs-mp-col">
+            <div class="cs-mp-wrap">
+                <span class="auth-v-arrow">↓</span>
+                <span class="band-item down band-2line">
+                    <span class="band-route">CS → MP</span>
+                    <span class="band-name">工作包描述</span>
+                </span>
+                <span class="auth-v-arrow">↓</span>
+            </div>
+            <div class="cs-mp-wrap">
+                <span class="auth-v-arrow">↑</span>
+                <span class="band-item bi band-2line">
+                    <span class="band-route">MP → CS</span>
+                    <span class="band-name">检查点报告</span>
+                </span>
+                <span class="auth-v-arrow">↑</span>
+            </div>
+            <div class="cs-mp-wrap">
+                <span class="auth-v-arrow">↑</span>
+                <span class="band-item bi band-2line">
+                    <span class="band-route">MP → CS</span>
+                    <span class="band-name">已完成工作包通知</span>
+                </span>
+                <span class="auth-v-arrow">↑</span>
+            </div>
         </div>
+        <div class="arrow-spacer"></div>
+        <div class="flow-spacer"></div>
     </div>
 
     <!-- ④交付层 MP（与CS列对齐） -->
@@ -432,13 +571,13 @@
         <div class="layer-label">交付</div>
         <div class="layer-body">
             <div class="delivery-row">
-                <div class="delivery-spacer"></div>
-                <div class="delivery-gap"></div>
-                <div class="delivery-spacer"></div>
-                <div class="delivery-gap"></div>
+                <div class="flow-spacer"></div>
+                <div class="arrow-spacer"></div>
+                <div class="flow-spacer"></div>
+                <div class="gap-wide"></div>
 
-                <!-- MP -->
-                <div class="proc-node" id="node-mp" style="flex:1" onclick="toggleDetail('mp')">
+                <!-- MP（与 CS 同列对齐） -->
+                <div class="proc-node" id="node-mp" onclick="toggleDetail('mp')">
                     <div class="proc-header">
                         <span class="proc-abbr">MP</span>
                         <div class="proc-title">
@@ -452,11 +591,18 @@
                     </div>
                 </div>
 
-                <div class="delivery-gap"></div>
-                <div class="delivery-spacer"></div>
+                <div class="arrow-spacer"></div>
+                <div class="flow-spacer"></div>
             </div>
         </div>
     </div>
+
+    <!-- DP→CS 通道连线（桌面端，JS 定位到 IP↔SB 通道，连到 CS 连接器） -->
+    <div class="corridor-label" id="corr-label">DP 授权</div>
+    <div class="corridor-line-v" id="corr-v"></div>
+    <div class="corridor-line-h" id="corr-h"></div>
+    <div class="corridor-line-v2" id="corr-v2"></div>
+    <div class="corridor-arrow" id="corr-arrow"></div>
 
     <!-- ═══ 详情面板区域 ═══ -->
 
@@ -883,7 +1029,10 @@
 /* 将授权事件盒子精确对齐到目标流程节点列 */
 function positionAuthEvents() {
     var pairs = [
-        { eventId: 'auth-event-ip', targetId: 'node-ip' }
+        { eventId: 'auth-event-ip', targetId: 'node-ip' },
+        { eventId: 'auth-event-cp', targetId: 'node-cp' },
+        { eventId: 'auth-up-sb', targetId: 'node-sb' },
+        { eventId: 'auth-up-su', targetId: 'node-su' }
     ];
     pairs.forEach(function(p) {
         var target = document.getElementById(p.targetId);
@@ -897,6 +1046,40 @@ function positionAuthEvents() {
 }
 window.addEventListener('load', positionAuthEvents);
 window.addEventListener('resize', positionAuthEvents);
+
+/* DP→CS 通道连线：从 DP 底部沿 IP↔SB 通道下行，拐入 CS 连接器顶部 */
+function positionCorridor() {
+    var container = document.querySelector('.container');
+    var dp = document.getElementById('node-dp');
+    var ip = document.getElementById('node-ip');
+    var sb = document.getElementById('node-sb');
+    var csBoxes = document.querySelector('.cs-auth-boxes');
+    var lbl = document.getElementById('corr-label');
+    var v = document.getElementById('corr-v');
+    var h = document.getElementById('corr-h');
+    var v2 = document.getElementById('corr-v2');
+    var ar = document.getElementById('corr-arrow');
+    if (!container || !dp || !ip || !sb || !csBoxes || !v) return;
+    var c = container.getBoundingClientRect();
+    var ipR = ip.getBoundingClientRect(), sbR = sb.getBoundingClientRect();
+    var cb = csBoxes.getBoundingClientRect();
+    var startX = (ipR.right + sbR.left) / 2 - c.left;       // 通道中心
+    var startY = dp.getBoundingClientRect().bottom - c.top + 4;
+    var endX = (cb.left + cb.right) / 2 - c.left;            // CS 连接器中心
+    var csTopY = cb.top - c.top;
+    var sbBottom = sbR.bottom - c.top;  // SB 框底部
+    var gap = 12;                       // 箭头与 CS 框顶留出的间距，避免遮挡
+    var arTopY = csTopY - gap - 7;      // 三角箭头元素顶（尖端再往下 7px）
+    var elbowY = sbBottom + 10;         // 横线落在 SB 底部下方、CS 框上方的间隙里，避免被 SB 遮挡
+    if (elbowY > arTopY - 6) elbowY = arTopY - 6;  // 间隙过小时兜底，至少保持在箭头上方
+    v.style.left = (startX - 1) + 'px'; v.style.top = startY + 'px'; v.style.width = '2px'; v.style.height = Math.max(0, elbowY - startY) + 'px';
+    h.style.left = Math.min(startX, endX) + 'px'; h.style.top = (elbowY - 1) + 'px'; h.style.width = Math.abs(endX - startX) + 'px'; h.style.height = '2px';
+    v2.style.left = (endX - 1) + 'px'; v2.style.top = elbowY + 'px'; v2.style.width = '2px'; v2.style.height = Math.max(0, arTopY - elbowY) + 'px';
+    ar.style.left = (endX - 5) + 'px'; ar.style.top = arTopY + 'px';
+    lbl.style.left = startX + 'px'; lbl.style.top = startY + 'px';
+}
+window.addEventListener('load', positionCorridor);
+window.addEventListener('resize', positionCorridor);
 
 var currentOpen = null;
 

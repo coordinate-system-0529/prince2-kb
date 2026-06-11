@@ -57,43 +57,32 @@ python -m http.server 8000
 
 ### graph-full.html 管理产品信息流架构
 
-`graph-full.html` 用 `.layer-section` 块（非 `.layer-row`）实现四层布局，层间用 `.info-band` 显示上行/下行信息流标签。
+`graph-full.html` 用 `.layer-section` 块实现四层布局（业务 / 指导 / 管理 / 交付），每个 `.layer-section` = `.layer-label`（48px 竖排标签）+ `.layer-body`。层间用 `.info-band` 显示上行/下行信息流标签（`.band-item.up` / `.down` / `.bi`）。这是全站最复杂的页面，改动前务必用浏览器实测对齐，不能只靠读代码。
 
-**管理产品标签体系**（3种 CSS 类）：
+**管理产品标签体系**（3种 CSS 类，`.mgmt-product` + 类型类组合，可作 `<a>` 或 `<span>`）：
 
 | 类名 | 含义 | 背景/边框颜色 |
 |------|------|-------------|
-| `.mp-plan` | 报告 / 计划 / 文件（15个） | 深绿底 #2E8B57 边框 |
-| `.mp-approach` | 管理方法（6个） | 深蓝底 #2E6B9B 边框 |
-| `.mp-register` | 登记单 / 日志（6个） | 深棕底 #8B6B00 边框 |
+| `.mp-plan` | 报告 / 计划 / 文件 | 深绿底 #2E8B57 边框 |
+| `.mp-approach` | 管理方法 | 深蓝底 #2E6B9B 边框 |
+| `.mp-register` | 登记单 / 日志 | 深棕底 #8B6B00 边框 |
 
-管理产品标签用 `.mgmt-product` + 类型类组合，可作 `<a>` 链接或 `<span>` 展示。
+> 注：此三分类是本项目的展示口径，**与官方 Appendix A 的"基线/报告/记录单"分类不同**；产品清单也收录了"项目收尾建议"而缺"商业论证/经验教训报告"，与 `entities/product.html` 一致但与官方手册有出入。改分类是牵动全站的内容决策，勿擅自改。
 
-**CS/MP 列对齐**：`graph-full.html` 中 CS 行和 MP 行用 `.flow-spacer`（`flex:1`）+ `.arrow-spacer`（`width:28px`）做透明占位与管理行的 SB 列对齐，数学上：管理行固定宽 = 层标签(48) + 内边距(32) + 边框(2) + 3箭头(84) = **166px**，spacer 行固定宽 = 标签空间(65) + 3间距(84) + 右侧(17) = **166px**，两边 flex:1 单位相同，对齐成立。
+**列对齐网格（整个页面对齐的骨架）**：所有需要纵向对齐的行都用**同一套四列网格**——4 个 `flex:1` 列，列间 3 个间隔。`gap1`(SU↔IP) 与 `gap3`(SB↔CP) = 28px（`.arrow-spacer` 或 `.flow-arrow`）；**`gap2`(IP↔SB) = 90px（`.gap-wide`）**，这条加宽间隙就是 DP→CS 连线穿过的"通道"。因为每一行结构完全相同，列才会跨行对齐。列顺序：SU / IP / SB / CP，**CS 与 MP 都对齐在第 3 列（SB 列）下方**。使用此网格的行：`.up-flow-row`、顶部 `.managing-row`、`.sb-cs-row`、底部 `.managing-row`(CS)、`.delivery-row`。改任一行的间隔，必须同步改其余所有行，否则列错位。
 
-**层间授权事件连接器**（`positionAuthEvents`）：当需要在两个层之间放置"授权事件中间节点"（如 DP→已授权项目启动→IP）时，**不要用 flex spacer 跨容器对齐**（不可靠）。正确做法：
+**连接器系统（层间授权/请求事件）**：跨容器对齐**不要用 flex spacer**（不可靠），用绝对定位 + JS 按目标节点 `getBoundingClientRect` 定位：
 
-```html
-<div class="auth-connector-row" id="auth-connector-dp-ip">
-    <div class="auth-event-col" id="auth-event-ip">...</div>
-</div>
-```
-```css
-.auth-connector-row { position:relative; height:68px; }
-.auth-event-col { position:absolute; top:0; }
-```
-```javascript
-function positionAuthEvents() {
-    var target = document.getElementById('node-ip');
-    var eventEl = document.getElementById('auth-event-ip');
-    var tRect = target.getBoundingClientRect();
-    var pRect = eventEl.parentElement.getBoundingClientRect();
-    eventEl.style.left  = (tRect.left - pRect.left) + 'px';
-    eventEl.style.width = tRect.width + 'px';
-}
-window.addEventListener('load', positionAuthEvents);
-window.addEventListener('resize', positionAuthEvents);
-```
+- `.auth-connector-row`（DP 与管理层顶排之间）：放下行连接器 `#auth-event-ip`、`#auth-event-cp`（↓ 落到 IP/CP），以及上行连接器 `#auth-up-sb`（↑ 连入 DP）。`.auth-event-col` 用 `position:absolute; top:0; bottom:0; justify-content:space-between` 撑满行高、箭头贴两端；`positionAuthEvents()` 里的 `pairs` 数组把每个 `eventId` 对齐到 `targetId` 节点列（现含 ip→node-ip、cp→node-cp、auth-up-sb→node-sb）。
+- `.sb-cs-row` 内 `.cs-auth-col` > `.cs-auth-boxes`：3 个 DP→CS 下行授权框，横向并排，靠 spacer 对齐到 CS 列（窄于内容时居中溢出到两侧空白）。
+- 连接器框 `.auth-event-box` = `.auth-event-src`（"起点 → 终点"路由，如 `DP 授权 → IP`）+ `.auth-event-name`（事件名）。
+- 上行请求同时以 `.up-col` 药丸出现在 `.up-flow-row`（按来源列对齐），这些药丸也**兼作移动端回退**。
+
+**DP→CS 通道连线**（`positionCorridor()`）：`.container` 设 `position:relative` 作定位上下文；连线由 5 个绝对定位元素组成（`#corr-label` 起点标签"DP 授权"、`#corr-v`/`#corr-h`/`#corr-v2` 三段线、`#corr-arrow` 箭头）。JS 计算：通道 x = `IP.right` 与 `SB.left` 中点，从 DP 底部竖直下行，拐入 CS 连接器中心，箭头靠 `gap`(12px) 悬在 CS 框上方避免遮挡。语义：DP→CS 的授权起点是 **DP 不是 SB**，通道绕开 SB 节点正是为消除误读。
+
+**统一框高**：`.proc-node { min-height:200px }` 把 6 个流程框（SU/IP/SB/CP/CS/MP）钉成等高，200 取自内容最多的 IP（10 个产品）的实际高度。
+
+**移动端回退模式（`@media max-width:960px`）**：连接器、通道连线、`.gap-wide`、`.sb-cs-row`、`.auth-connector-row` 全部 `display:none`；同时 `.dp-downflow`（蓝色 ▼"DP 发出"列表，含 CS 下行授权）和 `.up-sb-fallback`（SB 上行）改为显示，作为纯文字回退。**通用约定：桌面端用连接器，移动端用药丸列表，两端信息不丢**。新增任何桌面连接器时，必须同步留一个移动端文字回退。
 
 ### 实体类型与颜色编码
 
