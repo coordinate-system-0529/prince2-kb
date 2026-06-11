@@ -15,6 +15,13 @@ python -m http.server 8000
 # 访问 http://localhost:8000
 ```
 
+## Git 工作流与部署
+
+- **分支策略**：`develop` 为开发分支，`main` 为生产分支
+- **提交规范**：使用 Conventional Commits 格式（`feat:` `fix:` `style:` `content:` `docs:` `revert:`）
+- **部署方式**：GitHub Pages 自动部署，推送 `main` 分支后自动生效
+- **在线地址**：https://yunhongfeng-tracy.github.io/prince2-kb/
+
 ## 项目架构
 
 ### 文件结构
@@ -103,7 +110,11 @@ window.addEventListener('resize', positionAuthEvents);
 
 ### 主题系统
 
-配色方案通过 CSS `[data-theme="xxx"]` 属性切换，用户选择存入 `localStorage`。6套主题：`default`（古籍经典）、`blue`、`green`、`terra`、`lavender`、`mono`。新增页面须在 `<html>` 标签上读取 localStorage 并应用 `data-theme`，参考现有章节页面的 script 实现。
+配色方案通过 CSS `[data-theme="xxx"]` 属性切换，用户选择存入 `localStorage`。6套主题：`default`（古籍经典）、`blue`、`green`、`terra`、`lavender`、`mono`。
+
+**主题支持范围**：仅 `index.html`、`graph.html`、`graph-full.html` 支持主题切换。章节页面（`chapters/*.html`）和实体索引页面（`entities/*.html`）使用固定浅色主题，不响应主题切换。
+
+新增支持主题的页面时，须在 `<html>` 标签的 `<script>` 中读取 `localStorage.getItem('prince2-theme')` 并调用 `document.documentElement.setAttribute('data-theme', ...)`。
 
 ### 章节页面结构约定
 
@@ -112,6 +123,83 @@ window.addEventListener('resize', positionAuthEvents);
 2. 分类标签（`.chapter-tag`）
 3. `<h2 class="section-heading">` 和 `<h3 class="section-heading">` 供 `floating-toc.js` 收集
 4. 实体引用使用对应色码的 `<a>` 链接，指向 `entities/` 目录
+
+### entity 页面模板约定
+
+6个实体索引页面（`entities/principle.html`、`practice.html`、`process.html`、`role.html`、`product.html`、`term.html`）共享统一模板：
+
+1. **导航栏**：返回主页链接 + 6种实体类型的快捷入口（每种用对应色码）
+2. **`page-title`**：实体类型名称（如"原则索引"）
+3. **`page-stats`**：统计信息（如"共7个原则，在文本中共出现N次"）
+4. **`quick-nav`**：快速跳转区域（按首字母或分类），使用对应主题色的 `.quick-nav a` 链接
+5. **`entity-list`**：`.entity-entry` 卡片列表，每个卡片包含：
+   - `.entity-icon`：统一为"◇"符号
+   - `.entity-name`：实体名称
+   - `.occ-count`：出现次数（如"(175次)"）
+   - `.entity-desc`：简短描述/定义
+   - `.entity-sources`（仅 term.html）：出处链接，Purple Numbers 格式
+
+每种实体类型有独特的主题色（通过 CSS 变量 `--entity-color` 或直接样式控制），见上文颜色编码表。
+
+### practice.html 详情展开模式
+
+实践页面中每个 `.entity-entry` 包含内联的展开/收起交互：
+
+```html
+<div class="entity-detail-toggle" onclick="this.nextElementSibling.classList.toggle('open')">▸ 查看详情</div>
+<div class="entity-detail">
+    <!-- 详情内容：目的、产出成果与收益、生命周期、相关章节链接 -->
+</div>
+```
+
+CSS 控制：`.entity-detail { display: none; }` → `.entity-detail.open { display: block; }`
+
+7个实践（商业论证、组织、计划、质量、风险、问题、进展）使用相同的结构与模式，详情内容从对应章节原文提取。
+
+### index.html 搜索机制
+
+侧边栏搜索框（`#searchInput`）通过 `oninput` 事件触发实时过滤：
+
+- 搜索关键词与章节/实体项的 `data-keywords` 属性进行匹配
+- 匹配结果用 `<mark>` 标签高亮显示关键词
+- 过滤逻辑同时作用于章节导航树（`#navTree`）和主内容区的卡片列表
+- 清空搜索框时恢复全部显示
+
+### 跨页面实体链接约定
+
+全站实体引用使用对应色码的 `<a>` 链接，指向 `entities/` 目录：
+- 原则 → 金色链接 → `entities/principle.html`
+- 实践 → 褐色链接 → `entities/practice.html`
+- 流程 → 绿色链接 → `entities/process.html`
+- 角色 → 蓝色链接 → `entities/role.html`
+- 管理产品 → 紫色链接 → `entities/product.html`
+- 术语 → 棕色链接 → `entities/term.html`
+
+章节页面和实体页面中的术语引用均遵循此约定，形成互联的知识网络。
+
+### Purple Numbers 段落引用系统
+
+章节页面中每个标题使用 Purple Numbers 段落编号作为唯一锚点：
+
+```html
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link">[2]</a> 5.1 目的</h2>
+```
+
+- 格式：`id="pn-N"`，N 为该段落在整个手册中的全局编号
+- `.pn-link` 为自引用链接，点击可复制该段落的直接访问 URL
+- `term.html` 中的术语出处通过 `#pn-N` 锚点链接到章节的精确段落位置
+- 新增或编辑章节内容时，段落编号必须与 PRINCE2 官方手册保持一致，不可随意编造
+
+### term.html 结构与注意事项
+
+`term.html` 是项目中最大的文件（282 KB，141条术语），结构特点：
+
+- **扁平列表**：按术语拼音/Unicode顺序排列，无字母分组索引或分页
+- **每条术语包含**：唯一ID（`id="entity-名称"`）、图标、名称、出现频次（如"(175次)"）、简短定义、出处来源
+- **出处格式**：`第X章 名称 [N]`，使用 Purple Numbers 段落编号，每个出处为 `<a class="pn-ref">` 链接到章节页面的 `#pn-N` 锚点
+- **已知问题**：部分术语的名称和描述文本存在截断现象（如ID中出现"业产品为目的而建立的临时组织"这类不完整文本），可能源于自动提取过程的缺陷
+
+编辑此文件时务必分段操作，避免文本截断加剧。
 
 ### `floating-toc.js` 工作原理
 
