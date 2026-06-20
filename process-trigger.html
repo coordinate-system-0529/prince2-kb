@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>流程触发机制 · 事件 + 管理产品 - PRINCE2 7 知识库</title>
+<style>
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Microsoft YaHei','微软雅黑',sans-serif; background:#fdfbf7; color:#333; line-height:1.7; }
+.topbar { background:#2c1810; color:#f0e6d2; padding:12px 24px; display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+.topbar a { color:#d4af37; text-decoration:none; font-size:14px; }
+.topbar a:hover { text-decoration:underline; }
+.topbar .home { font-weight:bold; }
+.topbar .current { color:#8a7f6a; font-size:14px; }
+.container { max-width:1000px; margin:0 auto; padding:28px 24px 60px; }
+h1 { font-size:24px; color:#2c1810; margin:18px 0 8px; }
+.lead { color:#666; font-size:15px; margin:0 0 24px; }
+.card { background:#fff; border:1px solid #ece3d0; border-radius:12px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,0.04); }
+.diagram { display:block; width:100%; max-width:960px; height:auto; margin:0 auto; }
+.diagram a { cursor:pointer; }
+.diagram a text.src-link { fill:#1a5fb4; text-decoration:underline; }
+.diagram a:hover text.src-link { fill:#0a3d8f; }
+.diagram a:hover rect { stroke-width:3; }
+.tip { font-size:13px; color:#999; text-align:center; margin-top:10px; }
+.section { margin-top:32px; }
+.section h2 { font-size:18px; color:#2E8B57; border-left:4px solid #2E8B57; padding-left:10px; }
+.section p, .section li { font-size:15px; }
+@media (max-width:600px){ h1{font-size:20px;} .container{padding:18px 14px 40px;} }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a class="home" href="index.html">← PRINCE2 7 知识库</a>
+  <a href="graph.html">知识图谱</a>
+  <a href="graph-full.html">管理产品信息流</a>
+  <span class="current">流程触发机制</span>
+</nav>
+<div class="container">
+  <h1>流程触发机制：事件 + 管理产品</h1>
+  <p class="lead">PRINCE2 的流程之间不是孤立的，它们靠「事件（触发信号）」+「管理产品（信息载体）」互相触发。下图以阶段控制(CS) ↔ 产品交付管理(MP) 的工作包循环为例。<b>图中蓝色小字均可点击，跳转到对应章节或管理产品页。</b></p>
+
+  <div class="card">
+    <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 555">
+      <defs>
+        <marker id="ah" markerWidth="10" markerHeight="8" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L8,3 L0,6 Z" fill="#555"/>
+        </marker>
+      </defs>
+
+      <rect x="0" y="0" width="960" height="555" fill="#fdfbf7"/>
+      <rect x="6" y="6" width="948" height="543" fill="none" stroke="#e6ddc8" stroke-width="1.5" rx="10"/>
+
+      <text x="480" y="40" text-anchor="middle" font-size="22" font-weight="bold" fill="#2c3e50">流程触发机制示例：阶段控制(CS) ↔ 产品交付管理(MP)</text>
+      <text x="480" y="66" text-anchor="middle" font-size="14" fill="#666">流程之间靠『事件 = 触发信号』+『管理产品 = 信息载体』互相触发（蓝字可点击查看出处）</text>
+
+      <!-- CS 流程框（点击进第16章） -->
+      <a href="chapters/ch16.html">
+        <rect x="60" y="130" width="210" height="180" rx="12" fill="#ffffff" stroke="#2E8B57" stroke-width="3"/>
+        <text x="165" y="182" text-anchor="middle" font-size="22" font-weight="bold" fill="#2E8B57">阶段控制</text>
+        <text x="165" y="206" text-anchor="middle" font-size="15" fill="#2E8B57">CS</text>
+        <line x1="82" y1="222" x2="248" y2="222" stroke="#e0e0e0" stroke-width="1"/>
+        <text x="165" y="248" text-anchor="middle" font-size="12" fill="#555">项目经理 · 管理层</text>
+        <text x="165" y="270" text-anchor="middle" font-size="11" fill="#999">派发并管控工作包</text>
+        <text x="165" y="292" text-anchor="middle" font-size="10" fill="#bbb">第16章</text>
+      </a>
+
+      <!-- MP 流程框（点击进第17章） -->
+      <a href="chapters/ch17.html">
+        <rect x="690" y="130" width="210" height="180" rx="12" fill="#ffffff" stroke="#2E8B57" stroke-width="3"/>
+        <text x="795" y="182" text-anchor="middle" font-size="22" font-weight="bold" fill="#2E8B57">产品交付管理</text>
+        <text x="795" y="206" text-anchor="middle" font-size="15" fill="#2E8B57">MP</text>
+        <line x1="712" y1="222" x2="888" y2="222" stroke="#e0e0e0" stroke-width="1"/>
+        <text x="795" y="248" text-anchor="middle" font-size="12" fill="#555">小组经理 · 交付层</text>
+        <text x="795" y="270" text-anchor="middle" font-size="11" fill="#999">接受并执行工作包</text>
+        <text x="795" y="292" text-anchor="middle" font-size="10" fill="#bbb">第17章</text>
+      </a>
+
+      <!-- 去程 CS→MP -->
+      <a href="chapters/ch16.html">
+        <rect x="350" y="138" width="120" height="26" rx="13" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+        <text x="410" y="155" text-anchor="middle" font-size="13" fill="#9a5b06">已授权工作包</text>
+      </a>
+      <a href="chapters/ch16.html"><text x="410" y="178" text-anchor="middle" font-size="10" class="src-link">ch16 · 授权工作包活动</text></a>
+      <a href="entities/product.html#entity-工作包描述">
+        <rect x="500" y="138" width="115" height="26" rx="13" fill="#f6e4f6" stroke="#8B008B" stroke-width="1.2"/>
+        <text x="557" y="155" text-anchor="middle" font-size="13" fill="#6b1a6b">工作包描述</text>
+      </a>
+      <a href="chapters/appendix_a.html"><text x="552" y="178" text-anchor="end" font-size="10" class="src-link">附录A A15基线</text></a>
+      <a href="chapters/ch16.html"><text x="560" y="178" text-anchor="start" font-size="10" class="src-link">ch16产出</text></a>
+      <line x1="275" y1="200" x2="685" y2="200" stroke="#555" stroke-width="2.5" marker-end="url(#ah)"/>
+      <text x="480" y="216" text-anchor="middle" font-size="11" fill="#aaa">▶ 去程 · 项目经理把活派给小组</text>
+
+      <!-- 回程 MP→CS -->
+      <line x1="685" y1="238" x2="275" y2="238" stroke="#555" stroke-width="2.5" marker-end="url(#ah)"/>
+      <text x="480" y="234" text-anchor="middle" font-size="11" fill="#aaa">◀ 回程 · 小组交回成果与进度</text>
+      <a href="chapters/ch17.html">
+        <rect x="330" y="250" width="170" height="26" rx="13" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+        <text x="415" y="267" text-anchor="middle" font-size="13" fill="#9a5b06">已完成工作包通知</text>
+      </a>
+      <a href="chapters/ch17.html"><text x="415" y="290" text-anchor="middle" font-size="10" class="src-link">ch17 · 通知工作包已完成</text></a>
+      <a href="entities/product.html#entity-检查点报告">
+        <rect x="520" y="250" width="115" height="26" rx="13" fill="#f6e4f6" stroke="#8B008B" stroke-width="1.2"/>
+        <text x="577" y="267" text-anchor="middle" font-size="13" fill="#6b1a6b">检查点报告</text>
+      </a>
+      <a href="chapters/appendix_a.html"><text x="574" y="290" text-anchor="end" font-size="10" class="src-link">附录A A2报告</text></a>
+      <a href="chapters/ch17.html"><text x="582" y="290" text-anchor="start" font-size="10" class="src-link">ch17产出</text></a>
+
+      <text x="480" y="330" text-anchor="middle" font-size="12" font-style="italic" fill="#2E8B57">【循环】如此往复，直到本阶段工作包全部完成</text>
+
+      <!-- 图例 -->
+      <text x="60" y="362" font-size="14" font-weight="bold" fill="#333">图例 / 概念对照</text>
+      <rect x="70" y="374" width="20" height="20" rx="4" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="100" y="389" font-size="13" fill="#333">事件 = 门铃（触发信号，提示对方『该你上场了』）</text>
+      <rect x="70" y="402" width="20" height="20" rx="4" fill="#f6e4f6" stroke="#8B008B" stroke-width="1.2"/>
+      <text x="100" y="417" font-size="13" fill="#333">管理产品 = 包裹（信息载体，说明『要做什么 / 做得怎样』）</text>
+      <rect x="70" y="430" width="20" height="20" rx="4" fill="#ffffff" stroke="#2E8B57" stroke-width="3"/>
+      <text x="100" y="445" font-size="13" fill="#333">绿色方框 = 流程（全站统一用绿色表示流程）</text>
+      <text x="73" y="471" font-size="12" fill="#1a5fb4">蓝色小字 = 出处（可点击跳转到对应章节 / 管理产品页）</text>
+
+      <!-- 通用模式条 -->
+      <rect x="60" y="486" width="840" height="56" rx="8" fill="#eef3f8" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="480" y="508" text-anchor="middle" font-size="13" font-weight="bold" fill="#2c3e50">通用模式</text>
+      <text x="480" y="529" text-anchor="middle" font-size="12" fill="#444">上游流程完成活动 → 发出 事件（门铃）+ 管理产品（包裹）→ 下游流程被触发，以该管理产品为输入开始工作</text>
+    </svg>
+    <div class="tip">提示：点击流程框、药丸或下方蓝色出处小字，可跳转到知识库相应页面</div>
+  </div>
+
+  <div class="section">
+    <h2>怎么读这张图</h2>
+    <ul>
+      <li><b>事件 = 门铃</b>：触发信号，告诉下一个流程「该你上场了」，本身不是文档。</li>
+      <li><b>管理产品 = 包裹</b>：随门铃一起送过去的实际文档，下游流程靠它知道「具体做什么 / 做得怎样」。</li>
+      <li><b>一个流程被触发</b> = 收到门铃（事件）+ 同时收到包裹（管理产品）。</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>通用模式</h2>
+    <p>上游流程完成活动 → 发出 <b>事件</b>（门铃）+ <b>管理产品</b>（包裹）→ 下游流程被触发，以该管理产品为输入开始工作。7 个流程之间所有连接都是这一模式的重复，例如：项目准备(SU) 发「项目启动请求」+「项目概述文件」触发项目指导(DP)。</p>
+  </div>
+</div>
+</body>
+</html>
