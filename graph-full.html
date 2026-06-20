@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>流程与管理产品信息流 - PRINCE2® 7 知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-main:#1a0f0a;--bg-card:#2c1810;--bg-card-active:#4a3020;
+            --bg-panel:#241510;--bg-topbar:#2c1810;
+            --text-main:#e8d5b0;--text-heading:#d4af37;--text-muted:#8B7355;
+            --text-body:#c4a882;--accent:#d4af37;--accent-glow:rgba(212,175,55,.35);
+            --green:#2E8B57;--green-light:#3cb371;--green-glow:rgba(46,139,87,.3);
+            --blue:#4169E1;--border-card:#5c3d1a;--border-panel:#d4af37;
+            --border-subtle:#3a2515;
+        }
+        [data-theme="blue"]{--bg-main:#0a1628;--bg-card:#112240;--bg-card-active:#1a3355;--bg-panel:#0d1b2a;--text-main:#ccd6f6;--text-heading:#64ffda;--text-muted:#5a6a8a;--text-body:#8892b0;--accent:#1565c0;--accent-glow:rgba(21,101,192,.35);--green:#64ffda;--green-light:#64ffda;--green-glow:rgba(100,255,218,.2);--blue:#64ffda;--border-card:#1b2838;--border-panel:#1565c0;--border-subtle:#1b2838}
+        [data-theme="green"]{--bg-main:#0a1f0a;--bg-card:#1a3a2a;--bg-card-active:#2e5a3a;--bg-panel:#0f2a1a;--text-main:#c8e6c9;--text-heading:#81c784;--text-muted:#5a7a5a;--text-body:#a5d6a7;--accent:#4caf50;--accent-glow:rgba(76,175,80,.35);--green:#81c784;--green-light:#a5d6a7;--green-glow:rgba(129,199,132,.2);--blue:#81c784;--border-card:#2e5a3a;--border-panel:#4caf50;--border-subtle:#1a3a2a}
+        [data-theme="terra"]{--bg-main:#1a0f08;--bg-card:#3d2b1f;--bg-card-active:#5a3d2a;--bg-panel:#2a1a10;--text-main:#e8d5c0;--text-heading:#e8a87c;--text-muted:#8b6b4a;--text-body:#c49a6c;--accent:#e07a5f;--accent-glow:rgba(224,122,95,.35);--green:#e8a87c;--green-light:#f0c8a0;--green-glow:rgba(232,168,124,.2);--blue:#e07a5f;--border-card:#5a3d2a;--border-panel:#e07a5f;--border-subtle:#3d2b1f}
+        [data-theme="lavender"]{--bg-main:#1a1528;--bg-card:#2d2640;--bg-card-active:#4a3d6b;--bg-panel:#1e1830;--text-main:#e0d8f0;--text-heading:#c4b5fd;--text-muted:#6b5a8a;--text-body:#a594c4;--accent:#a78bfa;--accent-glow:rgba(167,139,250,.35);--green:#c4b5fd;--green-light:#ddd6fe;--green-glow:rgba(196,181,253,.2);--blue:#a78bfa;--border-card:#4a3d6b;--border-panel:#a78bfa;--border-subtle:#2d2640}
+        [data-theme="mono"]{--bg-main:#111;--bg-card:#1a1a1a;--bg-card-active:#333;--bg-panel:#151515;--text-main:#ddd;--text-heading:#fff;--text-muted:#666;--text-body:#999;--accent:#fff;--accent-glow:rgba(255,255,255,.15);--green:#fff;--green-light:#fff;--green-glow:rgba(255,255,255,.1);--blue:#fff;--border-card:#333;--border-panel:#fff;--border-subtle:#222}
+
+        body { font-family:"Noto Serif SC","Source Han Serif CN","SimSun",serif; background:var(--bg-main); color:var(--text-main); min-height:100vh; }
+
+        /* ── 顶部栏 ── */
+        .top-bar { background:var(--bg-card); border-bottom:2px solid var(--accent); padding:14px 24px; display:flex; align-items:center; gap:16px; position:sticky; top:0; z-index:100; }
+        .top-bar a { color:var(--text-heading); text-decoration:none; font-size:0.9em; }
+        .top-bar a:hover { text-decoration:underline; }
+        .top-bar h1 { font-size:1.15em; color:var(--text-heading); letter-spacing:0.05em; }
+        .top-bar .spacer { flex:1; }
+        .top-bar .hint { font-size:0.78em; color:var(--text-muted); }
+
+        /* ── 图例 ── */
+        .legend { display:flex; gap:14px; padding:10px 24px; background:var(--bg-panel); border-bottom:1px solid var(--border-subtle); font-size:0.8em; flex-wrap:wrap; align-items:center; }
+        .legend-item { display:flex; align-items:center; gap:5px; }
+        .legend-swatch { padding:2px 8px; border-radius:8px; font-size:0.85em; }
+
+        /* ── 主容器 ── */
+        .container { max-width:1500px; margin:0 auto; padding:20px 24px; display:flex; flex-direction:column; gap:0; position:relative; }
+
+        /* ── 层区块 ── */
+        .layer-section { display:flex; align-items:stretch; border-radius:10px; border:1px solid var(--border-subtle); overflow:hidden; }
+        .layer-label { width:48px; min-width:48px; display:flex; align-items:center; justify-content:center; writing-mode:vertical-rl; font-size:0.8em; letter-spacing:0.2em; padding:16px 0; user-select:none; border-right:1px solid var(--border-subtle); flex-shrink:0; }
+        .layer-body { flex:1; padding:16px; min-width:0; }
+
+        .layer--business { background:rgba(255,255,255,0.02); }
+        .layer--business .layer-label { color:var(--text-muted); }
+        .layer--directing { background:rgba(46,139,87,0.07); border-color:rgba(46,139,87,0.25); }
+        .layer--directing .layer-label { color:var(--green-light); border-right-color:rgba(46,139,87,0.25); }
+        .layer--managing { background:rgba(212,175,55,0.04); border-color:rgba(212,175,55,0.2); }
+        .layer--managing .layer-label { color:var(--text-heading); border-right-color:rgba(212,175,55,0.2); }
+        .layer--delivery { background:rgba(65,105,225,0.05); border-color:rgba(65,105,225,0.25); }
+        .layer--delivery .layer-label { color:#7a9ee8; border-right-color:rgba(65,105,225,0.25); }
+
+        /* ── 层间信息流带 ── */
+        .info-band { display:flex; flex-direction:column; gap:4px; padding:6px 16px 6px 64px; position:relative; min-height:32px; }
+        .info-band::before { content:''; position:absolute; left:47px; top:0; bottom:0; width:2px; background:var(--border-subtle); }
+        .band-row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+        .band-label { font-size:0.7em; color:var(--text-muted); letter-spacing:0.05em; width:100%; }
+        .band-item { display:inline-flex; align-items:center; gap:3px; padding:2px 9px; border-radius:10px; font-size:0.72em; white-space:nowrap; }
+        .band-item.up   { background:rgba(46,139,87,0.18); border:1px solid rgba(46,139,87,0.45); color:#90c8a0; }
+        .band-item.down { background:rgba(212,175,55,0.14); border:1px solid rgba(212,175,55,0.4); color:var(--text-heading); }
+        .band-item.bi   { background:rgba(65,105,225,0.14); border:1px solid rgba(65,105,225,0.4); color:#8aabf0; }
+        /* 信息流带 2 行盒（起点→终点 + 名称，仿连接器框样式） */
+        .band-2line { flex-direction:column; align-items:center; gap:1px; padding:4px 14px; white-space:normal; text-align:center; line-height:1.3; }
+        .band-2line .band-route { font-size:0.86em; opacity:0.72; }
+        .band-2line .band-name { font-weight:bold; }
+        /* CS↔MP 信息流带：做成对齐到 CS/MP 列、上下带箭头的连接器 */
+        .cs-mp-band { flex-direction:row; align-items:stretch; }
+        .cs-mp-band::before { display:none; }
+        .cs-mp-col { flex:1; min-width:0; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center; align-items:stretch; gap:10px; }
+        .cs-mp-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
+        .cs-mp-wrap .band-item { flex:0 0 auto; }
+
+        /* ── 业务层 ── */
+        .ext-products { display:flex; gap:16px; flex-wrap:wrap; align-items:stretch; }
+        .ext-product { display:flex; align-items:center; gap:10px; padding:10px 16px; background:var(--bg-card); border:1px solid var(--border-card); border-radius:8px; }
+        .ext-product .ext-icon { font-size:1.4em; }
+        .ext-product h4 { font-size:0.88em; color:var(--text-heading); }
+        .ext-product .ext-target { font-size:0.72em; color:var(--text-muted); margin-top:2px; }
+
+        /* ── 指导层 DP ── */
+        .dp-wrapper { display:flex; flex-direction:column; gap:8px; }
+        .dp-flow-block { display:flex; flex-direction:column; gap:4px; }
+        .dp-flow-title { font-size:0.72em; color:var(--text-muted); letter-spacing:0.05em; margin-bottom:2px; }
+        .dp-flow-row { display:flex; gap:6px; flex-wrap:wrap; }
+        /* 上行请求按来源流程列对齐（与下行连接器上下对称，列结构同管理层） */
+        .up-flow-row { display:flex; align-items:flex-start; }
+        .up-col { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:5px; }
+        .directing-bar { background:linear-gradient(90deg,var(--green),var(--green-light)); border:2px solid #2E8B57; border-radius:8px; padding:14px 20px; display:flex; align-items:center; gap:14px; }
+        .directing-bar .icon { font-size:1.8em; flex-shrink:0; }
+        .directing-bar h2 { font-size:1.1em; color:#fff; }
+        .directing-bar p { font-size:0.82em; color:#c8e6c9; margin-top:2px; }
+        .directing-bar .badge { margin-left:auto; background:rgba(255,255,255,0.2); padding:3px 10px; border-radius:10px; font-size:0.78em; color:#fff; white-space:nowrap; }
+
+        /* ── 管理层 ── */
+        .managing-grid { display:flex; flex-direction:column; gap:0; }
+        .managing-row { display:flex; align-items:flex-start; }
+        .flow-arrow { display:flex; align-items:center; justify-content:center; width:28px; min-width:28px; color:var(--text-heading); font-size:1.2em; padding-top:18px; flex-shrink:0; }
+        .flow-spacer { flex:1; }
+        .arrow-spacer { width:28px; min-width:28px; flex-shrink:0; }
+        /* IP↔SB 之间加宽的通道（gap2），供 DP→CS 连线穿过；所有列对齐行同步使用 */
+        .gap-wide { width:90px; min-width:90px; flex-shrink:0; }
+
+        /* SB→CS 连接行：顶部留出间隙，供 DP→CS 通道横线落在 SB 下方、CS 框上方 */
+        .sb-cs-row { display:flex; align-items:center; padding:4px 0; margin-top:34px; }
+        .sb-cs-connector { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; font-size:0.73em; color:var(--text-muted); border-left:2px dashed rgba(212,175,55,0.3); padding:3px 8px; margin:0 2px; }
+
+        /* ── 流程节点 ── */
+        .proc-node { flex:1; background:var(--bg-card); border:2px solid var(--border-card); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; min-height:200px; cursor:pointer; transition:all 0.3s; }
+        .proc-node:hover { border-color:var(--text-heading); box-shadow:0 4px 20px var(--accent-glow); transform:translateY(-2px); }
+        .proc-node.active { border-color:var(--text-heading); border-width:3px; background:rgba(212,175,55,0.07); box-shadow:0 0 20px var(--accent-glow); transform:translateY(-3px); }
+        .proc-header { display:flex; align-items:flex-start; gap:8px; }
+        .proc-abbr { background:var(--accent); color:#1a0f0a; font-weight:bold; font-size:0.82em; padding:2px 7px; border-radius:4px; white-space:nowrap; flex-shrink:0; margin-top:1px; }
+        .proc-title h3 { font-size:0.92em; color:var(--text-heading); line-height:1.3; }
+        .proc-title .proc-role { font-size:0.7em; color:var(--text-muted); margin-top:2px; }
+        .proc-products { display:flex; flex-wrap:wrap; gap:4px; }
+
+        /* ── 管理产品标签（3种类型）── */
+        .mgmt-product { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:10px; font-size:0.7em; white-space:nowrap; text-decoration:none; line-height:1.4; }
+        .mp-plan     { background:#152d1e; border:1px solid #2E8B57;  color:#90c8a0; }
+        .mp-approach { background:#152535; border:1px solid #2E6B9B;  color:#80b8d8; }
+        .mp-register { background:#2e2200; border:1px solid #8B6B00;  color:#d4b060; }
+        .mgmt-product:hover { filter:brightness(1.25); }
+
+        /* ── 交付层 ── */
+        .delivery-row { display:flex; align-items:flex-start; }
+        .delivery-spacer { flex:2; min-width:0; }
+        .delivery-gap { width:28px; min-width:28px; }
+
+        /* ── 汇总表 ── */
+        .summary-section { margin-top:28px; padding:20px; background:var(--bg-panel); border:1px solid var(--border-subtle); border-radius:8px; }
+        .summary-section h3 { color:var(--text-heading); font-size:1.05em; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border-subtle); }
+        .summary-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+        .summary-col h4 { font-size:0.82em; color:var(--text-heading); margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; gap:6px; }
+        .summary-col ul { list-style:none; }
+        .summary-col li { padding:4px 0; border-bottom:1px dotted var(--border-subtle); font-size:0.82em; color:var(--text-body); display:flex; align-items:center; gap:6px; }
+        .summary-col li:last-child { border-bottom:none; }
+
+        /* ── 详情面板 ── */
+        .detail-panel { background:var(--bg-panel); border:2px solid var(--border-panel); border-radius:8px; margin:12px 0; overflow:hidden; max-height:0; opacity:0; transition:max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease; }
+        .detail-panel.open { max-height:900px; opacity:1; padding:24px; }
+        .detail-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border-subtle); }
+        .detail-header h3 { font-size:1.08em; color:var(--text-heading); }
+        .detail-header .detail-sub { font-size:0.82em; color:var(--text-muted); }
+        .detail-header .close-btn { margin-left:auto; background:none; border:1px solid var(--border-card); color:var(--text-muted); padding:4px 10px; border-radius:4px; cursor:pointer; font-size:0.8em; flex-shrink:0; }
+        .detail-header .close-btn:hover { border-color:var(--text-heading); color:var(--text-heading); }
+        .detail-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+        .detail-col h4 { font-size:0.85em; color:var(--text-heading); margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid var(--border-subtle); }
+        .detail-col ul { list-style:none; padding:0; }
+        .detail-col li { font-size:0.82em; padding:4px 0; color:var(--text-body); border-bottom:1px dotted var(--border-subtle); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+        .detail-col li:last-child { border-bottom:none; }
+        .product-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; display:inline-block; }
+        .product-dot.input  { background:#4169E1; }
+        .product-dot.output { background:#2E8B57; }
+        .product-dot.update { background:#d4af37; }
+        @media (max-width:960px) { .detail-cols { grid-template-columns:1fr; } }
+
+        /* ── 页脚 ── */
+        .footer { margin-top:32px; padding:16px 0; border-top:2px solid var(--border-subtle); text-align:center; font-size:0.78em; color:var(--text-muted); }
+
+        /* ── 授权事件连接器 ── */
+        .auth-connector-row { position:relative; height:84px; margin:2px 0; }
+        .auth-event-col { position:absolute; top:0; bottom:0; display:flex; flex-direction:column; align-items:center; justify-content:space-between; box-sizing:border-box; }
+        .auth-v-arrow { color:var(--text-heading); font-size:1em; line-height:1.3; opacity:0.75; }
+        .auth-event-box { display:flex; flex-direction:column; align-items:center; gap:2px; padding:5px 14px; background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.45); border-radius:6px; margin:1px 0; white-space:nowrap; }
+        .auth-event-src { font-size:0.65em; color:var(--text-muted); }
+        .auth-event-name { font-size:0.78em; color:var(--text-heading); letter-spacing:0.02em; font-weight:bold; }
+        /* CS 列授权事件（DP→CS 的3个授权，并排横排，居中对齐到 CS 列，溢出落在两侧空白占位区） */
+        .cs-auth-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:2px 0; min-width:0; }
+        .cs-auth-boxes { display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center; align-items:stretch; gap:10px; }
+        .cs-auth-boxes .auth-event-box { flex:0 0 auto; margin:0; }
+        /* SB 上行连接器（位于 DP 下方，↑ 向上连入 DP）；桌面用连接器，移动端回退到上方 pill */
+        .auth-up-pills { display:flex; flex-direction:row; flex-wrap:nowrap; gap:10px; width:100%; justify-content:center; align-items:center; }
+        .auth-up-pills .band-item { flex:0 0 auto; display:inline-block; white-space:normal; text-align:center; line-height:1.3; }
+        /* 同列上下行连接器左右并排（IP 列：上行↑ + 下行↓） */
+        .auth-pair-col { flex-direction:row; justify-content:center; align-items:stretch; gap:10px; }
+        .auth-sub { display:flex; flex-direction:column; align-items:center; justify-content:space-between; min-width:0; }
+        /* 上行项移动端回退（桌面隐藏，窄屏显示为上方列表） */
+        .up-fb { display:none; }
+        .up-sb-fallback { display:none; }
+        /* DP→CS 通道连线（JS 定位，相对 .container 绝对定位） */
+        .corridor-line-v, .corridor-line-h, .corridor-line-v2 { position:absolute; background:var(--accent); z-index:2; opacity:0.8; }
+        .corridor-arrow { position:absolute; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:7px solid var(--accent); z-index:2; opacity:0.85; }
+        .corridor-label { position:absolute; transform:translateX(-50%); background:rgba(212,175,55,0.14); border:1px solid rgba(212,175,55,0.5); color:var(--text-heading); font-size:0.66em; font-weight:bold; letter-spacing:0.04em; padding:2px 9px; border-radius:8px; white-space:nowrap; z-index:3; }
+        /* DP 下行授权列表：桌面端改用连接器，故隐藏；移动端作为回退显示 */
+        .dp-downflow { display:none; }
+
+        /* ── 响应式 ── */
+        @media (max-width:960px) {
+            .auth-connector-row { display:none; }
+            .sb-cs-row { display:none; }
+            .corridor-line-v, .corridor-line-h, .corridor-line-v2, .corridor-arrow, .corridor-label { display:none; }
+            .dp-downflow { display:flex; }
+            .up-flow-row { flex-direction:column; align-items:stretch; gap:5px; }
+            .up-sb-fallback { display:flex; flex-direction:column; gap:5px; }
+            .up-fb { display:flex; flex-direction:column; gap:5px; }
+            .managing-row { flex-direction:column; gap:8px; }
+            .flow-arrow { transform:rotate(90deg); width:auto; height:28px; padding-top:0; align-self:center; }
+            .flow-spacer, .arrow-spacer, .delivery-spacer, .delivery-gap, .gap-wide { display:none; }
+            .summary-grid { grid-template-columns:1fr; }
+            .info-band { padding-left:16px; }
+            .info-band::before { display:none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href="index.html">◁ 首页</a>
+    <span style="color:var(--text-muted)">|</span>
+    <a href="graph.html">流程图</a>
+    <h1>📦 PRINCE2® 7 管理产品信息流</h1>
+    <span class="spacer"></span>
+    <span class="hint">7个流程 · 27个管理产品 · 完整信息流</span>
+</div>
+
+<div class="legend">
+    <div class="legend-item">
+        <span class="legend-swatch" style="background:#152d1e;border:1px solid #2E8B57;color:#90c8a0">报告 / 计划 / 文件</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-swatch" style="background:#152535;border:1px solid #2E6B9B;color:#80b8d8">管理方法</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-swatch" style="background:#2e2200;border:1px solid #8B6B00;color:#d4b060">登记单 / 日志</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-swatch" style="background:rgba(46,139,87,0.18);border:1px solid rgba(46,139,87,0.45);color:#90c8a0">↑ 上行（发往DP）</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-swatch" style="background:rgba(212,175,55,0.14);border:1px solid rgba(212,175,55,0.4);color:#d4af37">↓ 下行（DP发出）</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-swatch" style="background:rgba(65,105,225,0.14);border:1px solid rgba(65,105,225,0.4);color:#8aabf0">↕ 双向流动</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ①业务层 -->
+    <div class="layer-section layer--business">
+        <div class="layer-label">业务</div>
+        <div class="layer-body">
+            <div class="ext-products">
+                <div class="ext-product">
+                    <div class="ext-icon">📋</div>
+                    <div>
+                        <h4>项目任务书</h4>
+                        <div class="ext-target">输入 → 项目准备 SU</div>
+                    </div>
+                </div>
+                <div class="ext-product">
+                    <div class="ext-icon">🏢</div>
+                    <div>
+                        <h4>来自业务的建议和决策</h4>
+                        <div class="ext-target">输入 → 项目指导 DP</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 业务 ↔ 指导 信息流带 -->
+    <div class="info-band">
+        <div class="band-row">
+            <span class="band-item up">↑ 启动通知（DP→业务）</span>
+            <span class="band-item up">↑ 收尾通知（DP→业务）</span>
+        </div>
+    </div>
+
+    <!-- ②指导层 DP -->
+    <div class="layer-section layer--directing">
+        <div class="layer-label">指导</div>
+        <div class="layer-body">
+            <div class="dp-wrapper">
+                <!-- 发往DP -->
+                <div class="dp-flow-block">
+                    <div class="dp-flow-title">▲ 管理层发往 DP（上行请求与报告，按来源流程列对齐）</div>
+                    <div class="up-flow-row">
+                        <!-- SU 列（桌面改用 DP 下方连接器，此处仅移动端回退） -->
+                        <div class="up-col">
+                            <div class="up-fb">
+                                <span class="band-item up">↑ 项目启动请求（SU → DP）</span>
+                            </div>
+                        </div>
+                        <div class="arrow-spacer"></div>
+                        <!-- IP 列（桌面改用 DP 下方连接器，此处仅移动端回退） -->
+                        <div class="up-col">
+                            <div class="up-fb">
+                                <span class="band-item up">↑ 项目授权请求·PID（IP → DP）</span>
+                            </div>
+                        </div>
+                        <div class="gap-wide"></div>
+                        <!-- SB / CS 列（CS 与 SB 同列）；SB 两项桌面端改用 DP 下方连接器，此处仅移动端回退 -->
+                        <div class="up-col">
+                            <div class="up-sb-fallback">
+                                <span class="band-item up">↑ 下一阶段请求（SB → DP）</span>
+                                <span class="band-item up">↑ 例外计划批准请求（SB → DP，例外时）</span>
+                            </div>
+                            <span class="band-item up">↑ 要点报告（CS → DP）</span>
+                            <span class="band-item up">↑ 例外报告（CS → DP，例外时）</span>
+                        </div>
+                        <div class="arrow-spacer"></div>
+                        <!-- CP 列 -->
+                        <div class="up-col">
+                            <span class="band-item up">↑ 项目收尾建议（CP → DP）</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- DP贯穿条 -->
+                <div class="directing-bar" id="node-dp" onclick="toggleDetail('dp')" style="cursor:pointer">
+                    <div class="icon">🏛️</div>
+                    <div>
+                        <h2>项目指导 DP</h2>
+                        <p>项目委员会的决策中枢 — 授权启动、审批计划、监控进展、处理例外、授权收尾</p>
+                    </div>
+                    <span class="badge">贯穿全程</span>
+                </div>
+                <!-- DP发出（桌面端用层间连接器展示，此列表仅作移动端回退） -->
+                <div class="dp-flow-block dp-downflow">
+                    <div class="dp-flow-title">▼ DP 发出（下行授权与指导）</div>
+                    <div class="dp-flow-row">
+                        <span class="band-item down">↓ 已授权项目启动（→IP）</span>
+                        <span class="band-item down">↓ 已授权项目（→CS，首次）</span>
+                        <span class="band-item down">↓ 已授权阶段（→CS，每阶段）</span>
+                        <span class="band-item down">↓ 例外计划批准（→CS，例外时）</span>
+                        <span class="band-item down">↓ 提前收尾通知（→CP，例外时）</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DP↔管理层 连接器（JS 定位到各流程列；上行↑ / 下行↓） -->
+    <div class="auth-connector-row" id="auth-connector-dp-ip">
+        <!-- IP 列：上行（IP→DP 请求）+ 下行（DP→IP 授权）左右并排 -->
+        <div class="auth-event-col auth-pair-col" id="auth-event-ip">
+            <div class="auth-sub">
+                <span class="auth-v-arrow">↑</span>
+                <div class="auth-up-pills">
+                    <span class="band-item up">项目授权请求·PID<br>（IP → DP）</span>
+                </div>
+                <span class="auth-v-arrow">↑</span>
+            </div>
+            <div class="auth-sub">
+                <span class="auth-v-arrow">↓</span>
+                <div class="auth-event-box">
+                    <span class="auth-event-src">DP 授权 → IP</span>
+                    <span class="auth-event-name">已授权项目启动</span>
+                </div>
+                <span class="auth-v-arrow">↓</span>
+            </div>
+        </div>
+        <div class="auth-event-col" id="auth-event-cp">
+            <span class="auth-v-arrow">↓</span>
+            <div class="auth-event-box">
+                <span class="auth-event-src">DP 通知 → CP · 例外时</span>
+                <span class="auth-event-name">提前收尾通知</span>
+            </div>
+            <span class="auth-v-arrow">↓</span>
+        </div>
+        <!-- SB 上行连接器：↑ 向上连入 DP，对齐到 SB 列 -->
+        <div class="auth-event-col" id="auth-up-sb">
+            <span class="auth-v-arrow">↑</span>
+            <div class="auth-up-pills">
+                <span class="band-item up">下一阶段请求<br>（SB → DP）</span>
+                <span class="band-item up">例外计划批准请求<br>（SB → DP，例外时）</span>
+            </div>
+            <span class="auth-v-arrow">↑</span>
+        </div>
+        <!-- SU 上行连接器：↑ 向上连入 DP，对齐到 SU 列（该列无下行） -->
+        <div class="auth-event-col" id="auth-up-su">
+            <span class="auth-v-arrow">↑</span>
+            <div class="auth-up-pills">
+                <span class="band-item up">项目启动请求<br>（SU → DP）</span>
+            </div>
+            <span class="auth-v-arrow">↑</span>
+        </div>
+    </div>
+
+    <!-- ③管理层 -->
+    <div class="layer-section layer--managing">
+        <div class="layer-label">管理</div>
+        <div class="layer-body">
+            <div class="managing-grid">
+
+                <!-- 上行：SU → IP → SB → CP -->
+                <div class="managing-row">
+
+                    <!-- SU -->
+                    <div class="proc-node" id="node-su" onclick="toggleDetail('su')" >
+                        <div class="proc-header">
+                            <span class="proc-abbr">SU</span>
+                            <div class="proc-title">
+                                <h3>项目准备</h3>
+                                <div class="proc-role">项目经理 · 项目发起人</div>
+                            </div>
+                        </div>
+                        <div class="proc-products">
+                            <a class="mgmt-product mp-plan" href="entities/product.html">项目概述文件</a>
+                            <a class="mgmt-product mp-register" href="entities/product.html">日志</a>
+                            <a class="mgmt-product mp-register" href="entities/product.html">风险登记单</a>
+                            <a class="mgmt-product mp-register" href="entities/product.html">问题登记单</a>
+                            <a class="mgmt-product mp-register" href="entities/product.html">经验教训记录单</a>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">→</div>
+
+                    <!-- IP -->
+                    <div class="proc-node" id="node-ip" onclick="toggleDetail('ip')">
+                        <div class="proc-header">
+                            <span class="proc-abbr">IP</span>
+                            <div class="proc-title">
+                                <h3>项目启动</h3>
+                                <div class="proc-role">项目经理 · 项目保证</div>
+                            </div>
+                        </div>
+                        <div class="proc-products">
+                            <a class="mgmt-product mp-plan" href="entities/product.html">项目启动文件</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">项目计划</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">项目产品描述</a>
+                            <a class="mgmt-product mp-approach" href="entities/product.html">质量管理方法</a>
+                            <a class="mgmt-product mp-approach" href="entities/product.html">风险管理方法</a>
+                            <a class="mgmt-product mp-approach" href="entities/product.html">沟通管理方法</a>
+                            <a class="mgmt-product mp-approach" href="entities/product.html">收益管理方法</a>
+                            <a class="mgmt-product mp-approach" href="entities/product.html">可持续性管理方法</a>
+                            <a class="mgmt-product mp-approach" href="entities/product.html">问题管理方法</a>
+                            <a class="mgmt-product mp-register" href="entities/product.html">质量登记单</a>
+                        </div>
+                    </div>
+
+                    <div class="gap-wide"></div>
+
+                    <!-- SB -->
+                    <div class="proc-node" id="node-sb" onclick="toggleDetail('sb')">
+                        <div class="proc-header">
+                            <span class="proc-abbr">SB</span>
+                            <div class="proc-title">
+                                <h3>阶段边界管理</h3>
+                                <div class="proc-role">项目经理 · 项目保证</div>
+                            </div>
+                        </div>
+                        <div class="proc-products">
+                            <a class="mgmt-product mp-plan" href="entities/product.html">阶段计划</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">阶段竣工报告</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">例外计划</a>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">→</div>
+
+                    <!-- CP -->
+                    <div class="proc-node" id="node-cp" onclick="toggleDetail('cp')">
+                        <div class="proc-header">
+                            <span class="proc-abbr">CP</span>
+                            <div class="proc-title">
+                                <h3>项目收尾</h3>
+                                <div class="proc-role">项目经理 · 项目发起人</div>
+                            </div>
+                        </div>
+                        <div class="proc-products">
+                            <a class="mgmt-product mp-plan" href="entities/product.html">项目竣工报告</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">项目收尾建议</a>
+                        </div>
+                    </div>
+
+                </div><!-- /managing-row top -->
+
+                <!-- DP → CS 授权连接器（3个下行授权，经 spacer 对齐到 CS 列） -->
+                <div class="sb-cs-row">
+                    <div class="flow-spacer"></div>
+                    <div class="arrow-spacer"></div>
+                    <div class="flow-spacer"></div>
+                    <div class="gap-wide"></div>
+                    <div class="cs-auth-col">
+                        <div class="cs-auth-boxes">
+                            <div class="auth-event-box">
+                                <span class="auth-event-src">DP 授权 → CS · 首次</span>
+                                <span class="auth-event-name">已授权项目</span>
+                            </div>
+                            <div class="auth-event-box">
+                                <span class="auth-event-src">DP 授权 → CS · 每阶段</span>
+                                <span class="auth-event-name">已授权阶段</span>
+                            </div>
+                            <div class="auth-event-box">
+                                <span class="auth-event-src">DP 批准 → CS · 例外时</span>
+                                <span class="auth-event-name">例外计划批准</span>
+                            </div>
+                        </div>
+                        <span class="auth-v-arrow">↓</span>
+                    </div>
+                    <div class="arrow-spacer"></div>
+                    <div class="flow-spacer"></div>
+                </div>
+
+                <!-- 下行：CS（与SB对齐） -->
+                <div class="managing-row">
+                    <div class="flow-spacer"></div>
+                    <div class="arrow-spacer"></div>
+                    <div class="flow-spacer"></div>
+                    <div class="gap-wide"></div>
+
+                    <!-- CS -->
+                    <div class="proc-node" id="node-cs" onclick="toggleDetail('cs')">
+                        <div class="proc-header">
+                            <span class="proc-abbr">CS</span>
+                            <div class="proc-title">
+                                <h3>阶段控制</h3>
+                                <div class="proc-role">项目经理</div>
+                            </div>
+                        </div>
+                        <div class="proc-products">
+                            <a class="mgmt-product mp-plan" href="entities/product.html">工作包描述</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">要点报告</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">例外报告</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">问题报告</a>
+                            <a class="mgmt-product mp-register" href="entities/product.html">产品登记单</a>
+                        </div>
+                    </div>
+
+                    <div class="arrow-spacer"></div>
+                    <div class="flow-spacer"></div>
+                </div><!-- /managing-row bottom -->
+
+            </div><!-- /managing-grid -->
+        </div>
+    </div>
+
+    <!-- 管理 ↔ 交付 信息流带 (CS ↔ MP)：对齐 CS/MP 列，每框上下带方向箭头连到 CS（上）/ MP（下） -->
+    <div class="info-band cs-mp-band">
+        <div class="flow-spacer"></div>
+        <div class="arrow-spacer"></div>
+        <div class="flow-spacer"></div>
+        <div class="gap-wide"></div>
+        <div class="cs-mp-col">
+            <div class="cs-mp-wrap">
+                <span class="auth-v-arrow">↓</span>
+                <span class="band-item down band-2line">
+                    <span class="band-route">CS → MP</span>
+                    <span class="band-name">工作包描述</span>
+                </span>
+                <span class="auth-v-arrow">↓</span>
+            </div>
+            <div class="cs-mp-wrap">
+                <span class="auth-v-arrow">↑</span>
+                <span class="band-item bi band-2line">
+                    <span class="band-route">MP → CS</span>
+                    <span class="band-name">检查点报告</span>
+                </span>
+                <span class="auth-v-arrow">↑</span>
+            </div>
+            <div class="cs-mp-wrap">
+                <span class="auth-v-arrow">↑</span>
+                <span class="band-item bi band-2line">
+                    <span class="band-route">MP → CS</span>
+                    <span class="band-name">已完成工作包通知</span>
+                </span>
+                <span class="auth-v-arrow">↑</span>
+            </div>
+        </div>
+        <div class="arrow-spacer"></div>
+        <div class="flow-spacer"></div>
+    </div>
+
+    <!-- ④交付层 MP（与CS列对齐） -->
+    <div class="layer-section layer--delivery">
+        <div class="layer-label">交付</div>
+        <div class="layer-body">
+            <div class="delivery-row">
+                <div class="flow-spacer"></div>
+                <div class="arrow-spacer"></div>
+                <div class="flow-spacer"></div>
+                <div class="gap-wide"></div>
+
+                <!-- MP（与 CS 同列对齐） -->
+                <div class="proc-node" id="node-mp" onclick="toggleDetail('mp')">
+                    <div class="proc-header">
+                        <span class="proc-abbr">MP</span>
+                        <div class="proc-title">
+                            <h3>产品交付管理</h3>
+                            <div class="proc-role">团队经理 · 项目保证</div>
+                        </div>
+                    </div>
+                    <div class="proc-products">
+                        <a class="mgmt-product mp-plan" href="entities/product.html">检查点报告</a>
+                        <a class="mgmt-product mp-plan" href="entities/product.html">产品描述</a>
+                    </div>
+                </div>
+
+                <div class="arrow-spacer"></div>
+                <div class="flow-spacer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DP→CS 通道连线（桌面端，JS 定位到 IP↔SB 通道，连到 CS 连接器） -->
+    <div class="corridor-label" id="corr-label">DP 授权</div>
+    <div class="corridor-line-v" id="corr-v"></div>
+    <div class="corridor-line-h" id="corr-h"></div>
+    <div class="corridor-line-v2" id="corr-v2"></div>
+    <div class="corridor-arrow" id="corr-arrow"></div>
+
+    <!-- ═══ 详情面板区域 ═══ -->
+
+    <!-- DP 详情 -->
+    <div class="detail-panel" id="detail-dp">
+        <div class="detail-header">
+            <h3>🏛️ 项目指导 DP</h3>
+            <span class="detail-sub">项目委员会的决策中枢 — 贯穿全程</span>
+            <button class="close-btn" onclick="toggleDetail('dp')">关闭 ✕</button>
+        </div>
+        <div class="detail-cols">
+            <div class="detail-col">
+                <h4>🔑 关键活动</h4>
+                <ul>
+                    <li>授权项目启动（收到SU请求后）</li>
+                    <li>授权项目交付（批准PID后）</li>
+                    <li>审批下一阶段计划</li>
+                    <li>审批例外计划</li>
+                    <li>给予 ad hoc 指导</li>
+                    <li>确认收益已实现</li>
+                    <li>授权项目收尾</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📥 接收（上行）</h4>
+                <ul>
+                    <li><span class="product-dot input"></span> 项目启动请求（SU → DP）</li>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">项目启动文件 PID</span>（IP → DP）</li>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">要点报告</span>（CS → DP，定期）</li>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">例外报告</span>（CS → DP）</li>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">阶段竣工报告</span>（SB → DP）</li>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">例外计划</span>（SB → DP）</li>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">项目收尾建议</span>（CP → DP）</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📤 发出（下行授权）</h4>
+                <ul>
+                    <li><span class="product-dot output"></span> 已授权项目启动 → IP</li>
+                    <li><span class="product-dot output"></span> 已授权项目交付 → CS（首次）</li>
+                    <li><span class="product-dot output"></span> 已授权阶段 → CS（每阶段）</li>
+                    <li><span class="product-dot output"></span> 例外计划批准 → CS</li>
+                    <li><span class="product-dot output"></span> 提前收尾通知 → CP（例外时）</li>
+                </ul>
+                <h4 style="margin-top:12px">👥 角色</h4>
+                <ul>
+                    <li>项目发起人 — 最终决策权</li>
+                    <li>高级用户 — 用户需求代表</li>
+                    <li>高级供应商 — 技术能力代表</li>
+                    <li>项目保证 — 独立监督</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- SU 详情 -->
+    <div class="detail-panel" id="detail-su">
+        <div class="detail-header">
+            <h3>📋 项目准备 SU</h3>
+            <span class="detail-sub">万事俱备而后动 — 确保项目值得做、做得了、有人管</span>
+            <button class="close-btn" onclick="toggleDetail('su')">关闭 ✕</button>
+        </div>
+        <div class="detail-cols">
+            <div class="detail-col">
+                <h4>🔑 关键活动</h4>
+                <ul>
+                    <li>任命项目发起人和项目经理</li>
+                    <li>捕捉先前项目经验教训</li>
+                    <li>设计和任命项目管理团队</li>
+                    <li>编制项目概述文件</li>
+                    <li>编制启动阶段计划</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📦 产出管理产品</h4>
+                <ul>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">项目概述文件</span> → IP</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-register">日志</span> 初建</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-register">风险登记单</span> 初建</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-register">问题登记单</span> 初建</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-register">经验教训记录单</span> 初建</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>👥 角色</h4>
+                <ul>
+                    <li>项目经理 — 执行活动</li>
+                    <li>项目发起人 — 批准启动</li>
+                </ul>
+                <h4 style="margin-top:12px">➡️ 流向</h4>
+                <ul>
+                    <li>→ DP：申请授权启动项目</li>
+                    <li>→ IP：移交项目概述文件</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- IP 详情 -->
+    <div class="detail-panel" id="detail-ip">
+        <div class="detail-header">
+            <h3>📋 项目启动 IP</h3>
+            <span class="detail-sub">奠基立业 — 建立项目基线，获得正式授权</span>
+            <button class="close-btn" onclick="toggleDetail('ip')">关闭 ✕</button>
+        </div>
+        <div class="detail-cols">
+            <div class="detail-col">
+                <h4>🔑 关键活动</h4>
+                <ul>
+                    <li>建立质量管理方法</li>
+                    <li>建立风险管理方法</li>
+                    <li>建立沟通管理方法</li>
+                    <li>建立收益管理方法</li>
+                    <li>建立可持续性管理方法</li>
+                    <li>建立问题管理方法</li>
+                    <li>编制项目计划</li>
+                    <li>细化商业论证</li>
+                    <li>编制项目启动文件 PID</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📦 产出管理产品</h4>
+                <ul>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">项目启动文件</span> → DP</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">项目计划</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">项目产品描述</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-approach">质量管理方法</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-approach">风险管理方法</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-approach">沟通管理方法</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-approach">收益管理方法</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-approach">可持续性管理方法</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-approach">问题管理方法</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-register">质量登记单</span> 初建</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📥 接收</h4>
+                <ul>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">项目概述文件</span>（来自SU）</li>
+                    <li><span class="product-dot input"></span> DP 的启动授权</li>
+                </ul>
+                <h4 style="margin-top:12px">👥 角色</h4>
+                <ul>
+                    <li>项目经理 — 主导执行</li>
+                    <li>项目保证 — 独立审核</li>
+                </ul>
+                <h4 style="margin-top:12px">➡️ 流向</h4>
+                <ul>
+                    <li>→ DP：提交PID申请授权交付</li>
+                    <li>→ CS：提供阶段计划</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- SB 详情 -->
+    <div class="detail-panel" id="detail-sb">
+        <div class="detail-header">
+            <h3>📋 阶段边界管理 SB</h3>
+            <span class="detail-sub">承前启后 — 评审本阶段成果，规划下一阶段</span>
+            <button class="close-btn" onclick="toggleDetail('sb')">关闭 ✕</button>
+        </div>
+        <div class="detail-cols">
+            <div class="detail-col">
+                <h4>🔑 关键活动</h4>
+                <ul>
+                    <li>编制下一阶段计划</li>
+                    <li>更新项目计划</li>
+                    <li>更新商业论证</li>
+                    <li>报告阶段结束</li>
+                    <li>编制例外计划（例外时）</li>
+                    <li>更新各登记单</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📦 产出管理产品</h4>
+                <ul>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">阶段计划</span> → DP审批</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">阶段竣工报告</span> → DP</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">例外计划</span> → DP（例外时）</li>
+                    <li><span class="product-dot update"></span> 项目计划（更新）</li>
+                    <li><span class="product-dot update"></span> 商业论证（更新）</li>
+                    <li><span class="product-dot update"></span> 风险/问题登记单（更新）</li>
+                    <li><span class="product-dot update"></span> 经验教训记录单（更新）</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>👥 角色</h4>
+                <ul>
+                    <li>项目经理 — 主导执行</li>
+                    <li>项目保证 — 独立审核</li>
+                    <li>项目发起人 — 批准阶段计划</li>
+                </ul>
+                <h4 style="margin-top:12px">➡️ 流向</h4>
+                <ul>
+                    <li>→ DP：申请下一阶段授权</li>
+                    <li>→ CS：移交已批准阶段计划</li>
+                    <li>→ CP：最后阶段结束时</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- CS 详情 -->
+    <div class="detail-panel" id="detail-cs">
+        <div class="detail-header">
+            <h3>📋 阶段控制 CS</h3>
+            <span class="detail-sub">运筹帷幄 — 日常管理：分配工作、监督进展、处理问题</span>
+            <button class="close-btn" onclick="toggleDetail('cs')">关闭 ✕</button>
+        </div>
+        <div class="detail-cols">
+            <div class="detail-col">
+                <h4>🔑 关键活动</h4>
+                <ul>
+                    <li>授权工作包（→ MP）</li>
+                    <li>监督工作包进展</li>
+                    <li>接收已完成工作包</li>
+                    <li>审查问题和风险</li>
+                    <li>编制要点报告（→ DP）</li>
+                    <li>上报例外报告（→ DP）</li>
+                    <li>触发阶段边界（→ SB）</li>
+                    <li>触发项目收尾（→ CP）</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📦 使用/产出管理产品</h4>
+                <ul>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">工作包描述</span> → MP</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">要点报告</span> → DP（定期）</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">例外报告</span> → DP</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">问题报告</span></li>
+                    <li><span class="product-dot update"></span> <span class="mgmt-product mp-register">产品登记单</span> 维护</li>
+                    <li><span class="product-dot update"></span> 风险/问题登记单（持续更新）</li>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">阶段计划</span>（来自SB/IP）</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>👥 角色</h4>
+                <ul>
+                    <li>项目经理 — 全权负责</li>
+                    <li>项目保证 — 监督检查</li>
+                    <li>变更委员会 — 变更决策</li>
+                </ul>
+                <h4 style="margin-top:12px">↕ 双向交互</h4>
+                <ul>
+                    <li>↓ 向MP：授权工作包</li>
+                    <li>↑ 收MP：检查点报告</li>
+                    <li>↑ 向DP：要点/例外报告</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- CP 详情 -->
+    <div class="detail-panel" id="detail-cp">
+        <div class="detail-header">
+            <h3>📋 项目收尾 CP</h3>
+            <span class="detail-sub">功成身退 — 移交产品、总结经验、正式关闭项目</span>
+            <button class="close-btn" onclick="toggleDetail('cp')">关闭 ✕</button>
+        </div>
+        <div class="detail-cols">
+            <div class="detail-col">
+                <h4>🔑 关键活动</h4>
+                <ul>
+                    <li>移交产品给运营方</li>
+                    <li>评估项目绩效</li>
+                    <li>总结经验教训</li>
+                    <li>建议项目收尾（→ DP）</li>
+                    <li>发布项目收尾通知</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📦 产出管理产品</h4>
+                <ul>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">项目竣工报告</span></li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">项目收尾建议</span> → DP</li>
+                    <li><span class="product-dot update"></span> 商业论证（最终评审）</li>
+                    <li><span class="product-dot update"></span> 经验教训记录单（最终汇总）</li>
+                    <li><span class="product-dot update"></span> 收益管理方法（更新收益计划）</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>👥 角色</h4>
+                <ul>
+                    <li>项目经理 — 主导执行</li>
+                    <li>项目发起人 — 批准收尾</li>
+                    <li>高级用户 — 确认产品验收</li>
+                </ul>
+                <h4 style="margin-top:12px">➡️ 流向</h4>
+                <ul>
+                    <li>→ DP：建议收尾，等待最终授权</li>
+                    <li>→ 运营方：移交项目产品</li>
+                    <li>→ 组织：沉淀经验教训</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- MP 详情 -->
+    <div class="detail-panel" id="detail-mp">
+        <div class="detail-header">
+            <h3>📋 产品交付管理 MP</h3>
+            <span class="detail-sub">督工之道 — 团队接受工作包、执行工作、交付产品</span>
+            <button class="close-btn" onclick="toggleDetail('mp')">关闭 ✕</button>
+        </div>
+        <div class="detail-cols">
+            <div class="detail-col">
+                <h4>🔑 关键活动</h4>
+                <ul>
+                    <li>接受并确认工作包</li>
+                    <li>制定团队计划</li>
+                    <li>执行工作（实际交付）</li>
+                    <li>提交检查点报告（→ CS）</li>
+                    <li>完成质量检查</li>
+                    <li>移交已完成产品</li>
+                    <li>报告工作包完成</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>📦 使用/产出管理产品</h4>
+                <ul>
+                    <li><span class="product-dot input"></span> <span class="mgmt-product mp-plan">工作包描述</span>（来自CS）</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">检查点报告</span> → CS（定期）</li>
+                    <li><span class="product-dot output"></span> <span class="mgmt-product mp-plan">产品描述</span> 验收标准</li>
+                    <li><span class="product-dot update"></span> 质量登记单（填写测试记录）</li>
+                    <li><span class="product-dot update"></span> 经验教训记录单</li>
+                </ul>
+            </div>
+            <div class="detail-col">
+                <h4>👥 角色</h4>
+                <ul>
+                    <li>团队经理 — 带领团队交付</li>
+                    <li>项目保证 — 质量独立审核</li>
+                    <li>项目经理（CS侧）— 授权与接收</li>
+                </ul>
+                <h4 style="margin-top:12px">↕ 双向交互</h4>
+                <ul>
+                    <li>↑ 向CS：检查点报告</li>
+                    <li>↑ 向CS：完成通知</li>
+                    <li>↓ 收CS：工作包授权</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理产品汇总表 -->
+    <div class="summary-section">
+        <h3>📦 27个管理产品完整清单</h3>
+        <div class="summary-grid">
+
+            <!-- 报告/计划/文件类 -->
+            <div class="summary-col">
+                <h4>
+                    <span style="padding:2px 6px;background:#152d1e;border:1px solid #2E8B57;color:#90c8a0;border-radius:6px;font-size:0.9em">报告 / 计划 / 文件</span>
+                    （15个）
+                </h4>
+                <ul>
+                    <li><span class="mgmt-product mp-plan">产品描述</span> MP使用</li>
+                    <li><span class="mgmt-product mp-plan">例外报告</span> CS → DP</li>
+                    <li><span class="mgmt-product mp-plan">例外计划</span> SB → DP</li>
+                    <li><span class="mgmt-product mp-plan">工作包描述</span> CS → MP</li>
+                    <li><span class="mgmt-product mp-plan">检查点报告</span> MP → CS</li>
+                    <li><span class="mgmt-product mp-plan">要点报告</span> CS → DP</li>
+                    <li><span class="mgmt-product mp-plan">阶段竣工报告</span> SB → DP</li>
+                    <li><span class="mgmt-product mp-plan">阶段计划</span> SB → CS</li>
+                    <li><span class="mgmt-product mp-plan">项目产品描述</span> IP 创建</li>
+                    <li><span class="mgmt-product mp-plan">项目启动文件</span> IP → DP</li>
+                    <li><span class="mgmt-product mp-plan">项目收尾建议</span> CP → DP</li>
+                    <li><span class="mgmt-product mp-plan">项目概述文件</span> SU → IP</li>
+                    <li><span class="mgmt-product mp-plan">项目竣工报告</span> CP 创建</li>
+                    <li><span class="mgmt-product mp-plan">项目计划</span> IP 创建</li>
+                    <li><span class="mgmt-product mp-plan">问题报告</span> CS 创建</li>
+                </ul>
+            </div>
+
+            <!-- 管理方法类 -->
+            <div class="summary-col">
+                <h4>
+                    <span style="padding:2px 6px;background:#152535;border:1px solid #2E6B9B;color:#80b8d8;border-radius:6px;font-size:0.9em">管理方法</span>
+                    （6个）
+                </h4>
+                <ul>
+                    <li><span class="mgmt-product mp-approach">可持续性管理方法</span> IP</li>
+                    <li><span class="mgmt-product mp-approach">收益管理方法</span> IP</li>
+                    <li><span class="mgmt-product mp-approach">沟通管理方法</span> IP</li>
+                    <li><span class="mgmt-product mp-approach">质量管理方法</span> IP</li>
+                    <li><span class="mgmt-product mp-approach">问题管理方法</span> IP</li>
+                    <li><span class="mgmt-product mp-approach">风险管理方法</span> IP</li>
+                </ul>
+            </div>
+
+            <!-- 登记单/日志类 -->
+            <div class="summary-col">
+                <h4>
+                    <span style="padding:2px 6px;background:#2e2200;border:1px solid #8B6B00;color:#d4b060;border-radius:6px;font-size:0.9em">登记单 / 日志</span>
+                    （6个）
+                </h4>
+                <ul>
+                    <li><span class="mgmt-product mp-register">产品登记单</span> CS 维护</li>
+                    <li><span class="mgmt-product mp-register">日志</span> SU 初建</li>
+                    <li><span class="mgmt-product mp-register">经验教训记录单</span> SU 初建</li>
+                    <li><span class="mgmt-product mp-register">质量登记单</span> IP 创建</li>
+                    <li><span class="mgmt-product mp-register">问题登记单</span> SU 初建</li>
+                    <li><span class="mgmt-product mp-register">风险登记单</span> SU 初建</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</div><!-- /container -->
+
+<footer class="footer">
+    <p>PRINCE2® 7 管理产品信息流 | 基于 PRINCE2 第7版官方手册</p>
+    <p style="margin-top:4px">PRINCE2® is a registered trade mark of PeopleCert International Ltd.</p>
+</footer>
+
+<script>
+(function(){
+    var saved = localStorage.getItem('prince2-theme');
+    if(saved) document.documentElement.setAttribute('data-theme', saved);
+})();
+
+/* 将授权事件盒子精确对齐到目标流程节点列 */
+function positionAuthEvents() {
+    var pairs = [
+        { eventId: 'auth-event-ip', targetId: 'node-ip' },
+        { eventId: 'auth-event-cp', targetId: 'node-cp' },
+        { eventId: 'auth-up-sb', targetId: 'node-sb' },
+        { eventId: 'auth-up-su', targetId: 'node-su' }
+    ];
+    pairs.forEach(function(p) {
+        var target = document.getElementById(p.targetId);
+        var eventEl = document.getElementById(p.eventId);
+        if (!target || !eventEl) return;
+        var tRect = target.getBoundingClientRect();
+        var pRect = eventEl.parentElement.getBoundingClientRect();
+        eventEl.style.left  = (tRect.left - pRect.left) + 'px';
+        eventEl.style.width = tRect.width + 'px';
+    });
+}
+window.addEventListener('load', positionAuthEvents);
+window.addEventListener('resize', positionAuthEvents);
+
+/* DP→CS 通道连线：从 DP 底部沿 IP↔SB 通道下行，拐入 CS 连接器顶部 */
+function positionCorridor() {
+    var container = document.querySelector('.container');
+    var dp = document.getElementById('node-dp');
+    var ip = document.getElementById('node-ip');
+    var sb = document.getElementById('node-sb');
+    var csBoxes = document.querySelector('.cs-auth-boxes');
+    var lbl = document.getElementById('corr-label');
+    var v = document.getElementById('corr-v');
+    var h = document.getElementById('corr-h');
+    var v2 = document.getElementById('corr-v2');
+    var ar = document.getElementById('corr-arrow');
+    if (!container || !dp || !ip || !sb || !csBoxes || !v) return;
+    var c = container.getBoundingClientRect();
+    var ipR = ip.getBoundingClientRect(), sbR = sb.getBoundingClientRect();
+    var cb = csBoxes.getBoundingClientRect();
+    var startX = (ipR.right + sbR.left) / 2 - c.left;       // 通道中心
+    var startY = dp.getBoundingClientRect().bottom - c.top + 4;
+    var endX = (cb.left + cb.right) / 2 - c.left;            // CS 连接器中心
+    var csTopY = cb.top - c.top;
+    var sbBottom = sbR.bottom - c.top;  // SB 框底部
+    var gap = 12;                       // 箭头与 CS 框顶留出的间距，避免遮挡
+    var arTopY = csTopY - gap - 7;      // 三角箭头元素顶（尖端再往下 7px）
+    var elbowY = sbBottom + 10;         // 横线落在 SB 底部下方、CS 框上方的间隙里，避免被 SB 遮挡
+    if (elbowY > arTopY - 6) elbowY = arTopY - 6;  // 间隙过小时兜底，至少保持在箭头上方
+    v.style.left = (startX - 1) + 'px'; v.style.top = startY + 'px'; v.style.width = '2px'; v.style.height = Math.max(0, elbowY - startY) + 'px';
+    h.style.left = Math.min(startX, endX) + 'px'; h.style.top = (elbowY - 1) + 'px'; h.style.width = Math.abs(endX - startX) + 'px'; h.style.height = '2px';
+    v2.style.left = (endX - 1) + 'px'; v2.style.top = elbowY + 'px'; v2.style.width = '2px'; v2.style.height = Math.max(0, arTopY - elbowY) + 'px';
+    ar.style.left = (endX - 5) + 'px'; ar.style.top = arTopY + 'px';
+    lbl.style.left = startX + 'px'; lbl.style.top = startY + 'px';
+}
+window.addEventListener('load', positionCorridor);
+window.addEventListener('resize', positionCorridor);
+
+var currentOpen = null;
+
+function toggleDetail(id) {
+    var panel = document.getElementById('detail-' + id);
+    if (!panel) return;
+
+    if (currentOpen && currentOpen !== id) {
+        var prev = document.getElementById('detail-' + currentOpen);
+        if (prev) prev.classList.remove('open');
+        var prevNode = document.getElementById('node-' + currentOpen);
+        if (prevNode) prevNode.classList.remove('active');
+    }
+
+    if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+        currentOpen = null;
+        var node = document.getElementById('node-' + id);
+        if (node) node.classList.remove('active');
+    } else {
+        panel.classList.add('open');
+        currentOpen = id;
+        var node = document.getElementById('node-' + id);
+        if (node) node.classList.add('active');
+        setTimeout(function(){
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+    }
+}
+</script>
+
+</body>
+</html>
