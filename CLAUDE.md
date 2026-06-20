@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-PRINCE2® 7 中文知识库，基于 PRINCE2 第7版官方手册构建的纯静态 HTML 网站。在线访问：https://yunhongfeng-tracy.github.io/prince2-kb/
+PRINCE2® 7 中文知识库，基于 PRINCE2 第7版官方手册构建的纯静态 HTML 网站。在线访问：https://coordinate-system-0529.github.io/prince2-kb/
 
 ## 本地开发
 
@@ -20,7 +20,7 @@ python -m http.server 8000
 - **分支策略**：`develop` 为开发分支，`main` 为生产分支
 - **提交规范**：使用 Conventional Commits 格式（`feat:` `fix:` `style:` `content:` `docs:` `revert:`）
 - **部署方式**：GitHub Pages 自动部署，推送 `main` 分支后自动生效
-- **在线地址**：https://yunhongfeng-tracy.github.io/prince2-kb/
+- **在线地址**：https://coordinate-system-0529.github.io/prince2-kb/
 
 ## 项目架构
 

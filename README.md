@@ -4,7 +4,7 @@
 
 ## 🌐 在线访问
 
-**https://yunhongfeng-tracy.github.io/prince2-kb/**
+**https://coordinate-system-0529.github.io/prince2-kb/**
 
 ## ✨ 功能特性
 
@@ -75,7 +75,7 @@ prince2-kb/
 
 ```bash
 # 克隆仓库
-git clone https://github.com/yunhongfeng-tracy/prince2-kb.git
+git clone https://github.com/coordinate-system-0529/prince2-kb.git
 cd prince2-kb
 
 # 用浏览器直接打开
@@ -104,7 +104,7 @@ python3 -m http.server 8000
 
 ## 📧 联系方式
 
-- GitHub: [@yunhongfeng-tracy](https://github.com/yunhongfeng-tracy)
+- GitHub: [@coordinate-system-0529](https://github.com/coordinate-system-0529)
 
 ---
 
