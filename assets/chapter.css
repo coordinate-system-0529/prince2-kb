@@ -1,0 +1,184 @@
+/* PRINCE2 知识库 - 章节页公共样式 */
+/* 古籍风格：仿古纸色 + 衬线体 + 金色强调 + 双线装饰 */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
+    background-color: #faf6f0;
+    color: #3e2a1a;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.8;
+}
+
+/* 导航栏 */
+.nav-bar {
+    padding: 12px 0;
+    border-bottom: 2px solid #d4af37;
+    margin-bottom: 24px;
+    font-size: 0.9em;
+}
+.nav-link {
+    color: #8B4513;
+    text-decoration: none;
+    padding: 4px 8px;
+}
+.nav-link:hover {
+    color: #d4af37;
+    text-decoration: underline;
+}
+
+/* 分类标签 */
+.category-tag {
+    display: inline-block;
+    background: #8B4513;
+    color: #faf6f0;
+    padding: 3px 12px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-bottom: 8px;
+}
+
+/* 章节标题 */
+.chapter-title {
+    font-size: 1.8em;
+    color: #5c3d1a;
+    border-bottom: 3px double #d4af37;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+}
+
+/* 章节目录 */
+.chapter-toc {
+    background: #f0e8d8;
+    border: 1px solid #d4c8a8;
+    border-left: 4px solid #d4af37;
+    padding: 16px;
+    margin-bottom: 30px;
+    border-radius: 0 4px 4px 0;
+}
+.toc-title {
+    cursor: pointer;
+    color: #5c3d1a;
+    font-size: 1em;
+    user-select: none;
+}
+.toc-title:hover { color: #d4af37; }
+.toc-icon { transition: transform 0.3s; display: inline-block; }
+.toc-list {
+    list-style: none;
+    padding-left: 20px;
+    margin-top: 10px;
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+.toc-list.collapsed { max-height: 0; margin-top: 0; }
+.toc-list li {
+    padding: 3px 0;
+    border-bottom: 1px dotted #d4c8a8;
+}
+.toc-list a {
+    color: #8B4513;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+.toc-list a:hover { color: #d4af37; }
+
+/* 内容区 */
+.section-heading {
+    color: #5c3d1a;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e0d5c0;
+}
+h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
+h3.section-heading { font-size: 1.2em; }
+h4.section-heading { font-size: 1.05em; }
+
+.pn-link {
+    color: #d4af37;
+    text-decoration: none;
+    font-size: 0.75em;
+    vertical-align: super;
+    margin-right: 4px;
+    cursor: pointer;
+}
+.pn-link:hover { color: #8B4513; }
+
+.section-content {
+    margin-bottom: 20px;
+}
+.section-content p {
+    margin-bottom: 12px;
+    text-indent: 2em;
+    text-align: justify;
+}
+
+/* 列表 */
+.content-list {
+    list-style: none;
+    padding-left: 2em;
+    margin: 12px 0;
+}
+.content-list li {
+    position: relative;
+    padding-left: 1.2em;
+    margin-bottom: 6px;
+    text-align: justify;
+}
+.content-list li::before {
+    content: "●";
+    color: #d4af37;
+    position: absolute;
+    left: 0;
+}
+
+/* 实体链接 */
+.entity-link {
+    text-decoration: none;
+    border-bottom: 1px dashed;
+    padding: 0 1px;
+    transition: all 0.2s;
+}
+.entity-link:hover {
+    background: rgba(212, 175, 55, 0.15);
+}
+.entity-principle { color: #b8860b; border-color: #b8860b; }
+.entity-practice { color: #8B4513; border-color: #8B4513; }
+.entity-process { color: #2E8B57; border-color: #2E8B57; }
+.entity-role { color: #4169E1; border-color: #4169E1; }
+.entity-product { color: #8B008B; border-color: #8B008B; }
+.entity-term { color: #A0522D; border-color: #A0522D; }
+
+/* 页脚 */
+.footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 2px solid #d4af37;
+    text-align: center;
+    font-size: 0.85em;
+    color: #8B7355;
+}
+
+/* 响应式 - 平板竖屏 */
+@media (max-width: 768px) {
+    body { padding: 16px; }
+    .chapter-title { font-size: 1.5em; }
+    h2.section-heading { font-size: 1.2em; }
+    h3.section-heading { font-size: 1.05em; }
+    .chapter-toc { padding: 12px; }
+    .toc-list li a { font-size: 0.85em; }
+}
+
+/* 响应式 - 手机端 */
+@media (max-width: 600px) {
+    body { padding: 12px; }
+    .chapter-title { font-size: 1.4em; }
+    .nav-bar { font-size: 0.8em; }
+    .section-content p { text-indent: 1.5em; }
+    .chapter-toc .toc-list { max-height: 300px; }
+}

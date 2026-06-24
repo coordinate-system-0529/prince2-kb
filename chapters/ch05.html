@@ -4,177 +4,204 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第5章 商业论证 - PRINCE2 知识库</title>
+    <link rel="stylesheet" href="../assets/chapter.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* 浮动目录智能避让：默认收缩，悬停展开 */
+        #floating-toc {
+            transform: translateX(190px);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #floating-toc:hover {
+            transform: translateX(0);
+        }
+        .ftoc-toggle { display: none; }
 
-        body {
-            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
-            background-color: #faf6f0;
-            color: #3e2a1a;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.8;
+        /* 顶部导航栏固定悬浮 */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 102;
+            background: #faf6f0;
         }
 
-        /* 导航栏 */
-        .nav-bar {
-            padding: 12px 0;
-            border-bottom: 2px solid #d4af37;
-            margin-bottom: 24px;
+        /* 宽屏隐藏内联目录，避免与浮动目录重复 */
+        @media (min-width: 1201px) {
+            .chapter-toc { display: none; }
+        }
+
+        /* 导航栏颜色区分 */
+        .nav-link:first-child { color: #8B4513; font-weight: bold; }
+        .nav-link:not(:first-child) { color: #6e6e6e; }
+
+        /* === 仅本章生效的美化增强 === */
+        body { line-height: 1.9; }
+        .section-content p { margin-bottom: 16px; }
+
+        /* 阅读进度条 */
+        .progress-bar {
+            position: fixed; top: 0; left: 0;
+            width: 0%; height: 3px;
+            background: linear-gradient(90deg, #d4af37, #8B4513);
+            z-index: 200; transition: width 0.1s linear;
+        }
+
+        /* 内容区卡片化 */
+        .chapter-content {
+            background: #fffef9;
+            border: 1px solid #e0d5c0;
+            border-radius: 6px;
+            padding: 32px 36px;
+            box-shadow: 0 2px 12px rgba(139, 69, 19, 0.06);
+        }
+
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed; right: 24px; bottom: 32px;
+            width: 42px; height: 42px;
+            background: #8B4513; color: #faf6f0;
+            border: 2px solid #d4af37; border-radius: 50%;
+            cursor: pointer; font-size: 1.2em;
+            display: none; align-items: center; justify-content: center;
+            z-index: 99; opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, background 0.2s;
+        }
+        .back-to-top.visible { display: flex; opacity: 0.85; transform: translateY(0); }
+        .back-to-top:hover { background: #d4af37; color: #5c3d1a; opacity: 1; }
+
+        /* 列表悬停微交互 */
+        .content-list li {
+            transition: background 0.2s;
+            border-radius: 3px;
+        }
+        .content-list li:hover { background: rgba(212, 175, 55, 0.08); }
+
+        /* 响应式 - 平板 */
+        @media (max-width: 768px) {
+            .chapter-content { padding: 20px 18px; border-radius: 4px; }
+        }
+
+        /* === 内容类型区分样式 === */
+
+        /* 关键信息：金色左边框 + 微黄底色 */
+        .key-info {
+            background: #fef9e7;
+            border-left: 4px solid #d4af37;
+            padding: 12px 16px;
+            margin: 16px 0;
+            border-radius: 0 4px 4px 0;
+            font-style: italic;
+        }
+        .key-info::before {
+            content: "🔑 关键信息";
+            display: block;
+            font-weight: bold;
+            font-style: normal;
+            color: #8B4513;
+            margin-bottom: 8px;
             font-size: 0.9em;
         }
-        .nav-link {
-            color: #8B4513;
-            text-decoration: none;
-            padding: 4px 8px;
-        }
-        .nav-link:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
 
-        /* 分类标签 */
-        .category-tag {
-            display: inline-block;
-            background: #8B4513;
-            color: #faf6f0;
-            padding: 3px 12px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            margin-bottom: 8px;
-        }
-
-        /* 章节标题 */
-        .chapter-title {
-            font-size: 1.8em;
-            color: #5c3d1a;
-            border-bottom: 3px double #d4af37;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-        }
-
-        /* 章节目录 */
-        .chapter-toc {
-            background: #f0e8d8;
-            border: 1px solid #d4c8a8;
-            border-left: 4px solid #d4af37;
-            padding: 16px;
-            margin-bottom: 30px;
+        /* 定义框：宣纸笺注色 — 墨棕边框 + 暖宣纸底 */
+        .definition-box {
+            background: #f5f0e6;
+            border-left: 4px solid #6b5a4b;
+            padding: 14px 18px;
+            margin: 16px 0;
             border-radius: 0 4px 4px 0;
         }
-        .toc-title {
-            cursor: pointer;
+        .definition-box::before {
+            content: "📘 定义";
+            display: block;
+            font-weight: bold;
             color: #5c3d1a;
-            font-size: 1em;
-            user-select: none;
-        }
-        .toc-title:hover { color: #d4af37; }
-        .toc-icon { transition: transform 0.3s; display: inline-block; }
-        .toc-list {
-            list-style: none;
-            padding-left: 20px;
-            margin-top: 10px;
-            max-height: 500px;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-        .toc-list.collapsed { max-height: 0; margin-top: 0; }
-        .toc-list li {
-            padding: 3px 0;
-            border-bottom: 1px dotted #d4c8a8;
-        }
-        .toc-list a {
-            color: #8B4513;
-            text-decoration: none;
+            margin-bottom: 8px;
             font-size: 0.9em;
         }
-        .toc-list a:hover { color: #d4af37; }
+        .definition-box .def-term {
+            font-weight: bold;
+            color: #6b5a4b;
+        }
 
-        /* 内容区 */
-        .section-heading {
+        /* 场景框：灰色左边框 + 浅灰底色 */
+        .scenario-box {
+            background: #f5f5f0;
+            border-left: 4px solid #999;
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .scenario-box p:first-child strong:first-child::before {
+            content: "🎯 ";
+        }
+        .scenario-box strong:first-child {
             color: #5c3d1a;
-            margin-top: 32px;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e0d5c0;
-        }
-        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
-        h3.section-heading { font-size: 1.2em; }
-        h4.section-heading { font-size: 1.05em; }
-
-        .pn-link {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 0.75em;
-            vertical-align: super;
-            margin-right: 4px;
-            cursor: pointer;
-        }
-        .pn-link:hover { color: #8B4513; }
-
-        .section-content {
-            margin-bottom: 20px;
-        }
-        .section-content p {
-            margin-bottom: 12px;
-            text-indent: 2em;
-            text-align: justify;
         }
 
-        /* 列表 */
-        .content-list {
-            list-style: none;
-            padding-left: 2em;
+        /* 图/表注释：居中斜体灰色 */
+        .figure-note {
+            text-align: center;
+            color: #8B7355;
+            font-style: italic;
+            font-size: 0.9em;
             margin: 12px 0;
         }
-        .content-list li {
-            position: relative;
-            padding-left: 1.2em;
-            margin-bottom: 6px;
-            text-align: justify;
+
+        /* 管理产品卡片：双线边框 */
+        .product-card {
+            border: 2px solid #8B4513;
+            border-radius: 4px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            background: #fdfaf5;
         }
-        .content-list li::before {
-            content: "●";
-            color: #d4af37;
-            position: absolute;
-            left: 0;
+        .product-card .prod-name {
+            font-weight: bold;
+            color: #8B4513;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+        .product-card .prod-label {
+            font-weight: bold;
+            color: #6e6e6e;
         }
 
-        /* 实体链接 */
-        .entity-link {
-            text-decoration: none;
-            border-bottom: 1px dashed;
-            padding: 0 1px;
-            transition: all 0.2s;
+        /* 表格样式（职责关系表） */
+        .role-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.92em;
         }
-        .entity-link:hover {
-            background: rgba(212, 175, 55, 0.15);
-        }
-        .entity-principle { color: #b8860b; border-color: #b8860b; }
-        .entity-practice { color: #8B4513; border-color: #8B4513; }
-        .entity-process { color: #2E8B57; border-color: #2E8B57; }
-        .entity-role { color: #4169E1; border-color: #4169E1; }
-        .entity-product { color: #8B008B; border-color: #8B008B; }
-        .entity-term { color: #A0522D; border-color: #A0522D; }
-
-        /* 页脚 */
-        .footer {
-            margin-top: 48px;
-            padding-top: 16px;
-            border-top: 2px solid #d4af37;
+        .role-table th {
+            background: #f0e6d3;
+            color: #5c3d1a;
+            padding: 10px 12px;
             text-align: center;
-            font-size: 0.85em;
-            color: #8B7355;
+            border: 1px solid #d4c5a0;
+            font-weight: bold;
+        }
+        .role-table td {
+            padding: 8px 12px;
+            border: 1px solid #e0d5c0;
+            vertical-align: top;
+        }
+        .role-table tbody tr:nth-child(even) td {
+            background: #fdfaf5;
+        }
+        .table-scroll {
+            overflow-x: auto;
+            margin: 12px 0;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* 响应式 */
-        @media (max-width: 600px) {
-            body { padding: 12px; }
-            .chapter-title { font-size: 1.4em; }
-        }
+        /* 表格列宽控制 */
+        .cols-duty th:first-child { width: 22%; }
+        .cols-duty td:first-child { white-space: nowrap; }
+        .cols-princ th:first-child { width: 20%; }
+        .cols-princ th:nth-child(2) { width: 48%; }
+        .cols-princ th:nth-child(3) { width: 32%; }
     </style>
-</head>
 <body>
     <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch04.html" class="nav-link">◁ 第4章 PRINCE2实践简介</a> | <a href="ch06.html" class="nav-link">第6章 组织 ▷</a></div>
 
@@ -182,7 +209,7 @@
     <h1 class="chapter-title">第5章 商业论证</h1>
 
     
-        <nav class="chapter-toc">
+            <nav class="chapter-toc">
             <h3 class="toc-title" onclick="toggleToc()">
                 <span class="toc-icon">▸</span> 本章目录（24 节）
             </h3>
@@ -191,362 +218,424 @@
             </ul>
         </nav>
 
-    <div class="chapter-content">
-        <div class="section-content"><p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+<div class="chapter-content">
+
 <h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 5.1 目的</h2>
-<div class="section-content"><p>关键信息 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>实践的目的是建立一种机制，作为继续投资项目的决策支持手段，判断项 目是否（并且仍然是）可取、可行且可实现。 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>通过项目来实现其业务的单方面或多方面可测量的改进。这些可测量的改进被称为<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。 对于合规或监管项目，可将收益与不采取任何行动的后果进行比较。 PRINCE2 项目以<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的形式交付<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>，用<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>进一个或多个组织的变更。这些变更创建了可带 来成果的能力。这些成果可帮助组<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>目的商业论证中说明的收益。被一个或多个利益相 关方视为负面的成果称为<a href="../entities/term.html#entity-负收益" class="entity-link entity-term" title="术语：负收益">负收益</a>。 产出 能力 成果 收益 负收益 <a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a> 交付 嵌入 达成 测量<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>图 5.1 产出、成果与收益之间的关系</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 定义 产出：活动的有形或无形交付物。在 PRINCE2 中，<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>是将用于促成变更的专业 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。 能力：交付成果所需的<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>已完成的项目产出。 成果：变更的结果，通常会对现实世界中的行为和环境产生影响。实施变更是为了 取得成果，这些成果是为促进变更而开展的活动的结果。 <a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>：一种由成果引致的可测量的改进，此成果被投资<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>视为一种优势，并且有 助实现一个或多个业<a href="../entities/term.html#entity-务目标。" class="entity-link entity-term" title="术语：务目标。">务目标。</a> 负收益：由于投资组织视为负面的成果而导致的可测量的下降，该成果减损了一<a href="../entities/term.html#entity-务目标。" class="entity-link entity-term" title="术语：务目标。">务目标。</a>个业务目标。 业务目标：可测<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>成果，展示与组织战略相关的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>以及项目应做出的贡献。 所有项目都必须具有一个<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由，它<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>录在商业论证中。商业论证不仅确定了开展该 项目的原因，也证实了项目是否：</p>
+<div class="section-content">
+<div class="key-info"><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="practice：商业论证">商业论证</a>实践的目的是建立一种机制，作为继续投资项目的决策支持手段，判断项目是否（并且仍然是）可取、可行且可实现。</div>
+<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="practice：组织">组织</a>通过项目来实现其业务的单方面或多方面可测量的改进。这些可测量的改进被称为<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="term：收益">收益</a>。</p>
+<p>对于合规或监管项目，可将收益与不采取任何行动的后果进行比较。</p>
+<p>PRINCE2 项目以<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="term：产品">产品</a>的形式交付<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="term：产出">产出</a>，用于促进一个或多个组织的变更。这些变更创建了可带来成果的能力。这些成果可帮助组织实现项目的商业论证中说明的收益。被一个或多个利益相关方视为负面的成果称为<a href="../entities/term.html#entity-负收益" class="entity-link entity-term" title="term：负收益">负收益</a>。</p>
+<div class="figure-note" style="text-align:center; padding:8px 0 4px;">
+<svg role="img" viewBox="0 0 680 220" width="100%" style="max-width:660px; display:inline-block;">
+  <title>图 5.1 产出、成果与收益之间的关系</title>
+  <desc>产出 交付至 能力，能力 嵌入至 成果，成果 分别测量于负收益、收益，并达成业务目标</desc>
+  <defs>
+    <marker id="fig51-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#8B6914" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <!-- 产出 -->
+  <rect x="36" y="88" width="96" height="44" rx="6" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.5"/>
+  <text x="84" y="110" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="15" fill="#5c3d1a" font-weight="600">产出</text>
+  <!-- 产出→能力 -->
+  <line x1="132" y1="110" x2="188" y2="110" stroke="#8B6914" stroke-width="1.5" marker-end="url(#fig51-arr)"/>
+  <text x="160" y="102" text-anchor="middle" font-family="serif" font-size="11" fill="#8B7355">交付</text>
+  <!-- 能力 -->
+  <rect x="190" y="88" width="96" height="44" rx="6" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.5"/>
+  <text x="238" y="110" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="15" fill="#5c3d1a" font-weight="600">能力</text>
+  <!-- 能力→成果 -->
+  <line x1="286" y1="110" x2="342" y2="110" stroke="#8B6914" stroke-width="1.5" marker-end="url(#fig51-arr)"/>
+  <text x="314" y="102" text-anchor="middle" font-family="serif" font-size="11" fill="#8B7355">嵌入</text>
+  <!-- 成果 -->
+  <rect x="344" y="88" width="96" height="44" rx="6" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.5"/>
+  <text x="392" y="110" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="15" fill="#5c3d1a" font-weight="600">成果</text>
+  <!-- 成果 → 分叉竖线 -->
+  <line x1="440" y1="110" x2="490" y2="110" stroke="#8B6914" stroke-width="1.5"/>
+  <line x1="490" y1="36" x2="490" y2="184" stroke="#8B6914" stroke-width="1.5"/>
+  <!-- 分叉→负收益（上） -->
+  <line x1="490" y1="36" x2="520" y2="36" stroke="#8B6914" stroke-width="1.5" marker-end="url(#fig51-arr)"/>
+  <text x="505" y="22" text-anchor="middle" font-family="serif" font-size="11" fill="#8B7355">测量于</text>
+  <!-- 分叉→收益（中） -->
+  <line x1="490" y1="110" x2="520" y2="110" stroke="#8B6914" stroke-width="1.5" marker-end="url(#fig51-arr)"/>
+  <!-- 分叉→业务目标（下） -->
+  <line x1="490" y1="184" x2="520" y2="184" stroke="#8B6914" stroke-width="1.5" marker-end="url(#fig51-arr)"/>
+  <text x="505" y="150" text-anchor="middle" font-family="serif" font-size="11" fill="#8B7355">达成</text>
+  <!-- 负收益（用虚线边框区分负面语义） -->
+  <rect x="522" y="14" width="118" height="44" rx="6" fill="#ede8dd" stroke="#8B6914" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="581" y="36" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="#5c3d1a" font-style="italic">负收益</text>
+  <!-- 收益 -->
+  <rect x="522" y="88" width="118" height="44" rx="6" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.5"/>
+  <text x="581" y="110" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="#5c3d1a" font-weight="600">收益</text>
+  <!-- 业务目标 -->
+  <rect x="522" y="162" width="118" height="44" rx="6" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.5"/>
+  <text x="581" y="184" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="#5c3d1a" font-weight="600">业务目标</text>
+</svg>
+<br><span style="font-family:serif; color:#8B7355; font-size:0.9em;">图 5.1 产出、成果与收益之间的关系</span>
+</div>
+<div class="definition-box">
+<p><span class="def-term">产出：</span>活动的有形或无形交付物。在 PRINCE2 中，产出是将用于促成变更的专业产品。</p>
+<p><span class="def-term">能力：</span>交付成果所需的一组已完成的项目产出。</p>
+<p><span class="def-term">成果：</span>变更的结果，通常会对现实世界中的行为和环境产生影响。实施变更是为了取得成果，这些成果是为促进变更而开展的活动的结果。</p>
+<p><span class="def-term">收益：</span>一种由成果引致的可测量的改进，此成果被投资组织视为一种优势，并且有助实现一个或多个业务目标。</p>
+<p><span class="def-term">负收益：</span>由于投资组织视为负面的成果而导致的可测量的下降，该成果减损了一个或多个业务目标。</p>
+<p><span class="def-term">业务目标：</span>可测量的成果，展示与组织战略相关的进展以及项目应做出的贡献。</p>
+</div>
+<p>所有项目都必须具有一个业务理由，它通常被记录在商业论证中。商业论证不仅确定了开展该项目的原因，也证实了项目是否：</p>
 <ul class="content-list">
-  <li>可取（成本、<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>相对平衡）</li>
+<li>可取（成本、收益和风险相对平衡）</li>
+<li>可行（能够交付产品）</li>
+<li>可实现（使用该产品能否实现预期的成果及收益）</li>
 </ul>
-<ul class="content-list">
-  <li>可行（能够交付<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>）</li>
-</ul>
-<ul class="content-list">
-  <li>可实现（使用该<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>能否实现预期的成果及<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>）
-业务理由不仅与成本有关，还与了解项目的价值<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。它是可感知的收益，或重要性与为实现
-这些成果而部署的资源的比例。此外，<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由关乎选择一种能提供最佳整体价值的方法。
-项目必须<a href="../entities/principle.html#entity-确保持续业务理由" class="entity-link entity-principle" title="原则：确保持续业务理由">确保持续业务理由</a>，这是一项 PRINCE2 原则。这要求在项目开始时通过创<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>业论
-证来确定业务理由，随后定期审查及更新，以应对可能影响项目可取性、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>性或可实现性的
-决策和事件。如果业务理由不再有效，则应停止或变更项目。
-场景：可取、可行但不可实现
-在 NowByou 审查了宣传活动项目第二<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>（包括宣传活动的高级<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>收集和
-选项分析）之<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>为了筹备第三阶段，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>会与<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>会谈。这是为了
-在获得更多信息后检查项目的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。
-该小组得出结论，确定所述方法可以按时交付，并且费用合理。然而，他们认定拟议
-的沟通工具（的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>）不太可能覆盖目标受众。<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会要求项目发起
-人重新定义项目<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+<p>业务理由不仅与成本有关，还与了解项目的价值有关。它是可感知的收益，或重要性与为实现这些成果而部署的资源的比例。此外，业务理由关乎选择一种能提供最佳整体价值的方法。</p>
+<p>项目必须<a href="../entities/principle.html#entity-确保持续业务理由" class="entity-link entity-principle" title="principle：确保持续业务理由">确保持续业务理由</a>，这是一项 PRINCE2 原则。这要求在项目开始时通过创建商业论证来确定业务理由，随后定期审查及更新，以应对可能影响项目可取性、可行性或可实现性的决策和事件。如果业务理由不再有效，则应停止或变更项目。</p>
+<div class="scenario-box">
+<p><strong>场景：可取、可行但不可实现</strong></p>
+<p>在 NowByou 审查了宣传活动项目第二阶段的产出（包括宣传活动的高级需求收集和选项分析）之后，为了筹备第三阶段，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="role：项目经理">项目经理</a>会与<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="role：项目管理委员会">项目管理委员会</a>会谈。这是为了在获得更多信息后检查项目的商业论证。</p>
+<p>该小组得出结论，确定所述方法可以按时交付，并且费用合理。然而，他们认定拟议的沟通工具（的质量）不太可能覆盖目标受众。因此，项目管理委员会要求<a href="../entities/role.html#entity-项目发起人" class="entity-link entity-role" title="role：项目发起人">项目发起人</a>重新定义项目范围。</p>
+</div>
+</div>
 <h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 5.2 对有效的商业论证管理的指导</h2>
 <h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 5.2.1 商业论证生命周期</h3>
-<div class="section-content"><p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>在项目开始时以概况形式制定，并且依据的是项目任务书中提供的信息。它需要包含 充足的信息，确保<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>能够确认业务理由，并<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>启动项目。PRINCE2 使 用术语“<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a>”作为此初始理由。其他方法可能会使用诸如“战略概要论证”之类的<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a>商业论证记录在<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>中。 大多数情况下，此时还无法充分了解项目成本、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和目标，无法为整个项目提 供强有<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a>此，概要商业论证需要进一步发展和完善。随着<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>更加详细、信息 更<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>概要商业论证将发展为更详尽的商业论证。P<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>E2 使用“完整商业论证”这个 术语来描述这种经过增强的商业论证。其他方法也可能会使用不同的术语，比如“详尽商业论 证”或“最终商业论证”。 图 5.2 展示了从项目<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>概述文件和（完整）商<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>。 项目概述文件 项目任务书 商业论证 由<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>提供并设定期望和约束 包含概要商业论证以应对强制要求 提供完整商业论证以应对项目概述 文件 图 5.2 商业论证的演变 随着项目在各个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>之间推进、实际成本的产生、可能实现<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a><a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>、以及进一步了解相关信 息、商业论证也可以得到进一步完善。</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 场景：商业论证生命周期 鉴于 Findef <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的创新性质，人们认识到需要进行市场测试，并已<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>在项目生命 周期的第 3 <a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>进行此类测试。早期采用者的反馈将帮助 F<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>def 识别产品中的错误 和设计缺陷，并指明任何潜在营销机会。 <a href="../entities/role.html#entity-项目发起人" class="entity-link entity-role" title="角色：项目发起人">项目发起人</a>意识到，将市场反馈纳入产品决策将在<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a><a href="../entities/term.html#entity-最小可行产品" class="entity-link entity-term" title="术语：最小可行产品">最小可行产品</a>时，促成产品快 速采用。但这种方法并不能过分<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>什么是可接受的特征列表。这就意味着，商业论 证中提出的原始成本估算与响应市场反馈所需的成本相去甚远。因此，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员 会现在需要再度接洽投资委员会，为该项目申请额外的资金。</p></div>
+<div class="section-content">
+<p>商业论证在项目开始时以概况形式制定，并且依据的是项目任务书中提供的信息。它需要包含充足的信息，确保项目管理委员会能够确认业务理由，并授权项目经理启动项目。PRINCE2 使用术语"<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="term：概要商业论证">概要商业论证</a>"作为此初始理由。其他方法可能会使用诸如"战略概要论证"之类的术语。概要商业论证记录在<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="product：项目概述文件">项目概述文件</a>中。</p>
+<p>大多数情况下，此时还无法充分了解项目成本、时间、产品、风险和目标，无法为整个项目提供强有力的理由。因此，概要商业论证需要进一步发展和完善。随着项目计划更加详细、信息更加清晰，概要商业论证将发展为更详尽的商业论证。PRINCE2 使用"完整商业论证"这个术语来描述这种经过增强的商业论证。其他方法也可能会使用不同的术语，比如"详尽商业论证"或"最终商业论证"。</p>
+<div class="figure-note" style="text-align:center; padding:8px 0 4px;">
+<svg role="img" viewBox="0 0 680 170" width="100%" style="max-width:660px; display:inline-block;">
+  <title>图 5.2 商业论证的演变</title>
+  <desc>项目任务书 输出至 项目概述文件（含概要商业论证），随后发展为完整商业论证</desc>
+  <defs>
+    <marker id="fig52-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#8B6914" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <!-- 项目任务书 -->
+  <rect x="24" y="58" width="136" height="54" rx="6" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.5"/>
+  <text x="92" y="85" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="16" fill="#5c3d1a" font-weight="600">项目任务书</text>
+  <!-- 箭头1 -->
+  <line x1="160" y1="85" x2="222" y2="85" stroke="#8B6914" stroke-width="1.5" marker-end="url(#fig52-arr)"/>
+  <text x="191" y="75" text-anchor="middle" font-family="serif" font-size="11" fill="#8B7355">输出至</text>
+  <!-- 项目概述文件（含概要商业论证） -->
+  <rect x="224" y="50" width="208" height="70" rx="6" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.5"/>
+  <text x="328" y="72" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="15" fill="#5c3d1a" font-weight="600">项目概述文件</text>
+  <text x="328" y="98" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="#8B7355">含概要商业论证</text>
+  <!-- 箭头2 -->
+  <line x1="432" y1="85" x2="494" y2="85" stroke="#8B6914" stroke-width="1.5" marker-end="url(#fig52-arr)"/>
+  <text x="463" y="75" text-anchor="middle" font-family="serif" font-size="11" fill="#8B7355">发展为</text>
+  <!-- 商业论证（完整商业论证） -->
+  <rect x="496" y="50" width="168" height="70" rx="6" fill="#ede8dd" stroke="#8B6914" stroke-width="2"/>
+  <text x="580" y="72" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="15" fill="#5c3d1a" font-weight="600">商业论证</text>
+  <text x="580" y="98" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="#8B7355">完整商业论证</text>
+</svg>
+<br><span style="font-family:serif; color:#8B7355; font-size:0.9em;">图 5.2 商业论证的演变</span>
+</div>
+<p>随着项目在各个阶段之间推进、实际成本的产生、可能实现预测收益、以及进一步了解相关信息、商业论证也可以得到进一步完善。</p>
+<div class="scenario-box">
+<p><strong>场景：商业论证生命周期</strong></p>
+<p>鉴于 Findef 产品的创新性质，人们认识到需要进行市场测试，并已计划在项目生命周期的第 3 阶段进行此类测试。早期采用者的反馈将帮助 Findef 识别产品中的错误和设计缺陷，并指明任何潜在营销机会。</p>
+<p>项目发起人意识到，将市场反馈纳入产品决策将在推出最小可行产品时，促成产品快速采用。但这种方法并不能过分预测什么是可接受的特征列表。这就意味着，商业论证中提出的原始成本估算与响应市场反馈所需的成本相去甚远。因此，项目管理委员会现在需要再度接洽投资委员会，为该项目申请额外的资金。</p>
+</div>
+</div>
 <h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 5.2.2 使产品与业务目标和容许偏差保持一致</h3>
-<div class="section-content"><p>关联<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>、成果与收益的理论非常简单。但将理论付诸<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>往往要困难得多。许多<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>都 能够识别那些生产的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>从<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>到充分利用、组织变更未得到深化的项目。为了实现<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>， 必须实现成果，也就是说<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>预期使用项目的产出、定义新能力，并识别使用新能力的 障碍。 通常会发生这样一个<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>，项目从交付视角来看是成功的，而从投资视角来看是失败 的<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>于项目的成果和收益往往是在项目结束之后实<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>项目团队很容易只关注创造产品 （<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>）。需要明确识别项目产出、成果与收益之间的联系，并让项目参与者了解这种联 系。否则，就有背离项目目的、无法实<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>益的危险。有些产品是其他产品产生收益的促成 因素。 最终，项目要实现的成果和收益需要与<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>保持一致，并促进实现业<a href="../entities/term.html#entity-务目标。" class="entity-link entity-term" title="术语：务目标。">务目标。</a>这些目标可 能包括组织设定的环境、社会和<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a> (ESG) 目标。<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中记录的项目可持续性<a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>和 容许偏差应参考组织的 ESG 目标，并促进此类目标实现（有关可持续性的更多信息，请参阅 第 5.4.4 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>支持商业论证的<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>包括项目要实现的收益数量和实现<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>方面的预测，以及与这些 目标的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>相关的其他指导（例如销售额增长 10-15%）。在整个项目中（至少在每个阶 段结束时）都要核查<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>收益，如果它<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>定的容许偏差，则应将其上报到相应的级别， 以进行审查并采取行动。确保收益是可测量的，还要确保它们可以得到证明。如果项目包括无 法衡量的收益，则无法确定它是否成功或是否具备性价比。</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 定义 收益容许偏差：<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a><a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>的容许偏差，一旦超出收益<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，则需上报到更 高一级的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层。收益容<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>录于商业论证中。 可持续性容许偏<a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>续性绩效目标的容许偏差，一旦<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>续性容许偏差， 则需<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>到更高一级的管理<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>TITY_2⟧性容许偏差记录于商业论证中。</p></div>
+<div class="section-content">
+<p>关联产出、成果与收益的理论非常简单。但将理论付诸实践往往要困难得多。许多组织都能够识别那些生产的产品从未得到充分利用、组织变更未得到深化的项目。为了实现收益，必须实现成果，也就是说要按预期使用项目的产出、定义新能力，并识别使用新能力的障碍。</p>
+<p>通常会发生这样一个难点问题，项目从交付视角来看是成功的，而从投资视角来看是失败的。由于项目的成果和收益往往是在项目结束之后实现，项目团队很容易只关注创造产品（产出）。需要明确识别项目产出、成果与收益之间的联系，并让项目参与者了解这种联系。否则，就有背离项目目的、无法实现收益的危险。有些产品是其他产品产生收益的促成因素。</p>
+<p>最终，项目要实现的成果和收益需要与业务目标保持一致，并促进实现业务目标。这些目标可能包括组织设定的环境、社会和治理 (ESG) 目标。商业论证中记录的项目可持续性绩效目标和容许偏差应参考组织的 ESG 目标，并促进此类目标实现（有关可持续性的更多信息，请参阅第 5.4.4 节）。</p>
+<p>支持商业论证的收益管理方法包括项目要实现的收益数量和实现时间方面的预测，以及与这些目标的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="term：容许偏差">容许偏差</a>相关的其他指导（例如销售额增长 10-15%）。在整个项目中（至少在每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="term：阶段">阶段</a>结束时）都要核查预测收益，如果它们超出设定的容许偏差，则应将其上报到相应的级别，以进行审查并采取行动。确保收益是可测量的，还要确保它们可以得到证明。如果项目包括无法衡量的收益，则无法确定它是否成功或是否具备性价比。</p>
+<div class="definition-box">
+<p><span class="def-term">收益容许偏差：</span>收益绩效目标的容许偏差，一旦超出收益容许偏差，则需上报到更高一级的管理层。收益容许偏差记录于商业论证中。</p>
+<p><span class="def-term">可持续性容许偏差：</span>可持续性绩效目标的容许偏差，一旦超出可持续性容许偏差，则需上报到更高一级的管理层。可持续性容许偏差记录于商业论证中。</p>
+</div>
+</div>
 <h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 5.2.3 建立业务理由</h3>
-<div class="section-content"><p>在评估<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由时，应考虑项目<a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>的全部七个方面（见 1.4）及其相互关系，但不同绩效 方面之间通常会存在权衡。例如，如果在编制<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>时确定需要达成更高的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>目标， 则成本、时间或可持续性目标可能会受到影响。 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>会考虑实现所需成果的选项（PRI<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>E2 称之为“业务选项”），并选择在绩效的不同 方面之间实现最优平衡的选项。如果项目无法在针对全部七个绩效方面设置的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>构建商业论证，则其合理<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>在问题。 项目的商业论证不仅要包含项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的开发成本，还要包含项目结束后运营成本的变更。大多 数<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>都具备相应政策，定义了应该如何在商业论证中考虑这些成本。 <a href="../entities/term.html#entity-负收益" class="entity-link entity-term" title="术语：负收益">负收益</a>上是某项活动的预期后果，该活动具有某种不确定并且可能永不实际发生的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>。例 如，将组织的两个场地合并成一个新场地的决策可能有<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>（例如，优化联合工作效果）、成 本（例如，扩大两个场<a href="../entities/term.html#entity-负收益" class="entity-link entity-term" title="术语：负收益">负收益</a>一个）和负收益（例如，<a href="../entities/term.html#entity-负收益" class="entity-link entity-term" title="术语：负收益">负收益</a>的公共交通选项有限）。负收益 需要估价并纳入投资评估。</p></div>
+<div class="section-content">
+<p>在评估业务理由时，应考虑项目绩效目标的全部七个方面（见 1.4）及其相互关系，但不同绩效方面之间通常会存在权衡。例如，如果在编制项目产品描述时确定需要达成更高的质量目标，则成本、时间或可持续性目标可能会受到影响。</p>
+<p>商业论证会考虑实现所需成果的选项（PRINCE2 称之为"业务选项"），并选择在绩效的不同方面之间实现最优平衡的选项。如果项目无法在针对全部七个绩效方面设置的容许偏差范围内构建商业论证，则其合理性或许存在问题。</p>
+<p>项目的商业论证不仅要包含项目产品的开发成本，还要包含项目结束后运营成本的变更。大多数组织都具备相应政策，定义了应该如何在商业论证中考虑这些成本。</p>
+<p>负收益是某项活动的预期后果，该活动具有某种不确定并且可能永不实际发生的风险。例如，将组织的两个场地合并成一个新场地的决策可能有收益（例如，优化联合工作效果）、成本（例如，扩大两个场地中的一个）和负收益（例如，新场地的公共交通选项有限）。负收益需要估价并纳入投资评估。</p>
+</div>
 <h2 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 5.3 技术</h2>
 <h3 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 5.3.1 PRINCE2 商业论证管理技术</h3>
-<div class="section-content"><p>PRINCE2 包括一个四步<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>管理技术（开发、检查、维护、确认），如图 5.3 所示。如果 需要，可以使用替代程序代替它，例如，如果<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>已经开发了特定于其<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的程序。应将使用 替代程序的决策作为<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中的剪裁决策的一部分来记录。 商业论证在项目开始时开发，最初为概要形式，随后补充详细信息。在项目生命周期内，应 随着项目发展和变化<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>更新商业论证（见图 5.2）。<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>在每个关键决策点 （例如，<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>边界）检查商业论证，并在产生<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>的整个期间予以确认。</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 项目前 启动阶段 后续交付 <a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 最终交付 阶段 项目后 确认<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a> 确认收益 确认收益<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>要 商业论证 检查完整<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>证 检查更新的 商业论证 开发商业论证 维护商业论证 项目生命周期外 项目生命周期内 图 5.3 贯穿项目生命周期的商业论证 在上面的图 5.3 中：</p>
+<div class="section-content">
+<p>PRINCE2 包括一个四步商业论证管理技术（开发、检查、维护、确认），如图 5.3 所示。如果需要，可以使用替代程序代替它，例如，如果业务已经开发了特定于其组织的程序。应将使用替代程序的决策作为项目启动文件中的剪裁决策的一部分来记录。</p>
+<p>商业论证在项目开始时开发，最初为概要形式，随后补充详细信息。在项目生命周期内，应随着项目发展和变化，审查和更新商业论证（见图 5.2）。项目管理委员会在每个关键决策点（例如，阶段边界）检查商业论证，并在产生收益的整个期间予以确认。</p>
+<div class="figure-note" style="text-align:center; padding:8px 0 4px;">
+<svg role="img" viewBox="0 0 680 235" width="100%" style="max-width:660px; display:inline-block;">
+  <title>图 5.3 贯穿项目生命周期的商业论证</title>
+  <desc>项目生命周期（项目前→启动阶段→后续交付阶段→最终交付阶段→项目后）与商业论证开发/维护的对应关系</desc>
+  <defs>
+    <!-- 向左箭头 -->
+    <marker id="fig53-larr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M8 2L2 5L8 8" fill="none" stroke="#8B6914" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <!-- 向右箭头 -->
+    <marker id="fig53-rarr" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#8B6914" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- ===== 箭头形阶段块（Chevron） ===== -->
+  <!-- 项目前：深底色（生命周期外） -->
+  <polygon points="45,12 135,12 150,35 135,58 45,58 30,35" fill="#d4c5a0" stroke="#8B6914" stroke-width="1.2"/>
+  <text x="90" y="37" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="#3d2b1a" font-weight="600">项目前</text>
+
+  <!-- 启动阶段：浅底色（生命周期内） -->
+  <polygon points="160,12 250,12 265,35 250,58 160,58 145,35" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.2"/>
+  <text x="205" y="37" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="#5c3d1a" font-weight="600">启动阶段</text>
+
+  <!-- 后续交付阶段：浅底色（生命周期内） -->
+  <polygon points="275,12 365,12 380,35 365,58 275,58 260,35" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.2"/>
+  <text x="320" y="31" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="#5c3d1a" font-weight="600">后续交付</text>
+  <text x="320" y="45" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="#5c3d1a" font-weight="600">阶段</text>
+
+  <!-- 最终交付阶段：浅底色（生命周期内） -->
+  <polygon points="390,12 480,12 495,35 480,58 390,58 375,35" fill="#f5f0e6" stroke="#8B6914" stroke-width="1.2"/>
+  <text x="435" y="31" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="#5c3d1a" font-weight="600">最终交付</text>
+  <text x="435" y="45" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="#5c3d1a" font-weight="600">阶段</text>
+
+  <!-- 项目后：深底色（生命周期外） -->
+  <polygon points="505,12 595,12 610,35 595,58 505,58 490,35" fill="#d4c5a0" stroke="#8B6914" stroke-width="1.2"/>
+  <text x="550" y="37" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="#3d2b1a" font-weight="600">项目后</text>
+
+  <!-- ===== 上方：确认收益标注（箭头2-4） ===== -->
+  <text x="205" y="6" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">确认收益</text>
+  <polygon points="201,8 209,8 205,14" fill="#8B6914"/>
+  <text x="320" y="6" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">确认收益</text>
+  <polygon points="316,8 324,8 320,14" fill="#8B6914"/>
+  <text x="435" y="6" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">确认收益</text>
+  <polygon points="431,8 439,8 435,14" fill="#8B6914"/>
+
+  <!-- ===== 下方：检查标注（箭头1-3） ===== -->
+  <!-- 项目前：检查概要商业论证 -->
+  <polygon points="86,64 94,64 90,70" fill="#8B6914"/>
+  <text x="90" y="82" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">检查概要</text>
+  <text x="90" y="94" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">商业论证</text>
+
+  <!-- 启动阶段：检查完整商业论证 -->
+  <polygon points="201,64 209,64 205,70" fill="#8B6914"/>
+  <text x="205" y="82" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">检查完整</text>
+  <text x="205" y="94" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">商业论证</text>
+
+  <!-- 后续交付阶段：检查更新的商业论证 -->
+  <polygon points="316,64 324,64 320,70" fill="#8B6914"/>
+  <text x="320" y="82" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">检查更新的</text>
+  <text x="320" y="94" text-anchor="middle" font-family="serif" font-size="10" fill="#5c3d1a">商业论证</text>
+
+  <!-- ===== 底部：开发/维护双向箭头 ===== -->
+  <line x1="50" y1="175" x2="610" y2="175" stroke="#8B6914" stroke-width="1.5" marker-start="url(#fig53-larr)" marker-end="url(#fig53-rarr)"/>
+  <text x="180" y="170" text-anchor="middle" font-family="serif" font-size="11" fill="#5c3d1a" font-weight="600">开发商业论证</text>
+  <text x="480" y="170" text-anchor="middle" font-family="serif" font-size="11" fill="#5c3d1a" font-weight="600">维护商业论证</text>
+
+  <!-- ===== 右下角图例 ===== -->
+  <rect x="520" y="200" width="18" height="14" rx="2" fill="#d4c5a0" stroke="#8B6914" stroke-width="1"/>
+  <text x="544" y="211" text-anchor="start" font-family="serif" font-size="10" fill="#8B7355">项目生命周期外</text>
+  <rect x="520" y="220" width="18" height="14" rx="2" fill="#f5f0e6" stroke="#8B6914" stroke-width="1"/>
+  <text x="544" y="231" text-anchor="start" font-family="serif" font-size="10" fill="#8B7355">项目生命周期内</text>
+</svg>
+<br><span style="font-family:serif; color:#8B7355; font-size:0.9em;">图 5.3 贯穿项目生命周期的商业论证</span>
+</div>
+<p>在上面的图 5.3 中：</p>
 <ul class="content-list">
-  <li>开发：表示探索各种选项并获得正确信息，从而基于这些信息做出投资评估决策</li>
+<li>开发：表示探索各种选项并获得正确信息，从而基于这些信息做出投资评估决策</li>
+<li>检查：表示评估项目目前是否（仍然）值得</li>
+<li>维护：表示根据实际进展和当前预测（包括预测收益）及时更新商业论证</li>
+<li>确认：表示评估预期收益是否已经（或将要）实现。虽然在项目进行期间迭代交付和发布产品时可能会实现收益，但确认收益大多在项目结束后进行</li>
 </ul>
-<ul class="content-list">
-  <li>检查：表示评估项目目前是否（仍然）值得</li>
-</ul>
-<ul class="content-list">
-  <li>维护：表示根据实际<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>和当前预测（包括预测<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>）及时更新<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></li>
-</ul>
-<ul class="content-list">
-  <li>确认：表示评估预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>是否已经（或将要）实现。 虽然在项目进行期间迭代交付和发
-布<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>时可能会实现收益，但确认收益大多在项目结束后进行</li>
-</ul></div>
+</div>
 <h4 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 5.3.1.1 开发</h4>
-<div class="section-content"><p>项目任务书的提供激活了<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流程。随后项目任务书将用作输入，以制定<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a> （<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>的一部分）中记录的项目的初始<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由。在<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a>流程中，项目管理委员 会将在<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>项目启<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>概述文件。在项目启动<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a>商业论证将得以细化，形 成完整的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>将在授权项目时予以批准。 任何投资都<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>下三种基本的业务选项：</p>
+<div class="section-content">
+<p>项目任务书的提供激活了<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="process：项目准备">项目准备</a>流程。随后项目任务书将用作输入，以制定概要商业论证（<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="product：项目概述文件">项目概述文件</a>的一部分）中记录的项目的初始业务理由。在<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="process：项目指导">项目指导</a>流程中，项目管理委员会将在授权项目启动时批准项目概述文件。在<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="process：项目启动">项目启动</a>流程中，概要商业论证将得以细化，形成完整的商业论证。项目管理委员会将在授权项目时予以批准。</p>
+<p>任何投资都有以下三种基本的业务选项：</p>
 <ul class="content-list">
-  <li>不做任何不同的行动</li>
+<li>不做任何不同的行动</li>
+<li>做最低限度的行动</li>
+<li>做超过最低限度的行动</li>
 </ul>
-<ul class="content-list">
-  <li>做最低限度的行动</li>
-</ul>
-<ul class="content-list">
-  <li>做超过最低限度的行动
-“不做任何不同的行动”这一选项应始终是首选项，并充当量化其他选项的基础。“不做任何
-不同的行动”“做最低限度的行动”或“做超过最低限度的行动”之间的差异在于投资将产生
-的<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。
-对每种选项的分析，为<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目利益相关方提供了充分的信息，以确定哪个选项
-对<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>具有最佳价值。这也能为以下<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>提供答案：对于这种水平的投<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>该选项的预期收益
-是否比其他可选选项更具可取性、可行性和可实现性？请参见 5.3.2.1“投资评估技术”，其
-中汇总了可用于评价和比较各种选项的一些方法。
-在项目的早期<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>，可能要考虑较为广泛的选项，随后将减少选项数量，以便更细致地予以检
-查。对于所有项目而言，包括分类为“必做”的项目（例如监管项目），探索不同的选项并选
-择最合适的选项都非常重要。可能存在不同的可用方法，必须根据其可行性、可取性和可实现
-性进行评价。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 场景：“不采取任何行动”/“采取最低限度的行动”/ “采取某些行动”选项评估 在设计反对歧视的宣传活动时，NowByou 确定了以下几种选项，其分析概要列举如下： 选项 优势 劣势 不采取任何行动： 保持现状 无 无 采取最低限度的行 动：使用当前营销 工具（例如，社交 网络、网站和现场 工作） 利用已建立的论坛并与警方 合作 不需要新投资，但需要工作 人员付出<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>去更新和维护 当前平台（开支最高为 2,000 美元） 覆盖<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>有限，仅限现有受 众群体 采取超过最低限度的 行动：创建使用多重 营销工具的针对性宣 传活动 扩大 Now<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>ou 的覆盖范围 建立新的合作关系 建立品牌知名度 扩大捐助者群体/增加资金流 需要额外的资金（宣传活 动交付最高 25,000 <a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>； 工作人员时间最高 3,000 美元；专职<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>最高 8,000 美元） 考虑到所涉及的预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>和成本，创建一个使用多重营销工具的针对性宣传活动是首选 项，因为它可以产生符合NowByou使命的有吸引力的物有所值。</p></div>
+<p>"不做任何不同的行动"这一选项应始终是首选项，并充当量化其他选项的基础。"不做任何不同的行动""做最低限度的行动"或"做超过最低限度的行动"之间的差异在于投资将产生的收益。</p>
+<p>对每种选项的分析，为项目管理委员会和项目利益相关方提供了充分的信息，以确定哪个选项对组织具有最佳价值。这也能为以下问题提供答案：对于这种水平的投资，该选项的预期收益是否比其他可选选项更具可取性、可行性和可实现性？请参见 5.3.2.1"投资评估技术"，其中汇总了可用于评价和比较各种选项的一些方法。</p>
+<p>在项目的早期阶段，可能要考虑较为广泛的选项，随后将减少选项数量，以便更细致地予以检查。对于所有项目而言，包括分类为"必做"的项目（例如监管项目），探索不同的选项并选择最合适的选项都非常重要。可能存在不同的可用方法，必须根据其可行性、可取性和可实现性进行评价。</p>
+<div class="scenario-box">
+<p><strong>场景："不采取任何行动"/"采取最低限度的行动"/"采取某些行动"选项评估</strong></p>
+<p>在设计反对歧视的宣传活动时，NowByou 确定了以下几种选项，其分析概要列举如下：</p>
+<p>选项 A — 不采取任何行动（保持现状）：无优势，无劣势。</p>
+<p>选项 B — 采取最低限度的行动（使用当前营销工具，如社交网络、网站和现场工作）：利用已建立的论坛并与警方合作；不需要新投资，但需要工作人员付出时间（开支最高 2,000 美元）；覆盖范围有限，仅限现有受众群体。</p>
+<p>选项 C — 采取超过最低限度的行动（创建使用多重营销工具的针对性宣传活动）：扩大 NowByou 的覆盖范围，建立新的合作关系，建立品牌知名度，扩大捐助者群体/增加资金流；需要额外资金（宣传活动交付最高 25,000 美元；工作人员时间最高 3,000 美元；专职项目经理最高 8,000 美元）。</p>
+<p>考虑到所涉及的预期收益和成本，创建一个使用多重营销工具的针对性宣传活动是首选项，因为它可以产生符合 NowByou 使命的有吸引力的物有所值。</p>
+</div>
+</div>
 <h4 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 5.3.1.2 检查</h4>
-<div class="section-content"><p>因为新<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>或变更可能使改换其他选项更具合理性，因此必须持续评估所选选项<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的可 取性、可行性和可实现性。 随着进一步了解项目成本 、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>险，商业论证可能会在各个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>得到进一步完 善。持续<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由确保可继续实现预期<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>和收益，进而推动所有决策。<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a> 至少应在以下时间节点检查商业论证：</p>
+<div class="section-content">
+<p>因为新风险或变更可能使改换其他选项更具合理性，因此必须持续评估所选选项商业论证的可取性、可行性和可实现性。</p>
+<p>随着进一步了解项目成本、时间、产品和风险，商业论证可能会在各个阶段得到进一步完善。持续业务理由确保可继续实现预期业务目标和收益，进而推动所有决策。项目管理委员会至少应在以下时间节点检查商业论证：</p>
 <ul class="content-list">
-  <li>在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流程结束时，以授权项目启动</li>
+<li>在项目准备流程结束时，以授权项目启动</li>
+<li>在项目启动流程结束时，以授权项目</li>
+<li>在各个阶段结束时，以授权下一阶段和项目继续开展</li>
+<li>评估例外计划时，以授权修改后的阶段和项目继续开展</li>
 </ul>
+<p>项目经理还将在以下时间节点检查商业论证：</p>
 <ul class="content-list">
-  <li>在<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程结束时，以授权项目</li>
+<li>在评估进展、风险和问题时，以确定它们对业务理由的影响</li>
+<li>在最后管理阶段中（作为项目收尾的一部分），以根据需求评估项目绩效以及项目成果产生预期收益的概率</li>
+<li>咨询利益相关方时，以确定是否有任何目标发生变更（例如业务是否制定了任何其他可持续性目标）</li>
 </ul>
-<ul class="content-list">
-  <li>在各个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>结束时，以授权下一阶段和项目继续开展</li>
-</ul>
-<ul class="content-list">
-  <li>评估<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>时，以授权修改后的阶段和项目继续开展
-<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>还将在以下时间节点检查<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>：</li>
-</ul>
-<ul class="content-list">
-  <li>在评估<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>、<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和问题时，以确定它们对<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由的影响</li>
-</ul>
-<ul class="content-list">
-  <li>在最后<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>阶段中（作为<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>的一部分），以根据需求评估项目绩效以及项目成果产
-生预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>的概率</li>
-</ul>
-<ul class="content-list">
-  <li>咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>时，以确定是否有任何目标发生变更（例如<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>是否制定了任何其他可
-持续性目标）</li>
-</ul>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 有许多方式可用于检查预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。例如，敏感性分<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>决定商业论证是否过于<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>一个特 定的收益。如果是这样，<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>需要采取步骤来保证那个特定的收益，这就可能会影响编制项目 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>、监视和控制活动以及<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>。</p></div>
+<p>有许多方式可用于检查预期收益。例如，敏感性分析可用来决定商业论证是否过于依赖一个特定的收益。如果是这样，由于需要采取步骤来保证那个特定的收益，这就可能会影响编制项目计划、监视和控制活动以及风险管理。</p>
+</div>
 <h4 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 5.3.1.3 维护</h4>
-<div class="section-content"><p>在每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>结束时，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>都会使用进展情况数据（例如交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、项目成本、实现的收 益）以及最新的<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a><a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>和<a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>更新<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。使用适当的版本控制来维护商业论证非常 重要，这能确保先前的版本可以访问，以供参考和比较。</p></div>
+<div class="section-content">
+<p>在每个阶段结束时，项目经理都会使用进展情况数据（例如交付的产品、项目成本、实现的收益）以及最新的预测收益和绩效目标更新商业论证。使用适当的版本控制来维护商业论证非常重要，这能确保先前的版本可以访问，以供参考和比较。</p>
+</div>
 <h4 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 5.3.1.4 确认</h4>
-<div class="section-content"><p>作为结束后项目<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>评审的一部分，业务将审查<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>，以确定项目成果实现了其收益。他 们还将评估<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>切实实现了预期收益。在项目期间<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>在<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>边界进行收益评审， 以确认项 目期间<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>要实现的任何收益均有望实现。 如图 5.1（参见第 5.1 节）所示，项目交付<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>，利用这些产出可以产生成果，从而为<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>带 来收益。项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队务必要了解项目应实现的收益和成果。否则，就不太可能在项目生命<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>期内开发正确的产出，也不太可能建立和维持对变更的承诺。 <a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>负责指定项目的收益，同时负责通过问<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>确认是否实现了预测收益。这可能会涉及 超出项目生命周期的承诺，因为许多收益可能要等到项目结束以后才能实现。因<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>建议 高级用户来自受变更影响的业务领域。但这会产生一个困境，因为一旦项目结束，这个“临时 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>”就会解散，执行任何测量活动的框架（特别是资金和资源）也会一并解散。 <a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>定义了将要建立的管理行动，确保实现项目的成果及收益。它首先由<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在 启动阶段期间的“<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>”流程中创建，并在申请项目<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>时递交给<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>进行批 准。如果业务将管理或参与收益<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会可能需要寻求他们的<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>。收益管理方 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>按项目或由业务管理，且可能在项目生命周期之外进行管理。 项<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>期内可测量的收益应由高<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>认，由项目经理在<a href="../entities/product.html#entity-阶段竣工报告" class="entity-link entity-product" title="管理产品：阶段竣工报告">阶段竣工报告</a>和项目竣工报 告中正式<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>。如果收益可在项目生命周期<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>管理方法应当包括适当的项目中期 收益评审。而作为“<a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a>”流程的一部分，应重新检查所有未实现的收益，并更新 其预测。 <a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>后收益评审涉及业务要求高级<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>问责，就分配给他们的各项收益的实现情况征询证据， 并采取<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>来实现尚未完全实现的收益。项目后收益评审还将审查项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>在运营使用中 的绩效，识别是否产生任何附带效果（有益的或有害的），这些可能为其他项目提供有用的经 验教训。 <a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>负责确保收益评审得以<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和执行。随着项目结束，对于项目结束后的测量活动， 收益评<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>将从项目总监转移给业务（特别是高级用户），因为审查需要资金与资源。</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+<div class="section-content">
+<p>作为结束后项目收益评审的一部分，业务将审查商业论证，以确定项目成果实现了其收益。他们还将评估是否切实实现了预期收益。在项目期间，应在阶段边界进行收益评审，以确认项目期间预测要实现的任何收益均有望实现。</p>
+<p>如图 5.1（参见第 5.1 节）所示，项目交付产出，利用这些产出可以产生成果，从而为业务带来收益。项目管理团队务必要了解项目应实现的收益和成果。否则，就不太可能在项目生命周期内开发正确的产出，也不太可能建立和维持对变更的承诺。</p>
+<p><a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="role：高级用户">高级用户</a>负责指定项目的收益，同时负责通过问责制确认是否实现了预测收益。这可能会涉及超出项目生命周期的承诺，因为许多收益可能要等到项目结束以后才能实现。因此，通常建议高级用户来自受变更影响的业务领域。但这会产生一个困境，因为一旦项目结束，这个"临时组织"就会解散，执行任何测量活动的框架（特别是资金和资源）也会一并解散。</p>
+<p><a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="product：收益管理方法">收益管理方法</a>定义了将要建立的管理行动，确保实现项目的成果及收益。它首先由项目经理在启动阶段期间的"项目启动"流程中创建，并在申请项目授权时递交给项目管理委员会进行批准。如果业务将管理或参与收益评审，项目管理委员会可能需要寻求他们的批准。收益管理方法可按项目或由业务管理，且可能在项目生命周期之外进行管理。</p>
+<p>项目生命周期内可测量的收益应由高级用户确认，由项目经理在阶段竣工报告和项目竣工报告中正式报告。如果收益可在项目生命周期内审查，收益管理方法应当包括适当的项目中期收益评审。而作为"阶段边界管理"流程的一部分，应重新检查所有未实现的收益，并更新其预测。</p>
+<p>项目后收益评审涉及业务要求高级用户问责，就分配给他们的各项收益的实现情况征询证据，并采取纠正行动来实现尚未完全实现的收益。项目后收益评审还将审查项目产品在运营使用中的绩效，识别是否产生任何附带效果（有益的或有害的），这些可能为其他项目提供有用的经验教训。</p>
+<p><a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="role：项目总监">项目总监</a>负责确保收益评审得以计划和执行。随着项目结束，对于项目结束后的测量活动，收益评审的职责将从项目总监转移给业务（特别是高级用户），因为审查需要资金与资源。</p>
+</div>
 <h3 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 5.3.2 支持技术</h3>
 <h4 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 5.3.2.1 投资评估</h4>
-<div class="section-content"><p>投资评估将比较开发、运营和维护项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的成本与一段时间内的<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>价值。投资评估<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>的 是收益、成本和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>之间的关系。其中应该涵盖项<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>本（生产所需产品的成本和项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>成 本）以及持续的运营和维护成本。 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>可用的投资评估技术有很多，组织对在具体项目中采用的技术通常会有自己的偏好。对技 术的选择可能会受到<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>类型（例如，需要遵守公共部门会<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>则的业务）或组织自身标准的 影响。 投资评估技术的示例包括：</p>
+<div class="section-content">
+<p>投资评估将比较开发、运营和维护项目产品的成本与一段时间内的收益价值。投资评估关注的是收益、成本和风险之间的关系。其中应该涵盖项目成本（生产所需产品的成本和项目管理成本）以及持续的运营和维护成本。</p>
+<p>组织可用的投资评估技术有很多，组织对在具体项目中采用的技术通常会有自己的偏好。对技术的选择可能会受到业务类型（例如，需要遵守公共部门会计准则的业务）或组织自身标准的影响。</p>
+<p>投资评估技术的示例包括：</p>
 <ul class="content-list">
-  <li>整个生命周期成本：分析实施和任何增量转换、运营和维护的总成本</li>
+<li>整个生命周期成本：分析实施和任何增量转换、运营和维护的总成本</li>
+<li>净收益：分析一定时期内的收益总价值，并减去计算出的实施、转换和持续运营成本</li>
+<li>投资回报 (ROI)：投资产生的利润或节约，以其占初始投资总额的百分比形式体现</li>
+<li>回报期：测量现金和其他资源投资获得回报的时间</li>
+<li>净现值 (NPV)：投资在特定时间点之前将获得的金额，会考虑货币的时间价值，并使用贴现率来确定贴现现金流（例如，如果贴现率为 6%，则货币价值大约每 12 年减半一次。因此，如果一个项目预测能在 12 年后有 50 万英镑收益，则按目前货币计算，它的价值只有 25 万英镑。）</li>
+<li>内部收益率 (IRR)：一个百分比值，用于表示净现值 (NPV) 为零时的投资回报率</li>
+<li>选项分析：根据加权评估标准对每个选项进行评分，从而比较各个选项，以帮助确定首选的选项（也可以使用成对比较来区分不同选项，以建立候选名单并确定首选的选项。）</li>
+<li>敏感性分析：调整输入因素，以模拟产出因素不再符合投资合理性的点。例如，能在四个月内完成的项目是值得的，而需要六个月才能完成的项目就不值了。商业论证以不确定的预测为基础。为识别商业论证的可靠程度，了解输入因素（例如，项目成本、时间、质量、范围及项目风险）和产出因素（例如，运营和维护成本、业务收益和业务风险）之间的关系是有用的。</li>
 </ul>
-<ul class="content-list">
-  <li>净<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>：分析一定时期内的收益总价值，并减去计算出的实施、转换和持续运营成本</li>
-</ul>
-<ul class="content-list">
-  <li>投资回报 (ROI)：投资产生的利润或节约，以其占初始投资总额的百分比形式体现</li>
-</ul>
-<ul class="content-list">
-  <li>回报期：测量现金和其他资源投资获得回报的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a></li>
-</ul>
-<ul class="content-list">
-  <li>净现值 (NPV)：投资在特定<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>点之前将获得的金额，会考虑货币的时间价值，并使用贴
-现率来确定贴现现金流（例如，如果贴现率为 6%，则货币价值大约每 12 年减半一次。
-因此，如果一个项目<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>能在 12 年后有 50 万英镑<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>，则按目前货币计算，它的价值
-只有 25 万英镑。）</li>
-</ul>
-<ul class="content-list">
-  <li>内部<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>率 (IRR)：一个百分比值，用于表示净现值 (NPV) 为零时的投资回报率</li>
-</ul>
-<ul class="content-list">
-  <li>选项分析：根据加权评估标准对每个选项进行评分，从而比较各个选项，以帮助确定首选
-的选项（也可以使用成对比较来区分不同选项，以建立候选名单并确定首选的选项。）</li>
-</ul>
-<ul class="content-list">
-  <li>敏感性分析：调整输入因素，以模拟<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>因素不再符合投资合理性的点</li>
-</ul>
-<ul class="content-list">
-  <li>例如，能在四个月内完成的项目是值得的，而需要六个月才能完成的项目就不值了。</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>以不确定的预测为基础。为识别商业论证的可靠程度， 了解输入因素（例
-如，项目成本、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>、范围及项目风险）和<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>因素（例如，运营和维护成
-本、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>和业务<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>）之间的关系是有用的。</li>
-</ul></div>
+</div>
 <h4 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 5.3.2.2 多案例模型</h4>
-<div class="section-content"><p>从不同的视角评价投资，而不是只<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>财务回报，这样就能全面了解投资是否可取、可行且可 实现。一些不同投资视角的例子如下：</p>
+<div class="section-content">
+<p>从不同的视角评价投资，而不是只关注财务回报，这样就能全面了解投资是否可取、可行且可实现。一些不同投资视角的例子如下：</p>
 <ul class="content-list">
-  <li>战略视角：了解变更的驱动因素，并证明投资与战略的契合度</li>
+<li>战略视角：了解变更的驱动因素，并证明投资与战略的契合度</li>
+<li>经济视角：识别能交付最佳价值的选项，包括更广泛的社会、环境和可持续性考虑因素</li>
+<li>财务视角：评估项目和项目产品生命周期内的可负担性、资金、预算和现金流</li>
+<li>实施和商务视角：表明服务提供方可以交付首选选项，并建立了可保证项目交付成功的稳健安排</li>
 </ul>
-<ul class="content-list">
-  <li>经济视角：识别能交付最佳价值的选项，包括更广泛的社会、环境和可持续性考虑因素</li>
-</ul>
-<ul class="content-list">
-  <li>财务视角：评估项目和项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>生命周期内的可负担性、资金、预算和现金流</li>
-</ul>
-<ul class="content-list">
-  <li>实施和商务视角：表明服务提供方可以交付首选选项，并建立了可保证项目交付成功的稳
-健安排
-一项稳健的投资应该能证明其满足所有这些视角的要求。<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>可能已经开发了自己的一组案例
-来开发<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>，例如环境案例以及与其使用有关的政策。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+<p>一项稳健的投资应该能证明其满足所有这些视角的要求。业务可能已经开发了自己的一组案例来开发商业论证，例如环境案例以及与其使用有关的政策。</p>
+</div>
 <h4 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 5.3.2.3 收益的最好、预期和最差场景</h4>
-<div class="section-content"><p>使用迭代-增量方法（例如敏捷法）时，项目的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>通常是灵活的，以便保证适应性，并确保 项目将在<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>的时间和预算范围内完成。因此<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>益不应以目标估算表示，而应以范围形式表 示，且与交付范围内的金额有关。 展示<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>估算的一种方法是在<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中展示不同的范围和收益场景，例如：</p>
+<div class="section-content">
+<p>使用迭代-增量方法（例如敏捷法）时，项目的范围通常是灵活的，以便保证适应性，并确保项目将在固定的时间和预算范围内完成。因此，收益不应以目标估算表示，而应以范围形式表示，且与交付范围内的金额有关。</p>
+<p>展示收益估算的一种方法是在商业论证中展示不同的范围和收益场景，例如：</p>
 <ul class="content-list">
-  <li>描述<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>的最佳场景，即所有（必须满足、应该满足和可满足的）<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>均已得到满足的
-场景</li>
+<li>描述收益的最佳场景，即所有（必须满足、应该满足和可满足的）需求均已得到满足的场景</li>
+<li>描述收益的预期场景，即满足必须满足和应该满足的需求的场景</li>
+<li>描述收益的最差场景，即仅满足必须满足的需求的场景</li>
 </ul>
-<ul class="content-list">
-  <li>描述<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>的预期场景，即满足必须满足和应该满足的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的场景</li>
-</ul>
-<ul class="content-list">
-  <li>描述<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>的最差场景，即仅满足必须满足的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的场景
-在表示交付<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内的最低期望金额的最差场景中，项目仍然应该可行。</li>
-</ul></div>
+<p>在表示交付范围内的最低期望金额的最差场景中，项目仍然应该可行。</p>
+</div>
 <h2 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 5.4 应用实践</h2>
 <h3 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 5.4.1 组织情境</h3>
-<div class="section-content"><p>项目需要使其开发和维护<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的方法与更广泛的业务政策、标准和方法保持一致。这些通 常因<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>类型而异，例如，公共<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>与私营部门的组织有所不同。 如果项目是项目群的一部分，项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>定义商业论证的开发方法，并为项目提<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>业 论证。项目的商业论证通常会整合到项目群的总体商业论证中，其内容有可能会删减。它可能 仅包含<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>、预算和时间方面的详细信息、<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>列表（和收益<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>）、可持续性目标（和 可持续性容许偏差）、关于项目对项目群成果所做贡献的说明，以及选择提议的选项的理由。 项目商业论证的其他合理性因素应包含在项目<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>商业论证中。 收益通常由项目群<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队来定义、追踪和管理，项<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a><a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>可能是项目群收益实现 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的一部分。</p></div>
+<div class="section-content">
+<p>项目需要使其开发和维护商业论证的方法与更广泛的业务政策、标准和方法保持一致。这些通常因组织类型而异，例如，公共部门与私营部门的组织有所不同。</p>
+<p>如果项目是项目群的一部分，项目群通常会定义商业论证的开发方法，并为项目提供概要商业论证。项目的商业论证通常会整合到项目群的总体商业论证中，其内容有可能会删减。它可能仅包含范围、预算和时间方面的详细信息、收益列表（和收益容许偏差）、可持续性目标（和可持续性容许偏差）、关于项目对项目群成果所做贡献的说明，以及选择提议的选项的理由。项目商业论证的其他合理性因素应包含在项目群的商业论证中。</p>
+<p>收益通常由项目群管理团队来定义、追踪和管理，项目的收益管理方法可能是项目群收益实现计划的一部分。</p>
+</div>
 <h3 id="pn-19" class="section-heading"><a href="#pn-19" class="pn-link" title="点击复制链接">[19]</a> 5.4.2 商务情境</h3>
-<div class="section-content"><p><a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>将有自己参与项目的业务理由，并且可能需要自己的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。客户需要在考虑 选定供应商的前提下，确保项目是可行的，并且风<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>接受的。供应商需确保其会通过从事 的项目工<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>得收益 。换句话说，从供应商的视角来看，这是值得的。 成功的项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>每个商业论证中都可能存在各<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>素，从而确保这些商业论证 保持一致和兼容。<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>的职责是在<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>中协调用户、业务和供应商三方的项 目<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>，从而确保兼容性。</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+<div class="section-content">
+<p>客户和供应商将有自己参与项目的业务理由，并且可能需要自己的商业论证。客户需要在考虑选定<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="term：供应商">供应商</a>的前提下，确保项目是可行的，并且风险是可接受的。供应商需确保其会通过从事的项目工作中获得收益。换句话说，从供应商的视角来看，这是值得的。</p>
+<p>成功的项目能认识到每个商业论证中都可能存在各组织专有的元素，从而确保这些商业论证保持一致和兼容。项目总监的职责是在项目管理委员会中协调用户、业务和供应商三方的项目收益，从而确保兼容性。</p>
+</div>
 <h3 id="pn-20" class="section-heading"><a href="#pn-20" class="pn-link" title="点击复制链接">[20]</a> 5.4.3 交付方法</h3>
-<div class="section-content"><p>迭代-增量方法可能需要有关<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>、优先级和时间的更多信息。此外还有可能需要交 付<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>和顺序方面的详细信息。考虑到固定成本和<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>，展示<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的一种方法是展示可用 范围的最好情况、预期情况和最差情<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>创建商业论证时，必须了解<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的增量交付及其相关价值可能如何影响项目可行性（积极或消 极影响），<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>提早实现部分收益的能力。如果不确<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>， 则应快速开发商业论证并快速 测试假定情况。 使用迭代-增量交付方<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>如敏捷法）时，对于交付内容和收益的了解将在整个项目期间不断 加深。因此，商业论证在项目生命周期内的发展演进将超过线性-顺序项目。商业论证也可以 限定为最差场景，即仅满足“必须满足”的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>；预期场景，即满足“必须满足”<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>应该满 足”的需求；<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>最佳场景，即同时满足“可满足”的需求。</p></div>
+<div class="section-content">
+<p>迭代-增量方法可能需要有关收益容许偏差、优先级和时间的更多信息。此外还有可能需要交付范围和顺序方面的详细信息。考虑到固定成本和时间，展示商业论证的一种方法是展示可用范围的最好情况、预期情况和最差情况。</p>
+<p>在创建商业论证时，必须了解产品的增量交付及其相关价值可能如何影响项目可行性（积极或消极影响），以及提早实现部分收益的能力。如果不确定性较高，则应快速开发商业论证并快速测试假定情况。</p>
+<p>使用迭代-增量交付方法（如敏捷法）时，对于交付内容和收益的了解将在整个项目期间不断加深。因此，商业论证在项目生命周期内的发展演进将超过线性-顺序项目。商业论证也可以限定为最差场景，即仅满足"必须满足"的需求；预期场景，即满足"必须满足"和"应该满足"的需求；以及最佳场景，即同时满足"可满足"的需求。</p>
+</div>
 <h3 id="pn-21" class="section-heading"><a href="#pn-21" class="pn-link" title="点击复制链接">[21]</a> 5.4.4 可持续性</h3>
-<div class="section-content"><p>联合国定义了 17 个可持续发展目标，以改善健康和教育、减少不平等现象、鼓励经济增长， 同时应对气候变化。许多<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>已签约与这些目标保持一致。组织可以定义与加强可持续性相关 的具体<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>，以及实现其 ESG 承诺的具体组织政策、目标和框架。项目的可持续<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>标 务必要与组织更广泛的目标及其定义的任何 ESG 目标保持一致。 如果项目的主要目的是满足可持续性目标，则在评估其<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由时，传统的投资评估方法可能 无效。例如，一个建造防洪屏障的项目可能要到 20 年或 30 年后才会产生<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>，使用贴现现 金流方法可能难以证明其合理性，因为在这种情况下，货币的未来价<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>及因此产生的收益的 价值要低于当下的价值。可能需要针对<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>项目调整评估业务理由的方法。</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 场景：在选项评估中权衡可持续性 Louistown 市议会承诺在未来 10 年内实现净零排放，这意味着他们已经按年度为所 有活动设定了温室气体排放量限额。在该限额中，LouisShopping 项目分配到的限值 是 2.3 吨二氧化碳当量。这就要求该项目在设计、交付和运营/维护方面的选项之间 做出权衡。作为项目设计的一部分，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>要求项目团队完成选项分析， 以了解哪些可能的场景符合可持续性标准，并了解其影响。 项目团队识别了所需的两个关键设计决策，也做出了取舍，如下所示。 设计决策 选项 A 选项 B 室内空气<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>和 通风 使用增强的机械通风。这 <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>改善室内空气质量， 提高绿色建筑内居民的生 产力。但与其他通风系统 相比，这种通风系统的碳 排放量可能更高。 使用平衡式或全管道通风系统。 他们认为，这是为员工创造清 洁、最优环境的最有效解决方 案，因为它利用了完全受控且平 衡的通风系统。虽然利用率低于 机械通风系统，但它产生的碳排 放量更少。 高性能窗户 使用<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>双层玻璃窗可以 改善夜间睡眠质量，从而 提高工作时的生产力，并 提高热增益。双层玻璃窗 可以节省能源，从而减少 碳排放。 与装有传统供暖系统和双层玻璃 窗的建筑物相比，创新的注水窗 户可以自行冷却和再加热，无需 额外的能源供应，因此可以节省 多达 72% 的能源。但这种解决 方案尚未在零售建筑情境中进行 测试。</p>
-<p>基于理事会对净零排放的承诺，他们决定使用平衡通风系统，而非增强的机械通风。项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 委员会还协定，注水窗户虽然在碳排放方面效果更好，但会给项目带来较高水平的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。因 此，他们决定继续使用双层玻璃，这也是零售建筑中常用的方法。</p></div>
+<div class="section-content">
+<p>联合国定义了 17 个可持续发展目标，以改善健康和教育、减少不平等现象、鼓励经济增长，同时应对气候变化。许多组织已签约与这些目标保持一致。组织可以定义与加强可持续性相关的具体业务目标，以及实现其 ESG 承诺的具体组织政策、目标和框架。项目的可持续性目标务必要与组织更广泛的目标及其定义的任何 ESG 目标保持一致。</p>
+<p>如果项目的主要目的是满足可持续性目标，则在评估其业务理由时，传统的投资评估方法可能无效。例如，一个建造防洪屏障的项目可能要到 20 年或 30 年后才会产生收益，使用贴现现金流方法可能难以证明其合理性，因为在这种情况下，货币的未来价值以及因此产生的收益的价值要低于当下的价值。可能需要针对此类项目调整评估业务理由的方法。</p>
+<div class="scenario-box">
+<p><strong>场景：在选项评估中权衡可持续性</strong></p>
+<p>Louistown 市议会承诺在未来 10 年内实现净零排放，这意味着他们已经按年度为所有活动设定了温室气体排放量限额。在该限额中，LouisShopping 项目分配到的限值是 2.3 吨二氧化碳当量。这就要求该项目在设计、交付和运营/维护方面的选项之间做出权衡。作为项目设计的一部分，项目管理委员会要求项目团队完成选项分析，以了解哪些可能的场景符合可持续性标准，并了解其影响。</p>
+<p>项目团队识别了所需的两个关键设计决策，也做出了取舍：</p>
+<p>设计决策一（室内空气质量和通风）：选项 A — 使用增强的机械通风，可改善室内空气质量、提高生产力，但碳排放量可能更高。选项 B — 使用平衡式或全管道通风系统，为员工创造清洁最优环境，碳排放量更少。</p>
+<p>设计决策二（高性能窗户）：选项 A — 使用大号双层玻璃窗，改善夜间睡眠质量、提高生产力、节省能源。选项 B — 创新的注水窗户，可自行冷却和再加热，节省多达 72% 的能源，但尚未在零售建筑情境中测试。</p>
+<p>基于理事会对净零排放的承诺，他们决定使用平衡通风系统，而非增强的机械通风。项目管理委员会还协定，注水窗户虽然在碳排放方面效果更好，但会给项目带来较高水平的风险。因此，他们决定继续使用双层玻璃，这也是零售建筑中常用的方法。</p>
+</div>
+</div>
 <h3 id="pn-22" class="section-heading"><a href="#pn-22" class="pn-link" title="点击复制链接">[22]</a> 5.4.5 规模</h3>
-<div class="section-content"><p>需要调整<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的格式和细节，使其适合项目的规模和复杂性。例如，低价值的小型项目可 将<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>和商业论证合并为一份简单的商业论证文件。相反，对于大型或复杂项目，<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>要在商业论证中提供更多细节，例如包括大型基础架构项目的详细环境影响研究。</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+<div class="section-content">
+<p>需要调整商业论证的格式和细节，使其适合项目的规模和复杂性。例如，低价值的小型项目可将项目概述文件和商业论证合并为一份简单的商业论证文件。相反，对于大型或复杂项目，可能需要在商业论证中提供更多细节，例如包括大型基础架构项目的详细环境影响研究。</p>
+</div>
 <h2 id="pn-23" class="section-heading"><a href="#pn-23" class="pn-link" title="点击复制链接">[23]</a> 5.5 为实践提供支持的管理产品</h2>
-<div class="section-content"><p>PRINCE2 包括用于<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目的 15 种<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。下面描述了特定于<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>实践的管理产品。 管理<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>：<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a> 目的 项目概述文件的目的是为<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>提供全面、坚实的基础。 概括性内容 项目定义：解释项目应该实现什么目的，其中应该包括：</p>
-<ul class="content-list">
-  <li>背景</li>
-</ul>
-<ul class="content-list">
-  <li>项目目标</li>
-</ul>
-<ul class="content-list">
-  <li>期望成果</li>
-</ul>
-<ul class="content-list">
-  <li>项目<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>和除外条款</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>和<a href="../entities/term.html#entity-假设" class="entity-link entity-term" title="术语：假设">假设</a></li>
-</ul>
-<ul class="content-list">
-  <li>项目<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和其他已知的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>
-<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a>：需要开展该项目的理由和所选的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>选项
-<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>：包括用户质量期望和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>
-项目方法：<a href="../entities/term.html#entity-概要商业论证" class="entity-link entity-term" title="术语：概要商业论证">概要商业论证</a>商业论证中选定的业务选项的方法
-项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构和<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>：谁将参与项目、担任什么<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>以及使用什么授权和<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>方案
-参考资料：任何相关文件或<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></li>
-</ul>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 管理产品：商业论证 目的 商业论证用于记录开展项目的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由，其基于估算成本（开发、实施以及持续递增的运行 维护成本）与因相关<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>而获得和抵消的预期收益的比较。其应概述衡量预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>的方式和 <a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>。 概括性内容 内<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>突出商业论证的关键点，应该包括重要收益和投资回报 理由：定义开展项目的理由，并解释项目如何促成<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>的实现 业务选项：对选项进行分析并给出合理建议，包括选项所依<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>任何假定 预期收益和<a href="../entities/term.html#entity-负收益" class="entity-link entity-term" title="术语：负收益">负收益</a>：相对于项目开展之前的情<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>用可测量的<a href="../entities/term.html#entity-负收益" class="entity-link entity-term" title="术语：负收益">负收益</a>达收益和负收益。这些测 量指标包括收益<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a> 可持续性目标：项目必须满足的与可持续性相关的具体目标。目标<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>续性容许偏差 时间：项目执行的时段以及收益实现的时段 成本：项目成本的概要、持续的运营和维护成本及其资金<a href="../entities/term.html#entity-负收益" class="entity-link entity-term" title="术语：负收益">负收益</a>投资评估：将累积收益和负收益与项目成本以及持续增量运营和维护成本进行比较，以定义项 目<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>资价值 主要风险：汇<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>目的主要相关威胁和机会，以及风险发生后可能造成的影响与应对措施 参考资料：任何相关文件或<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 管理产品：<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a> 收益管理方法是项目启动文件的一部分。<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>管理方法的目的是定义要建立的<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>行动和收益评审，以确保实<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>目成果和项目 收益。 概括性内容 <a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>：描述要管理和测量的收益 收益实现程序：描述确保<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目成果所需的管理行动（这应包括<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a>在项目结束后执行的 <a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>实现活动的安排。例如，准备和移交收益实现<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>。） 收益测量：描述如何测量预期收益的实现情况、何时可以测量这些指标，以及作为改进计算依 据的基线测量指标 收益<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>对在商业论证中为项目定义的收益容许偏差，提供额外的指导 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>绩效：描述项目产品绩<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>方式 职责：定义商业论证活动的职<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>包括谁对预期收益问责 资源：收益管理活动，例如开展研究 辅助工具和技术：收益管理活动，例如使用模拟器 标准：适用于收益测量的所有标准 参考资料<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>何相关文件或产品</p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 管理产品：<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a> 可持续性管理方法是<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的一部分。 目<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a>方法的目的是：定义为确保实现项目的可持续性<a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>而设立的行动、审查和控 制措施。 概括性内容 <a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>：描述要管理和测量的可持续性目标 测量：描述如何测量可持续性目标的实现情况，何时可以测量这些目标，以及作为目标计算依 据的基线测量指标 职责：定义可持续性活动的职责，包括谁对测量可持续性目标的实现情况问责 资源：用于可持续性<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>活动，例如开展研究 辅助工具<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>术：可持续性管理活动 标准：适用于可持续性管理的所有标准 参考资料：任何相关文件或<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></p>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+<div class="section-content">
+<p>PRINCE2 包括用于管理项目的 15 种管理产品。下面描述了特定于商业论证实践的管理产品。</p>
+<div class="product-card">
+<p class="prod-name">项目概述文件</p>
+<p><span class="prod-label">目的</span></p>
+<p>项目概述文件的目的是为项目启动提供全面、坚实的基础。</p>
+<p><span class="prod-label">概括性内容：</span>项目定义（背景、项目目标、期望成果、项目范围和除外条款、约束和假设、项目容许偏差、用户和其他已知的利益相关方）；概要商业论证；项目产品描述（包括用户质量期望和验收准则）；项目方法；项目管理团队结构和角色描述；参考资料。</p>
+</div>
+<div class="product-card">
+<p class="prod-name">商业论证</p>
+<p><span class="prod-label">目的</span></p>
+<p>商业论证用于记录开展项目的业务理由，其基于估算成本（开发、实施以及持续递增的运行维护成本）与因相关风险而获得和抵消的预期收益的比较。其应概述衡量预期收益的方式和时间。</p>
+<p><span class="prod-label">概括性内容：</span>内容概要（关键点和投资回报）；理由（如何促成业务目标实现）；业务选项（分析及建议）；预期收益和负收益（可测量的术语，包括收益容许偏差）；可持续性目标（包括可持续性容许偏差）；时间（项目执行时段和收益实现时段）；成本（概要及资金安排）；投资评估；主要风险（威胁和机会、影响与应对）；参考资料。</p>
+</div>
+<div class="product-card">
+<p class="prod-name">收益管理方法</p>
+<p><span class="prod-label">目的</span></p>
+<p>收益管理方法的目的是定义要建立的收益管理行动和收益评审，以确保实现项目成果和项目收益。收益管理方法是项目启动文件的一部分。</p>
+<p><span class="prod-label">概括性内容：</span>范围（要管理和测量的收益）；收益实现程序（确保实现项目成果所需的管理行动）；收益测量（如何测量、何时测量、基线测量指标）；收益容许偏差指导；产品绩效审查方式；职责（包括谁对预期收益问责）；资源；辅助工具和技术；标准；参考资料。</p>
+</div>
+<div class="product-card">
+<p class="prod-name">可持续性管理方法</p>
+<p><span class="prod-label">目的</span></p>
+<p>可持续性管理方法的目的是：定义为确保实现项目的可持续性绩效目标而设立的行动、审查和控制措施。可持续性管理方法是项目启动文件的一部分。</p>
+<p><span class="prod-label">概括性内容：</span>范围（要管理和测量的可持续性目标）；测量（如何测量、何时测量、基线测量指标）；职责（包括谁对测量实现情况问责）；资源；辅助工具和技术；标准；参考资料。</p>
+</div>
+</div>
 <h2 id="pn-24" class="section-heading"><a href="#pn-24" class="pn-link" title="点击复制链接">[24]</a> 5.6 实践中关键职责的重点</h2>
-<div class="section-content"><p>PRINCE2 定义了项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的七项关键角色。下面描述了他们特定于<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>实践的职责。 表 5.1 与商业论证<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>相关的关键职责的重点领域 <a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a> 职责 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a></p>
-<ul class="content-list">
-  <li>提供项目任务书，定义开发<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>所需的所有标准</li>
-</ul>
-<ul class="content-list">
-  <li>要求<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>对实现项目产品产生的项目后<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>问责</li>
-</ul>
-<ul class="content-list">
-  <li>对<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>（项目后）问责</li>
-</ul>
-<ul class="content-list">
-  <li>设置项目层面<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>
-<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a></li>
-</ul>
-<ul class="content-list">
-  <li>在项目开展过程中对<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>问责</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a><a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a>，并对项目开展过程问责（除
-非由<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>）</li>
-</ul>
-<ul class="content-list">
-  <li>设置<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>层面收益<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a></li>
-</ul>
-<ul class="content-list">
-  <li>监督可行<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的开发，确保项目与业务目标保持一致</li>
-</ul>
-<ul class="content-list">
-  <li>确保项目是可取、可行且可实现的</li>
-</ul>
-<ul class="content-list">
-  <li>确保项目资金</li>
-</ul>
-<ul class="content-list">
-  <li>确保<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>指定的收益具有性价比、与<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>保持一致并且可以
-实现</li>
-</ul>
-<ul class="content-list">
-  <li>确保<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>提议的交付方法和成本的性价比
-<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a></li>
-</ul>
-<ul class="content-list">
-  <li>对指定所需成果和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>问责（<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>批准的依据）</li>
-</ul>
-<ul class="content-list">
-  <li>协定<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a></li>
-</ul>
-<ul class="content-list">
-  <li>对实现<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>问责，并确保项目生<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>产品，且该产品可交付期望成
-果，并且这<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>果可产生期望收益</li>
-</ul>
-<ul class="content-list">
-  <li>确认预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>（来源于项目成果）已实现或能够实现</li>
-</ul>
-<ul class="content-list">
-  <li>在<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>评审中，提供实际收益与<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>收益的比较说明
-<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a></li>
-</ul>
-<ul class="content-list">
-  <li>对<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>问责（如适用）</li>
-</ul>
-<ul class="content-list">
-  <li>确认能够在预期成本<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内交付所要求的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，并且具备可行性
-<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a></li>
-</ul>
-<ul class="content-list">
-  <li>根据<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>的授权，负责开发<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>、<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和可持续性
-管理方法</li>
-</ul>
-<ul class="content-list">
-  <li>审查<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>持续可行性问题和风险的影响</li>
-</ul>
-<ul class="content-list">
-  <li>在每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>结束时评估和更新<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>、<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和可持续性管
-理方法</li>
-</ul>
-<ul class="content-list">
-  <li>在<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>时，评估并报告项目绩效</li>
-</ul>
-<ul class="content-list">
-  <li>在项目的整个生命周期中咨询<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>，以检查是否有任何目标发
-生了变更
-（接下页）</li>
-</ul>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 角色 职责 小组经理</p>
-<ul class="content-list">
-  <li>实施其<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中协定的收益管理程序（如果有）
-<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a></li>
-</ul>
-<ul class="content-list">
-  <li>检查项目是否符合总体<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a></li>
-</ul>
-<ul class="content-list">
-  <li>就<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a>向项目经理提供建议</li>
-</ul>
-<ul class="content-list">
-  <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>确认，收益管理方法和<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a>符合业务
-政策</li>
-</ul>
-<ul class="content-list">
-  <li>根据外部事件和项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，检查和监视<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></li>
-</ul>
-<ul class="content-list">
-  <li>代表<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>监视项目财务状况</li>
-</ul>
-<ul class="content-list">
-  <li>监视<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的变更，以识别任何对商业<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>或<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的影响</li>
-</ul>
-<ul class="content-list">
-  <li>审查对<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和项目计划潜在变更的影响评估</li>
-</ul>
-<ul class="content-list">
-  <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>保证收益管理方法和<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a>的实施情况
-（例如，是否持续重新评估解决方案的性价比）
-<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a></li>
-</ul>
-<ul class="content-list">
-  <li>维护<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>、<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a>的基线和变更控制</li>
-</ul>
-<ul class="content-list">
-  <li>向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>报告影响<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的任何拟议或实际产品变更
-（续）</li>
-</ul>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+<div class="section-content">
+<p>PRINCE2 定义了项目管理的七项关键角色。下面描述了他们特定于商业论证实践的职责。</p>
+<div class="figure-note">表 5.1 与商业论证实践相关的关键职责的重点领域</div>
+<table class="role-table cols-duty">
+<thead><tr><th>角色</th><th>职责</th></tr></thead>
+<tbody>
+<tr><td><strong>业务层</strong></td><td>提供项目任务书，定义开发商业论证所需的所有标准；要求高级用户对实现项目产品产生的项目后收益问责；对收益管理方法（项目后）问责；设置项目层面收益容许偏差</td></tr>
+<tr><td><strong>项目总监</strong></td><td>在项目开展过程中对商业论证问责；批准收益管理方法和可持续性管理方法，并对项目开展过程问责（除非由业务管理）；设置阶段层面收益容许偏差；监督可行商业论证的开发，确保项目与业务目标保持一致；确保项目是可取、可行且可实现的；确保项目资金；确保高级用户指定的收益具有性价比、与业务目标保持一致并且可以实现；确保高级供应商提议的交付方法和成本的性价比</td></tr>
+<tr><td><strong>高级用户</strong></td><td>对指定所需成果和收益问责（商业论证批准的依据）；协定收益管理方法和可持续性管理方法；对实现收益问责，并确保项目生产出产品，且该产品可交付期望成果，并且这些成果可产生期望收益；确认预期收益（来源于项目成果）已实现或能够实现；在收益评审中，提供实际收益与预测收益的比较说明</td></tr>
+<tr><td><strong>高级供应商</strong></td><td>对供应商商业论证问责（如适用）；确认能够在预期成本范围内交付所要求的产品，并且具备可行性</td></tr>
+<tr><td><strong>项目经理</strong></td><td>根据项目总监的授权，负责开发商业论证、收益管理方法和可持续性管理方法；审查商业论证持续可行性问题和风险的影响；在每个阶段结束时评估和更新商业论证、收益管理方法和可持续性管理方法；在项目收尾时，评估并报告项目绩效；在项目的整个生命周期中咨询利益相关方，以检查是否有任何目标发生了变更</td></tr>
+<tr><td><strong>小组经理</strong></td><td>实施其工作包描述中协定的收益管理程序（如果有）</td></tr>
+<tr><td><strong>项目保证</strong></td><td>检查项目是否符合总体业务目标；就收益管理方法和可持续性管理方法向项目经理提供建议；向项目管理委员会确认，收益管理方法和可持续性管理方法符合业务政策；根据外部事件和项目进展，检查和监视商业论证；代表业务监视项目财务状况；监视项目计划的变更，以识别任何对商业需求或商业论证的影响；审查对商业论证和项目计划潜在变更的影响评估；向项目管理委员会保证收益管理方法和可持续性管理方法的实施情况（例如，是否持续重新评估解决方案的性价比）</td></tr>
+<tr><td><strong>项目支持</strong></td><td>维护商业论证、收益管理方法和可持续性管理方法的基线和变更控制；向项目经理报告影响商业论证的任何拟议或实际产品变更</td></tr>
+</tbody>
+</table>
+</div>
 <h2 id="pn-25" class="section-heading"><a href="#pn-25" class="pn-link" title="点击复制链接">[25]</a> 5.7 与原则的关键关系</h2>
-<div class="section-content"><p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>实践有助于在整个项目生命周期内遵守 PRINCE2 原则。 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>2 商业论证实践与 PRINCE2 原则之间的关键关系 原则 实现方式 导致 <a href="../entities/principle.html#entity-确保持续业务理由" class="entity-link entity-principle" title="原则：确保持续业务理由">确保持续业务理由</a> 为项目创建和维护商业论证，以评估 它是否（并且仍然是）可取、可行且 可实现 确信投资是值得的 <a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a> 利用经验教训为业务理由提供依据 确信商业论证根据既往经验 开发 定义<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、职责和 关系 明确在整个项目中开发和维护商业论 证和收<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>职责 清楚了解对商业论证和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a> <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的期望 <a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a> 确保检查在阶段边界做出的决策， 以确认<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由 确信通过项目进行投资仍然 合理 <a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a> 测量问题和风险对商业论证的影响， 并在<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>这些<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>超出容许偏 差时上报 清楚了解对商业论证的潜在 影响，以促进有效决策 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a> 确保生产的产品能够带来所需成果和 <a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a> 可实现的项目收益 <a href="../entities/principle.html#entity-根据项目剪裁" class="entity-link entity-principle" title="原则：根据项目剪裁">根据项目剪裁</a> 确保商业论证开发、<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>和审查的形 式和控制水平与项目类型、规模和复 杂性相符 契合目的的商业论证的<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a></p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-    </div>
+<div class="section-content">
+<p>商业论证实践有助于在整个项目生命周期内遵守 PRINCE2 原则。</p>
+<div class="figure-note">表 5.2 商业论证实践与 PRINCE2 原则之间的关键关系</div>
+<table class="role-table cols-princ">
+<thead><tr><th>原则</th><th>实现方式</th><th>导致</th></tr></thead>
+<tbody>
+<tr><td><strong>确保持续业务理由</strong></td><td>为项目创建和维护商业论证，以评估它是否（并且仍然是）可取、可行且可实现</td><td>确信投资是值得的</td></tr>
+<tr><td><strong>吸取经验教训</strong></td><td>利用经验教训为业务理由提供依据</td><td>确信商业论证根据既往经验开发</td></tr>
+<tr><td><strong>定义角色、职责和关系</strong></td><td>明确在整个项目中开发和维护商业论证和收益管理的职责</td><td>清楚了解对商业论证和收益管理的期望</td></tr>
+<tr><td><strong>按阶段管理</strong></td><td>确保检查在阶段边界做出的决策，以确认业务理由</td><td>确信通过项目进行投资仍然合理</td></tr>
+<tr><td><strong>按例外管理</strong></td><td>测量问题和风险对商业论证的影响，并在预测这些问题和风险超出容许偏差时上报</td><td>清楚了解对商业论证的潜在影响，以促进有效决策</td></tr>
+<tr><td><strong>关注产品</strong></td><td>确保生产的产品能够带来所需成果和收益</td><td>可实现的项目收益</td></tr>
+<tr><td><strong>根据项目剪裁</strong></td><td>确保商业论证开发、批准和审查的形式和控制水平与项目类型、规模和复杂性相符</td><td>契合目的的商业论证的治理</td></tr>
+</tbody>
+</table>
+</div>
 
-    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+<!-- END OF CHAPTER CONTENT -->
+</div>
+<div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch04.html" class="nav-link">◁ 第4章 PRINCE2实践简介</a> | <a href="ch06.html" class="nav-link">第6章 组织 ▷</a>
     </div>
 
@@ -554,27 +643,35 @@
         <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
     </div>
 
-    <script>
-        function toggleToc() {
-            var list = document.getElementById('tocList');
-            var icon = document.querySelector('.toc-icon');
-            list.classList.toggle('collapsed');
-            icon.style.transform = list.classList.contains('collapsed')
-                ? 'rotate(0deg)' : 'rotate(90deg)';
-        }
+<script src="../assets/chapter-common.js"></script>
+<script>
+    (function() {
+        var list = document.getElementById('tocList');
+        var icon = document.querySelector('.toc-icon');
+        if (list) { list.classList.add('collapsed'); }
+        if (icon) { icon.style.transform = 'rotate(0deg)'; }
+    })();
 
-        // Purple Numbers: 点击复制链接
-        document.querySelectorAll('.pn-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var url = window.location.href.split('#')[0] + link.getAttribute('href');
-                navigator.clipboard.writeText(url).then(function() {
-                    link.style.color = '#2E8B57';
-                    setTimeout(function() { link.style.color = ''; }, 1000);
-                });
-            });
+    /* 阅读进度条 & 返回顶部 */
+    (function() {
+        var bar = document.createElement('div');
+        bar.className = 'progress-bar';
+        document.body.prepend(bar);
+
+        var btn = document.createElement('div');
+        btn.className = 'back-to-top';
+        btn.innerHTML = '\u25B2';
+        btn.title = '\u8FD4\u56DE\u9876\u90E8';
+        document.body.appendChild(btn);
+        btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+        window.addEventListener('scroll', function() {
+            var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+            bar.style.width = Math.min(pct, 100) + '%';
+            btn.classList.toggle('visible', window.scrollY > 400);
         });
-    </script>
+    })();
+</script>
 <script src="../assets/floating-toc.js"></script>
 </body>
 </html>
