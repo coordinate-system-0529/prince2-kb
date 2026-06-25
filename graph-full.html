@@ -109,7 +109,8 @@
         .sb-cs-connector { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; font-size:0.73em; color:var(--text-muted); border-left:2px dashed rgba(212,175,55,0.3); padding:3px 8px; margin:0 2px; }
 
         /* ── 流程节点 ── */
-        .proc-node { flex:1; background:var(--bg-card); border:2px solid var(--border-card); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; min-height:200px; cursor:pointer; transition:all 0.3s; }
+        /* 卡片式自适应：高度随内容，同行靠 .managing-row 的 align-items:flex-start 顶端对齐，底端各自收口，不再强制等高留白 */
+        .proc-node { flex:1; background:var(--bg-card); border:2px solid var(--border-card); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; cursor:pointer; transition:all 0.3s; }
         .proc-node:hover { border-color:var(--text-heading); box-shadow:0 4px 20px var(--accent-glow); transform:translateY(-2px); }
         .proc-node.active { border-color:var(--text-heading); border-width:3px; background:rgba(212,175,55,0.07); box-shadow:0 0 20px var(--accent-glow); transform:translateY(-3px); }
         .proc-header { display:flex; align-items:flex-start; gap:8px; }
@@ -170,7 +171,8 @@
         .auth-event-name { font-size:0.78em; color:var(--text-heading); letter-spacing:0.02em; font-weight:bold; }
         /* CS 列授权事件（DP→CS 的3个授权，并排横排，居中对齐到 CS 列，溢出落在两侧空白占位区） */
         .cs-auth-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:2px 0; min-width:0; }
-        .cs-auth-boxes { display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center; align-items:stretch; gap:10px; }
+        /* 与上方 .auth-up-pills 之间留出 ~32px，让 DP→CS 通道箭头落在药丸下方、授权框上方，不再穿过上行报告药丸 */
+        .cs-auth-boxes { display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center; align-items:stretch; gap:10px; margin-top:30px; }
         .cs-auth-boxes .auth-event-box { flex:0 0 auto; margin:0; }
         /* SB 上行连接器（位于 DP 下方，↑ 向上连入 DP）；桌面用连接器，移动端回退到上方 pill */
         .auth-up-pills { display:flex; flex-direction:row; flex-wrap:nowrap; gap:10px; width:100%; justify-content:center; align-items:center; }
@@ -184,6 +186,7 @@
         /* DP→CS 通道连线（JS 定位，相对 .container 绝对定位） */
         .corridor-line-v, .corridor-line-h, .corridor-line-v2 { position:absolute; background:var(--accent); z-index:2; opacity:0.8; }
         .corridor-arrow { position:absolute; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:7px solid var(--accent); z-index:2; opacity:0.85; }
+        .corridor-arrow-up { border-top:0; border-bottom:7px solid var(--accent); }
         .corridor-label { position:absolute; transform:translateX(-50%); background:rgba(212,175,55,0.14); border:1px solid rgba(212,175,55,0.5); color:var(--text-heading); font-size:0.66em; font-weight:bold; letter-spacing:0.04em; padding:2px 9px; border-radius:8px; white-space:nowrap; z-index:3; }
         /* DP 下行授权列表：桌面端改用连接器，故隐藏；移动端作为回退显示 */
         .dp-downflow { display:none; }
@@ -300,13 +303,17 @@
                                 <span class="band-item up">↑ 下一阶段请求（SB → DP）</span>
                                 <span class="band-item up">↑ 例外计划批准请求（SB → DP，例外时）</span>
                             </div>
-                            <span class="band-item up">↑ 要点报告（CS → DP）</span>
-                            <span class="band-item up">↑ 例外报告（CS → DP，例外时）</span>
+                            <div class="up-fb">
+                                <span class="band-item up">↑ 要点报告（CS → DP）</span>
+                                <span class="band-item up">↑ 例外报告（CS → DP，例外时）</span>
+                            </div>
                         </div>
                         <div class="arrow-spacer"></div>
-                        <!-- CP 列 -->
+                        <!-- CP 列（桌面改用 DP 下方连接器，此处仅移动端回退） -->
                         <div class="up-col">
-                            <span class="band-item up">↑ 项目收尾建议（CP → DP）</span>
+                            <div class="up-fb">
+                                <span class="band-item up">↑ 项目收尾建议（CP → DP）</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -354,13 +361,23 @@
                 <span class="auth-v-arrow">↓</span>
             </div>
         </div>
-        <div class="auth-event-col" id="auth-event-cp">
-            <span class="auth-v-arrow">↓</span>
-            <div class="auth-event-box">
-                <span class="auth-event-src">DP 通知 → CP · 例外时</span>
-                <span class="auth-event-name">提前收尾通知</span>
+        <!-- CP 列：上行（CP→DP 收尾建议）+ 下行（DP→CP 提前收尾通知）左右并排 -->
+        <div class="auth-event-col auth-pair-col" id="auth-event-cp">
+            <div class="auth-sub">
+                <span class="auth-v-arrow">↑</span>
+                <div class="auth-up-pills">
+                    <span class="band-item up">项目收尾建议<br>（CP → DP）</span>
+                </div>
+                <span class="auth-v-arrow">↑</span>
             </div>
-            <span class="auth-v-arrow">↓</span>
+            <div class="auth-sub">
+                <span class="auth-v-arrow">↓</span>
+                <div class="auth-event-box">
+                    <span class="auth-event-src">DP 通知 → CP · 例外时</span>
+                    <span class="auth-event-name">提前收尾通知</span>
+                </div>
+                <span class="auth-v-arrow">↓</span>
+            </div>
         </div>
         <!-- SB 上行连接器：↑ 向上连入 DP，对齐到 SB 列 -->
         <div class="auth-event-col" id="auth-up-sb">
@@ -477,6 +494,12 @@
                     <div class="flow-spacer"></div>
                     <div class="gap-wide"></div>
                     <div class="cs-auth-col">
+                        <!-- 上行：CS → DP 报告（药丸；连线由 #corr-up-* 沿通道连到 DP，移动端回退见上方 .up-fb） -->
+                        <div class="auth-up-pills">
+                            <span class="band-item up">要点报告<br>（CS → DP）</span>
+                            <span class="band-item up">例外报告<br>（CS → DP，例外时）</span>
+                        </div>
+                        <!-- 下行：DP → CS 授权 -->
                         <div class="cs-auth-boxes">
                             <div class="auth-event-box">
                                 <span class="auth-event-src">DP 授权 → CS · 首次</span>
@@ -603,6 +626,11 @@
     <div class="corridor-line-h" id="corr-h"></div>
     <div class="corridor-line-v2" id="corr-v2"></div>
     <div class="corridor-arrow" id="corr-arrow"></div>
+    <!-- CS → DP 上行报告连线（沿同一通道反向连到 DP） -->
+    <div class="corridor-line-v" id="corr-up-v"></div>
+    <div class="corridor-line-h" id="corr-up-h"></div>
+    <div class="corridor-line-v2" id="corr-up-v2"></div>
+    <div class="corridor-arrow corridor-arrow-up" id="corr-up-arrow"></div>
 
     <!-- ═══ 详情面板区域 ═══ -->
 
@@ -1070,13 +1098,37 @@ function positionCorridor() {
     var sbBottom = sbR.bottom - c.top;  // SB 框底部
     var gap = 12;                       // 箭头与 CS 框顶留出的间距，避免遮挡
     var arTopY = csTopY - gap - 7;      // 三角箭头元素顶（尖端再往下 7px）
-    var elbowY = sbBottom + 10;         // 横线落在 SB 底部下方、CS 框上方的间隙里，避免被 SB 遮挡
+    // 横线拐点：若 CS 列上方有上行报告药丸，则拐在药丸下方，避免竖线穿过药丸
+    var upPills = document.querySelector('.cs-auth-col .auth-up-pills');
+    var elbowY = upPills ? (upPills.getBoundingClientRect().bottom - c.top + 6)
+                         : (sbBottom + 10);  // 无药丸时回退到 SB 底部下方
     if (elbowY > arTopY - 6) elbowY = arTopY - 6;  // 间隙过小时兜底，至少保持在箭头上方
     v.style.left = (startX - 1) + 'px'; v.style.top = startY + 'px'; v.style.width = '2px'; v.style.height = Math.max(0, elbowY - startY) + 'px';
     h.style.left = Math.min(startX, endX) + 'px'; h.style.top = (elbowY - 1) + 'px'; h.style.width = Math.abs(endX - startX) + 'px'; h.style.height = '2px';
     v2.style.left = (endX - 1) + 'px'; v2.style.top = elbowY + 'px'; v2.style.width = '2px'; v2.style.height = Math.max(0, arTopY - elbowY) + 'px';
     ar.style.left = (endX - 5) + 'px'; ar.style.top = arTopY + 'px';
-    lbl.style.left = startX + 'px'; lbl.style.top = startY + 'px';
+    lbl.style.left = (startX - 5) + 'px'; lbl.style.top = startY + 'px'; lbl.style.transform = 'translateX(-100%)';  // 标签靠左，让出右侧给上行箭头
+    // ── CS → DP 上行报告连线：沿同一通道反向上行连到 DP ──
+    var upv = document.getElementById('corr-up-v');
+    var uph = document.getElementById('corr-up-h');
+    var upv2 = document.getElementById('corr-up-v2');
+    var upar = document.getElementById('corr-up-arrow');
+    if (upPills && upv) {
+        var pr = upPills.getBoundingClientRect();
+        var pillsTop = pr.top - c.top;
+        var pillsCx = (pr.left + pr.right) / 2 - c.left;
+        var upX = startX + 18;                 // 通道内偏右，与下行线错开
+        var upElbowY = sbBottom + 8;           // 横线落在 SB 底下方、药丸顶上方
+        if (upElbowY > pillsTop - 6) upElbowY = pillsTop - 6;
+        // 药丸顶 → 横线（在药丸中心 x）
+        upv2.style.left = (pillsCx - 1) + 'px'; upv2.style.top = upElbowY + 'px'; upv2.style.width = '2px'; upv2.style.height = Math.max(0, pillsTop - upElbowY) + 'px';
+        // 横线：药丸中心 → 通道（在 upElbowY）
+        uph.style.left = Math.min(pillsCx, upX) + 'px'; uph.style.top = (upElbowY - 1) + 'px'; uph.style.width = Math.abs(pillsCx - upX) + 'px'; uph.style.height = '2px';
+        // 通道竖线：横线 → DP 底（箭头占 7px）
+        upv.style.left = (upX - 1) + 'px'; upv.style.top = (startY + 7) + 'px'; upv.style.width = '2px'; upv.style.height = Math.max(0, upElbowY - (startY + 7)) + 'px';
+        // ↑ 箭头贴 DP 底，指向 DP
+        upar.style.left = (upX - 5) + 'px'; upar.style.top = startY + 'px';
+    }
 }
 window.addEventListener('load', positionCorridor);
 window.addEventListener('resize', positionCorridor);
