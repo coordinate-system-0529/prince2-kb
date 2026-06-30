@@ -1,7 +1,15 @@
 /* PRINCE2 知识库 - 章节页公共脚本 */
-/* 包含：章节目录折叠、Purple Numbers 点击复制 */
+/* 包含：配色加载/持久化、章节目录折叠、Purple Numbers 点击复制 */
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    /* -- 配色方案加载/持久化（与 index.html 同步） -- */
+    (function () {
+        var theme = localStorage.getItem('prince2-theme');
+        if (theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+    })();
 
     /* -- 章节目录折叠 -- */
     window.toggleToc = function () {

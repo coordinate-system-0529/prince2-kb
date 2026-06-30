@@ -6,22 +6,44 @@
     <title>第13章 项目准备 - PRINCE2 知识库</title>
     <link rel="stylesheet" href="../assets/chapter.css">
     <style>
-        /* 浮动目录智能避让：默认收缩，悬停展开 */
+        /* 浮动目录智能避让：默认半隐藏，悬停展开 */
         #floating-toc {
-            transform: translateX(190px);
+            transform: translateX(172px);
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -3px 0 8px color-mix(in srgb, var(--accent) 8%, transparent);
         }
         #floating-toc:hover {
             transform: translateX(0);
+            box-shadow: -4px 0 16px color-mix(in srgb, var(--accent) 15%, transparent);
         }
-        .ftoc-toggle { display: none; }
+        /* 显示目录标签卡片，提示用户可悬停展开 */
+        .ftoc-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            background: var(--kb-accent-dark);
+            color: var(--kb-tag-text);
+            padding: 10px 5px;
+            border-radius: 4px 0 0 4px;
+            font-size: 0.78em;
+            cursor: default;
+            letter-spacing: 4px;
+            position: absolute;
+            left: 0;
+            top: 16px;
+            transform: translateX(-100%);
+            box-shadow: -2px 0 6px rgba(0,0,0,0.10);
+            user-select: none;
+        }
 
         /* 顶部导航栏固定悬浮 */
         .nav-bar {
             position: sticky;
             top: 0;
             z-index: 102;
-            background: #faf6f0;
+            background: var(--bg-main);
         }
 
         /* 宽屏隐藏内联目录，避免与浮动目录重复 */
@@ -30,7 +52,7 @@
         }
 
         /* 导航栏颜色区分 */
-        .nav-link:first-child { color: #8B4513; font-weight: bold; }
+        .nav-link:first-child { color: var(--kb-accent-dark); font-weight: bold; }
         .nav-link:not(:first-child) { color: #6e6e6e; }
 
         /* === 仅本章生效的美化增强 === */
@@ -41,14 +63,14 @@
         .progress-bar {
             position: fixed; top: 0; left: 0;
             width: 0%; height: 3px;
-            background: linear-gradient(90deg, #d4af37, #8B4513);
+            background: linear-gradient(90deg, var(--accent), var(--kb-accent-dark));
             z-index: 200; transition: width 0.1s linear;
         }
 
         /* 内容区卡片化 */
         .chapter-content {
             background: #fffef9;
-            border: 1px solid #e0d5c0;
+            border: 1px solid var(--border-card);
             border-radius: 6px;
             padding: 32px 36px;
             box-shadow: 0 2px 12px rgba(139, 69, 19, 0.06);
@@ -58,8 +80,8 @@
         .back-to-top {
             position: fixed; right: 24px; bottom: 32px;
             width: 42px; height: 42px;
-            background: #8B4513; color: #faf6f0;
-            border: 2px solid #d4af37; border-radius: 50%;
+            background: var(--kb-accent-dark); color: var(--kb-tag-text);
+            border: 2px solid var(--accent); border-radius: 50%;
             cursor: pointer; font-size: 1.2em;
             display: none; align-items: center; justify-content: center;
             z-index: 99; opacity: 0;
@@ -67,7 +89,7 @@
             transition: opacity 0.3s, transform 0.3s, background 0.2s;
         }
         .back-to-top.visible { display: flex; opacity: 0.85; transform: translateY(0); }
-        .back-to-top:hover { background: #d4af37; color: #5c3d1a; opacity: 1; }
+        .back-to-top:hover { background: var(--accent); color: var(--text-heading); opacity: 1; }
 
         /* 列表悬停微交互 */
         .content-list li {
@@ -85,8 +107,8 @@
 
         /* 关键信息：金色左边框 + 微黄底色 */
         .key-info {
-            background: #fef9e7;
-            border-left: 4px solid #d4af37;
+            background: var(--bg-intro);
+            border-left: 4px solid var(--accent);
             padding: 12px 16px;
             margin: 16px 0;
             border-radius: 0 4px 4px 0;
@@ -97,15 +119,15 @@
             display: block;
             font-weight: bold;
             font-style: normal;
-            color: #8B4513;
+            color: var(--kb-accent-dark);
             margin-bottom: 8px;
             font-size: 0.9em;
         }
 
         /* 定义框：宣纸笺注色 — 墨棕边框 + 暖宣纸底 */
         .definition-box {
-            background: #f5f0e6;
-            border-left: 4px solid #6b5a4b;
+            background: var(--kb-paper-3);
+            border-left: 4px solid var(--kb-accent-dark);
             padding: 14px 18px;
             margin: 16px 0;
             border-radius: 0 4px 4px 0;
@@ -114,34 +136,39 @@
             content: "📘 定义";
             display: block;
             font-weight: bold;
-            color: #5c3d1a;
+            color: var(--text-heading);
             margin-bottom: 8px;
             font-size: 0.9em;
         }
         .definition-box .def-term {
             font-weight: bold;
-            color: #6b5a4b;
+            color: var(--kb-muted);
         }
 
-        /* 场景框：灰色左边框 + 浅灰底色 */
+        /* 场景框：暖杏底色 + 金棕边框（统一色系） */
         .scenario-box {
-            background: #f5f5f0;
-            border-left: 4px solid #999;
+            background: var(--kb-paper-2);
+            border-left: 4px solid var(--kb-border-mid);
             padding: 14px 18px;
             margin: 16px 0;
             border-radius: 0 4px 4px 0;
         }
-        .scenario-box p:first-child strong:first-child::before {
-            content: "🎯 ";
+        .scenario-box::before {
+            content: "🎯 场景";
+            display: block;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-size: 0.9em;
         }
         .scenario-box strong:first-child {
-            color: #5c3d1a;
+            color: var(--text-heading);
         }
 
         /* 图/表注释：居中斜体灰色 */
         .figure-note {
             text-align: center;
-            color: #8B7355;
+            color: var(--kb-muted);
             font-style: italic;
             font-size: 0.9em;
             margin: 12px 0;
@@ -155,20 +182,20 @@
             font-size: 0.88em;
         }
         .role-table th {
-            background: #f0e6d3;
-            color: #5c3d1a;
+            background: var(--kb-paper-4);
+            color: var(--text-heading);
             padding: 8px 10px;
             text-align: center;
-            border: 1px solid #d4c5a0;
+            border: 1px solid var(--kb-border-light);
             font-weight: bold;
         }
         .role-table td {
             padding: 7px 10px;
-            border: 1px solid #e0d5c0;
+            border: 1px solid var(--border-card);
             vertical-align: top;
         }
         .role-table tbody tr:nth-child(even) td {
-            background: #fdfaf5;
+            background: var(--kb-paper-1);
         }
         .role-table .td-left {
             text-align: left;
@@ -230,7 +257,117 @@
 </div>
 <div class="section-content">
 <h2 id="s13-3" class="section-heading"><a href="#s13-3" class="pn-link" title="点击复制链接">[4]</a> 13.3 情境</h2>
-<div class="figure-note">图 13.1 项目准备流程概述</div>
+<div class="figure-svg">
+<div class="figure-note" style="text-align:center; padding:8px 0 4px;">
+<svg role="img" viewBox="0 0 680 600" width="100%" style="max-width:660px; display:inline-block;">
+  <title>图 13.1 项目准备流程概述</title>
+  <desc>项目准备流程：从项目任务书触发，经过任命、评估、准备、选择、汇编、计划、请求等步骤，最终输出项目启动请求</desc>
+  <defs>
+    <marker id="fig131-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- ===== 顶部右：项目指导（粉色圆角框） ===== -->
+  <rect x="490" y="8" width="160" height="38" rx="19" fill="color-mix(in srgb, hotpink 60%, var(--accent))" stroke="none"/>
+  <text x="570" y="31" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="700">项目指导</text>
+
+  <!-- 项目启动请求 → 项目指导 箭头 -->
+  <line x1="570" y1="82" x2="570" y2="48" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- ===== 顶部右：项目启动请求（青绿色圆角框） ===== -->
+  <rect x="474" y="84" width="192" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 15%, #2ABCA3)" stroke="color-mix(in srgb, var(--accent) 40%, #2ABCA3)" stroke-width="1.5"/>
+  <text x="570" y="108" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="var(--text-heading)" font-weight="600">项目启动请求</text>
+
+  <!-- ===== 项目准备 大虚线框（灰底） ===== -->
+  <rect x="14" y="148" width="650" height="436" rx="10" fill="color-mix(in srgb, var(--accent) 5%, #e8e8e8)" stroke="var(--kb-border-mid)" stroke-width="1.5" stroke-dasharray="10,5"/>
+  <text x="540" y="176" text-anchor="middle" font-family="serif" font-size="15" fill="var(--kb-accent-dark)" font-weight="700">项目准备</text>
+
+  <!-- ===== 业务层 虚线框（在活动框之前绘制，不遮挡内部元素） ===== -->
+  <!-- 任务书: x=36~200, y=100~140；任命框: x=208~388, y=168~218 -->
+  <!-- 业务层框覆盖 x=24~404, y=62~232，给四周留8px边距 -->
+  <rect x="24" y="62" width="390" height="172" rx="8" fill="none" stroke="var(--kb-border-mid)" stroke-width="1.8" stroke-dasharray="7,4"/>
+  <text x="340" y="82" text-anchor="middle" font-family="serif" font-size="13" fill="var(--kb-muted)">业务层</text>
+
+  <!-- ===== 项目任务书（青绿色圆角） ===== -->
+  <rect x="36" y="100" width="164" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 15%, #2ABCA3)" stroke="color-mix(in srgb, var(--accent) 40%, #2ABCA3)" stroke-width="1.5"/>
+  <text x="118" y="124" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="var(--text-heading)" font-weight="600">项目任务书</text>
+
+  <!-- 项目任务书 → 任命项目总监（横折线：右出→右折至任命框顶边中点→向下指入） -->
+  <polyline points="200,120 298,120 298,168" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 项目任务书 → 准备概要商业论证（垂直向下穿过，直接到达） -->
+  <line x1="118" y1="140" x2="118" y2="340" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- ===== 活动框：蓝色系 ===== -->
+
+  <!-- 任命项目总监和项目经理 -->
+  <rect x="208" y="168" width="180" height="50" rx="10" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="298" y="188" text-anchor="middle" font-family="serif" font-size="12" fill="white" font-weight="600">任命项目总监和</text>
+  <text x="298" y="206" text-anchor="middle" font-family="serif" font-size="12" fill="white" font-weight="600">项目经理</text>
+
+  <!-- 任命 → 评估 -->
+  <line x1="298" y1="218" x2="298" y2="255" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 评估之前的经验教训 -->
+  <rect x="178" y="258" width="180" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="268" y="282" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">评估之前的经验教训</text>
+
+  <!-- 评估 → 任命项目管理团队（右箭头） -->
+  <line x1="358" y1="278" x2="395" y2="278" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 任命项目管理团队 -->
+  <rect x="398" y="258" width="190" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="493" y="282" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">任命项目管理团队</text>
+
+  <!-- 评估 → 准备概要/选择项目方法之间（垂直向下，指向双向箭头中心） -->
+  <line x1="268" y1="298" x2="268" y2="360" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 任命项目管理团队 → 选择项目方法（下箭头） -->
+  <line x1="493" y1="298" x2="493" y2="338" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 准备概要商业论证 -->
+  <rect x="36" y="340" width="190" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="131" y="364" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">准备概要商业论证</text>
+
+  <!-- 选择项目方法 -->
+  <rect x="398" y="340" width="190" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="493" y="364" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">选择项目方法</text>
+
+  <!-- 准备概要商业论证 ↔ 选择项目方法（双向箭头） -->
+  <line x1="226" y1="360" x2="396" y2="360" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-start="url(#fig131-arr)" marker-end="url(#fig131-arr)"/>
+
+  <!-- 选择项目方法 → 汇编项目概述文件（下箭头） -->
+  <line x1="493" y1="380" x2="493" y2="420" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 准备概要商业论证 → 汇编项目概述文件（从框底部中心向下，再向右） -->
+  <line x1="131" y1="380" x2="131" y2="440" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="131" y1="440" x2="398" y2="440" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 汇编项目概述文件 -->
+  <rect x="398" y="422" width="190" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="493" y="446" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">汇编项目概述文件</text>
+
+  <!-- 汇编项目概述文件 → 编制启动阶段计划（下箭头） -->
+  <line x1="493" y1="462" x2="493" y2="502" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 编制启动阶段计划 -->
+  <rect x="338" y="504" width="190" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="433" y="528" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">编制启动阶段计划</text>
+
+  <!-- 编制启动阶段计划 → 请求项目启动（右箭头） -->
+  <line x1="528" y1="524" x2="568" y2="524" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+  <!-- 请求项目启动 -->
+  <rect x="570" y="504" width="76" height="40" rx="10" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="608" y="528" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">请求项目启动</text>
+
+  <!-- 请求项目启动 → 项目启动请求（从框顶部中心直接垂直向上） -->
+  <line x1="608" y1="504" x2="608" y2="124" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig131-arr)"/>
+
+</svg>
+<br><span style="font-family:serif; color:var(--kb-muted); font-size:0.9em;">图 13.1 项目准备流程概述</span>
+</div></div>
 <p>项目可以通过多种方式触发，因此在正式启动之前，可用信息会有很大的变化。在 PRINCE2 中，项目的触发因素称为<a href="../entities/term.html#entity-项目任务书" class="entity-link entity-term" title="term：项目任务书">项目任务书</a>。这由发出项目委托的业务的负有责任的职权组织提供。</p>
 <p>负有责任的职权组织也可能来自各种各样的领域。例如，<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="role：项目总监">项目总监</a>组、职能或运营单位、项目群、项目组合或客户。</p>
 <p>从 PRINCE2 的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="practice：组织">组织</a>视角来看，负有责任的职权组织被视为在项目之外的<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="term：业务层">业务层</a>中。术语"项目任务书"适用于任何用来触发项目的信息，例如可行性研究，或者在供应商环境中则是接收到的"征求建议书"。项目任务书应该提供项目的授权范围，而且应包含充分的信息，至少识别未来<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="role：项目管理委员会">项目管理委员会</a>的项目总监。项目任务书中信息的进一步完善可以形成项目概述文件。</p>
@@ -541,7 +678,7 @@
 </div>
     </div>
 
-    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid var(--accent); border-bottom: none;">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch12.html" class="nav-link">◁ 第12章 PRINCE2流程简介</a> | <a href="ch14.html" class="nav-link">第14章 项目指导 ▷</a>
     </div>
 

@@ -1,12 +1,50 @@
 /* PRINCE2 知识库 - 章节页公共样式 */
-/* 古籍风格：仿古纸色 + 衬线体 + 金色强调 + 双线装饰 */
+/* 支持 6 套配色方案，跟随首页切换 */
 
+/* ================================================================
+   主题 CSS 变量（与 index.html 同步）
+   ================================================================ */
+:root {
+    --bg-main:#faf6f0;--bg-card:#fff;--bg-intro:#f0e8d8;
+    --bg-sidebar:#2c1810;--bg-sidebar-deep:#1a0f0a;--bg-sidebar-hover:#3a2515;
+    --text-main:#3e2a1a;--text-heading:#5c3d1a;
+    --text-sidebar:#e8d5b0;--text-sidebar-muted:#8B7355;--text-sidebar-dim:#6b5a45;
+    --text-nav:#c4a882;--text-body-muted:#5c4a3a;
+    --accent:#d4af37;--border-sidebar:#5c3d1a;--border-sidebar-deep:#3a2515;
+    --border-card:#e0d5c0;--border-intro:#d4c8a8;--search-bg:#1a0f0a;
+}
+[data-theme="blue"]{--bg-main:#f0f4f8;--bg-card:#fff;--bg-intro:#e3eaf2;--bg-sidebar:#0d1b2a;--bg-sidebar-deep:#060f1a;--bg-sidebar-hover:#1b2838;--text-main:#1a2332;--text-heading:#0d1b2a;--text-sidebar:#a8b2d1;--text-sidebar-muted:#64748b;--text-sidebar-dim:#475569;--text-nav:#8892b0;--text-body-muted:#5a6a7a;--accent:#1565c0;--border-sidebar:#1b2838;--border-sidebar-deep:#0f1923;--border-card:#d0d8e4;--border-intro:#b0c4de;--search-bg:#060f1a}
+[data-theme="green"]{--bg-main:#f1f8e9;--bg-card:#fff;--bg-intro:#e0f0d0;--bg-sidebar:#1a3a2a;--bg-sidebar-deep:#0f2a1a;--bg-sidebar-hover:#2e5a3a;--text-main:#2e3b2e;--text-heading:#1a3a2a;--text-sidebar:#c8e6c9;--text-sidebar-muted:#6b8a6b;--text-sidebar-dim:#4a6a4a;--text-nav:#a5d6a7;--text-body-muted:#5a6b5a;--accent:#2e7d32;--border-sidebar:#2e5a3a;--border-sidebar-deep:#1a3a2a;--border-card:#c8e6c9;--border-intro:#a5d6a7;--search-bg:#0f2a1a}
+[data-theme="terra"]{--bg-main:#fdf6f0;--bg-card:#fff;--bg-intro:#f5e6d5;--bg-sidebar:#3d2b1f;--bg-sidebar-deep:#2a1a10;--bg-sidebar-hover:#5a3d2a;--text-main:#3d2b1f;--text-heading:#3d2b1f;--text-sidebar:#d4a574;--text-sidebar-muted:#8b6b4a;--text-sidebar-dim:#6b5040;--text-nav:#c49a6c;--text-body-muted:#6b5040;--accent:#c75b39;--border-sidebar:#5a3d2a;--border-sidebar-deep:#3d2b1f;--border-card:#e8d5c0;--border-intro:#d4b896;--search-bg:#2a1a10}
+[data-theme="lavender"]{--bg-main:#f5f3ff;--bg-card:#fff;--bg-intro:#ede8ff;--bg-sidebar:#2d2640;--bg-sidebar-deep:#1e1830;--bg-sidebar-hover:#4a3d6b;--text-main:#2d2640;--text-heading:#2d2640;--text-sidebar:#c4b5fd;--text-sidebar-muted:#6b5a8a;--text-sidebar-dim:#5a4a70;--text-nav:#a594c4;--text-body-muted:#6b5a8a;--accent:#7c3aed;--border-sidebar:#4a3d6b;--border-sidebar-deep:#2d2640;--border-card:#e0d8f0;--border-intro:#c4b5fd;--search-bg:#1e1830}
+[data-theme="mono"]{--bg-main:#fafafa;--bg-card:#fff;--bg-intro:#f0f0f0;--bg-sidebar:#1a1a1a;--bg-sidebar-deep:#0a0a0a;--bg-sidebar-hover:#333;--text-main:#111;--text-heading:#111;--text-sidebar:#ccc;--text-sidebar-muted:#777;--text-sidebar-dim:#555;--text-nav:#999;--text-body-muted:#555;--accent:#111;--border-sidebar:#333;--border-sidebar-deep:#1a1a1a;--border-card:#ddd;--border-intro:#ccc;--search-bg:#0a0a0a}
+
+/* ================================================================
+   章节页语义变量（从 accent 自动衍生浅/深色，适配所有主题）
+   ================================================================ */
+:root {
+    --kb-paper-1: color-mix(in srgb, var(--accent) 5%, white);
+    --kb-paper-2: color-mix(in srgb, var(--accent) 10%, white);
+    --kb-paper-3: color-mix(in srgb, var(--accent) 16%, white);
+    --kb-paper-4: color-mix(in srgb, var(--accent) 28%, white);
+    --kb-border-light: color-mix(in srgb, var(--accent) 45%, white);
+    --kb-border-mid: color-mix(in srgb, var(--accent) 60%, white);
+    --kb-accent-dark: color-mix(in srgb, var(--accent) 50%, black);
+    --kb-anchor-flash: color-mix(in srgb, var(--accent) 16%, transparent);
+    --kb-muted: var(--text-body-muted);
+    --kb-tag-bg: color-mix(in srgb, var(--accent) 60%, black);
+    --kb-tag-text: var(--bg-main);
+}
+
+/* ================================================================
+   全局基础
+   ================================================================ */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
-    background-color: #faf6f0;
-    color: #3e2a1a;
+    background-color: var(--bg-main);
+    color: var(--text-main);
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
@@ -16,25 +54,25 @@ body {
 /* 导航栏 */
 .nav-bar {
     padding: 12px 0;
-    border-bottom: 2px solid #d4af37;
+    border-bottom: 2px solid var(--accent);
     margin-bottom: 24px;
     font-size: 0.9em;
 }
 .nav-link {
-    color: #8B4513;
+    color: var(--kb-accent-dark);
     text-decoration: none;
     padding: 4px 8px;
 }
 .nav-link:hover {
-    color: #d4af37;
+    color: var(--accent);
     text-decoration: underline;
 }
 
 /* 分类标签 */
 .category-tag {
     display: inline-block;
-    background: #8B4513;
-    color: #faf6f0;
+    background: var(--kb-tag-bg);
+    color: var(--kb-tag-text);
     padding: 3px 12px;
     border-radius: 3px;
     font-size: 0.8em;
@@ -44,28 +82,28 @@ body {
 /* 章节标题 */
 .chapter-title {
     font-size: 1.8em;
-    color: #5c3d1a;
-    border-bottom: 3px double #d4af37;
+    color: var(--text-heading);
+    border-bottom: 3px double var(--accent);
     padding-bottom: 12px;
     margin-bottom: 24px;
 }
 
 /* 章节目录 */
 .chapter-toc {
-    background: #f0e8d8;
-    border: 1px solid #d4c8a8;
-    border-left: 4px solid #d4af37;
+    background: var(--bg-intro);
+    border: 1px solid var(--border-intro);
+    border-left: 4px solid var(--accent);
     padding: 16px;
     margin-bottom: 30px;
     border-radius: 0 4px 4px 0;
 }
 .toc-title {
     cursor: pointer;
-    color: #5c3d1a;
+    color: var(--text-heading);
     font-size: 1em;
     user-select: none;
 }
-.toc-title:hover { color: #d4af37; }
+.toc-title:hover { color: var(--accent); }
 .toc-icon { transition: transform 0.3s; display: inline-block; }
 .toc-list {
     list-style: none;
@@ -78,36 +116,56 @@ body {
 .toc-list.collapsed { max-height: 0; margin-top: 0; }
 .toc-list li {
     padding: 3px 0;
-    border-bottom: 1px dotted #d4c8a8;
+    border-bottom: 1px dotted var(--border-intro);
 }
 .toc-list a {
-    color: #8B4513;
+    color: var(--kb-accent-dark);
     text-decoration: none;
     font-size: 0.9em;
 }
-.toc-list a:hover { color: #d4af37; }
+.toc-list a:hover { color: var(--accent); }
 
 /* 内容区 */
 .section-heading {
-    color: #5c3d1a;
+    color: var(--text-heading);
     margin-top: 32px;
     margin-bottom: 12px;
     padding-bottom: 6px;
-    border-bottom: 1px solid #e0d5c0;
+    border-bottom: 1px solid var(--border-card);
 }
-h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
-h3.section-heading { font-size: 1.2em; }
-h4.section-heading { font-size: 1.05em; }
+h2.section-heading {
+    font-size: 1.5em;
+    border-bottom-width: 2px;
+    color: color-mix(in srgb, var(--text-heading) 80%, black);
+}
+h3.section-heading { font-size: 1.2em; color: var(--text-heading); }
+h4.section-heading {
+    font-size: 1.08em;
+    border-bottom: 1px dotted var(--border-intro);
+    color: var(--kb-muted);
+}
+
+/* 锚点跳转高亮 */
+.section-heading:target {
+    background: linear-gradient(90deg, var(--kb-anchor-flash), transparent 60%);
+    border-radius: 4px;
+    padding-left: 8px;
+    animation: anchor-flash 1.8s ease-out;
+}
+@keyframes anchor-flash {
+    0%   { background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%); }
+    100% { background: linear-gradient(90deg, var(--kb-anchor-flash), transparent 60%); }
+}
 
 .pn-link {
-    color: #d4af37;
+    color: var(--accent);
     text-decoration: none;
     font-size: 0.75em;
     vertical-align: super;
     margin-right: 4px;
     cursor: pointer;
 }
-.pn-link:hover { color: #8B4513; }
+.pn-link:hover { color: var(--kb-accent-dark); }
 
 .section-content {
     margin-bottom: 20px;
@@ -132,12 +190,12 @@ h4.section-heading { font-size: 1.05em; }
 }
 .content-list li::before {
     content: "●";
-    color: #d4af37;
+    color: var(--accent);
     position: absolute;
     left: 0;
 }
 
-/* 实体链接 */
+/* 实体链接（分类语义色不随主题变化） */
 .entity-link {
     text-decoration: none;
     border-bottom: 1px dashed;
@@ -145,7 +203,7 @@ h4.section-heading { font-size: 1.05em; }
     transition: all 0.2s;
 }
 .entity-link:hover {
-    background: rgba(212, 175, 55, 0.15);
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 .entity-principle { color: #b8860b; border-color: #b8860b; }
 .entity-practice { color: #8B4513; border-color: #8B4513; }
@@ -158,13 +216,13 @@ h4.section-heading { font-size: 1.05em; }
 .footer {
     margin-top: 48px;
     padding-top: 16px;
-    border-top: 2px solid #d4af37;
+    border-top: 2px solid var(--accent);
     text-align: center;
     font-size: 0.85em;
-    color: #8B7355;
+    color: var(--kb-muted);
 }
 
-/* 响应式 - 平板竖屏 */
+/* 响应式 */
 @media (max-width: 768px) {
     body { padding: 16px; }
     .chapter-title { font-size: 1.5em; }
@@ -173,8 +231,6 @@ h4.section-heading { font-size: 1.05em; }
     .chapter-toc { padding: 12px; }
     .toc-list li a { font-size: 0.85em; }
 }
-
-/* 响应式 - 手机端 */
 @media (max-width: 600px) {
     body { padding: 12px; }
     .chapter-title { font-size: 1.4em; }
