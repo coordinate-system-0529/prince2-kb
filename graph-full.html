@@ -109,7 +109,8 @@
         .sb-cs-connector { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; font-size:0.73em; color:var(--text-muted); border-left:2px dashed rgba(212,175,55,0.3); padding:3px 8px; margin:0 2px; }
 
         /* ── 流程节点 ── */
-        .proc-node { flex:1; background:var(--bg-card); border:2px solid var(--border-card); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; min-height:200px; cursor:pointer; transition:all 0.3s; }
+        /* 卡片式自适应：高度随内容，同行靠 .managing-row 的 align-items:flex-start 顶端对齐，底端各自收口，不再强制等高留白 */
+        .proc-node { flex:1; background:var(--bg-card); border:2px solid var(--border-card); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; cursor:pointer; transition:all 0.3s; }
         .proc-node:hover { border-color:var(--text-heading); box-shadow:0 4px 20px var(--accent-glow); transform:translateY(-2px); }
         .proc-node.active { border-color:var(--text-heading); border-width:3px; background:rgba(212,175,55,0.07); box-shadow:0 0 20px var(--accent-glow); transform:translateY(-3px); }
         .proc-header { display:flex; align-items:flex-start; gap:8px; }
@@ -146,6 +147,10 @@
         .detail-header h3 { font-size:1.08em; color:var(--text-heading); }
         .detail-header .detail-sub { font-size:0.82em; color:var(--text-muted); }
         .detail-header .close-btn { margin-left:auto; background:none; border:1px solid var(--border-card); color:var(--text-muted); padding:4px 10px; border-radius:4px; cursor:pointer; font-size:0.8em; flex-shrink:0; }
+        /* 跳转流程详情子页（活动放大图）的按钮，与关闭按钮并排 */
+        .detail-header .zoom-link { margin-left:auto; background:rgba(46,139,87,0.15); border:1px solid var(--green); color:var(--green-light); padding:4px 12px; border-radius:4px; font-size:0.8em; text-decoration:none; flex-shrink:0; }
+        .detail-header .zoom-link:hover { background:rgba(46,139,87,0.3); }
+        .detail-header .zoom-link + .close-btn { margin-left:10px; }
         .detail-header .close-btn:hover { border-color:var(--text-heading); color:var(--text-heading); }
         .detail-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
         .detail-col h4 { font-size:0.85em; color:var(--text-heading); margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid var(--border-subtle); }
@@ -170,7 +175,8 @@
         .auth-event-name { font-size:0.78em; color:var(--text-heading); letter-spacing:0.02em; font-weight:bold; }
         /* CS 列授权事件（DP→CS 的3个授权，并排横排，居中对齐到 CS 列，溢出落在两侧空白占位区） */
         .cs-auth-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:2px 0; min-width:0; }
-        .cs-auth-boxes { display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center; align-items:stretch; gap:10px; }
+        /* 与上方 .auth-up-pills 之间留出 ~32px，让 DP→CS 通道箭头落在药丸下方、授权框上方，不再穿过上行报告药丸 */
+        .cs-auth-boxes { display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center; align-items:stretch; gap:10px; margin-top:30px; }
         .cs-auth-boxes .auth-event-box { flex:0 0 auto; margin:0; }
         /* SB 上行连接器（位于 DP 下方，↑ 向上连入 DP）；桌面用连接器，移动端回退到上方 pill */
         .auth-up-pills { display:flex; flex-direction:row; flex-wrap:nowrap; gap:10px; width:100%; justify-content:center; align-items:center; }
@@ -184,7 +190,17 @@
         /* DP→CS 通道连线（JS 定位，相对 .container 绝对定位） */
         .corridor-line-v, .corridor-line-h, .corridor-line-v2 { position:absolute; background:var(--accent); z-index:2; opacity:0.8; }
         .corridor-arrow { position:absolute; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:7px solid var(--accent); z-index:2; opacity:0.85; }
+        .corridor-arrow-up { border-top:0; border-bottom:7px solid var(--accent); }
         .corridor-label { position:absolute; transform:translateX(-50%); background:rgba(212,175,55,0.14); border:1px solid rgba(212,175,55,0.5); color:var(--text-heading); font-size:0.66em; font-weight:bold; letter-spacing:0.04em; padding:2px 9px; border-radius:8px; white-space:nowrap; z-index:3; }
+        /* CS→SB / CS→CP 触发连线（绿色，JS 定位；语义：CS 运行中触发上游流程） */
+        .trig-line { position:absolute; background:var(--green-light); z-index:2; opacity:0.8; }
+        .trig-arrow { position:absolute; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-bottom:7px solid var(--green-light); z-index:2; opacity:0.9; }
+        .trig-label { position:absolute; background:rgba(46,139,87,0.15); border:1px solid rgba(46,139,87,0.55); color:var(--green-light); font-size:0.66em; font-weight:bold; letter-spacing:0.04em; padding:2px 9px; border-radius:8px; white-space:nowrap; z-index:3; }
+        /* ③ 新问题/风险 → CS 输入标签（放 CS 右侧 flex:1 spacer 内，min-width:0 保持四列网格不被撑宽） */
+        .cs-issue-spacer { display:flex; align-self:stretch; align-items:flex-end; padding-bottom:14px; justify-content:flex-start; min-width:0; }
+        .cs-input-tag { display:inline-flex; align-items:center; padding:5px 10px; border-radius:8px; font-size:0.72em; white-space:nowrap; background:rgba(65,105,225,0.14); border:1px solid rgba(65,105,225,0.45); color:#8aabf0; margin-left:10px; }
+        /* 触发移动端回退（桌面隐藏） */
+        .trigger-fb { display:none; }
         /* DP 下行授权列表：桌面端改用连接器，故隐藏；移动端作为回退显示 */
         .dp-downflow { display:none; }
 
@@ -203,6 +219,9 @@
             .summary-grid { grid-template-columns:1fr; }
             .info-band { padding-left:16px; }
             .info-band::before { display:none; }
+            .trig-line, .trig-arrow, .trig-label { display:none; }
+            .trigger-fb { display:flex; flex-direction:column; gap:5px; margin-bottom:6px; }
+            .cs-issue-spacer { display:flex; justify-content:center; margin-top:6px; }
         }
     </style>
 </head>
@@ -267,7 +286,9 @@
     <div class="info-band">
         <div class="band-row">
             <span class="band-item up">↑ 启动通知（DP→业务）</span>
+            <span class="band-item up">↑ 项目授权通知（DP→业务）</span>
             <span class="band-item up">↑ 收尾通知（DP→业务）</span>
+            <span class="band-item bi">↕ 建议请求 / 建议和决策（业务↔DP，ad hoc）</span>
         </div>
     </div>
 
@@ -300,13 +321,17 @@
                                 <span class="band-item up">↑ 下一阶段请求（SB → DP）</span>
                                 <span class="band-item up">↑ 例外计划批准请求（SB → DP，例外时）</span>
                             </div>
-                            <span class="band-item up">↑ 要点报告（CS → DP）</span>
-                            <span class="band-item up">↑ 例外报告（CS → DP，例外时）</span>
+                            <div class="up-fb">
+                                <span class="band-item up">↑ 要点报告（CS → DP）</span>
+                                <span class="band-item up">↑ 例外报告（CS → DP，例外时）</span>
+                            </div>
                         </div>
                         <div class="arrow-spacer"></div>
-                        <!-- CP 列 -->
+                        <!-- CP 列（桌面改用 DP 下方连接器，此处仅移动端回退） -->
                         <div class="up-col">
-                            <span class="band-item up">↑ 项目收尾建议（CP → DP）</span>
+                            <div class="up-fb">
+                                <span class="band-item up">↑ 项目收尾建议（CP → DP）</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -354,13 +379,23 @@
                 <span class="auth-v-arrow">↓</span>
             </div>
         </div>
-        <div class="auth-event-col" id="auth-event-cp">
-            <span class="auth-v-arrow">↓</span>
-            <div class="auth-event-box">
-                <span class="auth-event-src">DP 通知 → CP · 例外时</span>
-                <span class="auth-event-name">提前收尾通知</span>
+        <!-- CP 列：上行（CP→DP 收尾建议）+ 下行（DP→CP 提前收尾通知）左右并排 -->
+        <div class="auth-event-col auth-pair-col" id="auth-event-cp">
+            <div class="auth-sub">
+                <span class="auth-v-arrow">↑</span>
+                <div class="auth-up-pills">
+                    <span class="band-item up">项目收尾建议<br>（CP → DP）</span>
+                </div>
+                <span class="auth-v-arrow">↑</span>
             </div>
-            <span class="auth-v-arrow">↓</span>
+            <div class="auth-sub">
+                <span class="auth-v-arrow">↓</span>
+                <div class="auth-event-box">
+                    <span class="auth-event-src">DP 通知 → CP · 例外时</span>
+                    <span class="auth-event-name">提前收尾通知</span>
+                </div>
+                <span class="auth-v-arrow">↓</span>
+            </div>
         </div>
         <!-- SB 上行连接器：↑ 向上连入 DP，对齐到 SB 列 -->
         <div class="auth-event-col" id="auth-up-sb">
@@ -477,6 +512,12 @@
                     <div class="flow-spacer"></div>
                     <div class="gap-wide"></div>
                     <div class="cs-auth-col">
+                        <!-- 上行：CS → DP 报告（药丸；连线由 #corr-up-* 沿通道连到 DP，移动端回退见上方 .up-fb） -->
+                        <div class="auth-up-pills">
+                            <span class="band-item up">要点报告<br>（CS → DP）</span>
+                            <span class="band-item up">例外报告<br>（CS → DP，例外时）</span>
+                        </div>
+                        <!-- 下行：DP → CS 授权 -->
                         <div class="cs-auth-boxes">
                             <div class="auth-event-box">
                                 <span class="auth-event-src">DP 授权 → CS · 首次</span>
@@ -504,6 +545,12 @@
                     <div class="flow-spacer"></div>
                     <div class="gap-wide"></div>
 
+                    <!-- 触发回退（移动端）：CS 对上游流程的触发；桌面端见绝对定位触发线 -->
+                    <div class="trigger-fb">
+                        <span class="band-item up">↑ 阶段边界临近（CS 触发 → SB）</span>
+                        <span class="band-item up">↑ 项目竣工临近（CS 触发 → CP）</span>
+                    </div>
+
                     <!-- CS -->
                     <div class="proc-node" id="node-cs" onclick="toggleDetail('cs')">
                         <div class="proc-header">
@@ -523,7 +570,7 @@
                     </div>
 
                     <div class="arrow-spacer"></div>
-                    <div class="flow-spacer"></div>
+                    <div class="flow-spacer cs-issue-spacer"><span class="cs-input-tag">← 新问题 / 风险</span></div>
                 </div><!-- /managing-row bottom -->
 
             </div><!-- /managing-grid -->
@@ -603,6 +650,24 @@
     <div class="corridor-line-h" id="corr-h"></div>
     <div class="corridor-line-v2" id="corr-v2"></div>
     <div class="corridor-arrow" id="corr-arrow"></div>
+    <!-- CS → DP 上行报告连线（沿同一通道反向连到 DP） -->
+    <div class="corridor-line-v" id="corr-up-v"></div>
+    <div class="corridor-line-h" id="corr-up-h"></div>
+    <div class="corridor-line-v2" id="corr-up-v2"></div>
+    <div class="corridor-arrow corridor-arrow-up" id="corr-up-arrow"></div>
+    <!-- CS→SB / CS→CP 触发连线（JS 定位；移动端回退见 .trigger-fb） -->
+    <div class="trig-label" id="trig-sb-label">阶段边界临近 · CS 触发</div>
+    <div class="trig-line" id="trig-sb-h1"></div>
+    <div class="trig-line" id="trig-sb-v1"></div>
+    <div class="trig-line" id="trig-sb-h2"></div>
+    <div class="trig-line" id="trig-sb-v2"></div>
+    <div class="trig-arrow" id="trig-sb-arrow"></div>
+    <div class="trig-label" id="trig-cp-label">项目竣工临近 · CS 触发</div>
+    <div class="trig-line" id="trig-cp-h1"></div>
+    <div class="trig-line" id="trig-cp-v1"></div>
+    <div class="trig-line" id="trig-cp-h2"></div>
+    <div class="trig-line" id="trig-cp-v2"></div>
+    <div class="trig-arrow" id="trig-cp-arrow"></div>
 
     <!-- ═══ 详情面板区域 ═══ -->
 
@@ -611,6 +676,7 @@
         <div class="detail-header">
             <h3>🏛️ 项目指导 DP</h3>
             <span class="detail-sub">项目委员会的决策中枢 — 贯穿全程</span>
+            <a class="zoom-link" href="processes/dp.html">⤢ 活动放大图</a>
             <button class="close-btn" onclick="toggleDetail('dp')">关闭 ✕</button>
         </div>
         <div class="detail-cols">
@@ -663,6 +729,7 @@
         <div class="detail-header">
             <h3>📋 项目准备 SU</h3>
             <span class="detail-sub">万事俱备而后动 — 确保项目值得做、做得了、有人管</span>
+            <a class="zoom-link" href="processes/su.html">⤢ 活动放大图</a>
             <button class="close-btn" onclick="toggleDetail('su')">关闭 ✕</button>
         </div>
         <div class="detail-cols">
@@ -706,6 +773,7 @@
         <div class="detail-header">
             <h3>📋 项目启动 IP</h3>
             <span class="detail-sub">奠基立业 — 建立项目基线，获得正式授权</span>
+            <a class="zoom-link" href="processes/ip.html">⤢ 活动放大图</a>
             <button class="close-btn" onclick="toggleDetail('ip')">关闭 ✕</button>
         </div>
         <div class="detail-cols">
@@ -763,6 +831,7 @@
         <div class="detail-header">
             <h3>📋 阶段边界管理 SB</h3>
             <span class="detail-sub">承前启后 — 评审本阶段成果，规划下一阶段</span>
+            <a class="zoom-link" href="processes/sb.html">⤢ 活动放大图</a>
             <button class="close-btn" onclick="toggleDetail('sb')">关闭 ✕</button>
         </div>
         <div class="detail-cols">
@@ -811,6 +880,7 @@
         <div class="detail-header">
             <h3>📋 阶段控制 CS</h3>
             <span class="detail-sub">运筹帷幄 — 日常管理：分配工作、监督进展、处理问题</span>
+            <a class="zoom-link" href="processes/cs.html">⤢ 活动放大图</a>
             <button class="close-btn" onclick="toggleDetail('cs')">关闭 ✕</button>
         </div>
         <div class="detail-cols">
@@ -861,6 +931,7 @@
         <div class="detail-header">
             <h3>📋 项目收尾 CP</h3>
             <span class="detail-sub">功成身退 — 移交产品、总结经验、正式关闭项目</span>
+            <a class="zoom-link" href="processes/cp.html">⤢ 活动放大图</a>
             <button class="close-btn" onclick="toggleDetail('cp')">关闭 ✕</button>
         </div>
         <div class="detail-cols">
@@ -906,6 +977,7 @@
         <div class="detail-header">
             <h3>📋 产品交付管理 MP</h3>
             <span class="detail-sub">督工之道 — 团队接受工作包、执行工作、交付产品</span>
+            <a class="zoom-link" href="processes/mp.html">⤢ 活动放大图</a>
             <button class="close-btn" onclick="toggleDetail('mp')">关闭 ✕</button>
         </div>
         <div class="detail-cols">
@@ -1070,16 +1142,78 @@ function positionCorridor() {
     var sbBottom = sbR.bottom - c.top;  // SB 框底部
     var gap = 12;                       // 箭头与 CS 框顶留出的间距，避免遮挡
     var arTopY = csTopY - gap - 7;      // 三角箭头元素顶（尖端再往下 7px）
-    var elbowY = sbBottom + 10;         // 横线落在 SB 底部下方、CS 框上方的间隙里，避免被 SB 遮挡
+    // 横线拐点：若 CS 列上方有上行报告药丸，则拐在药丸下方，避免竖线穿过药丸
+    var upPills = document.querySelector('.cs-auth-col .auth-up-pills');
+    var elbowY = upPills ? (upPills.getBoundingClientRect().bottom - c.top + 6)
+                         : (sbBottom + 10);  // 无药丸时回退到 SB 底部下方
     if (elbowY > arTopY - 6) elbowY = arTopY - 6;  // 间隙过小时兜底，至少保持在箭头上方
     v.style.left = (startX - 1) + 'px'; v.style.top = startY + 'px'; v.style.width = '2px'; v.style.height = Math.max(0, elbowY - startY) + 'px';
     h.style.left = Math.min(startX, endX) + 'px'; h.style.top = (elbowY - 1) + 'px'; h.style.width = Math.abs(endX - startX) + 'px'; h.style.height = '2px';
     v2.style.left = (endX - 1) + 'px'; v2.style.top = elbowY + 'px'; v2.style.width = '2px'; v2.style.height = Math.max(0, arTopY - elbowY) + 'px';
     ar.style.left = (endX - 5) + 'px'; ar.style.top = arTopY + 'px';
-    lbl.style.left = startX + 'px'; lbl.style.top = startY + 'px';
+    lbl.style.left = (startX - 5) + 'px'; lbl.style.top = startY + 'px'; lbl.style.transform = 'translateX(-100%)';  // 标签靠左，让出右侧给上行箭头
+    // ── CS → DP 上行报告连线：沿同一通道反向上行连到 DP ──
+    var upv = document.getElementById('corr-up-v');
+    var uph = document.getElementById('corr-up-h');
+    var upv2 = document.getElementById('corr-up-v2');
+    var upar = document.getElementById('corr-up-arrow');
+    if (upPills && upv) {
+        var pr = upPills.getBoundingClientRect();
+        var pillsTop = pr.top - c.top;
+        var pillsCx = (pr.left + pr.right) / 2 - c.left;
+        var upX = startX + 18;                 // 通道内偏右，与下行线错开
+        var upElbowY = sbBottom + 8;           // 横线落在 SB 底下方、药丸顶上方
+        if (upElbowY > pillsTop - 6) upElbowY = pillsTop - 6;
+        // 药丸顶 → 横线（在药丸中心 x）
+        upv2.style.left = (pillsCx - 1) + 'px'; upv2.style.top = upElbowY + 'px'; upv2.style.width = '2px'; upv2.style.height = Math.max(0, pillsTop - upElbowY) + 'px';
+        // 横线：药丸中心 → 通道（在 upElbowY）
+        uph.style.left = Math.min(pillsCx, upX) + 'px'; uph.style.top = (upElbowY - 1) + 'px'; uph.style.width = Math.abs(pillsCx - upX) + 'px'; uph.style.height = '2px';
+        // 通道竖线：横线 → DP 底（箭头占 7px）
+        upv.style.left = (upX - 1) + 'px'; upv.style.top = (startY + 7) + 'px'; upv.style.width = '2px'; upv.style.height = Math.max(0, upElbowY - (startY + 7)) + 'px';
+        // ↑ 箭头贴 DP 底，指向 DP
+        upar.style.left = (upX - 5) + 'px'; upar.style.top = startY + 'px';
+    }
 }
 window.addEventListener('load', positionCorridor);
 window.addEventListener('resize', positionCorridor);
+
+/* CS→SB / CS→CP 触发连线：CS 右缘横出，沿 SB 列右外通道上行，分别进入 SB 底部与 CP 底部 */
+function positionTriggers() {
+    var container = document.querySelector('.container');
+    var cs = document.getElementById('node-cs');
+    var sb = document.getElementById('node-sb');
+    var cp = document.getElementById('node-cp');
+    if (!container || !cs || !sb || !cp) return;
+    var c = container.getBoundingClientRect();
+    function R(el) { var r = el.getBoundingClientRect(); return { l:r.left-c.left, r:r.right-c.left, t:r.top-c.top, b:r.bottom-c.top, cx:(r.left+r.right)/2-c.left }; }
+    var csR = R(cs), sbR = R(sb), cpR = R(cp);
+    function setH(id,x1,x2,y){ var e=document.getElementById(id); e.style.left=Math.min(x1,x2)+'px'; e.style.top=(y-1)+'px'; e.style.width=Math.abs(x2-x1)+'px'; e.style.height='2px'; }
+    function setV(id,x,y1,y2){ var e=document.getElementById(id); e.style.left=(x-1)+'px'; e.style.top=Math.min(y1,y2)+'px'; e.style.width='2px'; e.style.height=Math.abs(y2-y1)+'px'; }
+    function setA(id,x,yTip){ var e=document.getElementById(id); e.style.left=(x-5)+'px'; e.style.top=yTip+'px'; }
+    function setL(id,x,y){ var e=document.getElementById(id); e.style.left=x+'px'; e.style.top=y+'px'; e.style.transform='translateY(-50%)'; }
+    /* 通道基准 x：取 CS 右缘与授权框（居中溢出）右缘的较大者，保证竖线不穿 cs-auth-boxes */
+    var baseX = csR.r;
+    var boxesEl = document.querySelector('.cs-auth-boxes');
+    if (boxesEl) { var bx = boxesEl.getBoundingClientRect().right - c.left; if (bx > baseX) baseX = bx; }
+    /* ① CS→SB：右缘 y+20 横出 → 通道上行 → SB 底下 12px 横到 SB 右段 → 上行进 SB 底 */
+    var y1 = csR.t + 20, x1 = baseX + 12, yT1 = sbR.b + 12, x2 = sbR.r - 30;
+    setH('trig-sb-h1', csR.r, x1, y1);
+    setV('trig-sb-v1', x1, y1, yT1);
+    setH('trig-sb-h2', x1, x2, yT1);
+    setV('trig-sb-v2', x2, yT1, sbR.b + 7);
+    setA('trig-sb-arrow', x2, sbR.b);
+    setL('trig-sb-label', x1 + 8, (y1 + yT1) / 2);
+    /* ② CS→CP：右缘 y+44 横出 → 通道更外侧上行 → CP 底下 12px 横到 CP 中心 → 上行进 CP 底 */
+    var y2 = csR.t + 44, xA = baseX + 26, yT2 = cpR.b + 12;
+    setH('trig-cp-h1', csR.r, xA, y2);
+    setV('trig-cp-v1', xA, y2, yT2);
+    setH('trig-cp-h2', xA, cpR.cx, yT2);
+    setV('trig-cp-v2', cpR.cx, yT2, cpR.b + 7);
+    setA('trig-cp-arrow', cpR.cx, cpR.b);
+    setL('trig-cp-label', xA + 8, (y2 + yT2) / 2 + 34);
+}
+window.addEventListener('load', positionTriggers);
+window.addEventListener('resize', positionTriggers);
 
 var currentOpen = null;
 
