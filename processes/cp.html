@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>项目收尾 CP · 流程详情 - PRINCE2 7 知识库</title>
+<style>
+* { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+body { margin:0; font-family:'Microsoft YaHei','微软雅黑',sans-serif; background:#fdfbf7; color:#333; line-height:1.7; }
+.topbar { background:#2c1810; color:#f0e6d2; padding:12px 24px; display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+.topbar a { color:#d4af37; text-decoration:none; font-size:14px; }
+.topbar a:hover { text-decoration:underline; }
+.topbar .home { font-weight:bold; }
+.topbar .current { color:#8a7f6a; font-size:14px; }
+.container { max-width:1400px; margin:0 auto; padding:28px 24px 60px; }
+h1 { font-size:24px; color:#2c1810; margin:18px 0 8px; }
+.lead { color:#666; font-size:15px; margin:0 0 24px; }
+.card { background:#fff; border:1px solid #ece3d0; border-radius:12px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,0.04); }
+.card + .card { margin-top:20px; }
+.card h2 { font-size:16px; color:#2c1810; margin:0 0 14px; padding-bottom:8px; border-bottom:1px solid #ece3d0; }
+.diagram { display:block; width:100%; max-width:1320px; height:auto; margin:0 auto; }
+.diagram a { cursor:pointer; }
+.diagram a text.src-link { fill:#1a5fb4; text-decoration:underline; }
+.diagram a:hover text.src-link { fill:#0a3d8f; }
+.diagram a:hover rect { stroke-width:3; }
+.trig-table { width:100%; border-collapse:collapse; font-size:14px; }
+.trig-table th { text-align:left; padding:8px 10px; width:110px; color:#8a7f6a; font-weight:bold; vertical-align:top; border-bottom:1px dotted #ece3d0; }
+.trig-table td { padding:8px 10px; border-bottom:1px dotted #ece3d0; }
+.trig-table tr:last-child th, .trig-table tr:last-child td { border-bottom:none; }
+.tag-ev { display:inline-block; padding:2px 10px; border-radius:10px; font-size:12px; background:#fdebd5; border:1px solid #d97706; color:#9a5b06; margin:2px 3px; }
+.tag-mp { display:inline-block; padding:2px 10px; border-radius:10px; font-size:12px; background:#f6e4f6; border:1px solid #8B008B; color:#6b1a6b; margin:2px 3px; text-decoration:none; }
+a.tag-mp:hover { filter:brightness(0.92); }
+.read-links a { color:#1a5fb4; }
+.proc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid #ece3d0; font-size:14px; }
+.proc-nav a { color:#2E8B57; text-decoration:none; font-weight:bold; }
+.proc-nav a:hover { text-decoration:underline; }
+.proc-nav .disabled { color:#bbb; }
+@media (max-width:600px){ h1{font-size:20px;} .container{padding:18px 14px 40px;} .card{overflow-x:auto;} .diagram{min-width:880px;} }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a class="home" href="../index.html">← PRINCE2 7 知识库</a>
+  <a href="../graph-full.html">管理产品信息流</a>
+  <a href="../entities/process.html">流程索引</a>
+  <span class="current">流程详情 · 项目收尾 CP</span>
+</nav>
+<div class="container">
+  <h1>项目收尾 CP <span style="font-size:15px;color:#8a7f6a;font-weight:normal">Closing a Project · 第19章</span></h1>
+  <p class="lead">项目的最后一道流程：无论是按计划竣工，还是被项目管理委员会命令提前收尾，都要确认产品验收与移交、评估项目整体绩效、编制项目竣工报告，最后向项目管理委员会请求授权关闭项目。</p>
+
+  <div class="card">
+    <h2>📐 活动放大图</h2>
+    <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 700">
+      <defs>
+        <marker id="ah" markerWidth="10" markerHeight="8" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#888"/></marker>
+        <marker id="ahg" markerWidth="10" markerHeight="8" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#2E8B57"/></marker>
+      </defs>
+      <rect x="0" y="0" width="1150" height="700" fill="#fdfbf7"/>
+      <rect x="6" y="6" width="1138" height="688" fill="none" stroke="#e6ddc8" stroke-width="1.5" rx="10"/>
+
+      <text x="575" y="38" text-anchor="middle" font-size="20" font-weight="bold" fill="#2c3e50">放大 CP：5 个活动 · 双入口收敛，请求项目收尾</text>
+
+      <!-- 上游条：左 CS / 右 DP（DP 既是入口也是收尾请求的去向） -->
+      <a href="../chapters/ch16.html">
+        <rect x="80" y="58" width="460" height="36" rx="8" fill="#2E8B57"/>
+        <text x="310" y="81" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">阶段控制 CS · 最后阶段临近结束</text>
+      </a>
+      <a href="../chapters/ch14.html">
+        <rect x="560" y="58" width="460" height="36" rx="8" fill="#2E8B57"/>
+        <text x="790" y="81" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">项目指导 DP · 项目管理委员会 · 命令提前收尾 / 授权关闭</text>
+      </a>
+
+      <!-- 入口事件（挂在竖直接口线正中心 cy=122） -->
+      <line x1="220" y1="94" x2="220" y2="196" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ahg)"/>
+      <line x1="900" y1="94" x2="900" y2="196" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ahg)"/>
+      <rect x="145" y="108" width="150" height="28" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="220" y="126" text-anchor="middle" font-size="10" fill="#9a5b06">项目竣工临近</text>
+      <rect x="825" y="108" width="150" height="28" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="900" y="126" text-anchor="middle" font-size="10" fill="#9a5b06">提前收尾请求 · 例外时</text>
+
+      <!-- CP 容器 -->
+      <rect x="80" y="150" width="940" height="396" rx="14" fill="#f6fbf8" stroke="#2E8B57" stroke-width="2" stroke-dasharray="7 4"/>
+      <text x="100" y="176" text-anchor="start" font-size="13" font-weight="bold" fill="#2E8B57">项目收尾 CP</text>
+      <text x="100" y="192" text-anchor="start" font-size="10" fill="#6a9c7f">验收 → 评估 → 收尾</text>
+
+      <!-- ── 上排：准备（双入口） ── -->
+      <a href="../chapters/ch19.html#pn-7"><rect x="130" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="220" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">准备按计划收尾</text><text x="220" y="237" text-anchor="middle" font-size="11" fill="#888">19.4.1</text></a>
+      <a href="../chapters/ch19.html#pn-8"><rect x="810" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="900" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">准备提前收尾</text><text x="900" y="237" text-anchor="middle" font-size="11" fill="#888">19.4.2 · 例外时</text></a>
+      <a href="../entities/product.html#entity-项目收尾建议"><text x="120" y="266" text-anchor="start" font-size="10" class="src-link">产出：项目收尾建议</text></a>
+
+      <!-- ── 中排：确认验收（枢纽，两路汇入） ── -->
+      <a href="../chapters/ch19.html#pn-9"><rect x="470" y="330" width="180" height="52" rx="10" fill="#e3f2e9" stroke="#2E8B57" stroke-width="3"/><text x="560" y="354" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">确认项目验收</text><text x="560" y="371" text-anchor="middle" font-size="11" fill="#888">19.4.3</text></a>
+      <!-- C1 准备按计划收尾 → 确认项目验收（左侧进入） -->
+      <polyline points="220,248 220,356 458,356" fill="none" stroke="#555" stroke-width="2"/>
+      <line x1="458" y1="356" x2="470" y2="356" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+      <!-- C2 准备提前收尾 → 确认项目验收（虚线，部分交付时，顶部进入） -->
+      <polyline points="900,248 900,300 560,300 560,320" fill="none" stroke="#777" stroke-width="1.8" stroke-dasharray="6 4"/>
+      <line x1="560" y1="320" x2="560" y2="330" stroke="#777" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah)"/>
+
+      <!-- ── 下排：评估 → 请求 ── -->
+      <a href="../chapters/ch19.html#pn-11"><rect x="130" y="464" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="220" y="488" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">请求项目收尾</text><text x="220" y="505" text-anchor="middle" font-size="11" fill="#888">19.4.5</text></a>
+      <a href="../chapters/ch19.html#pn-10"><rect x="470" y="464" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="560" y="488" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">评估项目</text><text x="560" y="505" text-anchor="middle" font-size="11" fill="#888">19.4.4</text></a>
+      <a href="../entities/product.html#entity-项目竣工报告"><text x="120" y="536" text-anchor="start" font-size="10" class="src-link">产出：项目竣工报告</text></a>
+      <!-- C4 确认项目验收 → 评估项目（中列主脊） -->
+      <line x1="560" y1="382" x2="560" y2="464" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+      <!-- C3 准备提前收尾 → 评估项目（走右侧净空通道 x1005，右侧进入） -->
+      <polyline points="990,222 1005,222 1005,490 662,490" fill="none" stroke="#555" stroke-width="2"/>
+      <line x1="662" y1="490" x2="650" y2="490" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+      <!-- C5 评估项目 → 请求项目收尾（同排左向） -->
+      <line x1="470" y1="490" x2="310" y2="490" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+
+      <!-- C6 请求项目收尾 → 项目收尾请求 → DP（走底部+右侧净空通道 x1080 回到 DP） -->
+      <polyline points="220,516 220,605 1080,605 1080,76 1020,76" fill="none" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ahg)"/>
+      <rect x="900" y="590" width="160" height="30" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="980" y="609" text-anchor="middle" font-size="10" fill="#9a5b06">项目收尾请求</text>
+      <text x="892" y="622" text-anchor="end" font-size="9" fill="#999">→ DP 请求授权关闭项目</text>
+
+      <!-- 图例 -->
+      <rect x="80" y="662" width="16" height="16" rx="3" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="102" y="674" font-size="11" fill="#444">橙 = 事件　绿框 = 活动　实绿条 = 上下游流程(CS/DP)　虚线 = 提前收尾时验收可能部分完成　蓝字 = 出处(可点)</text>
+    </svg>
+  </div>
+
+  <div class="card">
+    <h2>⚡ 触发速览</h2>
+    <table class="trig-table">
+      <tr><th>谁触发我</th><td><span class="tag-ev">项目竣工临近（CS · 最后阶段临近结束）</span><span class="tag-ev">提前收尾请求（DP · 例外时）</span></td></tr>
+      <tr><th>我触发谁</th><td><span class="tag-ev">项目收尾请求 → DP（请求授权关闭项目）</span></td></tr>
+      <tr><th>产出管理产品</th><td><a class="tag-mp" href="../entities/product.html">项目收尾建议</a><a class="tag-mp" href="../entities/product.html">项目竣工报告</a><a class="tag-mp" href="../entities/product.html">经验教训记录单（关闭）</a><a class="tag-mp" href="../entities/product.html">后续行动建议</a><a class="tag-mp" href="../entities/product.html">收益管理方法（更新）</a><a class="tag-mp" href="../entities/product.html">项目计划（更新）</a></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📖 深入阅读</h2>
+    <p class="read-links" style="margin:0">流程原文：<a href="../chapters/ch19.html">第19章 项目收尾</a>　·　管理产品定义：<a href="../chapters/appendix_a.html">附录 A</a>　·　信息流全景：<a href="../graph-full.html">管理产品信息流</a></p>
+    <div class="proc-nav">
+      <span><a href="sb.html">◁ SB 阶段边界管理</a></span>
+      <a href="../entities/process.html">全部 7 个流程</a>
+      <span><span class="disabled">CP 是最后一个流程 ▷</span></span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
