@@ -21,9 +21,13 @@ h1 { font-size:24px; color:#2c1810; margin:18px 0 8px; }
 .diagram { display:block; width:100%; max-width:1000px; height:auto; margin:0 auto; }
 .diagram a, .diagram .clickable { cursor:pointer; }
 .diagram a text.src-link { fill:#1a5fb4; text-decoration:underline; }
+.detail-bar { display:flex; justify-content:flex-end; margin-bottom:6px; }
+.close-detail { background:none; border:1px solid #cbbfa5; color:#8a7f6a; font-size:13px; padding:4px 12px; border-radius:6px; cursor:pointer; }
+.close-detail:hover { border-color:#8B4513; color:#8B4513; }
 .diagram a:hover text.src-link { fill:#0a3d8f; }
 .diagram a:hover rect, .diagram .clickable:hover rect { stroke-width:3; }
-@media (max-width:600px){ h1{font-size:20px;} .container{padding:18px 14px 40px;} }
+/* 窄屏：SVG 保持最小宽度 + 卡片内横向滚动，避免小字缩到不可读（390px 屏实测 10px 字会缩至 3.2px） */
+@media (max-width:600px){ h1{font-size:20px;} .container{padding:18px 14px 40px;} .card{overflow-x:auto;} .diagram{min-width:880px;} }
 </style>
 </head>
 <body>
@@ -35,7 +39,7 @@ h1 { font-size:24px; color:#2c1810; margin:18px 0 8px; }
 </nav>
 <div class="container">
   <h1>流程触发机制：事件 + 管理产品</h1>
-  <p class="lead">PRINCE2 的流程之间不是孤立的，它们靠「事件（触发信号）」+「管理产品（信息载体）」互相触发。下图以阶段控制(CS) ↔ 产品交付管理(MP) 的工作包循环为例。<b>点击「产品交付管理 MP」框，可展开它内部的 4 个活动；蓝色小字可点击跳转到对应章节或管理产品页。</b></p>
+  <p class="lead">PRINCE2 的流程之间不是孤立的，它们靠「事件（触发信号）」+「管理产品（信息载体）」互相触发。下图以阶段控制(CS) ↔ 产品交付管理(MP) 的工作包循环为例。<b>点击「阶段控制 CS」或「产品交付管理 MP」框，可展开该流程内部的活动放大图；蓝色小字可点击跳转到对应章节或管理产品页。</b></p>
 
   <div class="card">
     <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430">
@@ -109,6 +113,7 @@ h1 { font-size:24px; color:#2c1810; margin:18px 0 8px; }
   </div>
 
   <div class="card" id="mp-detail" style="display:none">
+    <div class="detail-bar"><button class="close-detail" onclick="closeDetail('mp-detail')">关闭 ✕</button></div>
     <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 455">
       <defs>
         <marker id="ah2" markerWidth="10" markerHeight="8" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -217,15 +222,16 @@ h1 { font-size:24px; color:#2c1810; margin:18px 0 8px; }
   </div>
 
   <div class="card" id="cs-detail" style="display:none">
-    <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 600">
+    <div class="detail-bar"><button class="close-detail" onclick="closeDetail('cs-detail')">关闭 ✕</button></div>
+    <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 780">
       <defs>
         <marker id="ah3" markerWidth="10" markerHeight="8" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#888"/></marker>
         <marker id="ah3g" markerWidth="10" markerHeight="8" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#2E8B57"/></marker>
       </defs>
-      <rect x="0" y="0" width="1100" height="600" fill="#fdfbf7"/>
-      <rect x="6" y="6" width="1088" height="588" fill="none" stroke="#e6ddc8" stroke-width="1.5" rx="10"/>
+      <rect x="0" y="0" width="1150" height="780" fill="#fdfbf7"/>
+      <rect x="6" y="6" width="1138" height="768" fill="none" stroke="#e6ddc8" stroke-width="1.5" rx="10"/>
 
-      <text x="550" y="38" text-anchor="middle" font-size="20" font-weight="bold" fill="#2c3e50">放大 CS：8 个活动的输入 → 输出</text>
+      <text x="575" y="38" text-anchor="middle" font-size="20" font-weight="bold" fill="#2c3e50">放大 CS：8 个活动 · 执行 / 评估 / 汇报 三层</text>
 
       <!-- DP 贯穿条（上游：项目指导） -->
       <a href="chapters/ch14.html">
@@ -237,78 +243,85 @@ h1 { font-size:24px; color:#2c1810; margin:18px 0 8px; }
       <line x1="245" y1="94" x2="245" y2="146" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
       <rect x="150" y="100" width="190" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
       <text x="245" y="115" text-anchor="middle" font-size="10" fill="#9a5b06">阶段授权 / 例外计划授权</text>
-      <text x="348" y="115" text-anchor="start" font-size="9" fill="#999">DP 授权↓</text>
+      <text x="245" y="139" text-anchor="middle" font-size="9" fill="#999">DP 授权↓ · 含委员会建议与决策</text>
       <line x1="860" y1="146" x2="860" y2="94" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
       <rect x="745" y="100" width="230" height="22" rx="11" fill="#f6e4f6" stroke="#8B008B" stroke-width="1.2"/>
       <text x="860" y="115" text-anchor="middle" font-size="10" fill="#6b1a6b">要点报告 / 例外报告 / 征求建议</text>
       <text x="740" y="115" text-anchor="end" font-size="9" fill="#999">CS 上报↑</text>
 
       <!-- CS 容器 -->
-      <rect x="80" y="150" width="940" height="300" rx="14" fill="#f6fbf8" stroke="#2E8B57" stroke-width="2" stroke-dasharray="7 4"/>
-      <text x="550" y="170" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">阶段控制 CS · 流程内部（控制回路）</text>
+      <rect x="80" y="150" width="940" height="460" rx="14" fill="#f6fbf8" stroke="#2E8B57" stroke-width="2" stroke-dasharray="7 4"/>
+      <text x="100" y="174" text-anchor="start" font-size="13" font-weight="bold" fill="#2E8B57">阶段控制 CS · 流程内部</text>
+      <text x="100" y="190" text-anchor="start" font-size="10" fill="#6a9c7f">下：执行 → 中：评估 → 上：汇报</text>
 
-      <!-- 上排：控制主线 -->
-      <a href="chapters/ch16.html#pn-6"><rect x="110" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="200" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">授权工作包</text><text x="200" y="237" text-anchor="middle" font-size="11" fill="#888">16.4.1</text></a>
-      <a href="chapters/ch16.html#pn-8"><rect x="330" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="420" y="218" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E8B57">接收已完成的工作包</text><text x="420" y="237" text-anchor="middle" font-size="11" fill="#888">16.4.3</text></a>
-      <a href="chapters/ch16.html#pn-7"><rect x="550" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="640" y="220" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E8B57">评价工作包状态</text><text x="640" y="237" text-anchor="middle" font-size="11" fill="#888">16.4.2</text></a>
-      <a href="chapters/ch16.html#pn-9"><rect x="770" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="860" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">评价阶段状态</text><text x="860" y="237" text-anchor="middle" font-size="11" fill="#888">16.4.4</text></a>
-      <line x1="290" y1="222" x2="328" y2="222" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
-      <line x1="510" y1="222" x2="548" y2="222" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
-      <line x1="730" y1="222" x2="768" y2="222" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+      <!-- ── 汇报排（面向 DP）── -->
+      <a href="chapters/ch16.html#pn-12"><rect x="470" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="560" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">上报问题和风险</text><text x="560" y="237" text-anchor="middle" font-size="11" fill="#888">16.4.7</text></a>
+      <a href="chapters/ch16.html#pn-13"><rect x="810" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="900" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">报告要点</text><text x="900" y="237" text-anchor="middle" font-size="11" fill="#888">16.4.8</text></a>
+      <!-- 汇报排 → 容器顶（呼应右上 CS 上报接口） -->
+      <line x1="560" y1="194" x2="560" y2="158" stroke="#888" stroke-width="1.5" marker-end="url(#ah3)"/>
+      <line x1="900" y1="194" x2="900" y2="158" stroke="#888" stroke-width="1.5" marker-end="url(#ah3)"/>
+      <text x="568" y="180" text-anchor="start" font-size="9" fill="#6b1a6b">例外报告 / 已提出例外</text>
+      <text x="908" y="180" text-anchor="start" font-size="9" fill="#6b1a6b">要点报告</text>
 
-      <!-- 关键产物小标（上排） -->
-      <text x="200" y="266" text-anchor="middle" font-size="9" fill="#9a5b06">↓ 工作包已授权 给 MP</text>
-      <text x="530" y="266" text-anchor="middle" font-size="9" fill="#6b1a6b">↑ 用 MP 的 检查点报告 / 已完成通知</text>
-      <text x="860" y="266" text-anchor="middle" font-size="9" fill="#9a5b06">← 委员会建议（来自 DP）</text>
+      <!-- ── 评估排（枢纽）── -->
+      <a href="chapters/ch16.html#pn-11"><rect x="130" y="330" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="220" y="354" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">采取纠正行动</text><text x="220" y="371" text-anchor="middle" font-size="11" fill="#888">16.4.6</text></a>
+      <a href="chapters/ch16.html#pn-9"><rect x="470" y="330" width="180" height="52" rx="10" fill="#e3f2e9" stroke="#2E8B57" stroke-width="3"/><text x="560" y="354" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">评价阶段状态</text><text x="560" y="371" text-anchor="middle" font-size="11" fill="#888">16.4.4 · 决策枢纽</text></a>
+      <a href="chapters/ch16.html#pn-10"><rect x="810" y="330" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="900" y="354" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">捕获问题和风险</text><text x="900" y="371" text-anchor="middle" font-size="11" fill="#888">16.4.5</text></a>
 
-      <!-- 下排：问题处理 -->
-      <a href="chapters/ch16.html#pn-10"><rect x="110" y="372" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="200" y="396" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">捕获问题和风险</text><text x="200" y="413" text-anchor="middle" font-size="11" fill="#888">16.4.5</text></a>
-      <a href="chapters/ch16.html#pn-11"><rect x="330" y="372" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="420" y="396" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">采取纠正行动</text><text x="420" y="413" text-anchor="middle" font-size="11" fill="#888">16.4.6</text></a>
-      <a href="chapters/ch16.html#pn-12"><rect x="550" y="372" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="640" y="396" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">上报问题和风险</text><text x="640" y="413" text-anchor="middle" font-size="11" fill="#888">16.4.7</text></a>
-      <a href="chapters/ch16.html#pn-13"><rect x="770" y="372" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="860" y="396" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">报告要点</text><text x="860" y="413" text-anchor="middle" font-size="11" fill="#888">16.4.8</text></a>
-      <line x1="290" y1="398" x2="328" y2="398" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
-      <line x1="510" y1="398" x2="548" y2="398" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
-      <line x1="730" y1="398" x2="768" y2="398" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+      <!-- 枢纽的分发与汇聚 -->
+      <line x1="468" y1="356" x2="314" y2="356" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+      <line x1="808" y1="356" x2="654" y2="356" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+      <line x1="560" y1="328" x2="560" y2="252" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+      <polyline points="630,328 630,288 900,288" fill="none" stroke="#555" stroke-width="2"/>
+      <line x1="900" y1="288" x2="900" y2="252" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+      <!-- 新问题/风险（外部输入） -->
+      <rect x="1032" y="345" width="110" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="1087" y="360" text-anchor="middle" font-size="10" fill="#9a5b06">新问题或风险</text>
+      <line x1="1030" y1="356" x2="994" y2="356" stroke="#d97706" stroke-width="2" marker-end="url(#ah3)"/>
+      <!-- 纠正 ↓ 回路（回到授权工作包） -->
+      <line x1="220" y1="384" x2="220" y2="476" stroke="#2E8B57" stroke-width="2" marker-end="url(#ah3g)"/>
+      <text x="228" y="434" text-anchor="start" font-size="9" fill="#2E8B57">↺ 重新授权工作包</text>
+      <!-- 枢纽 → SB / CP 触发出口 -->
+      <polyline points="600,384 600,418 1024,418" fill="none" stroke="#2E8B57" stroke-width="2"/>
+      <path d="M1024,415 L1032,418 L1024,421 Z" fill="#2E8B57"/>
+      <text x="1036" y="414" text-anchor="start" font-size="10" fill="#2E8B57">阶段边界临近</text>
+      <text x="1036" y="427" text-anchor="start" font-size="10" font-weight="bold" fill="#2E8B57">→ SB</text>
+      <polyline points="625,384 625,446 1024,446" fill="none" stroke="#2E8B57" stroke-width="2"/>
+      <path d="M1024,443 L1032,446 L1024,449 Z" fill="#2E8B57"/>
+      <text x="1036" y="443" text-anchor="start" font-size="10" fill="#2E8B57">项目竣工临近</text>
+      <text x="1036" y="456" text-anchor="start" font-size="10" font-weight="bold" fill="#2E8B57">→ CP</text>
 
-      <!-- 关键产物小标（下排） -->
-      <text x="200" y="356" text-anchor="middle" font-size="9" fill="#9a5b06">← 新问题或风险</text>
-      <text x="420" y="356" text-anchor="middle" font-size="9" fill="#2E8B57">↺ 触发重新授权工作包</text>
-      <text x="640" y="356" text-anchor="middle" font-size="9" fill="#6b1a6b">↑ 例外报告 给 DP</text>
-      <text x="860" y="356" text-anchor="middle" font-size="9" fill="#6b1a6b">↑ 要点报告 给 DP</text>
+      <!-- ── 执行排（面向 MP）── -->
+      <a href="chapters/ch16.html#pn-6"><rect x="130" y="480" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="220" y="504" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">授权工作包</text><text x="220" y="521" text-anchor="middle" font-size="11" fill="#888">16.4.1</text></a>
+      <a href="chapters/ch16.html#pn-7"><rect x="470" y="480" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="560" y="504" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E8B57">评价工作包状态</text><text x="560" y="521" text-anchor="middle" font-size="11" fill="#888">16.4.2</text></a>
+      <a href="chapters/ch16.html#pn-8"><rect x="810" y="480" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="900" y="502" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E8B57">接收已完成的工作包</text><text x="900" y="521" text-anchor="middle" font-size="11" fill="#888">16.4.3</text></a>
+      <!-- 执行排内与排间关系 -->
+      <line x1="808" y1="506" x2="654" y2="506" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+      <line x1="560" y1="478" x2="560" y2="384" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
 
-      <!-- 上排→下排 联系（监控发现问题 / 阶段评估后报告） -->
-      <line x1="420" y1="248" x2="420" y2="370" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah3)"/>
-      <text x="430" y="312" text-anchor="start" font-size="9" fill="#999">监控发现问题 → 转入问题处理</text>
-      <line x1="860" y1="248" x2="860" y2="370" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah3)"/>
-      <text x="850" y="312" text-anchor="end" font-size="9" fill="#999">阶段评估 → 报告要点</text>
-
-      <!-- 右侧出口 → SB / CP（来自 评价阶段状态） -->
-      <line x1="950" y1="214" x2="1014" y2="214" stroke="#2E8B57" stroke-width="2" marker-end="url(#ah3g)"/>
-      <text x="1018" y="211" text-anchor="start" font-size="10" fill="#2E8B57">阶段临近结束</text>
-      <text x="1018" y="223" text-anchor="start" font-size="10" font-weight="bold" fill="#2E8B57">→ SB</text>
-      <line x1="950" y1="236" x2="1014" y2="236" stroke="#2E8B57" stroke-width="2" marker-end="url(#ah3g)"/>
-      <text x="1018" y="245" text-anchor="start" font-size="10" fill="#2E8B57">项目临近结束</text>
-      <text x="1018" y="257" text-anchor="start" font-size="10" font-weight="bold" fill="#2E8B57">→ CP</text>
-
-      <!-- CS ↔ MP 接口 -->
-      <line x1="245" y1="450" x2="245" y2="508" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
-      <rect x="150" y="462" width="124" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
-      <text x="212" y="477" text-anchor="middle" font-size="10" fill="#9a5b06">工作包已授权</text>
-      <text x="282" y="477" text-anchor="start" font-size="9" fill="#999">派活↓ + 工作包描述</text>
-      <line x1="860" y1="508" x2="860" y2="450" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
-      <rect x="745" y="462" width="230" height="22" rx="11" fill="#f6e4f6" stroke="#8B008B" stroke-width="1.2"/>
-      <text x="860" y="477" text-anchor="middle" font-size="10" fill="#6b1a6b">检查点报告 / 已完成工作包通知</text>
-      <text x="740" y="477" text-anchor="end" font-size="9" fill="#999">收活↑</text>
+      <!-- CS ↔ MP 接口（三条：派活↓ / 检查点↑ / 完成通知↑） -->
+      <line x1="220" y1="534" x2="220" y2="686" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
+      <rect x="158" y="614" width="124" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="220" y="629" text-anchor="middle" font-size="10" fill="#9a5b06">工作包已授权</text>
+      <text x="282" y="629" text-anchor="start" font-size="9" fill="#999">派活↓ + 工作包描述</text>
+      <line x1="560" y1="686" x2="560" y2="534" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
+      <rect x="505" y="614" width="110" height="22" rx="11" fill="#f6e4f6" stroke="#8B008B" stroke-width="1.2"/>
+      <text x="560" y="629" text-anchor="middle" font-size="10" fill="#6b1a6b">检查点报告</text>
+      <text x="622" y="629" text-anchor="start" font-size="9" fill="#999">MP 定期↑</text>
+      <line x1="900" y1="686" x2="900" y2="534" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
+      <rect x="828" y="614" width="144" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="900" y="629" text-anchor="middle" font-size="10" fill="#9a5b06">已完成工作包通知</text>
+      <text x="822" y="629" text-anchor="end" font-size="9" fill="#999">收活↑</text>
 
       <!-- MP 贯穿条（下游：产品交付管理） -->
       <a href="chapters/ch17.html">
-        <rect x="80" y="510" width="940" height="36" rx="8" fill="#2E8B57"/>
-        <text x="550" y="533" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">产品交付管理 MP · 小组经理 · 接受并执行工作包</text>
+        <rect x="80" y="690" width="940" height="36" rx="8" fill="#2E8B57"/>
+        <text x="550" y="713" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">产品交付管理 MP · 小组经理 · 接受并执行工作包</text>
       </a>
 
       <!-- 图例 -->
-      <rect x="80" y="566" width="16" height="16" rx="3" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
-      <text x="102" y="578" font-size="11" fill="#444">橙 = 事件　紫 = 管理产品　绿框 = 活动　实绿条 = 上下游流程(DP/MP)　蓝字 = 出处(可点)</text>
+      <rect x="80" y="746" width="16" height="16" rx="3" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="102" y="758" font-size="11" fill="#444">橙 = 事件　紫 = 管理产品　绿框 = 活动（加粗 = 决策枢纽）　实绿条 = 上下游流程(DP/MP)　蓝字 = 出处(可点)</text>
     </svg>
   </div>
 </div>
@@ -325,6 +338,10 @@ function toggleDetail(id){
       });
     });
   }
+}
+function closeDetail(id){
+  document.getElementById(id).style.display='none';
+  document.querySelector('.card').scrollIntoView({behavior:'smooth',block:'start'});
 }
 </script>
 </body>
