@@ -4,174 +4,211 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第16章 阶段控制 - PRINCE2 知识库</title>
+    <link rel="stylesheet" href="../assets/chapter.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
-            background-color: #faf6f0;
-            color: #3e2a1a;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.8;
+        /* 浮动目录智能避让：默认半隐藏，悬停展开 */
+        #floating-toc {
+            transform: translateX(172px);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -3px 0 8px color-mix(in srgb, var(--accent) 8%, transparent);
+            z-index: 103 !important;
         }
-
-        /* 导航栏 */
-        .nav-bar {
-            padding: 12px 0;
-            border-bottom: 2px solid #d4af37;
-            margin-bottom: 24px;
-            font-size: 0.9em;
+        #floating-toc:hover {
+            transform: translateX(0);
+            box-shadow: -4px 0 16px color-mix(in srgb, var(--accent) 15%, transparent);
         }
-        .nav-link {
-            color: #8B4513;
-            text-decoration: none;
-            padding: 4px 8px;
-        }
-        .nav-link:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-
-        /* 分类标签 */
-        .category-tag {
-            display: inline-block;
-            background: #8B4513;
-            color: #faf6f0;
-            padding: 3px 12px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            margin-bottom: 8px;
-        }
-
-        /* 章节标题 */
-        .chapter-title {
-            font-size: 1.8em;
-            color: #5c3d1a;
-            border-bottom: 3px double #d4af37;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-        }
-
-        /* 章节目录 */
-        .chapter-toc {
-            background: #f0e8d8;
-            border: 1px solid #d4c8a8;
-            border-left: 4px solid #d4af37;
-            padding: 16px;
-            margin-bottom: 30px;
-            border-radius: 0 4px 4px 0;
-        }
-        .toc-title {
-            cursor: pointer;
-            color: #5c3d1a;
-            font-size: 1em;
-            user-select: none;
-        }
-        .toc-title:hover { color: #d4af37; }
-        .toc-icon { transition: transform 0.3s; display: inline-block; }
-        .toc-list {
-            list-style: none;
-            padding-left: 20px;
-            margin-top: 10px;
-            max-height: 500px;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-        .toc-list.collapsed { max-height: 0; margin-top: 0; }
-        .toc-list li {
-            padding: 3px 0;
-            border-bottom: 1px dotted #d4c8a8;
-        }
-        .toc-list a {
-            color: #8B4513;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        .toc-list a:hover { color: #d4af37; }
-
-        /* 内容区 */
-        .section-heading {
-            color: #5c3d1a;
-            margin-top: 32px;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e0d5c0;
-        }
-        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
-        h3.section-heading { font-size: 1.2em; }
-        h4.section-heading { font-size: 1.05em; }
-
-        .pn-link {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 0.75em;
-            vertical-align: super;
-            margin-right: 4px;
-            cursor: pointer;
-        }
-        .pn-link:hover { color: #8B4513; }
-
-        .section-content {
-            margin-bottom: 20px;
-        }
-        .section-content p {
-            margin-bottom: 12px;
-            text-indent: 2em;
-            text-align: justify;
-        }
-
-        /* 列表 */
-        .content-list {
-            list-style: none;
-            padding-left: 2em;
-            margin: 12px 0;
-        }
-        .content-list li {
-            position: relative;
-            padding-left: 1.2em;
-            margin-bottom: 6px;
-            text-align: justify;
-        }
-        .content-list li::before {
-            content: "●";
-            color: #d4af37;
+        /* 显示目录标签卡片，提示用户可悬停展开 */
+        .ftoc-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            background: var(--kb-accent-dark);
+            color: var(--kb-tag-text);
+            padding: 10px 5px;
+            border-radius: 4px 0 0 4px;
+            font-size: 0.78em;
+            cursor: default;
+            letter-spacing: 4px;
             position: absolute;
             left: 0;
+            top: 16px;
+            transform: translateX(-100%);
+            box-shadow: -2px 0 6px rgba(0,0,0,0.10);
+            user-select: none;
         }
 
-        /* 实体链接 */
-        .entity-link {
-            text-decoration: none;
-            border-bottom: 1px dashed;
-            padding: 0 1px;
-            transition: all 0.2s;
+        /* 顶部导航栏固定悬浮 */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 102;
+            background: var(--bg-main);
         }
-        .entity-link:hover {
-            background: rgba(212, 175, 55, 0.15);
-        }
-        .entity-principle { color: #b8860b; border-color: #b8860b; }
-        .entity-practice { color: #8B4513; border-color: #8B4513; }
-        .entity-process { color: #2E8B57; border-color: #2E8B57; }
-        .entity-role { color: #4169E1; border-color: #4169E1; }
-        .entity-product { color: #8B008B; border-color: #8B008B; }
-        .entity-term { color: #A0522D; border-color: #A0522D; }
 
-        /* 页脚 */
-        .footer {
-            margin-top: 48px;
-            padding-top: 16px;
-            border-top: 2px solid #d4af37;
+        /* 宽屏隐藏内联目录，避免与浮动目录重复 */
+        @media (min-width: 1201px) {
+            .chapter-toc { display: none; }
+        }
+
+        /* 导航栏颜色区分 */
+        .nav-link:first-child { color: var(--kb-accent-dark); font-weight: bold; }
+        .nav-link:not(:first-child) { color: #6e6e6e; }
+
+        /* === 仅本章生效的美化增强 === */
+        body { line-height: 1.9; }
+        .section-content p { margin-bottom: 16px; }
+
+        /* 阅读进度条 */
+        .progress-bar {
+            position: fixed; top: 0; left: 0;
+            width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--kb-accent-dark));
+            z-index: 200; transition: width 0.1s linear;
+        }
+
+        /* 内容区卡片化 */
+        .chapter-content {
+            background: #fffef9;
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 32px 36px;
+            box-shadow: 0 2px 12px rgba(139, 69, 19, 0.06);
+        }
+
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed; right: 24px; bottom: 32px;
+            width: 42px; height: 42px;
+            background: var(--kb-accent-dark); color: var(--kb-tag-text);
+            border: 2px solid var(--accent); border-radius: 50%;
+            cursor: pointer; font-size: 1.2em;
+            display: none; align-items: center; justify-content: center;
+            z-index: 99; opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, background 0.2s;
+        }
+        .back-to-top.visible { display: flex; opacity: 0.85; transform: translateY(0); }
+        .back-to-top:hover { background: var(--accent); color: var(--text-heading); opacity: 1; }
+
+        /* 列表悬停微交互 */
+        .content-list li {
+            transition: background 0.2s;
+            border-radius: 3px;
+        }
+        .content-list li:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
+        /* 关键要点卡片 */
+        .key-info {
+            background: color-mix(in srgb, var(--accent) 6%, #fffef9);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 6px 6px 0;
+            padding: 14px 18px;
+            margin: 18px 0;
+        }
+        .key-info strong:first-child { color: var(--kb-accent-dark); }
+
+        /* 定义框 */
+        .definition-box {
+            background: color-mix(in srgb, var(--kb-accent-dark) 5%, #fffef9);
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 18px 0;
+        }
+        .definition-box strong:first-child { color: var(--kb-accent-dark); }
+
+        /* 情景框 */
+        .scenario-box {
+            background: color-mix(in srgb, var(--accent) 4%, #fffef9);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 6px 6px 0;
+            padding: 14px 18px;
+            margin: 18px 0;
+            position: relative;
+        }
+        .scenario-box::before {
+            content: "💡";
+            position: absolute;
+            left: -12px;
+            top: 14px;
+            background: var(--accent);
+            color: var(--kb-tag-text);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .scenario-box strong:first-child { color: var(--kb-accent-dark); }
+
+        /* 图表标题 */
+        .figure-note {
             text-align: center;
-            font-size: 0.85em;
-            color: #8B7355;
+            color: #6e6e6e;
+            font-size: 0.92em;
+            margin-top: 8px;
+            margin-bottom: 18px;
         }
 
-        /* 响应式 */
-        @media (max-width: 600px) {
-            body { padding: 12px; }
-            .chapter-title { font-size: 1.4em; }
+        /* SVG 图表容器 */
+        .figure-svg {
+            margin: 24px 0;
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 16px;
+            background: #fffef9;
+            box-shadow: 0 1px 4px rgba(139, 69, 19, 0.04);
+            overflow-x: auto;
+        }
+        .figure-svg svg { max-width: 100%; height: auto; }
+
+        /* 产品卡片 */
+        .product-card {
+            background: #fffef9;
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            box-shadow: 0 1px 4px rgba(139, 69, 19, 0.04);
+        }
+        .product-card h3 { margin-top: 0; color: var(--kb-accent-dark); }
+
+        /* 角色表格 */
+        .role-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.92em;
+        }
+        .role-table th {
+            background: var(--kb-accent-dark);
+            color: var(--kb-tag-text);
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .role-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-card);
+        }
+        .role-table tr:nth-child(even) { background: color-mix(in srgb, var(--accent) 3%, #fffef9); }
+
+        /* 表格横向滚动 */
+        .table-scroll {
+            overflow-x: auto;
+            margin: 18px 0;
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+        }
+        .table-scroll table { margin: 0; }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            .chapter-content { padding: 20px 18px; border-radius: 4px; }
+            .nav-bar { flex-wrap: wrap; gap: 6px; }
         }
     </style>
 </head>
@@ -181,315 +218,323 @@
     <span class="category-tag">流程</span>
     <h1 class="chapter-title">第16章 阶段控制</h1>
 
-    
-        <nav class="chapter-toc">
-            <h3 class="toc-title" onclick="toggleToc()">
-                <span class="toc-icon">▸</span> 本章目录（17 节）
-            </h3>
-            <ul class="toc-list" id="tocList">
-                <li><a href="#pn-2">16.1 目的</a></li><li><a href="#pn-3">16.2 目标</a></li><li><a href="#pn-4">16.3 情境</a></li><li><a href="#pn-5">16.4 活动</a></li><li><a href="#pn-6">16.4.1 授权工作包</a></li><li><a href="#pn-7">16.4.2 评价工作包状态</a></li><li><a href="#pn-8">16.4.3 接收已完成的工作包</a></li><li><a href="#pn-9">16.4.4 评价阶段状态</a></li><li><a href="#pn-10">16.4.5 捕获问题和风险</a></li><li><a href="#pn-11">16.4.6 采取纠正行动</a></li><li><a href="#pn-12">16.4.7 上报问题和风险</a></li><li><a href="#pn-13">16.4.8 报告要点</a></li><li><a href="#pn-14">16.5 应用流程</a></li><li><a href="#pn-15">16.5.1 一般注意事项</a></li><li><a href="#pn-16">16.5.2 阶段控制流程中的角色剪裁</a></li><li><a href="#pn-17">16.6 职责</a></li><li><a href="#pn-18">16.7 为此流程应用实践</a></li>
-            </ul>
-        </nav>
+    <nav class="chapter-toc">
+        <h3 class="toc-title" onclick="toggleToc()">
+            <span class="toc-icon">▸</span> 本章目录（18 节）
+        </h3>
+        <ul class="toc-list" id="tocList">
+            <li><a href="#pn-2">16.1 目的</a></li>
+            <li><a href="#pn-3">16.2 目标</a></li>
+            <li><a href="#pn-4">16.3 情境</a></li>
+            <li><a href="#pn-5">16.4 活动</a></li>
+            <li><a href="#pn-6">16.4.1 授权工作包</a></li>
+            <li><a href="#pn-7">16.4.2 评价工作包状态</a></li>
+            <li><a href="#pn-8">16.4.3 接收已完成的工作包</a></li>
+            <li><a href="#pn-9">16.4.4 评价阶段状态</a></li>
+            <li><a href="#pn-10">16.4.5 捕获问题和风险</a></li>
+            <li><a href="#pn-11">16.4.6 采取纠正行动</a></li>
+            <li><a href="#pn-12">16.4.7 上报问题和风险</a></li>
+            <li><a href="#pn-13">16.4.8 报告要点</a></li>
+            <li><a href="#pn-14">16.5 应用流程</a></li>
+            <li><a href="#pn-15">16.5.1 一般注意事项</a></li>
+            <li><a href="#pn-16">16.5.2 阶段控制流程中的角色剪裁</a></li>
+            <li><a href="#pn-17">16.6 职责</a></li>
+            <li><a href="#pn-18">16.7 为此流程应用实践</a></li>
+        </ul>
+    </nav>
 
-    <div class="chapter-content">
-        <div class="section-content"><p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a></p></div>
+<div class="chapter-content">
+
 <h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 16.1 目的</h2>
-<div class="section-content"><p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>流程的目的旨在分配工作，监视这些工作，处理<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>报告进展， 以及采取<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>，确保阶段仍<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会设置的容许偏差<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内。</p></div>
+<div class="section-content">
+<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>流程的目的旨在分配工作，监视这些工作，处理<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>报告进展，以及采取<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>，确保阶段仍保持在<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>设置的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>范围内。</p>
+</div>
+
 <h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 16.2 目标</h2>
-<div class="section-content"><p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>流程的目标是确保：</p>
+<div class="section-content">
+<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>流程的目标是确保：</p>
 <ul class="content-list">
-  <li>主要将注意力放在<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的交付上；任何偏离阶段开始时协定的产品和交付方法的操作
-都会受到监视，以避免不受控变更。</li>
+<li><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>产品的交付受到监视，避免不受控变更。</li>
+<li>风险和问题得到控制。</li>
+<li>持续审查<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。</li>
+<li>阶段的协定产品符合协定的质量期望并可接受。</li>
+<li>项目管理团队专注于在建立的容许偏差范围内交付。在可能的情况下，应给予团队经理自由，使用容许偏差，以便最大限度地减少上报。同样，项目经理应该与项目管理委员会讨论自己的容许偏差，避免不必要的上报，并获得行动和学习的自由。因此，项目经理充当的是促进者而不是控制者。</li>
 </ul>
-<ul class="content-list">
-  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和问题得到控制。</li>
-</ul>
-<ul class="content-list">
-  <li>持续审查<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的协定<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>符合协定的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>期望并可接受。</li>
-</ul>
-<ul class="content-list">
-  <li>项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队专注于在建立的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>范围内交付。
-在可能的情况下，应给予团队经<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>使用容许偏差，以便最大限度地减少上报。同样，
-<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应该与<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>讨论自己的容许偏差，避免不必要的上报，并获得行动和学
-习的<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>此，项目经理充当的是促进者而不是控制者。</li>
-</ul>
-<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a></p></div>
+</div>
+
 <h2 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 16.3 情境</h2>
-<div class="section-content"><p>或 <a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a> <a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a> 已授权例外计划 已<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 已提出例外 请求建议 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a> 的建议 阶段边界管理 <a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a> 阶段边界临近 项目竣工临近 上报<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 报告要点 采取<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a> 评价阶段状态 授权<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a> 评价工作包状态 接收已完成的 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>包 捕获问题和风险 新问<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>险 已完成工作包 通知 已授权工作包 <a href="../entities/process.html#entity-产品交付管理" class="entity-link entity-process" title="流程：产品交付管理">产品交付管理</a> 图 16.1 阶段控<a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>述 阶段控制流程描述了<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>对该阶段的日常管理；此流<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>用于项目的每个阶段。每一<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 阶段临近结束，就会开展<a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a>流程活动（见第 18<a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>最后阶段例外。 阶段控制<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a><a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会授权项目后首次使<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 也有可能在<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>阶段即被使 用，特别对于大型或复杂项目。 <a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>用于定义、分配和控制要完成的工作，以及为<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>设置容许偏差。如果项目经<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>任小组<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>工作包描述仍应用于定义和控制分配给小组成员的工作。在这种情况 下，阶<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>程所指小组经理应视为被分配工作的小组成员。</p>
-<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a> 项目最终取得成功的关键在于日常控制开展的工作。其在整个<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>阶段中由以下循环组成：</p>
+<div class="section-content">
+<p>阶段控制流程描述了<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>对该阶段的日常管理；此流程将用于项目的每个阶段。每一管理阶段临近结束，就会开展<a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a>流程活动（见第 18 章），最后阶段例外。</p>
+<p>阶段控制流程通常在项目管理委员会授权项目后首次使用，也有可能在项目启动阶段即被使用，特别对于大型或复杂项目。</p>
+<p>工作包描述用于定义、分配和控制要完成的工作，以及为<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>设置容许偏差。如果项目经理兼任小组经理角色，工作包描述仍应用于定义和控制分配给小组成员的工作。在这种情况下，阶段控制流程所指小组经理应视为被分配工作的小组成员。</p>
+
+<div>
+    <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <marker id="as" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0,0 8,3 0,6" fill="#5c3d1a"/>
+            </marker>
+        </defs>
+        <!-- 项目指导 -->
+        <rect x="260" y="10" width="160" height="36" rx="6" fill="#8B4513" opacity="0.85"/>
+        <text x="340" y="33" text-anchor="middle" fill="#fffef9" font-size="12" font-weight="bold">项目指导</text>
+        <text x="340" y="54" text-anchor="middle" fill="#5c3d1a" font-size="10">已授权阶段 / 已授权例外计划</text>
+        <!-- 阶段控制 -->
+        <rect x="240" y="68" width="200" height="44" rx="8" fill="#d4af37" opacity="0.9"/>
+        <text x="340" y="88" text-anchor="middle" fill="#3e2a1a" font-size="13" font-weight="bold">阶段控制</text>
+        <text x="340" y="104" text-anchor="middle" fill="#3e2a1a" font-size="10">（日常管理每个阶段）</text>
+        <!-- 箭头 -->
+        <line x1="340" y1="46" x2="340" y2="68" stroke="#5c3d1a" stroke-width="1.5" marker-end="url(#as)"/>
+        <!-- 产品交付管理 -->
+        <rect x="40" y="140" width="160" height="36" rx="6" fill="#8B4513" opacity="0.7"/>
+        <text x="120" y="163" text-anchor="middle" fill="#fffef9" font-size="12">产品交付管理</text>
+        <!-- 上报 -->
+        <rect x="500" y="140" width="160" height="36" rx="6" fill="#8B4513" opacity="0.7"/>
+        <text x="580" y="163" text-anchor="middle" fill="#fffef9" font-size="12">上报问题和风险</text>
+        <!-- 活动框 -->
+        <rect x="220" y="155" width="200" height="28" rx="4" fill="#f0e8d8" stroke="#8B4513" stroke-width="0.8"/>
+        <text x="320" y="173" text-anchor="middle" fill="#3e2a1a" font-size="11">授权工作包 → 评价工作包状态</text>
+        <rect x="220" y="190" width="200" height="28" rx="4" fill="#f0e8d8" stroke="#8B4513" stroke-width="0.8"/>
+        <text x="320" y="208" text-anchor="middle" fill="#3e2a1a" font-size="11">接收已完成的工作包</text>
+        <rect x="220" y="225" width="200" height="28" rx="4" fill="#f0e8d8" stroke="#8B4513" stroke-width="0.8"/>
+        <text x="320" y="243" text-anchor="middle" fill="#3e2a1a" font-size="11">评价阶段状态 → 报告要点</text>
+        <rect x="220" y="260" width="200" height="28" rx="4" fill="#f0e8d8" stroke="#8B4513" stroke-width="0.8"/>
+        <text x="320" y="278" text-anchor="middle" fill="#3e2a1a" font-size="11">捕获问题和风险 → 采取纠正行动</text>
+        <line x1="320" y1="183" x2="320" y2="190" stroke="#8B4513" stroke-width="1" marker-end="url(#as)"/>
+        <line x1="320" y1="218" x2="320" y2="225" stroke="#8B4513" stroke-width="1" marker-end="url(#as)"/>
+        <line x1="320" y1="253" x2="320" y2="260" stroke="#8B4513" stroke-width="1" marker-end="url(#as)"/>
+        <!-- 连接线 -->
+        <line x1="240" y1="90" x2="130" y2="155" stroke="#5c3d1a" stroke-width="1.2" marker-end="url(#as)"/>
+        <line x1="340" y1="112" x2="510" y2="155" stroke="#5c3d1a" stroke-width="1.2" marker-end="url(#as)"/>
+        <!-- 底部流程 -->
+        <rect x="130" y="300" width="140" height="30" rx="6" fill="#8B4513" opacity="0.6"/>
+        <text x="200" y="320" text-anchor="middle" fill="#fffef9" font-size="11">阶段边界管理</text>
+        <rect x="400" y="300" width="120" height="30" rx="6" fill="#8B4513" opacity="0.6"/>
+        <text x="460" y="320" text-anchor="middle" fill="#fffef9" font-size="11">项目收尾</text>
+        <line x1="320" y1="288" x2="200" y2="300" stroke="#5c3d1a" stroke-width="1" marker-end="url(#as)" stroke-dasharray="3,2"/>
+        <line x1="360" y1="288" x2="460" y2="300" stroke="#5c3d1a" stroke-width="1" marker-end="url(#as)" stroke-dasharray="3,2"/>
+    </svg>
+</div>
+<p class="figure-note">图 16.1 阶段控制流程概述</p>
+
+<p>项目最终取得成功的关键在于日常控制开展的工作。其在整个管理阶段中由以下循环组成：</p>
 <ul class="content-list">
-  <li><a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>工作</li>
+<li><a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>工作</li>
+<li>监视进展信息，包括验收已完成的工作包</li>
+<li>审查情况（包括产品质量）并产生新的工作包</li>
+<li>以约定的频度向项目管理委员会报告要点</li>
+<li>观察、评估和处理问题和风险</li>
+<li>采取任何必要的纠正行动，以保持在容许偏差范围内</li>
 </ul>
-<ul class="content-list">
-  <li>监视<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>信息，包括验收已完成的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a></li>
-</ul>
-<ul class="content-list">
-  <li>审查情况（包括<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>）并产生新的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a></li>
-</ul>
-<ul class="content-list">
-  <li>以约定的频度向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>报告要点</li>
-</ul>
-<ul class="content-list">
-  <li>观察、评估和处理<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></li>
-</ul>
-<ul class="content-list">
-  <li>采取任何必要的<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>，以保持在容许偏差范围内
-最后一个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>临近结束时，将触发<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程（见第 19 章）。
-表 16.1 <a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>的输入、活动和产出
-输入
-活动
-<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>
-阶段授权（触发此流程）
-已被<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>的<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>（触发此
-流程）
-<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>（审查）
-小组计划（审查）
-<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>（审查）
-授权工作包
-项目记录单（更新）
-<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>（创建、修改、批准）
-<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>被授权（触发<a href="../entities/process.html#entity-产品交付管理" class="entity-link entity-process" title="流程：产品交付管理">产品交付管理</a>
-流程）
-新问题或风险（触发<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>工作包描述（审查）
-<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>（审查）
-<a href="../entities/product.html#entity-检查点报告" class="entity-link entity-product" title="管理产品：检查点报告">检查点报告</a>（审查）
-评价工作包状态
-捕获问<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>
-采取纠正行动
-项目记<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>新）
-阶段计划（更新）
-<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>（如果需要则创建）
-征求建议（触发<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a>流程）
-已完成工作包<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>此流程）
-工作包描述（审查）<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>已完成的
-工作包
-项目记录单（更新）
-<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>的建议（触发此
-流程）
-要<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>上一期间）（审查）
-阶段<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a><a href="../entities/product.html#entity-检查点报告" class="entity-link entity-product" title="管理产品：检查点报告">检查点报告</a>检查点报告（审查）
-项目记<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>（审查）
-评价阶段状态
-<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>要点
-项目记录单（更新）
-<a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a>（为每个期间创建）
-阶段临近结束（触发<a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a>
-流程）
-项目临近结束（触<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>导流程）
-阶段计划（审查）
-<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>（审查）
-上报问题和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>
-<a href="../entities/product.html#entity-例外报告" class="entity-link entity-product" title="管理产品：例外报告">例外报告</a>（创建）
-提<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a>触发项目指导流程）</li>
-</ul>
-<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a></p></div>
+<p>最后一个阶段临近结束时，将触发<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程（见第 19 章）。</p>
+</div>
+
+
+<table class="role-table">
+<thead><tr><th style="width:22%">输入</th><th style="width:38%">活动</th><th style="width:40%">产出</th></tr></thead>
+<tbody>
+<tr><td rowspan="2" style="vertical-align:middle">阶段授权（触发此流程）<br/>已被授权的例外计划（触发此流程）</td><td rowspan="2" style="vertical-align:middle">授权工作包</td><td>项目记录单（更新）</td></tr>
+<tr><td>工作包描述（创建、修改、批准）<br/>工作包被授权（触发产品交付管理流程）</td></tr>
+<tr><td rowspan="3" style="vertical-align:middle">新问题或风险（触发此流程）<br/>工作包描述（审查）<br/>小组计划（审查）<br/>检查点报告（审查）</td><td rowspan="3" style="vertical-align:middle">评价工作包状态<br/>捕获问题和风险<br/>采取纠正行动</td><td>项目记录单（更新）</td></tr>
+<tr><td>阶段计划（更新）</td></tr>
+<tr><td>问题报告（如果需要则创建）<br/>征求建议（触发项目指导流程）</td></tr>
+<tr><td rowspan="2" style="vertical-align:middle">已完成工作包通知（触发此流程）<br/>工作包描述（审查）</td><td rowspan="2" style="vertical-align:middle">接收已完成的工作包</td><td>项目记录单（更新）</td></tr>
+<tr><td>工作包被授权（触发产品交付管理流程）</td></tr>
+<tr><td rowspan="3" style="vertical-align:middle">项目管理委员会的建议（触发此流程）<br/>要点报告（上一期间）（审查）<br/>阶段计划（审查）<br/>检查点报告（审查）<br/>项目记录单（审查）<br/>项目计划（审查）</td><td rowspan="3" style="vertical-align:middle">评价阶段状态<br/>报告要点<br/>上报问题和风险</td><td>项目记录单（更新）<br/>阶段计划（更新）<br/>要点报告（为每个期间创建）</td></tr>
+<tr><td>阶段临近结束（触发阶段边界管理流程）<br/>项目临近结束（触发项目指导流程）</td></tr>
+<tr><td>例外报告（创建）<br/>提出例外（触发项目指导流程）</td></tr>
+</tbody>
+</table>
+<p class="figure-note">表 16.1 阶段控制的输入、活动和产出</p>
+
 <h2 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 16.4 活动</h2>
 <h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 16.4.1 授权工作包</h3>
-<div class="section-content"><p>人们交付项目工作所需的自主程度需要与协调工作开始<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>和工作完成时间的需要相平衡。项 目工作只有在得到<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>同意的情况下才能开始和继续。否则，如果工作人员随时开始执行 活动，工作环境就会变得混乱。<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>项目工作协调时间的工具是 <a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的授权、执行和交付。 工作包应当涵盖创建一个或多个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的工作。如<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>需要多个工作包才能创建，则应该将产 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>一步分解为子产品，并附带子产品<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>触发项目经理授权工作包的事件包括：</p>
+<div class="section-content">
+<p>人们交付项目工作所需的自主程度需要与协调工作开始时间和工作完成时间的需要相平衡。项目工作只有在得到<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>同意的情况下才能开始和继续。否则，如果工作人员随时开始执行活动，工作环境就会变得混乱。确保项目工作协调时间的工具是工作包的授权、执行和交付。</p>
+<p>工作包应当涵盖创建一个或多个产品的工作。如果产品需要多个工作包才能创建，则应该将产品进一步分解为子产品，并附带子产品描述。</p>
+<p>触发项目经理授权工作包的事件包括：</p>
 <ul class="content-list">
-  <li><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>授权：<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>授予执行阶段计划的职权。</li>
+<li><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>授权：项目管理委员会授予执行阶段计划的职权。</li>
+<li>批准的例外计划：项目管理委员会授予执行例外计划的职权。</li>
+<li>需要新的工作包：来自评价阶段状态的产出（见第 16.4.4 节）。</li>
+<li><a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>：采取这些行动以应对问题或风险。</li>
 </ul>
+<p>该活动用于授权新的工作包，或授权修改现有工作包。</p>
+<p>推荐项目经理采取的行动：</p>
 <ul class="content-list">
-  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>：<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>授予执行例外计划的职权。</li>
+<li>检查项目启动文件和阶段计划以决定所需的工作包。</li>
+<li>定义每个将要被授权（或修改）的工作包。</li>
+<li>与小组经理建立工作关系（见第 3 章）。</li>
+<li>与小组经理共创和审查工作包描述，确保小组经理接收工作包，并授权小组经理开始工作（见第 17 章）。对于使用迭代-增量交付方法的项目，工作包描述的共创可能是与小组经理、开发团队和产品负责人的联合行动。</li>
+<li>审查小组经理的小组计划（如果在商务环境中，项目经理不宜了解小组计划内容，则使用小组计划里程碑摘要），并更新阶段计划以反映工作包被授权的时间。</li>
+<li>更新项目记录单以反映被授权的工作包的内容。</li>
+<li>为计划的质量管理活动更新项目记录单。</li>
+<li>咨询项目保证，确保识别和选定的质量审查者是可接受的。</li>
+<li>如有必要，根据风险管理方法更新项目记录单。</li>
 </ul>
-<ul class="content-list">
-  <li>需要新的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>：来自评价阶段状态的<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>（见第 16.4.4 节）。</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>：采取这些行动以应对<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>或<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。
-该活动用于授权新的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>，或授权修改现有工作包。
-推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</li>
-</ul>
-<ul class="content-list">
-  <li>检查<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>和阶段计划以决定所需的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>定义每个将要被<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>（或修改）的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>与<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>建立工作关系（见第 3 章）。</li>
-</ul>
-<ul class="content-list">
-  <li>与<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>共创和审查<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>，确保小组经理接收工<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>授权小组经理开始工
-作（见第 17 章）。对于使用迭代-增量交付方<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>工作包描述的共创可能是与小
-组经理、开发团队和<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>负责人的联合行动。</li>
-</ul>
-<ul class="content-list">
-  <li>审查<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>的小组计划（如果在商务环境中，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>不宜了解小组计划内容，则使用
-<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>里程碑摘要），并更新<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>以反映工作包被授权的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>更新项目记录单以反映被<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的内容。</li>
-</ul>
-<ul class="content-list">
-  <li>为<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的质量管理活动更新项目记录单。</li>
-</ul>
-<ul class="content-list">
-  <li>咨询<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>，确保识别和选定的质量审查者是可接受的。</li>
-</ul>
-<ul class="content-list">
-  <li>如有必要，根据<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>更新项目记录单。</li>
-</ul></div>
+</div>
+
 <h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 16.4.2 评价工作包状态</h3>
-<div class="section-content"><p>该活动提供了定期评估<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>状态的方法。该活动的频率和正式程度，通常与<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中定 义的报告频率一致，并受当前<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>支持。 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>针对正在进行的每个工作包的建议操作：</p>
+<div class="section-content">
+<p>该活动提供了定期评估工作包状态的方法。该活动的频率和正式程度，通常与工作包描述中定义的报告频率一致，并受当前阶段的阶段计划支持。</p>
+<p>项目经理针对正在进行的每个工作包的建议操作：</p>
 <ul class="content-list">
-  <li>与<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>进行非正式对话以维持关系（见第 3 章），并了解他们在处理<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>时可能遇
-到的任何问题或<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。</li>
+<li>与小组经理进行非正式对话以维持关系（见第 3 章），并了解他们在处理工作包时可能遇到的任何问题或风险。</li>
+<li>对于正在执行的工作包，收集并审查检查点报告中的进展信息。</li>
+<li>如有必要，请更新项目记录单。</li>
+<li>根据截至目前的实际情况、预测和调整，为当前阶段更新阶段计划。</li>
 </ul>
-<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a></p>
-<ul class="content-list">
-  <li>对于正在执行的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>，收集并审查<a href="../entities/product.html#entity-检查点报告" class="entity-link entity-product" title="管理产品：检查点报告">检查点报告</a>中的进展信息。</li>
-</ul>
-<ul class="content-list">
-  <li>如有必要，请更新项目记录单。</li>
-</ul>
-<ul class="content-list">
-  <li>根据截至目前的实际情况、<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>和调整，为当前<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>更新<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>。</li>
-</ul></div>
+</div>
+
 <h3 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 16.4.3 接收已完成的工作包</h3>
-<div class="section-content"><p>如果工作已被分配给个人或小组，应该相应确认工作已经完成并获得<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>。 推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p>
+<div class="section-content">
+<p>如果工作已被分配给个人或小组，应该相应确认工作已经完成并获得批准。</p>
+<p>推荐项目经理采取的行动：</p>
 <ul class="content-list">
-  <li>确保<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>已完成<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>定义的工作，或者（如果采用敏捷方法）已交付为<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>
-商定的特征。</li>
+<li>确保小组经理已完成工作包描述定义的工作，或者（如果采用敏捷方法）已交付为时间盒商定的特征。</li>
+<li>检查与产品相关的质量登记单，以决定是否完成了必要的质量审查。</li>
+<li>确保工作包每一个产品已获得必要批准（参见其产品描述质量和可持续性职责中的定义）。</li>
+<li>确认已更新每一获批产品的产品登记单记录。</li>
+<li>更新阶段计划，以显示工作包已经完成。</li>
 </ul>
-<ul class="content-list">
-  <li>检查与<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>相关的<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>，以决定是否完成了必要的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>审查。</li>
-</ul>
-<ul class="content-list">
-  <li>确保<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的每一个产品已获得必要<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>（参见其<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>质量和可持续性职责中的
-定义）。</li>
-</ul>
-<ul class="content-list">
-  <li>确认已更新每一获批<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>记录。</li>
-</ul>
-<ul class="content-list">
-  <li>更新<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>，以显示工作包已经完成。</li>
-</ul></div>
+</div>
+
 <h3 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 16.4.4 评价阶段状态</h3>
-<div class="section-content"><p>如果不及时检查，<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>就会有失去控制的危险。提前<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和应对事态二者必须加以平衡。 为了做出明智决策并实施理性控制，需要对比实际已经发生的情况以及原本预期发生的情况和 接下来可能发生的情况（包括任何<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>）。 因此，具有能够提供整体<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>的稳定信息流，以及能够提供这些信息的简单而有力的监视系统 是至关重要的。 该活动的目标是就已执行的工作和资源状态<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>准确且最新的进展概貌。该活动按照<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a> 定义频率进行，可能由<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>建议触发，或者构成对新问题和风险的部分分析。 推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p>
+<div class="section-content">
+<p>如果不及时检查，阶段就会有失去控制的危险。提前计划和应对事态二者必须加以平衡。为了做出明智决策并实施理性控制，需要对比实际已经发生的情况以及原本预期发生的情况和接下来可能发生的情况（包括任何问题和风险）。</p>
+<p>因此，具有能够提供整体进展的稳定信息流，以及能够提供这些信息的简单而有力的监视系统是至关重要的。</p>
+<p>该活动的目标是就已执行的工作和资源状态维护准确且最新的进展概貌。该活动按照阶段计划定义频率进行，可能由项目管理委员会建议触发，或者构成对新问题和风险的部分分析。</p>
+<p>推荐项目经理采取的行动：</p>
 <ul class="content-list">
-  <li>查看<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，并确定是否需要执行任何行动。</li>
+<li>查看阶段的进展，并确定是否需要执行任何行动。</li>
+<li>根据需要修改项目记录单。</li>
+<li>在总体评估更改预测时更新阶段计划。</li>
+<li>确认任何产品的所有权是否已作为产品分阶段移交的一部分转移给用户（见第 19 章）。（注意，在项目生命周期中可能发生多次移交。）</li>
+<li>考虑是现在审查经验教训，还是等待后续阶段状态审查或在阶段临近结束时审查。</li>
+<li>如果当前阶段临近结束（根据阶段计划、项目记录单内容或里程碑等判断），则为下一阶段作准备（见第 18 章）。</li>
+<li>如果最后一个阶段临近结束，则准备收尾项目（见第 19 章）。</li>
 </ul>
-<ul class="content-list">
-  <li>根据需要修改项目记录单。</li>
-</ul>
-<ul class="content-list">
-  <li>在总体评估更改<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>时更新<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>确认任何<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的所有权是否已作为产品分<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>移交的一部分转移给用户（见第 19 章）。
-（注意，在项目生命周期中可能发生多次移交。）</li>
-</ul>
-<ul class="content-list">
-  <li>考虑是现在审查经验教训，还是等待后续<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>状态审查或在阶段临近结束时审查。</li>
-</ul>
-<ul class="content-list">
-  <li>如果当前<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>临近结束（根据<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>、项目记录单内容或里程碑等判断），则为下一阶
-段作准备（见第 18 章）。</li>
-</ul>
-<ul class="content-list">
-  <li>如果最后一个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>临近结束，则准备收尾项目（见第 19 章）。</li>
-</ul>
-<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a></p></div>
+</div>
+
 <h3 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 16.4.5 捕获问题和风险</h3>
-<div class="section-content"><p>项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>流程中可能会出现<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，也可能识别出<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。它们将以非结构化的方式发生，并且 应以一致和可靠的方式捕获。<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>、项目的任何成员或其他<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>都可能提出问题或风 险<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>外，确保项目管理团队内部的心理安全也非常重要（见第 3 章）。必须立即充分<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 相关问题和风险。 在<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>采取一系列行动前，每个问题或风险都应该记录在项目记录单中，然后评估其影响。 有关<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>的更多详细信息，请参阅<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>9 章；有关问题管理的更多详细信息，请参阅 推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p>
+<div class="section-content">
+<p>项目管理流程中可能会出现问题，也可能识别出风险。它们将以非结构化的方式发生，并且应以一致和可靠的方式捕获。业务、项目的任何成员或其他利益相关方都可能提出问题或风险。此外，确保项目管理团队内部的心理安全也非常重要（见第 3 章）。必须立即充分解决相关问题和风险。</p>
+<p>在决定采取一系列行动前，每个问题或风险都应该记录在项目记录单中，然后评估其影响。有关风险管理的更多详细信息，请参阅第 9 章；有关问题管理的更多详细信息，请参阅第 10 章。</p>
+<p>推荐项目经理采取的行动：</p>
 <ul class="content-list">
-  <li>如果出现<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，根据<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>记录和管理风险（见第 9 章）。</li>
+<li>如果出现风险，根据风险管理方法记录和管理风险（见第 9 章）。</li>
+<li>如果出现问题，请根据问题管理方法记录和管理问题（见第 10 章）。</li>
+<li>如有必要，采取纠正行动、向项目管理委员会征求建议或者上报问题或风险，然后首先审查阶段状态，以便考虑总体情况（见 16.4.4 节）。</li>
 </ul>
-<ul class="content-list">
-  <li>如果出现<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，请根据<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>记录和管理问题（见第 10 章）。</li>
-</ul>
-<ul class="content-list">
-  <li>如有必要，采取<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>、向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>征求建议或者上报问题或<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，然后首先
-审查阶段状态，以便考虑总体情况（见 16.4.4 节）。</li>
-</ul></div>
+</div>
+
 <h3 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 16.4.6 采取纠正行动</h3>
-<div class="section-content"><p>对于项目的变更和调整，即使看起来易于<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>，且在<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>范围内，也需要经过深思熟虑并 以合理方式进行。 采取<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>的目的是选择并在管理<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>和项目容许偏差的限制内实施行动，以纠正相比于计<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>差。纠正行动在评估阶段状态时触发（见 16.4.4 节）， 通常包括处理<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a> 提供的建议和指导，以及<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>提出的问题。 有关计划的更多详细信息，请参阅第 7 章。有关<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理的更多详细信息，请参阅第 10 章。 推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p>
+<div class="section-content">
+<p>对于项目的变更和调整，即使看起来易于管理，且在容许偏差范围内，也需要经过深思熟虑并以合理方式进行。</p>
+<p>采取纠正行动的目的是选择并在管理阶段和项目容许偏差的限制内实施行动，以纠正相比于计划的偏差。纠正行动在评估阶段状态时触发（见 16.4.4 节），通常包括处理项目管理委员会提供的建议和指导，以及小组经理提出的问题。有关计划的更多详细信息，请参阅第 7 章。有关问题管理的更多详细信息，请参阅第 10 章。</p>
+<p>推荐项目经理采取的行动：</p>
 <ul class="content-list">
-  <li>收集关于偏差的所有相关信息。</li>
+<li>收集关于偏差的所有相关信息。</li>
+<li>识别处理偏差的潜在方法，并选择最合适的选项。</li>
+<li>通过授权工作包触发纠正行动（见 16.4.1 节）。</li>
+<li>更新受影响产品的产品登记单记录，包括是否需要任何变更或需要新产品。</li>
+<li>更新问题报告（如有必要），以显示纠正行动的状态。</li>
+<li>根据纠正行动产生的变更更新项目记录单。</li>
+<li>更新当前管理阶段的阶段计划。</li>
 </ul>
-<ul class="content-list">
-  <li>识别处理偏差的潜在方法，并选择最合适的选项。</li>
-</ul>
-<ul class="content-list">
-  <li>通过<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a><a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>触发<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>（见 16.4.1 节）。</li>
-</ul>
-<ul class="content-list">
-  <li>更新受影响<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>记录，包括是否需要任何变更或需要新产品。</li>
-</ul>
-<ul class="content-list">
-  <li>更新<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>（如有必要），以显示<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>的状态。</li>
-</ul>
-<ul class="content-list">
-  <li>根据<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>产生的变更更新项目记录单。</li>
-</ul>
-<ul class="content-list">
-  <li>更新当前<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>阶段的<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>。</li>
-</ul></div>
+</div>
+
 <h3 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 16.4.7 上报问题和风险</h3>
-<div class="section-content"><p><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>不应该超出<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>协定的容许偏差。只有阶段（或项目）<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>将在项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员 会设定的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>范围内完成，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>才能采取纠正行动或维<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>如果项目经理控制范 围内的任何<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>都无法避免阶段超出协定的容许偏差，则此活动适用。以上适用于无<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会设定的容许偏差<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内解决的各类<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>（或其汇总）。</p>
-<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a> 由于收集信息创建例外<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>可能要花一些时间，建议尽早提醒<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>。因此，项目 经理可能希望分两步执行活动：提<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会预测例外情况以便其有所准备，然 后以<a href="../entities/product.html#entity-例外报告" class="entity-link entity-product" title="管理产品：例外报告">例外报告</a>形式提供支持信息。 项<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会就上报内容所做的决策。上报<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>是良好实践，不应 被看做失效；问题上报越早，可用于实施<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>的时间越多。 有关<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>的更多详细信息，请参阅<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>9 章；有关问题管理的更多详细信息，请参阅 推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p>
+<div class="section-content">
+<p>阶段不应该超出项目管理委员会协定的容许偏差。只有阶段（或项目）预测将在项目管理委员会设定的容许偏差范围内完成，项目经理才能采取纠正行动或维持现状。如果项目经理控制范围内的任何纠正行动都无法避免阶段超出协定的容许偏差，则此活动适用。以上适用于无法在项目管理委员会设定的容许偏差范围内解决的各类问题和风险（或其汇总）。</p>
+<p>由于收集信息创建例外报告可能要花一些时间，建议尽早提醒项目管理委员会。因此，项目经理可能希望分两步执行活动：提前通知项目管理委员会预测例外情况以便其有所准备，然后以例外报告形式提供支持信息。</p>
+<p>项目经理应执行项目管理委员会就上报内容所做的决策。上报问题和风险是良好实践，不应被看做失效；问题上报越早，可用于实施纠正行动的时间越多。有关风险管理的更多详细信息，请参阅第 9 章；有关问题管理的更多详细信息，请参阅第 10 章；有关例外管理的更多详细信息，请参阅第 11 章。</p>
+<p>推荐项目经理采取的行动：</p>
 <ul class="content-list">
-  <li>检查<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>，以定义偏差程度和未完成的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，并决定如果偏差继续发展将会发生
-什么。</li>
+<li>检查阶段计划，以定义偏差程度和未完成的产品，并决定如果偏差继续发展将会发生什么。</li>
+<li>了解项目管理团队的心理安全，以决定是否需要采取行动。</li>
+<li>检查项目计划的项目状态和所有偏差的总体影响（使用项目启动文件当前基线）。</li>
+<li>决定恢复选项，并根据商业论证对其进行评估。</li>
+<li>根据阶段计划评估恢复选项对当前阶段的影响。（应当考虑具有相关技能或经验的个人或团体是否有能力评估这些影响。）</li>
+<li>在例外报告中向项目管理委员会提出情况、选项和行动方案推荐；然后，项目管理委员会将决定适当的行动方案（可以支持或拒绝项目经理的推荐）。</li>
 </ul>
-<ul class="content-list">
-  <li>了解项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队的心理安全，以决定是否需要采取行动。</li>
-</ul>
-<ul class="content-list">
-  <li>检查<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的项目状态和所有偏差的总体影响（使用<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>当前基线）。</li>
-</ul>
-<ul class="content-list">
-  <li>决定恢复选项，并根据<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>对其进行评估。</li>
-</ul>
-<ul class="content-list">
-  <li>根据<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>评估恢复选项对当前阶段的影响。（应当考虑具有相关技能或经验的个人
-或团体是否有能力评估这些影响。）</li>
-</ul>
-<ul class="content-list">
-  <li>在<a href="../entities/product.html#entity-例外报告" class="entity-link entity-product" title="管理产品：例外报告">例外报告</a>中向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>提出情况、选项和行动方案推荐；然后，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委
-员会将决定适当的行动方案（可以支持或拒绝<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>的推荐）。</li>
-</ul></div>
+</div>
+
 <h3 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 16.4.8 报告要点</h3>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>必须向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>提供有关阶段和项目状态的概要信息，并按照<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a> 记录的频<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会定义），向利益相关方分发其他信息。（有关<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>控制的更 多详细信息，请参阅第 11 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>推荐项目经理采取的行动：</p>
+<div class="section-content">
+<p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>必须向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>提供有关阶段和项目状态的概要信息，并按照<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>记录的频度（由项目管理委员会定义），向利益相关方分发其他信息。（有关进展控制的更多详细信息，请参阅第 11 章。）</p>
+<p>推荐项目经理采取的行动：</p>
 <ul class="content-list">
-  <li>汇编<a href="../entities/product.html#entity-检查点报告" class="entity-link entity-product" title="管理产品：检查点报告">检查点报告</a>、项目记录单，以及当前<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>期<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>的所有重大变更（信息来自阶
-段状态审查；见 16.4.4 节）。</li>
+<li>汇编检查点报告、项目记录单，以及当前报告期阶段计划的所有重大变更（信息来自阶段状态审查；见 16.4.4 节）。</li>
+<li>汇编报告期内采取的纠正行动清单（如项目记录单中注明或记录的那样）；这将向项目管理委员会保证项目经理在协定的容许偏差范围内行事（信息是通过采取纠正行动获得的；见第 16.4.6 节）。</li>
+<li>审查以前报告期的要点报告。</li>
+<li>编制当前报告期的要点报告。</li>
+<li>分发要点报告（见第 11 章）。对于使用迭代-增量交付方法（如敏捷）的项目，要点报告可能基于"拉动"系统，项目管理委员会通过该系统查看项目经理和开发团队维护的进展图表。</li>
 </ul>
-<ul class="content-list">
-  <li>汇编<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>期内采取的<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>清单（如项目记录单中注明或记录的那样）；这将向项目管
-理委员会保证<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在协定的容许偏差范围内行事（信<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>采取纠正行动获得的；
-见第 16.4.6 节）。</li>
-</ul>
-<ul class="content-list">
-  <li>审查以前<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>期的<a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>编制当前<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>期的<a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>分发<a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a>（见第 11 章）。对于使用迭代-增量交付方法（如敏捷）的项目，要点报
-告可能基于“拉动”系统，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>通过该系统查看项目经理和开发团队维护的
-<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>图表。</li>
-</ul>
-<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a></p></div>
+</div>
+
 <h2 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 16.5 应用流程</h2>
 <h3 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 16.5.1 一般注意事项</h3>
-<div class="section-content"><p><a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>在这一流程中是基础， 因为其与 PRINCE2 中的<a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>原<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>工作包描述的详细程度可能会有所不同，具体取决于<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>与<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>之间的关系。良好实践是 包括<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>、阶段计划或<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的摘录，或者只是交叉引用其元素。这可以减少重 复内容。 在<a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>流程中，项目经理、项目支持和<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>之间应该保持协作关系。<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>不是 将任务委派或分配给小组经理或<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>，而是促进改进所有权<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>并使小组经理和项 目支持能够为项目做出贡献，并最终实现<a href="../entities/term.html#entity-业务目标" class="entity-link entity-term" title="术语：业务目标">业务目标</a>（请参阅第 3 章，了解<a href="../entities/term.html#entity-共创" class="entity-link entity-term" title="术语：共创">共创</a>和协作）。</p></div>
-<h3 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 16.5.2 阶段控制流程中的角色剪裁</h3>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在此流程中负责创建所有新的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>，可将任务授权给他人，但其仍对工作负责。例 如，PRIN<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>中，项目经理负责创建<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>。但是，在实践中，他们可能不具备在<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>描 述中定义<a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>或方法陈述的必要技能。因此，他们将依靠<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>家来创建内容， 项目经理的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>将是确保他们被充分定义、审查和保证以满足<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>的需求。</p></div>
-<h2 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 16.6 职责</h2>
-<div class="section-content"><p>表 16.2 总结了关于完成<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中每项活动的问责制和职责，以及应咨询和知情的人员。 表 16.2 用于<a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>的 RACI 图表 活动 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a> <a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>高级用户<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>项目经理小组经理项目保证 <a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a> 授权工作包 A R C C C 评价<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>状态 A R C C C<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>已完成的工作包 A R C I 评价<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>状态 A C C R C C C 捕获<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> A R R C C 采取<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a> A C C A 1/R <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>I 上报问题和风险 A C C R I I <a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>要点 A C C R C C C R = 负责人，A = 问责人，C = 咨询人，I = 知情<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>R 1：负责在阶段层面捕获问题和风险 R 2：<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>在团队层面捕获问题和风险 A 1：对<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>采取的纠正行动问责 R 3<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a>己的纠正行动 R 4：负责团队层面的纠正行动</p>
-<p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a></p></div>
-<h2 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 16.7 为此流程应用实践</h2>
-<div class="section-content"><p>表 16.3 总结了每种<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>如何支持<a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>流程的活动。 表 1<a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a>实践在阶段控制流程中的应用 实践 应用于<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>控制流程 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 定期检查商业论证以确保其保持可行，否则必须通知<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>。应用 收益管理方法和<a href="../entities/product.html#entity-可持续性管理方法" class="entity-link entity-product" title="管理产品：可持续性管理方法">可持续性管理方法</a>，其需求包含在阶段的<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中。 组织 应用沟通<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>、<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>方法和商务管理方法，其<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>包含在阶段的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a> 描述中。 监视项目团队的健康和福祉。 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 开发或<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>工作包描述。 更新阶段计划和<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>。 质量 使用阶段的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>状态更新<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>。 应用<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>，其需求包含在阶段的工作包描<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>。 开发或更新阶段的<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>。 根据计划或实际的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>活动更新<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>。 风险 应用<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>，其需求包含在阶段的工作包描述中 。 <a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>中更新新风险的详细信息，并采取行动或完成<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>。 问题 应用<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>，其需求包含在阶段的工作包描述中。 <a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>将更新新问题的详细信息以及需要或已完成的任何操作。 为那些需要上报、进一步分析和采取行动的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>创建<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>。 进展 应用数字化和<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>管理方法<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>含在阶段的工作包描述中。 使用新条目更新<a href="../entities/product.html#entity-日志" class="entity-link entity-product" title="管理产品：日志">日志</a>和<a href="../entities/product.html#entity-经验教训记录单" class="entity-link entity-product" title="管理产品：经验教训记录单">经验教训记录单</a>。 以项目控制所需的频率生成和发布<a href="../entities/product.html#entity-要点报告" class="entity-link entity-product" title="管理产品：要点报告">要点报告</a>。 对于无法在协定的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>内解决的问题，将生成<a href="../entities/product.html#entity-例外报告" class="entity-link entity-product" title="管理产品：例外报告">例外报告</a>并上报。</p>
-<p><a href="../entities/process.html#entity-产品交付管理" class="entity-link entity-process" title="流程：产品交付管理">产品交付管理</a></p></div>
-    </div>
+<div class="section-content">
+<p><a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>在这一流程中是基础，因为其与 PRINCE2 中的<a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>原则相关。</p>
+<p>工作包描述的详细程度可能会有所不同，具体取决于业务与供应商之间的关系。良好实践是包括项目计划、阶段计划或项目启动文件的摘录，或者只是交叉引用其元素。这可以减少重复内容。</p>
+<p>在阶段控制流程中，项目经理、项目支持和小组经理之间应该保持协作关系。项目经理不是将任务委派或分配给小组经理或项目支持，而是促进改进所有权的流程，并使小组经理和项目支持能够为项目做出贡献，并最终实现业务目标（请参阅第 3 章，了解共创和协作）。</p>
+</div>
 
-    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+<h3 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 16.5.2 阶段控制流程中的角色剪裁</h3>
+<div class="section-content">
+<p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在此流程中负责创建所有新的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>，可将任务授权给他人，但其仍对工作负责。例如，PRINCE2 中，项目经理负责创建工作包描述。但是，在实践中，他们可能不具备在工作包描述中定义专业产品或方法陈述的必要技能。因此，他们将依靠小组经理或其他专家来创建内容，项目经理的角色将是确保他们被充分定义、审查和保证以满足阶段计划的需求。</p>
+</div>
+
+<h2 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 16.6 职责</h2>
+<div class="section-content">
+<p>表 16.2 总结了关于完成流程中每项活动的问责制和职责，以及应咨询和知情的人员。</p>
+
+<table class="role-table">
+<thead><tr><th style="min-width:120px">活动</th><th>业务层</th><th>项目总监</th><th>高级用户</th><th>高级供应商</th><th>项目经理</th><th>小组经理</th><th>项目保证</th><th>项目支持</th></tr></thead>
+<tbody>
+<tr><td>授权工作包</td><td>A</td><td>R</td><td>C</td><td>C</td><td>C</td><td></td><td></td><td></td></tr>
+<tr><td>评价工作包状态</td><td>A</td><td>R</td><td>C</td><td>C</td><td></td><td>R</td><td></td><td></td></tr>
+<tr><td>接收已完成的工作包</td><td>A</td><td>R</td><td>C</td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>评价阶段状态</td><td>A</td><td>C</td><td>C</td><td>R</td><td>C</td><td>C</td><td>C</td><td></td></tr>
+<tr><td>捕获问题和风险</td><td>A</td><td>R</td><td>R</td><td>C</td><td>C</td><td></td><td></td><td></td></tr>
+<tr><td>采取纠正行动</td><td>A</td><td>C</td><td>C</td><td>R</td><td>I</td><td></td><td>I</td><td></td></tr>
+<tr><td>上报问题和风险</td><td>A</td><td>C</td><td>C</td><td>R</td><td>I</td><td>I</td><td></td><td></td></tr>
+<tr><td>报告要点</td><td>A</td><td>C</td><td>C</td><td>R</td><td>C</td><td>C</td><td>C</td><td></td></tr>
+<tr><td colspan="9" style="text-align:left;font-size:0.85em;color:#5c3d1a">
+R = 负责人，A = 问责人，C = 咨询人，I = 知情人<br/>
+R1：负责在阶段层面捕获问题和风险　　R2：负责在团队层面捕获问题和风险<br/>
+A1：对小组经理采取的纠正行动问责　　R3：负责自己的纠正行动　　R4：负责团队层面的纠正行动
+</td></tr>
+</tbody>
+</table>
+<p class="figure-note">表 16.2 用于阶段控制的 RACI 图表</p>
+
+</div>
+
+<h2 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 16.7 为此流程应用实践</h2>
+<div class="section-content">
+<p>表 16.3 总结了每种实践如何支持阶段控制流程的活动。</p>
+
+<table class="role-table">
+<thead><tr><th style="width:18%">实践</th><th>应用于阶段控制流程</th></tr></thead>
+<tbody>
+<tr><td>商业论证</td><td>定期检查商业论证以确保其保持可行，否则必须通知项目管理委员会。应用收益管理方法和可持续性管理方法，其需求包含在阶段的工作包描述中。</td></tr>
+<tr><td>组织</td><td>应用沟通管理、变更管理方法和商务管理方法，其需求包含在阶段的工作包描述中。监视项目团队的健康和福祉。</td></tr>
+<tr><td>计划</td><td>开发或更新阶段的工作包描述。更新阶段计划和项目计划。</td></tr>
+<tr><td>质量</td><td>使用阶段的产品状态更新产品登记单。应用质量管理方法，其需求包含在阶段的工作包描述中。开发或更新阶段的产品描述。根据计划或实际的质量活动更新质量登记单。</td></tr>
+<tr><td>风险</td><td>应用风险管理方法，其需求包含在阶段的工作包描述中。风险登记单中更新新风险的详细信息，并采取行动或完成风险应对。</td></tr>
+<tr><td>问题</td><td>应用问题管理方法，其需求包含在阶段的工作包描述中。问题登记单将更新新问题的详细信息以及需要或已完成的任何操作。为那些需要上报、进一步分析和采取行动的问题创建问题报告。</td></tr>
+<tr><td>进展</td><td>应用数字化和数据管理方法，其需求包含在阶段的工作包描述中。使用新条目更新日志和经验教训记录单。以项目控制所需的频率生成和发布要点报告。对于无法在协定的容许偏差内解决的问题，将生成例外报告并上报。</td></tr>
+</tbody>
+</table>
+<p class="figure-note">表 16.3 实践在阶段控制流程中的应用</p>
+
+</div>
+
+</div>
+
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid var(--accent); border-bottom: none;">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch15.html" class="nav-link">◁ 第15章 项目启动</a> | <a href="ch17.html" class="nav-link">第17章 产品交付管理 ▷</a>
     </div>
 
@@ -497,27 +542,32 @@
         <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
     </div>
 
-    <script>
-        function toggleToc() {
-            var list = document.getElementById('tocList');
-            var icon = document.querySelector('.toc-icon');
-            list.classList.toggle('collapsed');
-            icon.style.transform = list.classList.contains('collapsed')
-                ? 'rotate(0deg)' : 'rotate(90deg)';
-        }
+    <script src="../assets/chapter-common.js"></script>
+<script>
+    (function() {
+        var list = document.getElementById("tocList");
+        var icon = document.querySelector(".toc-icon");
+        if (list) { list.classList.add("collapsed"); }
+        if (icon) { icon.style.transform = "rotate(0deg)"; }
+    })();
 
-        // Purple Numbers: 点击复制链接
-        document.querySelectorAll('.pn-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var url = window.location.href.split('#')[0] + link.getAttribute('href');
-                navigator.clipboard.writeText(url).then(function() {
-                    link.style.color = '#2E8B57';
-                    setTimeout(function() { link.style.color = ''; }, 1000);
-                });
-            });
+    (function() {
+        var bar = document.createElement("div");
+        bar.className = "progress-bar";
+        document.body.prepend(bar);
+        var btn = document.createElement("div");
+        btn.className = "back-to-top";
+        btn.innerHTML = "\u25B2";
+        btn.title = "\u8FD4\u56DE\u9876\u90E8";
+        document.body.appendChild(btn);
+        btn.addEventListener("click", function() { window.scrollTo({ top: 0, behavior: "smooth" }); });
+        window.addEventListener("scroll", function() {
+            var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+            bar.style.width = Math.min(pct, 100) + "%";
+            btn.classList.toggle("visible", window.scrollY > 400);
         });
-    </script>
+    })();
+</script>
 <script src="../assets/floating-toc.js"></script>
 </body>
 </html>

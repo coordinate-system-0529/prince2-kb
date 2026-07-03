@@ -184,7 +184,7 @@ h4.section-heading {
 }
 .content-list li {
     position: relative;
-    padding-left: 1.2em;
+    padding-left: 1.6em;
     margin-bottom: 6px;
     text-align: justify;
 }
@@ -193,6 +193,11 @@ h4.section-heading {
     color: var(--accent);
     position: absolute;
     left: 0;
+    top: 0;
+    line-height: inherit;
+    width: 1em;
+    display: inline-block;
+    text-align: left;
 }
 
 /* 实体链接（分类语义色不随主题变化） */

@@ -4,175 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第4章 PRINCE2实践简介 - PRINCE2 知识库</title>
+    <link rel="stylesheet" href="../assets/chapter.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
-            background-color: #faf6f0;
-            color: #3e2a1a;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.8;
+        /* 浮动目录智能避让：默认半隐藏，悬停展开 */
+        #floating-toc {
+            transform: translateX(172px);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -3px 0 8px color-mix(in srgb, var(--accent) 8%, transparent);
+            z-index: 103 !important;
         }
-
-        /* 导航栏 */
-        .nav-bar {
-            padding: 12px 0;
-            border-bottom: 2px solid #d4af37;
-            margin-bottom: 24px;
-            font-size: 0.9em;
+        #floating-toc:hover {
+            transform: translateX(0);
+            box-shadow: -4px 0 16px color-mix(in srgb, var(--accent) 15%, transparent);
         }
-        .nav-link {
-            color: #8B4513;
-            text-decoration: none;
-            padding: 4px 8px;
-        }
-        .nav-link:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-
-        /* 分类标签 */
-        .category-tag {
-            display: inline-block;
-            background: #8B4513;
-            color: #faf6f0;
-            padding: 3px 12px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            margin-bottom: 8px;
-        }
-
-        /* 章节标题 */
-        .chapter-title {
-            font-size: 1.8em;
-            color: #5c3d1a;
-            border-bottom: 3px double #d4af37;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-        }
-
-        /* 章节目录 */
-        .chapter-toc {
-            background: #f0e8d8;
-            border: 1px solid #d4c8a8;
-            border-left: 4px solid #d4af37;
-            padding: 16px;
-            margin-bottom: 30px;
-            border-radius: 0 4px 4px 0;
-        }
-        .toc-title {
-            cursor: pointer;
-            color: #5c3d1a;
-            font-size: 1em;
-            user-select: none;
-        }
-        .toc-title:hover { color: #d4af37; }
-        .toc-icon { transition: transform 0.3s; display: inline-block; }
-        .toc-list {
-            list-style: none;
-            padding-left: 20px;
-            margin-top: 10px;
-            max-height: 500px;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-        .toc-list.collapsed { max-height: 0; margin-top: 0; }
-        .toc-list li {
-            padding: 3px 0;
-            border-bottom: 1px dotted #d4c8a8;
-        }
-        .toc-list a {
-            color: #8B4513;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        .toc-list a:hover { color: #d4af37; }
-
-        /* 内容区 */
-        .section-heading {
-            color: #5c3d1a;
-            margin-top: 32px;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e0d5c0;
-        }
-        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
-        h3.section-heading { font-size: 1.2em; }
-        h4.section-heading { font-size: 1.05em; }
-
-        .pn-link {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 0.75em;
-            vertical-align: super;
-            margin-right: 4px;
-            cursor: pointer;
-        }
-        .pn-link:hover { color: #8B4513; }
-
-        .section-content {
-            margin-bottom: 20px;
-        }
-        .section-content p {
-            margin-bottom: 12px;
-            text-indent: 2em;
-            text-align: justify;
-        }
-
-        /* 列表 */
-        .content-list {
-            list-style: none;
-            padding-left: 2em;
-            margin: 12px 0;
-        }
-        .content-list li {
-            position: relative;
-            padding-left: 1.2em;
-            margin-bottom: 6px;
-            text-align: justify;
-        }
-        .content-list li::before {
-            content: "●";
-            color: #d4af37;
+        .ftoc-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            background: var(--kb-accent-dark);
+            color: var(--kb-tag-text);
+            padding: 10px 5px;
+            border-radius: 4px 0 0 4px;
+            font-size: 0.78em;
+            cursor: default;
+            letter-spacing: 4px;
             position: absolute;
             left: 0;
+            top: 16px;
+            transform: translateX(-100%);
+            box-shadow: -2px 0 6px rgba(0,0,0,0.10);
+            user-select: none;
         }
 
-        /* 实体链接 */
-        .entity-link {
-            text-decoration: none;
-            border-bottom: 1px dashed;
-            padding: 0 1px;
-            transition: all 0.2s;
+        /* 顶部导航栏固定悬浮 */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 102;
+            background: var(--bg-main);
         }
-        .entity-link:hover {
-            background: rgba(212, 175, 55, 0.15);
-        }
-        .entity-principle { color: #b8860b; border-color: #b8860b; }
-        .entity-practice { color: #8B4513; border-color: #8B4513; }
-        .entity-process { color: #2E8B57; border-color: #2E8B57; }
-        .entity-role { color: #4169E1; border-color: #4169E1; }
-        .entity-product { color: #8B008B; border-color: #8B008B; }
-        .entity-term { color: #A0522D; border-color: #A0522D; }
 
-        /* 页脚 */
-        .footer {
-            margin-top: 48px;
-            padding-top: 16px;
-            border-top: 2px solid #d4af37;
+        /* 宽屏隐藏内联目录，避免与浮动目录重复 */
+        @media (min-width: 1201px) {
+            .chapter-toc { display: none; }
+        }
+
+        /* 导航栏颜色区分 */
+        .nav-link:first-child { color: var(--kb-accent-dark); font-weight: bold; }
+        .nav-link:not(:first-child) { color: #6e6e6e; }
+
+        /* === 仅本章生效的美化增强 === */
+        body { line-height: 1.9; }
+        .section-content p { margin-bottom: 16px; }
+
+        /* 阅读进度条 */
+        .progress-bar {
+            position: fixed; top: 0; left: 0;
+            width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--kb-accent-dark));
+            z-index: 200; transition: width 0.1s linear;
+        }
+
+        /* 内容区卡片化 */
+        .chapter-content {
+            background: #fffef9;
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 32px 36px;
+            box-shadow: 0 2px 12px rgba(139, 69, 19, 0.06);
+        }
+
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed; right: 24px; bottom: 32px;
+            width: 42px; height: 42px;
+            background: var(--kb-accent-dark); color: var(--kb-tag-text);
+            border: 2px solid var(--accent); border-radius: 50%;
+            cursor: pointer; font-size: 1.2em;
+            display: none; align-items: center; justify-content: center;
+            z-index: 99; opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, background 0.2s;
+        }
+        .back-to-top.visible { display: flex; opacity: 0.85; transform: translateY(0); }
+        .back-to-top:hover { background: var(--accent); color: var(--text-heading); opacity: 1; }
+
+        /* 列表悬停微交互 */
+        .content-list li {
+            transition: background 0.2s;
+            border-radius: 3px;
+        }
+        .content-list li:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
+        /* 响应式 - 平板 */
+        @media (max-width: 768px) {
+            .chapter-content { padding: 20px 18px; border-radius: 4px; }
+        }
+
+        /* === 内容类型区分样式 === */
+
+        /* 关键信息 */
+        .key-info {
+            background: var(--bg-intro);
+            border-left: 4px solid var(--accent);
+            padding: 12px 16px;
+            margin: 16px 0;
+            border-radius: 0 4px 4px 0;
+            font-style: italic;
+        }
+        .key-info::before {
+            content: "🔑 关键信息";
+            display: block;
+            font-weight: bold;
+            font-style: normal;
+            color: var(--kb-accent-dark);
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        /* 定义框 */
+        .definition-box {
+            background: var(--kb-paper-3);
+            border-left: 4px solid var(--kb-accent-dark);
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .definition-box::before {
+            content: "📘 定义";
+            display: block;
+            font-weight: bold;
+            color: var(--text-heading);
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        /* 场景框 */
+        .scenario-box {
+            background: var(--kb-paper-2);
+            border-left: 4px solid var(--kb-border-mid);
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .scenario-box::before {
+            content: "🎯 场景";
+            display: block;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        /* 图/表注释 */
+        .figure-note {
             text-align: center;
-            font-size: 0.85em;
-            color: #8B7355;
+            color: var(--kb-muted);
+            font-style: italic;
+            font-size: 0.9em;
+            margin: 12px 0;
         }
 
-        /* 响应式 */
-        @media (max-width: 600px) {
-            body { padding: 12px; }
-            .chapter-title { font-size: 1.4em; }
+        /* 产品卡片（管理产品描述） */
+        .product-card {
+            border: 2px solid var(--kb-accent-dark);
+            border-radius: 4px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            background: var(--kb-paper-1);
         }
+        .product-card .prod-name {
+            font-weight: bold;
+            color: var(--kb-accent-dark);
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--kb-border-light);
+        }
+        .product-card .prod-label {
+            font-weight: bold;
+            color: var(--accent);
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        /* 表格样式 */
+        .role-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.92em;
+        }
+        .role-table th {
+            background: var(--kb-paper-4);
+            color: var(--text-heading);
+            padding: 10px 12px;
+            text-align: center;
+            border: 1px solid var(--border-card);
+        }
+        .role-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border-card);
+            vertical-align: top;
+        }
+        .role-table tr:nth-child(even) td {
+            background: var(--kb-paper-1);
+        }
+        .cols-prac th:first-child { width: 12%; }
+        .cols-prac th:nth-child(2) { width: 52%; }
+        .cols-prac th:nth-child(3) { width: 20%; }
+        .cols-prac th:nth-child(4) { width: 16%; }
     </style>
 </head>
 <body>
@@ -184,179 +227,242 @@
     
         <nav class="chapter-toc">
             <h3 class="toc-title" onclick="toggleToc()">
-                <span class="toc-icon">▸</span> 本章目录（6 节）
+                <span class="toc-icon">▸</span> 本章目录（5 节）
             </h3>
             <ul class="toc-list" id="tocList">
-                <li><a href="#pn-2">4.1 PRINCE2 实践</a></li><li><a href="#pn-3">4.2 应用实践</a></li><li><a href="#pn-4">4.3 管理产品</a></li><li><a href="#pn-5">4.3.1 项目启动文件</a></li><li><a href="#pn-6">4.3.2 项目记录单</a></li><li><a href="#pn-7">4.4 实践章节的格式</a></li>
+                <li><a href="#pn-1">4.1 PRINCE2 实践</a></li>
+                <li><a href="#pn-2">4.2 应用实践</a></li>
+                <li><a href="#pn-3">4.3 管理产品</a></li>
+                <li><a href="#pn-4">4.3.1 项目启动文件</a></li>
+                <li><a href="#pn-5">4.3.2 项目记录单</a></li>
+                <li><a href="#pn-6">4.4 实践章节的格式</a></li>
             </ul>
         </nav>
 
     <div class="chapter-content">
-        <div class="section-content"><p>PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>简介</p></div>
-<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 4.1 PRINCE2 实践</h2>
-<div class="section-content"><p>定义：<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a> 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的一个方面，必须在整个项目生命周期中一致地应用。具<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>践需要对项 目管理的该方面特别<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>，以保证 PRINCE2 <a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>的有效<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> PRINCE2 实践描述了项目管理的各个方面，这些方面必须随着项目在其生命周期内的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>不断 得到处理。例如，由于<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>会不断出现，<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>也需要管理，因此项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>需在整个项目生 命周期内进行更新和再验证。PRINCE<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>的优势在于七种实践的集成方式，包括它们关联在一起 的方式，以及在所有<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>RINCE2 流程中的使用方式。 PRINCE2 流程（见第 1<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>章至第 19 章）涵盖项目的渐进流程（生命周期<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>其中描述了在需 要时采取的与每项实践相关的行动。在以下实践章节（见第 5 章至第 11 章）中，为这些行 动提供了更详细的指导。 表4.1 七项 PRINCE2 实践 实践 描述 回答的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>节 商业论证 项目始于一个被认为对相关<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>具有潜在价值的 想法。这种实践解决了如何将想法发展成可行的 投资主张，以及如何定义和验证成功。 它为项目管理如<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>整个项目中重点关注项目收 益、目的以及与<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>和所涉及其他组织的目标和 优先级<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>一致奠定了基础。 为什么？ 组织 项目工作需要由问责人指导，<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>给负责管理的 人，并分配给将交付项目所需<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的人。项目 是跨职能的，因此，普通的直线型管理结构并不 适合。 本实践描述了为有效发起和完成项目所需的临时 性 PRINCE2 项目管理团队中的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、职责和关 系。它描述了如何在项目活动和决策中体现出业 务、<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的利益。 谁？ （接下页）</p>
-<p>PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>简介 实践 描述 回答的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a> 章节 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> PRINCE2 项目会根据<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>列经过批准的计划分阶 段交<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>本实践通过描述如何设计和开发计划来 补充<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>实践。在 PRINCE2 中，计划通过项目 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>层（指导、管理和交付）与人们的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>相匹 配，同时也是贯穿始终的沟通和控制的重点。 如何？ <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>？ 何时？ 质量 最初的项目想法将仅仅作为一个宽泛<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>要来理 解。本实践解释了如何制定概要，以便所<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>益 相关方了解要交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的质量属性，以及项目<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>理如何确保这些需求后续得以交付。 什么？ <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 由于项目的独特性、使用新的和不同的产品、供 应商和/或程序，因此存在更多的不确定性，<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 导致更多的风险。本实<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>绍项目团队如何管理 不确定性<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>如果发生？ 问题 本实践描述项目管理如何评估和响应对项目各方 面（包括其<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>、计划与产品）可能产生影响的 问题。问题可能包括未预料到的一般<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>、 变更请求或者产品实例不合规格。 现在<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>办？ <a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a> 本实践关注计划的持续可实现性。它通过结合事 件和基于<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>的控制，说明如何监视性能以及事 件未按计划进行时的上报<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>。最终，本实践会 决定项目是否应该继续以及如何继续。 我们现在处于 怎样的<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>？ 要去哪里？ 是否应该继续？</p></div>
-<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 4.2 应用实践</h2>
-<div class="section-content"><p>预计 PRINCE2 方法将被应用和<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>，以确保其适用于特定项目情境下的目的。其中将包括 PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>的应用方式。具体应用<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>可能很广，包括提供标准或规范性指南的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>，以及 允许项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队在如何将每种实践应用于项目方面提供很大的自由度。 PRINCE2 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>旨在帮助项目管理团队<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>和剪裁该方法，主要是通过一套管理方法（如<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>管 理方法）进行。每种管理方法都定义了要应用的程序、技术和标准，以及确保相应项目管理方 面有效所需担负的职责。 PRINCE2 没有规定应如何记录程序、技术和标准、所需的详细程度，或是发布和共享这些方面 的方式。详细程度可以从几段到全面的说明手册不等。文件的级别和类型由<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>确 定，项目管理委员<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>考虑在协定的业务政策中管理和记录决策所需的内容。 （续）</p>
-<p>PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>简介 项目的重要性、<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和紧迫性等情境因素将影响所需的控制水平，这也将决定监视、审查、报 告和决策的正式程度和频率。所涉及的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>以及这些组织之间的关系（例如，<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>） 也将影响将要建立的控制。项目是否是更广泛的项目群或项目组合的一部分将会影响项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 团队与业务互动和整合管理<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的方式。在应用 PRINCE<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>实践时，项目管理团队还应体现对 <a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、流程和术语的所有<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>。 在一个项目中，应当应用全部七<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>践。但是，这些实践会因<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>项目的规模、风险、<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>涉及的人员和组织，以及复杂性或简便性而有所不同。这将始终确保 PRINCE2 方法与七项 PRINCE2 原则保持一致。 本手<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>含有关如何基于一些共同因素将每种实践应用于项目情境的建议，例如项目群中的项 目或使用敏捷交付方法的项目。</p></div>
-<h2 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 4.3 管理产品</h2>
-<div class="section-content"><p>PRINCE2 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>了管理项目所需的信息。这些信息可以通过各种方式进行维护，可<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>会作为文件或管理信息系统的一部分。附录 A 包含每款 PRINCE2 <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>的建议概要，以 及如何<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>管理<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的更多详细信<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>两款管理产品与本章节中描述的大多数 PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>相关：<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>和项目记录单。</p></div>
-<h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 4.3.1 项目启动文件</h3>
-<div class="section-content"><p><a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>包括在启动期间制作和汇编的信息包，用于获得继续开展项目的<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>。它为进行 持续<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>提供了基础。其中包含可以在单独的文件或系统中捕获的大量信息。或者，也可以收 集所有信息以形成一份单一的参考文件。</p>
-<p>PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>简介 <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a> 目的 项目启动文件给出了项目的指导和<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>，并（与<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>一起）形成了<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和项目管理委 员会之间的“合<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>启动文件的三个主要用途是：</p>
-<ul class="content-list">
-  <li>在请求<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>对项目做出任何重大承诺之前，确保项目具有良好的基础</li>
-</ul>
-<ul class="content-list">
-  <li>作为基础文件，助力<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目经理评估进展、<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>及持续存在的可行性疑
-问等</li>
-</ul>
-<ul class="content-list">
-  <li>提供有关项目的单一参考来源，以便加入“临时<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>”的人员能够快速、轻松地了解项
-目的内容以及项目的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方式
-概括性内容</li>
-</ul>
-<ul class="content-list">
-  <li>项目定义：解释项目需要实现的目标和应该包括的内容：背景情境、项目目标和预期成
-果、项目<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>（包含项和排除项）、<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>和<a href="../entities/term.html#entity-假设" class="entity-link entity-term" title="术语：假设">假设</a>、用户和任何其他相关利益方，以及接
-口项目方法：定义将在项目中用于交付从<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中选择的业务选项的解决方案和交付
-方法的选择，考虑解决方案必须适应的运营环境</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>：基于估算的成本、风险和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>，描述项目和所选业务选项的理由</li>
-</ul>
-<ul class="content-list">
-  <li>项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构：用于显示谁将参与项目的图表</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>：描述项目管理团队成员的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法：要应用的程序、技术和标准以及以下方面的职责：<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>、收益管理、商
-务管理<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>通管理、数据管理、<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管理、<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>管理、<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>和可持续性管理</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>：通过展示项目所需的主要<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、活动、资源和人员，描述如何以及何时实现
-项目目标；为监视项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>提供基线</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a> PRINCE2：关于如何为项目剪裁 PRINCE2 的摘要；例如，对术语的任何变更
-<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>是一个动态变化的产品，因为它应始终反映项目的当前状态、<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和控制。在每
-个阶段结束时，需要更新其组件<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>并重新确定组件产品的基线，以反映其组成部分的当前状
-态。用于获得项<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>启动文件版本将被保留，作为日后结束项目时评<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>。
-项目启动文件的组件在<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>章节（第 5 章至第 11 章）中有更详细的描述。但是，在每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>
-结束时，都要审查此文件每个组件的时效性，如果需要，应进行结构化变更。基线版本会始终
-保留下来。</li>
-</ul>
-<p>PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>简介 <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：项目记录单</p></div>
-<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 4.3.2 项目记录单</h3>
-<div class="section-content"><p>项目记录单维护项目活动和<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>的实时记录。项目记录单捕<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>种项目活动和进展信息，例 如<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。 项目记录单可以是单个文件，更常见的是不同记录单的集合。项目记录单中的每个记录单/登 记单在<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>章节（第 5 章至第 11 章）中都有更详细的描述。 目的 项目记录<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>目的是，捕获问题、经验教训、<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>、风险和其他正式/非正式行动或事 件的继续变更的记录。项目记录单是动<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，原因在于其中包含项目活动和进展的当前和历史 记录。 概括性内容</p>
-<ul class="content-list">
-  <li>项目记录单和登记单：</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/product.html#entity-经验教训记录单" class="entity-link entity-product" title="管理产品：经验教训记录单">经验教训记录单</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a></li>
-</ul>
-<ul class="content-list">
-  <li>其他信息操作和事件的<a href="../entities/product.html#entity-日志" class="entity-link entity-product" title="管理产品：日志">日志</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>每个记录单条目的通用数据：</li>
-</ul>
-<ul class="content-list">
-  <li>唯一标识符</li>
-</ul>
-<ul class="content-list">
-  <li>记录日期</li>
-</ul>
-<ul class="content-list">
-  <li>记录者</li>
-</ul>
-<ul class="content-list">
-  <li>更新日期</li>
-</ul>
-<ul class="content-list">
-  <li>状态</li>
-</ul>
-<ul class="content-list">
-  <li>分类（如果需要）</li>
-</ul>
-<ul class="content-list">
-  <li>详细信息</li>
-</ul>
-<p>PRINCE2 <a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>简介</p></div>
-<h2 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 4.4 实践章节的格式</h2>
-<div class="section-content"><p>每个<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>章节的结构如下：</p>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>目的</li>
-</ul>
-<ul class="content-list">
-  <li>对有效使用和<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>实践的指导</li>
-</ul>
-<ul class="content-list">
-  <li>为<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>提供支持的技术</li>
-</ul>
-<ul class="content-list">
-  <li>对于每种<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>，有两种类型的技术：特定于 PRINCE2 的技术（例如，基于<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的规
-划），以及因项目情境而异的其他实用技术。可以省略或替换其他技术，而无需变更
-PRINCE2 的应用方式。省略或替换 PRINCE2 技术将需要<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>方法</li>
-</ul>
-<ul class="content-list">
-  <li>应用<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a></li>
-</ul>
-<ul class="content-list">
-  <li>为<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>提供支持的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>中关键职责的重点</li>
-</ul>
-<ul class="content-list">
-  <li>与 PRINCE2 原则的关键关系</li>
-</ul>
-<p><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></p></div>
+
+        <!-- ===== 4.1 PRINCE2 实践 ===== -->
+        <h2 id="pn-1" class="section-heading"><a href="#pn-1" class="pn-link">[1]</a> 4.1 PRINCE2 实践</h2>
+        <div class="section-content">
+
+        <div class="definition-box">
+            <span class="def-term">实践</span> — 项目管理的一个方面，必须在整个项目生命周期中一致地应用。具体实践需要对项目管理的该方面特别关注，以保证 PRINCE2 流程的有效性。
+        </div>
+
+        <p>PRINCE2 实践描述了项目管理的各个方面，这些方面必须随着项目在其生命周期内的进展不断得到处理。例如，由于问题会不断出现，风险也需要管理，因此项目商业论证需在整个项目生命周期内进行更新和再验证。PRINCE2 的优势在于七种实践的集成方式，包括它们关联在一起的方式，以及在所有 PRINCE2 流程中的使用方式。</p>
+
+        <p>PRINCE2 流程（见第 12 章至第 19 章）涵盖项目的渐进流程（生命周期），其中描述了在需要时采取的与每项实践相关的行动。在以下实践章节（见第 5 章至第 11 章）中，为这些行动提供了更详细的指导。</p>
+
+        <div class="figure-note">表 4.1 七项 PRINCE2 实践</div>
+        <table class="role-table cols-prac">
+        <thead><tr>
+            <th>实践</th>
+            <th>描述</th>
+            <th>回答的问题</th>
+            <th>章节</th>
+        </tr></thead>
+        <tbody>
+        <tr>
+            <td>商业论证</td>
+            <td>项目始于一个被认为对相关组织具有潜在价值的想法。这种实践解决了如何将想法发展成可行的投资主张，以及如何定义和验证成功。它为项目管理如何在整个项目中重点关注项目收益、目的以及与业务和所涉及其他组织的目标和优先级保持一致奠定了基础。</td>
+            <td>为什么？</td>
+            <td>5</td>
+        </tr>
+        <tr>
+            <td>组织</td>
+            <td>项目工作需要由问责人指导，授权给负责管理的人，并分配给将交付项目所需产品的人。项目是跨职能的，因此，普通的直线型管理结构并不适合。本实践描述了为有效发起和完成项目所需的临时性 PRINCE2 项目管理团队中的角色、职责和关系。它描述了如何在项目活动和决策中体现出业务、用户和供应商的利益。</td>
+            <td>谁？</td>
+            <td>6</td>
+        </tr>
+        <tr>
+            <td>计划</td>
+            <td>项目会根据一系列经过批准的计划分阶段交付。本实践通过描述如何设计和开发计划来补充质量实践。在 PRINCE2 中，计划通过项目管理层（指导、管理和交付）与人们的需求相匹配，同时也是贯穿始终的沟通和控制的重点。</td>
+            <td>如何？多少？何时？</td>
+            <td>7</td>
+        </tr>
+        <tr>
+            <td>质量</td>
+            <td>最初的项目想法将仅仅作为一个宽泛的概要来理解。本实践解释了如何制定概要，以便所有利益相关方了解要交付的产品的质量属性，以及项目管理如何确保这些需求后续得以交付。</td>
+            <td>什么？</td>
+            <td>8</td>
+        </tr>
+        <tr>
+            <td>风险</td>
+            <td>由于项目的独特性、使用新的和不同的产品、供应商和/或程序，因此存在更多的不确定性，进而导致更多的风险。本实践介绍项目团队如何管理不确定性。</td>
+            <td>如果发生？</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <td>问题</td>
+            <td>本实践描述项目管理如何评估和响应对项目各方面（包括其目标、计划与产品）可能产生影响的问题。问题可能包括未预料到的一般难点问题、变更请求或者产品实例不合规格。</td>
+            <td>现在怎么办？</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <td>进展</td>
+            <td>本实践关注计划的持续可实现性。它通过结合事件和基于时间的控制，说明如何监视性能以及事件未按计划进行时的上报流程。最终，本实践会决定项目是否应该继续以及如何继续。</td>
+            <td>我们现在处于怎样的阶段？要去哪里？是否应该继续？</td>
+            <td>11</td>
+        </tr>
+        </tbody>
+        </table>
+        </div>
+
+        <!-- ===== 4.2 应用实践 ===== -->
+        <h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link">[2]</a> 4.2 应用实践</h2>
+        <div class="section-content">
+
+        <div class="key-info">
+            PRINCE2 方法预计将被应用和剪裁，以确保其适用于特定项目情境下的目的。具体应用范围可能很广，包括提供标准或规范性指南的业务，以及允许项目管理团队在如何将每种实践应用于项目方面提供很大的自由度。
+        </div>
+
+        <p>PRINCE2 实践旨在帮助项目管理团队应用和剪裁该方法，主要是通过一套管理方法（如收益管理方法）进行。每种管理方法都定义了要应用的程序、技术和标准，以及确保相应项目管理方面有效所需担负的职责。</p>
+
+        <p>PRINCE2 没有规定应如何记录程序、技术和标准、所需的详细程度，或是发布和共享这些方面的方式。详细程度可以从几段到全面的说明手册不等。文件的级别和类型由项目管理委员会确定，项目管理委员会将考虑在协定的业务政策中管理和记录决策所需的内容。</p>
+
+        <p>项目的重要性、风险和紧迫性等情境因素将影响所需的控制水平，这也将决定监视、审查、报告和决策的正式程度和频率。所涉及的组织以及这些组织之间的关系（例如，客户和供应商）也将影响将要建立的控制。项目是否是更广泛的项目群或项目组合的一部分将会影响项目管理团队与业务互动和整合管理需求的方式。在应用 PRINCE2 实践时，项目管理团队还应体现对角色、流程和术语的所有剪裁。</p>
+
+        <p>在一个项目中，应当应用全部七项实践。但是，这些实践会因相关项目的规模、风险、所涉及的人员和组织，以及复杂性或简便性而有所不同。这将始终确保 PRINCE2 方法与七项 PRINCE2 原则保持一致。</p>
+
+        <p>本手册包含有关如何基于一些共同因素将每种实践应用于项目情境的建议，例如项目群中的项目或使用敏捷交付方法的项目。</p>
+        </div>
+
+        <!-- ===== 4.3 管理产品 ===== -->
+        <h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link">[3]</a> 4.3 管理产品</h2>
+        <div class="section-content">
+
+        <p>PRINCE2 管理产品描述了管理项目所需的信息。这些信息可以通过各种方式进行维护，可能会作为文件或管理信息系统的一部分。附录 A 包含每款 PRINCE2 管理产品的建议概要，以及如何剪裁管理产品的更多详细信息。</p>
+
+        <p>有两款管理产品与本章节中描述的大多数 PRINCE2 实践相关：项目启动文件和项目记录单。</p>
+
+        <!-- 4.3.1 -->
+        <h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link">[4]</a> 4.3.1 项目启动文件</h3>
+
+        <p>项目启动文件包括在启动期间制作和汇编的信息包，用于获得继续开展项目的授权。它为进行持续管理提供了基础。其中包含可以在单独的文件或系统中捕获的大量信息。或者，也可以收集所有信息以形成一份单一的参考文件。</p>
+
+        <div class="product-card">
+            <div class="prod-name">管理产品：项目启动文件</div>
+            <p><span class="prod-label">目的</span></p>
+            <p>项目启动文件给出了项目的指导和范围，并（与阶段计划一起）形成了项目经理和项目管理委员会之间的"合同"。</p>
+            <p>项目启动文件的三个主要用途是：</p>
+            <ul class="content-list">
+                <li>在请求项目管理委员会对项目做出任何重大承诺之前，确保项目具有良好的基础</li>
+                <li>作为基础文件，助力项目管理委员会和项目经理评估进展、问题及持续存在的可行性疑问等</li>
+                <li>提供有关项目的单一参考来源，以便加入"临时组织"的人员能够快速、轻松地了解项目的内容以及项目的管理方式</li>
+            </ul>
+            <p><span class="prod-label">概括性内容</span></p>
+            <ul class="content-list">
+                <li><strong>项目定义</strong>：解释项目需要实现的目标和应该包括的内容：背景情境、项目目标和预期成果、项目范围（包含项和排除项）、约束和假设、用户和任何其他相关利益方，以及接口</li>
+                <li><strong>项目方法</strong>：定义将在项目中用于交付从商业论证中选择的业务选项的解决方案和交付方法的选择，考虑解决方案必须适应的运营环境</li>
+                <li><strong>商业论证</strong>：基于估算的成本、风险和收益，描述项目和所选业务选项的理由</li>
+                <li><strong>项目管理团队结构</strong>：用于显示谁将参与项目的图表</li>
+                <li><strong>角色描述</strong>：描述项目管理团队成员的角色</li>
+                <li><strong>管理方法</strong>：要应用的程序、技术和标准以及以下方面的职责：变更管理、收益管理、商务管理、沟通管理、数据管理、问题管理、质量管理、风险管理和可持续性管理</li>
+                <li><strong>项目计划</strong>：通过展示项目所需的主要产品、活动、资源和人员，描述如何以及何时实现项目目标；为监视项目进展提供基线</li>
+                <li><strong>剪裁 PRINCE2</strong>：关于如何为项目剪裁 PRINCE2 的摘要；例如，对术语的任何变更</li>
+            </ul>
+        </div>
+
+        <p>项目启动文件是一个动态变化的产品，因为它应始终反映项目的当前状态、计划和控制。在每个阶段结束时，需要更新其组件产品并重新确定组件产品的基线，以反映其组成部分的当前状态。用于获得项目授权的项目启动文件版本将被保留，作为日后结束项目时评估绩效的依据。</p>
+
+        <p>项目启动文件的组件在实践章节（第 5 章至第 11 章）中有更详细的描述。但是，在每个阶段结束时，都要审查此文件每个组件的时效性，如果需要，应进行结构化变更。基线版本会始终保留下来。</p>
+
+        <!-- 4.3.2 -->
+        <h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link">[5]</a> 4.3.2 项目记录单</h3>
+
+        <p>项目记录单维护项目活动和进展的实时记录。项目记录单捕获各种项目活动和进展信息，例如问题和风险。</p>
+
+        <div class="product-card">
+            <div class="prod-name">管理产品：项目记录单</div>
+            <p><span class="prod-label">目的</span></p>
+            <p>项目记录单的目的是，捕获问题、经验教训、产品、质量、风险和其他正式/非正式行动或事件的继续变更的记录。项目记录单是动态的，原因在于其中包含项目活动和进展的当前和历史记录。</p>
+            <p><span class="prod-label">概括性内容</span></p>
+            <p><strong>项目记录单和登记单：</strong></p>
+            <ul class="content-list">
+                <li>问题登记单</li>
+                <li>经验教训记录单</li>
+                <li>产品登记单</li>
+                <li>质量登记单</li>
+                <li>风险登记单</li>
+                <li>其他信息操作和事件的日志</li>
+            </ul>
+            <p><strong>每个记录单条目的通用数据：</strong></p>
+            <ul class="content-list">
+                <li>唯一标识符</li>
+                <li>记录日期</li>
+                <li>记录者</li>
+                <li>更新日期</li>
+                <li>状态</li>
+                <li>分类（如果需要）</li>
+                <li>详细信息</li>
+            </ul>
+        </div>
+
+        <p>项目记录单可以是单个文件，更常见的是不同记录单的集合。项目记录单中的每个记录单/登记单在实践章节（第 5 章至第 11 章）中都有更详细的描述。</p>
+
+        </div>
+
+        <!-- ===== 4.4 实践章节的格式 ===== -->
+        <h2 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link">[6]</a> 4.4 实践章节的格式</h2>
+        <div class="section-content">
+
+        <div class="scenario-box">
+            每个实践章节（第 5 章至第 11 章）都遵循统一的格式，确保读者能够快速定位所需信息。
+        </div>
+
+        <p>每个实践章节的结构如下：</p>
+        <ul class="content-list">
+            <li>实践<strong>目的</strong></li>
+            <li>对有效使用和<strong>管理实践的指导</strong></li>
+            <li>为实践提供支持的<strong>技术</strong></li>
+        </ul>
+        <p>对于每种实践，有两种类型的技术：特定于 PRINCE2 的技术（例如，基于产品的规划），以及因项目情境而异的其他实用技术。可以省略或替换其他技术，而无需变更 PRINCE2 的应用方式。省略或替换 PRINCE2 技术将需要剪裁方法。</p>
+        <ul class="content-list">
+            <li><strong>应用</strong>实践</li>
+            <li>为实践提供支持的<strong>管理产品</strong></li>
+            <li>实践中<strong>关键职责的重点</strong></li>
+            <li>与 PRINCE2 <strong>原则的关键关系</strong></li>
+        </ul>
+        </div>
+
     </div>
 
-    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid var(--accent); border-bottom: none;">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch03.html" class="nav-link">◁ 第3章 人员</a> | <a href="ch05.html" class="nav-link">第5章 商业论证 ▷</a>
     </div>
 
     <div class="footer">
-        <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
+        <p>PRINCE2 7 知识库 | 基于古籍风格的结构化知识图谱</p>
     </div>
 
+    <script src="../assets/chapter-common.js"></script>
     <script>
-        function toggleToc() {
-            var list = document.getElementById('tocList');
-            var icon = document.querySelector('.toc-icon');
-            list.classList.toggle('collapsed');
-            icon.style.transform = list.classList.contains('collapsed')
-                ? 'rotate(0deg)' : 'rotate(90deg)';
-        }
-
-        // Purple Numbers: 点击复制链接
-        document.querySelectorAll('.pn-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var url = window.location.href.split('#')[0] + link.getAttribute('href');
-                navigator.clipboard.writeText(url).then(function() {
-                    link.style.color = '#2E8B57';
-                    setTimeout(function() { link.style.color = ''; }, 1000);
-                });
+        // 进度条
+        (function() {
+            var bar = document.createElement('div');
+            bar.className = 'progress-bar';
+            document.body.insertBefore(bar, document.body.firstChild);
+            window.addEventListener('scroll', function() {
+                var h = document.documentElement.scrollHeight - window.innerHeight;
+                bar.style.width = h > 0 ? (window.scrollY / h * 100) + '%' : '0%';
             });
-        });
+        })();
+
+        // 返回顶部
+        (function() {
+            var btn = document.createElement('div');
+            btn.className = 'back-to-top';
+            btn.textContent = '↑';
+            btn.title = '返回顶部';
+            document.body.appendChild(btn);
+            btn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            window.addEventListener('scroll', function() {
+                btn.classList.toggle('visible', window.scrollY > 400);
+            });
+        })();
     </script>
-<script src="../assets/floating-toc.js"></script>
+    <script src="../assets/floating-toc.js"></script>
 </body>
 </html>
