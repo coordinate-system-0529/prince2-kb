@@ -4,175 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第19章 项目收尾 - PRINCE2 知识库</title>
+    <link rel="stylesheet" href="../assets/chapter.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
-            background-color: #faf6f0;
-            color: #3e2a1a;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.8;
+        #floating-toc {
+            transform: translateX(172px);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -3px 0 8px color-mix(in srgb, var(--accent) 8%, transparent);
+            z-index: 103 !important;
         }
-
-        /* 导航栏 */
-        .nav-bar {
-            padding: 12px 0;
-            border-bottom: 2px solid #d4af37;
-            margin-bottom: 24px;
-            font-size: 0.9em;
+        #floating-toc:hover {
+            transform: translateX(0);
+            box-shadow: -4px 0 16px color-mix(in srgb, var(--accent) 15%, transparent);
         }
-        .nav-link {
-            color: #8B4513;
-            text-decoration: none;
-            padding: 4px 8px;
-        }
-        .nav-link:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-
-        /* 分类标签 */
-        .category-tag {
-            display: inline-block;
-            background: #8B4513;
-            color: #faf6f0;
-            padding: 3px 12px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            margin-bottom: 8px;
-        }
-
-        /* 章节标题 */
-        .chapter-title {
-            font-size: 1.8em;
-            color: #5c3d1a;
-            border-bottom: 3px double #d4af37;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-        }
-
-        /* 章节目录 */
-        .chapter-toc {
-            background: #f0e8d8;
-            border: 1px solid #d4c8a8;
-            border-left: 4px solid #d4af37;
-            padding: 16px;
-            margin-bottom: 30px;
-            border-radius: 0 4px 4px 0;
-        }
-        .toc-title {
-            cursor: pointer;
-            color: #5c3d1a;
-            font-size: 1em;
-            user-select: none;
-        }
-        .toc-title:hover { color: #d4af37; }
-        .toc-icon { transition: transform 0.3s; display: inline-block; }
-        .toc-list {
-            list-style: none;
-            padding-left: 20px;
-            margin-top: 10px;
-            max-height: 500px;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-        .toc-list.collapsed { max-height: 0; margin-top: 0; }
-        .toc-list li {
-            padding: 3px 0;
-            border-bottom: 1px dotted #d4c8a8;
-        }
-        .toc-list a {
-            color: #8B4513;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        .toc-list a:hover { color: #d4af37; }
-
-        /* 内容区 */
-        .section-heading {
-            color: #5c3d1a;
-            margin-top: 32px;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e0d5c0;
-        }
-        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
-        h3.section-heading { font-size: 1.2em; }
-        h4.section-heading { font-size: 1.05em; }
-
-        .pn-link {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 0.75em;
-            vertical-align: super;
-            margin-right: 4px;
-            cursor: pointer;
-        }
-        .pn-link:hover { color: #8B4513; }
-
-        .section-content {
-            margin-bottom: 20px;
-        }
-        .section-content p {
-            margin-bottom: 12px;
-            text-indent: 2em;
-            text-align: justify;
-        }
-
-        /* 列表 */
-        .content-list {
-            list-style: none;
-            padding-left: 2em;
-            margin: 12px 0;
-        }
-        .content-list li {
-            position: relative;
-            padding-left: 1.2em;
-            margin-bottom: 6px;
-            text-align: justify;
-        }
-        .content-list li::before {
-            content: "●";
-            color: #d4af37;
+        .ftoc-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            background: var(--kb-accent-dark);
+            color: var(--kb-tag-text);
+            padding: 10px 5px;
+            border-radius: 4px 0 0 4px;
+            font-size: 0.78em;
+            cursor: default;
+            letter-spacing: 4px;
             position: absolute;
             left: 0;
+            top: 16px;
+            transform: translateX(-100%);
+            box-shadow: -2px 0 6px rgba(0,0,0,0.10);
+            user-select: none;
         }
-
-        /* 实体链接 */
-        .entity-link {
-            text-decoration: none;
-            border-bottom: 1px dashed;
-            padding: 0 1px;
-            transition: all 0.2s;
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 102;
+            background: var(--bg-main);
         }
-        .entity-link:hover {
-            background: rgba(212, 175, 55, 0.15);
+        @media (min-width: 1201px) {
+            .chapter-toc { display: none; }
         }
-        .entity-principle { color: #b8860b; border-color: #b8860b; }
-        .entity-practice { color: #8B4513; border-color: #8B4513; }
-        .entity-process { color: #2E8B57; border-color: #2E8B57; }
-        .entity-role { color: #4169E1; border-color: #4169E1; }
-        .entity-product { color: #8B008B; border-color: #8B008B; }
-        .entity-term { color: #A0522D; border-color: #A0522D; }
-
-        /* 页脚 */
-        .footer {
-            margin-top: 48px;
-            padding-top: 16px;
-            border-top: 2px solid #d4af37;
+        .nav-link:first-child { color: var(--kb-accent-dark); font-weight: bold; }
+        .nav-link:not(:first-child) { color: #6e6e6e; }
+        body { line-height: 1.9; }
+        .section-content p { margin-bottom: 16px; }
+        .progress-bar {
+            position: fixed; top: 0; left: 0;
+            width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--kb-accent-dark));
+            z-index: 200; transition: width 0.1s linear;
+        }
+        .chapter-content {
+            background: #fffef9;
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 32px 36px;
+            box-shadow: 0 2px 12px rgba(139, 69, 19, 0.06);
+        }
+        .back-to-top {
+            position: fixed; right: 24px; bottom: 32px;
+            width: 42px; height: 42px;
+            background: var(--kb-accent-dark); color: var(--kb-tag-text);
+            border: 2px solid var(--accent); border-radius: 50%;
+            cursor: pointer; font-size: 1.2em;
+            display: none; align-items: center; justify-content: center;
+            z-index: 99; opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, background 0.2s;
+        }
+        .back-to-top.visible { display: flex; opacity: 0.85; transform: translateY(0); }
+        .back-to-top:hover { background: var(--accent); color: var(--text-heading); opacity: 1; }
+        .content-list li {
+            transition: background 0.2s;
+            border-radius: 3px;
+        }
+        .content-list li:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+        @media (max-width: 768px) {
+            .chapter-content { padding: 20px 18px; border-radius: 4px; }
+        }
+        .figure-note {
             text-align: center;
-            font-size: 0.85em;
-            color: #8B7355;
+            color: var(--kb-muted);
+            font-style: italic;
+            font-size: 0.9em;
+            margin: 12px 0;
         }
-
-        /* 响应式 */
-        @media (max-width: 600px) {
-            body { padding: 12px; }
-            .chapter-title { font-size: 1.4em; }
+        .role-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.92em;
         }
+        .role-table th {
+            background: var(--kb-paper-4);
+            color: var(--text-heading);
+            padding: 10px 12px;
+            text-align: center;
+            border: 1px solid var(--kb-border-light);
+            font-weight: bold;
+        }
+        .role-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border-card);
+            vertical-align: top;
+        }
+        .role-table tbody tr:nth-child(even) td {
+            background: var(--kb-paper-1);
+        }
+        .td-left { padding: 8px 12px; text-align: left; border: 1px solid var(--border-card); }
+        .td-center { padding: 8px 12px; text-align: center; border: 1px solid var(--border-card); }
+        .table-scroll { overflow-x: auto; margin: 16px 0; }
     </style>
 </head>
 <body>
@@ -181,178 +123,232 @@
     <span class="category-tag">流程</span>
     <h1 class="chapter-title">第19章 项目收尾</h1>
 
-    
-        <nav class="chapter-toc">
-            <h3 class="toc-title" onclick="toggleToc()">
-                <span class="toc-icon">▸</span> 本章目录（15 节）
-            </h3>
-            <ul class="toc-list" id="tocList">
-                <li><a href="#pn-2">19.1 目的</a></li><li><a href="#pn-3">19.2 目标</a></li><li><a href="#pn-4">19.3 情境</a></li><li><a href="#pn-5">14.4.5 节）。</a></li><li><a href="#pn-6">19.4 活动</a></li><li><a href="#pn-7">19.4.1 准备按计划收尾</a></li><li><a href="#pn-8">19.4.2 准备提前收尾</a></li><li><a href="#pn-9">19.4.3 确认项目验收</a></li><li><a href="#pn-10">19.4.4 评估项目</a></li><li><a href="#pn-11">19.4.5 请求项目收尾</a></li><li><a href="#pn-12">19.5 应用流程</a></li><li><a href="#pn-13">19.5.1 一般注意事项</a></li><li><a href="#pn-14">19.5.2 剪裁项目收尾流程中的角色</a></li><li><a href="#pn-15">19.6 职责</a></li><li><a href="#pn-16">19.7 为此流程应用实践</a></li>
-            </ul>
-        </nav>
+    <nav class="chapter-toc">
+        <h3 class="toc-title" onclick="toggleToc()">
+            <span class="toc-icon">▸</span> 本章目录（14 节）
+        </h3>
+        <ul class="toc-list" id="tocList">
+            <li><a href="#pn-1">19.1 目的</a></li><li><a href="#pn-2">19.2 目标</a></li><li><a href="#pn-3">19.3 情境</a></li><li><a href="#pn-4">19.4 活动</a></li><li><a href="#pn-5">19.4.1 准备按计划收尾</a></li><li><a href="#pn-6">19.4.2 准备提前收尾</a></li><li><a href="#pn-7">19.4.3 确认项目验收</a></li><li><a href="#pn-8">19.4.4 评估项目</a></li><li><a href="#pn-9">19.4.5 请求项目收尾</a></li><li><a href="#pn-10">19.5 应用流程</a></li><li><a href="#pn-11">19.5.1 一般注意事项</a></li><li><a href="#pn-12">19.5.2 剪裁项目收尾流程中的角色</a></li><li><a href="#pn-13">19.6 职责</a></li><li><a href="#pn-14">19.7 为此流程应用实践</a></li>
+        </ul>
+    </nav>
 
     <div class="chapter-content">
-        <div class="section-content"><p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a></p></div>
-<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 19.1 目的</h2>
-<div class="section-content"><p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程的目的是提供固定点以确认项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>验收。 它还提供了一个确认点，用以确认<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中确立的目标或已批准目标变更已经实现。 在需要<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a>的情况下，此流程可确保项目有序收尾。</p></div>
-<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 19.2 目标</h2>
-<div class="section-content"><p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程的目标是：</p>
-<ul class="content-list">
+<h2 id="pn-1" class="section-heading"><a href="#pn-1" class="pn-link" title="点击复制链接">[1]</a> 19.1 目的</h2>
+<div class="section-content"><p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程的目的是提供固定点以确认项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>验收。它还提供了一个确认点，用以确认<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中确立的目标或已批准目标变更已经实现。在需要<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a>的情况下，此流程可确保项目有序收尾。</p></div>
+<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 19.2 目标</h2>
+<div class="section-content"><p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程的目标是：</p><ul class="content-list">
   <li>检查项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的用户验收</li>
-</ul>
-<ul class="content-list">
   <li>确保<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>时，业务能够支持相关<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></li>
-</ul>
-<ul class="content-list">
   <li>根据项目基线审查项目绩效</li>
-</ul>
-<ul class="content-list">
   <li>评估已实现的<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>，更新<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>，将项目后收益评审纳入其中</li>
-</ul>
-<ul class="content-list">
   <li>确保供应解决所有未解决<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的措施，并提出<a href="../entities/term.html#entity-后续行动建议" class="entity-link entity-term" title="术语：后续行动建议">后续行动建议</a></li>
-</ul>
-<ul class="content-list">
   <li>确保项目有序收尾，而不是简单地放弃（在<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a>的情况下）</li>
 </ul>
-<p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a></p></div>
-<h2 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 19.3 情境</h2>
-<div class="section-content"><p><a href="../entities/process.html#entity-阶段控制" class="entity-link entity-process" title="流程：阶段控制">阶段控制</a> <a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a> 项目竣工临近 提前收尾请求 准备按<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>收尾 准备<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a> 确认项目验收 评估项目 请求<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a> 项目收尾请求 项目收尾 图<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>1 项目收尾概述 项目的典型特征之一是，它是有限的；它有一个起点和一个终点。如果项目失去这一区分， 它也就失去了与运营<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法相比的优势。 项目明确结束：</p>
-<ul class="content-list">
+</div>
+<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 19.3 情境</h2>
+    <svg viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#8B6914"/>
+            </marker>
+            <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#2a6496"/>
+            </marker>
+            <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+                <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#8B6914" flood-opacity="0.15"/>
+            </filter>
+        </defs>
+        <!-- Top triggers -->
+        <rect x="40" y="15" width="130" height="36" rx="6" fill="#f0e8d8" stroke="#a08050" stroke-width="1.5"/>
+        <text x="105" y="37" text-anchor="middle" font-size="12" fill="#5c3d1a">阶段控制</text>
+        <line x1="170" y1="33" x2="220" y2="33" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <rect x="225" y="15" width="130" height="36" rx="6" fill="#f0e8d8" stroke="#a08050" stroke-width="1.5"/>
+        <text x="290" y="37" text-anchor="middle" font-size="12" fill="#5c3d1a">项目竣工临近</text>
+        <line x1="355" y1="33" x2="405" y2="33" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <rect x="410" y="15" width="130" height="36" rx="6" fill="#f0e8d8" stroke="#a08050" stroke-width="1.5"/>
+        <text x="475" y="37" text-anchor="middle" font-size="12" fill="#5c3d1a">项目指导</text>
+
+        <!-- Early closure trigger -->
+        <rect x="530" y="60" width="120" height="30" rx="6" fill="#e8f0f8" stroke="#2a6496" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <text x="590" y="79" text-anchor="middle" font-size="11" fill="#2a6496">提前收尾请求</text>
+
+        <!-- Arrows from triggers to activities -->
+        <line x1="290" y1="51" x2="290" y2="85" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="590" y1="90" x2="590" y2="85" stroke="#2a6496" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <line x1="475" y1="51" x2="475" y2="85" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Activity 1: 准备按计划收尾 -->
+        <rect x="140" y="85" width="155" height="48" rx="8" fill="#faf6f0" stroke="#d4af37" stroke-width="2" filter="url(#shadow)"/>
+        <text x="217" y="112" text-anchor="middle" font-size="13" fill="#5c3d1a" font-weight="bold">准备按计划收尾</text>
+
+        <!-- Activity 2: 准备提前收尾 -->
+        <rect x="440" y="85" width="155" height="48" rx="8" fill="#faf6f0" stroke="#d4af37" stroke-width="2" filter="url(#shadow)"/>
+        <text x="517" y="112" text-anchor="middle" font-size="13" fill="#5c3d1a" font-weight="bold">准备提前收尾</text>
+
+        <!-- Arrow from 准备按计划收尾 → 确认项目验收 -->
+        <line x1="217" y1="133" x2="217" y2="175" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <!-- Arrow from 准备提前收尾 → 确认项目验收 -->
+        <line x1="517" y1="133" x2="517" y2="175" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Activity 3: 确认项目验收 -->
+        <rect x="140" y="175" width="155" height="48" rx="8" fill="#faf6f0" stroke="#d4af37" stroke-width="2" filter="url(#shadow)"/>
+        <text x="217" y="202" text-anchor="middle" font-size="13" fill="#5c3d1a" font-weight="bold">确认项目验收</text>
+
+        <!-- Activity 4: 评估项目 -->
+        <rect x="440" y="175" width="155" height="48" rx="8" fill="#faf6f0" stroke="#d4af37" stroke-width="2" filter="url(#shadow)"/>
+        <text x="517" y="202" text-anchor="middle" font-size="13" fill="#5c3d1a" font-weight="bold">评估项目</text>
+
+        <!-- Arrows down to 请求项目收尾 -->
+        <line x1="217" y1="223" x2="217" y2="260" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="517" y1="223" x2="517" y2="260" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Activity 5: 请求项目收尾 -->
+        <rect x="240" y="260" width="200" height="48" rx="8" fill="#e8d5a0" stroke="#b8960a" stroke-width="2.5" filter="url(#shadow)"/>
+        <text x="340" y="287" text-anchor="middle" font-size="14" fill="#5c3d1a" font-weight="bold">请求项目收尾</text>
+
+        <!-- Output -->
+        <line x1="340" y1="308" x2="340" y2="345" stroke="#8B6914" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <rect x="240" y="348" width="200" height="36" rx="6" fill="#fff8e1" stroke="#c4a344" stroke-width="1.5"/>
+        <text x="340" y="370" text-anchor="middle" font-size="12" fill="#5c3d1a">项目收尾请求</text>
+
+        <!-- Labels -->
+        <text x="55" y="340" font-size="9" fill="#888" font-style="italic">来自：阶段控制</text>
+        <text x="55" y="355" font-size="9" fill="#888" font-style="italic">（项目竣工临近）</text>
+        <text x="555" y="340" font-size="9" fill="#888" font-style="italic">来自：项目指导</text>
+        <text x="555" y="355" font-size="9" fill="#888" font-style="italic">（提前收尾请求）</text>
+    </svg>
+<div class="figure-note">图 19.1 项目收尾概述</div>
+<div class="section-content"><p>项目的典型特征之一是，它是有限的；它有一个起点和一个终点。如果项目失去这一区分，它也就失去了与运营<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法相比的优势。</p><p>项目明确结束：</p><ul class="content-list">
   <li>通常比缓慢投入使用更为成功，因为它表示所有相关方对以下方面的认可：</li>
-</ul>
-<ul class="content-list">
   <li>最初的目标已经实现（任何已<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>变更均已获得批准）</li>
-</ul>
-<ul class="content-list">
   <li>目前的项目已经完成</li>
-</ul>
-<ul class="content-list">
   <li><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的持续运营和维护职责已由协定的负责人确认</li>
-</ul>
-<ul class="content-list">
   <li>临时项目<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>（特别是项目管理团队）可以解散</li>
-</ul>
-<ul class="content-list">
   <li>不应再发生项目成本</li>
-</ul>
-<ul class="content-list">
   <li>提供机会，确保所有未实现的目标已被识别，以便将来得到处理</li>
-</ul>
-<ul class="content-list">
   <li>将<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的所有权转移给协定负责人，并终止项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队的职责</li>
 </ul>
-<p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a> 收尾活动应作为最后<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>的一部分<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>。当项目收尾时，需要为项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委 员会准备信息以便获得其<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>结束项目。然后，<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>还应通知业务层项目已经结束（见</p></div>
-<h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 14.4.5 节）。</h3>
-<div class="section-content"><p>在某些情况下（例如，如果<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>不再有效），<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>可能希望触发项目提前收 尾。如果项目将<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a>，这一流程仍需执行。 项目结束后，可能会有多个针对项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的特定行动，这些应该作为<a href="../entities/term.html#entity-后续行动建议" class="entity-link entity-term" title="术语：后续行动建议">后续行动建议</a>进行记录 和计划。这些行动可能面向不同的受众，因此可能需要分别发布。接收人的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>将决定格式 和内容：有些可能需要正式<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>，有些可能需要系统中的一个记录单条目，还有的可能需要 召开会议。 表 19.1 <a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>相关的输入、活动和产出 输入 活动 <a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a> 项目临近结束（触发此<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>） 项目记录单（审查） <a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>（检查） 商业论证（检查） <a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>（审查） 准备按计划收尾 项目记<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>新） 项目计划（需要时更新） <a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>（需要时更新） 经验教训报告（创建） <a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>（创建） 确认项目验收 评<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>请求项目收尾 提前收尾请求（触发此流程） 项目记录单（<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>启动文件（检查） 商业论证（检查） 项目<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>（审查） 准备提<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>项目记录单（更新） 项目计划（需要时<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>管理方法（需要时更新） 经验教训报告（<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>竣工报告（创建） 确<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>收 评估项目 请求项目收尾</p></div>
-<h2 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 19.4 活动</h2>
-<h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 19.4.1 准备按计划收尾</h3>
-<div class="section-content"><p>在<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>确认项目可以结束后，可以向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>提出项目收尾建议。 推荐项目经理采取的行动：</p>
-<ul class="content-list">
-  <li>使用<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>识别需要知道项目即将收尾的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>或<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>。（在这一点上，要考
-虑公共关系沟通活动和营销机会。）</li>
-</ul>
-<ul class="content-list">
+<p>收尾活动应作为最后<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>的一部分加以规划。当项目收尾时，需要为<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>准备信息以便获得其<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>结束项目。然后，<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>还应通知业务层项目已经结束（见 14.4.5 节）。</p><p>在某些情况下（例如，如果<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>不再有效），<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>可能希望触发项目提前收尾。如果项目将<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a>，这一流程仍需执行。</p><p>项目结束后，可能会有多个针对项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的特定行动，这些应该作为<a href="../entities/term.html#entity-后续行动建议" class="entity-link entity-term" title="术语：后续行动建议">后续行动建议</a>进行记录和计划。这些行动可能面向不同的受众，因此可能需要分别发布。接收人的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>将决定格式和内容：有些可能需要正式<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>，有些可能需要系统中的一个记录单条目，还有的可能需要召开会议。</p></div>
+<div class="table-scroll">
+<table class="role-table">
+<thead><tr><th>输入</th><th>活动</th><th>产出</th></tr>
+</thead>
+<tbody>
+<tr><td>项目临近结束（触发此<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>）<br>项目记录单（审查）<br><a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>（检查）<br>商业论证（检查）<br><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>（审查）</td><td>准备按计划收尾<br>确认项目验收<br>评估项目<br>请求项目收尾</td><td>项目记录单（更新）<br><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>（需要时更新）<br><a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>（需要时更新）<br>经验教训报告（创建）<br><a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>（创建）</td></tr>
+
+<tr><td>提前收尾请求（触发此<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>）<br>项目记录单（审查）<br><a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>（检查）<br>商业论证（检查）<br><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>（审查）</td><td>准备提前收尾<br>确认项目验收<br>评估项目<br>请求项目收尾</td><td>项目记录单（更新）<br><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>（需要时更新）<br><a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>（需要时更新）<br>经验教训报告（创建）<br><a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>（创建）</td></tr>
+
+</tbody>
+</table>
+</div>
+<div class="figure-note">表 19.1 项目收尾相关的输入、活动和产出</div>
+<h2 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 19.4 活动</h2>
+<h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 19.4.1 准备按计划收尾</h3>
+<div class="section-content"><p>在<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>确认项目可以结束后，可以向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>提出项目收尾建议。</p></div>
+<div class="section-content"><p>推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p><ul class="content-list">
+  <li>使用<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>识别需要知道项目即将收尾的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>或<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>。（在这一点上，要考虑公共关系沟通活动和营销机会。）</li>
   <li>关闭项目记录单。</li>
-</ul>
-<ul class="content-list">
-  <li>确保所有项目信息妥善保存和存档（按照数字化和数据<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法），以便将来对项目管理
-团队的决策、行动和绩效进行审计。</li>
-</ul>
-<ul class="content-list">
+  <li>确保所有项目信息妥善保存和存档（按照数字化和数据<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法），以便将来对项目管理团队的决策、行动和绩效进行审计。</li>
   <li>准备供<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>审查的项目收尾通知初稿。</li>
 </ul>
-<p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a></p></div>
-<h3 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 19.4.2 准备提前收尾</h3>
-<div class="section-content"><p>在某些情况下，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>可能命令项目经理提前结束项目。在这种情况下，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>必 须确保避免简单放弃开展中的工作，而要尽可能挽回项目迄今为止创造的价值， 同时检查因 项目取消而产生的偏差是否已向<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>推荐项目经理采取的行动：</p>
-<ul class="content-list">
-  <li>更新项目记录单（和<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>，如有必要）以记录提前收尾<a href="../entities/term.html#entity-请求。" class="entity-link entity-term" title="术语：请求。">请求。</a></li>
-</ul>
-<ul class="content-list">
+</div>
+<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 19.4.2 准备提前收尾</h3>
+<div class="section-content"><p>在某些情况下，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>可能命令项目经理提前结束项目。在这种情况下，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>必须确保避免简单放弃开展中的工作，而要尽可能挽回项目迄今为止创造的价值，同时检查因项目取消而产生的偏差是否已向<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>指出。</p></div>
+<div class="section-content"><p>推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p><ul class="content-list">
+  <li>更新项目记录单（和<a href="../entities/product.html#entity-问题报告" class="entity-link entity-product" title="管理产品：问题报告">问题报告</a>，如有必要）以记录提前收尾请求。</li>
   <li>根据最后<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>实际情况，更新<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>。</li>
-</ul>
-<ul class="content-list">
   <li>请<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>说明产品状态。据此决定项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的哪些组件：</li>
-</ul>
-<ul class="content-list">
   <li>已获得其<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>所确定的管理组织的批准</li>
-</ul>
-<ul class="content-list">
   <li>正在开发之中（以及需要完成其中的哪些组件）</li>
-</ul>
-<ul class="content-list">
   <li>获得<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>特许</li>
-</ul>
-<ul class="content-list">
   <li>尚未开始</li>
-</ul>
-<ul class="content-list">
   <li>需要确保安全</li>
-</ul>
-<ul class="content-list">
   <li>可能对其他项目有用</li>
-</ul>
-<ul class="content-list">
-  <li>协定已完成或<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>中的产品的恢复方法（如合适）。这需要咨询<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>，可能包
-含额外工作，以便创建、保护或完成可能对其他项目有用的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>（例如，确保一幢在建大
-楼安全且免受自然侵蚀）。有时候，额外工作可能需要<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>。</li>
-</ul>
-<ul class="content-list">
+  <li>协定已完成或<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>中的产品的恢复方法（如合适）。这需要咨询<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>，可能包含额外工作，以便创建、保护或完成可能对其他项目有用的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>（例如，确保一幢在建大楼安全且免受自然侵蚀）。有时候，额外工作可能需要<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>。</li>
   <li>寻求<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>，通知业务资源和人员可以或即将提前释放。</li>
-</ul></div>
-<h3 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 19.4.3 确认项目验收</h3>
-<div class="section-content"><p>在<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>前，项目产品必须移交到运营和维护环境中。这可能是项目结束时的一次性发布， 或者，项目方法可能包括分<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>交付，在此情况下，<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>将在多次发布中完成交付。在提前收 尾的情况<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>可能会有部分产品已获<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>但未交付。根据<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>的指导，其中部分或 所有产品的所<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>可能需要转移给用户。 在交付产品时，需要更新<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>，以纳入在运营环境下有关项目产品的项目后<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>评审 或性能审查。这种收益评审可识别是否有附带结果（有利或不利），由此为其他项目提供有用 的经验教训。 在项目生命周期中可能发生多次移交 <a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>项目完成后进行收益评审不是项目活动，而只是计 划此类收益评审<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>果项目是项目群的一部分，则项目后收益评审需要包括在项目群收益<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 活动中。 推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p>
-<ul class="content-list">
-  <li>咨询项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队，为项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>准备<a href="../entities/term.html#entity-后续行动建议" class="entity-link entity-term" title="术语：后续行动建议">后续行动建议</a>，涵盖所有未完成工作、<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。
-对项目产品（或其组件）或每个不同的<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>小组（例如，人力资源、财务、运营）都可以
-<a href="../entities/term.html#entity-后续行动建议" class="entity-link entity-term" title="术语：后续行动建议">后续行动建议</a>行动建议。</li>
 </ul>
-<ul class="content-list">
-  <li>检查<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>是否包含项目后活动，以便确认项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>在运营环境下使用一段<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>后
-才能测量的收益（例如，可靠性）。</li>
-</ul>
-<ul class="content-list">
+</div>
+<h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 19.4.3 确认项目验收</h3>
+<div class="section-content"><p>在<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>前，项目产品必须移交到运营和维护环境中。这可能是项目结束时的一次性发布，或者，项目方法可能包括分<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>交付，在此情况下，<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>将在多次发布中完成交付。在提前收尾的情况下，可能会有部分<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>已获<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>但未交付。根据<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>的指导，其中部分或所有<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的所有权可能需要转移给用户。</p><p>在交付产品时，需要更新<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>，以纳入在运营环境下有关项目产品的项目后<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>评审或性能审查。这种收益评审可识别是否有附带结果（有利或不利），由此为其他项目提供有用的经验教训。</p><p>在项目生命周期中可能发生多次移交。在项目完成后进行<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>评审不是项目活动，而只是计划此类收益评审。如果项目是项目群的一部分，则项目后收益评审需要包括在项目群收益<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>活动中。</p></div>
+<div class="section-content"><p>推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p><ul class="content-list">
+  <li>咨询项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队，为项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>准备<a href="../entities/term.html#entity-后续行动建议" class="entity-link entity-term" title="术语：后续行动建议">后续行动建议</a>，涵盖所有未完成工作、<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。对项目产品（或其组件）或每个不同的<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>小组（例如，人力资源、财务、运营）都可以有单独的<a href="../entities/term.html#entity-后续行动建议" class="entity-link entity-term" title="术语：后续行动建议">后续行动建议</a>。</li>
+  <li>检查<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>是否包含项目后活动，以便确认项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>在运营环境下使用一段<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>后才能测量的收益（例如，可靠性）。</li>
   <li>检查<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>，以便确认产品如何交付给在<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>运营中维护产品的人员。</li>
 </ul>
-<p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a></p></div>
-<h3 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 19.4.4 评估项目</h3>
-<div class="section-content"><p>成功的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>会从项目中<a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a>。在评价项目时，目标是评估项目的成功程度，或者在提 前收尾的情况下，评价项目和<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a>的原因。通过分析当前项目的估算和实际<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>指标，也 有可能提高未来项目的估算水平。 推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p>
-<ul class="content-list">
+</div>
+<h3 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 19.4.4 评估项目</h3>
+<div class="section-content"><p>成功的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>会从项目中<a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a>。在评价项目时，目标是评估项目的成功程度，或者在提前收尾的情况下，评价项目和<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a>的原因。通过分析当前项目的估算和实际<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>指标，也有可能提高未来项目的估算水平。</p></div>
+<div class="section-content"><p>推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p><ul class="content-list">
   <li>审查项目的最初意图，它在启动<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>协定，并由<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>定义为当时的基线。</li>
-</ul>
-<ul class="content-list">
   <li>审查当前版本<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>组件定义的已批准变更。</li>
-</ul>
-<ul class="content-list">
   <li>咨询项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队，准备<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>。</li>
+  <li>咨询项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队，审查项目记录单，识别可用于将来项目的经验教训，并纳入经验教训<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>。</li>
 </ul>
-<ul class="content-list">
-  <li>咨询项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队，审查项目记录单，识别可用于将来项目的经验教训，并纳入经验教训
-<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>。</li>
-</ul></div>
-<h3 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 19.4.5 请求项目收尾</h3>
-<div class="section-content"><p>要完成当前<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>并结束项目，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应联系<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>以请求项目收尾。项目经理将强 调庆祝项目成功的重要性，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会向所有相关人员表达某种形式的赞赏。项目 收尾的正式理由可以在<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>中找到。 推荐项目经理采取的行动：</p>
-<ul class="content-list">
+</div>
+<h3 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 19.4.5 请求项目收尾</h3>
+<div class="section-content"><p>要完成当前<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>并结束项目，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应联系<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>以请求项目收尾。项目经理将强调庆祝项目成功的重要性，并建议<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>向所有相关人员表达某种形式的赞赏。项目收尾的正式理由可以在<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>中找到。</p></div>
+<div class="section-content"><p>推荐<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>采取的行动：</p><ul class="content-list">
   <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>简要介绍项目绩效，确认收尾就绪情况，并强调任何<a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>的特许。</li>
-</ul>
-<ul class="content-list">
   <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>请求项目收尾。</li>
-</ul></div>
-<h2 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 19.5 应用流程</h2>
-<h3 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 19.5.1 一般注意事项</h3>
-<div class="section-content"><p>此<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中的活动可以合并、拆分或同时运行以适应情境，但应注意确保与<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a>流程和阶段 控制流程连接的完整性。 作为<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>的一部分，产品移交活动可能不会在项目的最后<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>进行，但它可能发生在之前 的<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>阶段。在项目流程收尾时，只要求确认所有的移交已经完成。</p></div>
-<h3 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 19.5.2 剪裁项目收尾流程中的角色</h3>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在此流程中负责创建所有新的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>，可将工作授权他人，但其仍对工作整体负 责。有关项目后<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>评审是否<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>实施的检查，可能会由<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>在“确认项目验收”活动中 执行。</p>
-<p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a></p></div>
-<h2 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 19.6 职责</h2>
-<div class="section-content"><p>表 19.2 总结了关于完成<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中每项活动的问责制和职责，以及应咨询和知情的人员。 表 19.2 <a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a> RACI 图表 活动 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a> <a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a> 高级用户<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>项目经理小组经理 项目保证 <a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a> 准备按计划收尾 A C C R C C C 准备<a href="../entities/term.html#entity-提前收尾" class="entity-link entity-term" title="术语：提前收尾">提前收尾</a> A C C R C C C 确认项目<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a> A C C R I I I 评估项目 A C C R C <a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>请求项目收尾 I A C C R I C I R = 负责人，A = 问责人，C = 咨询人，I = 知情人</p>
-<p><a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a></p></div>
-<h2 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 19.7 为此流程应用实践</h2>
-<div class="section-content"><p>表 19.3 总结了每项<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>如何支持<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程的活动。 表 19.3 为项目收尾<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>应用实践<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>应用到项目收尾流程 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a> 在项目结束时评估项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>并更新商业论证，以反映实际成本和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>以及 尚未实现的收益<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>。如果需要，审查和更新<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和可持续性管理方 法，以履行项目后职责。 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 审查项目团队绩效以及健康和福利，以输入关于经验教训和<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>的 意见。 审查<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>、变更管理方法和商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法，以了解与项目收尾相关的 任何<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，例如，<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>知人员。 项目管理团队解散，离职活动完成。 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 对计划进行审查，将项目的实际绩效与计划绩效进行比较，为吸取的经验<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>竣工报告提供输入。 <a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a> 检查<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>以确认已执行最终阶段所需的质量活动，并为最终<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>提供 输入。 审查<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>，以了解与项目收尾有关的任何<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>闭质量登记单。 风险 对<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>进行审查，以消除最后<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>，将任何<a href="../entities/term.html#entity-剩余风险" class="entity-link entity-term" title="术语：剩余风险">剩余风险</a>转移到业务 中<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>训和项目竣工报告提供输入。 审查<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>，以了解与项目收尾有关的任何<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>闭风险登记单。 问题 对<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>进行审查，以消除最后阶段的<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，捕获业务相关的任何后续行 动，并为<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>教训和项目竣工报告提供输入。 审查<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>，以了解与项目收尾相关的任何<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>闭问题登记单。 进展 检查<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>，以确认最后阶段所需的产<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>经交付，并为经验教训和项目 竣工报告提<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>闭产品登记单。 审查<a href="../entities/product.html#entity-日志" class="entity-link entity-product" title="管理产品：日志">日志</a>和<a href="../entities/product.html#entity-经验教训记录单" class="entity-link entity-product" title="管理产品：经验教训记录单">经验教训记录单</a>，为项目竣工报告提供输<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 审查数<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>据管理方法，以了解与<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>收尾有关的任何需求，例如，如何 以及在何处存档或使用项目数据。 创建并发布项目竣工报告。 <a href="../entities/product.html#entity-经验教训记录单" class="entity-link entity-product" title="管理产品：经验教训记录单">经验教训记录单</a>记录单已关闭。</p>
-<p><a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a> 附录 A</p></div>
-    </div>
+</ul>
+</div>
+<h2 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 19.5 应用流程</h2>
+<h3 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 19.5.1 一般注意事项</h3>
+<div class="section-content"><p>此<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中的活动可以合并、拆分或同时运行以适应情境，但应注意确保与<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a>流程和阶段控制流程连接的完整性。</p><p>作为<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>的一部分，产品移交活动可能不会在项目的最后<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>进行，但它可能发生在之前的<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>几个阶段。在项目流程收尾时，只要求确认所有的移交已经完成。</p></div>
+<h3 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 19.5.2 剪裁项目收尾流程中的角色</h3>
+<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在此流程中负责创建所有新的<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>，可将工作授权他人，但其仍对工作整体负责。有关项目后<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>评审是否<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>实施的检查，可能会由<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>在“确认项目验收”活动中执行。</p></div>
+<h2 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 19.6 职责</h2>
+<div class="section-content"><p>表 19.2 总结了关于完成<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中每项活动的问责制和职责，以及应咨询和知情的人员。</p></div>
+<div class="table-scroll">
+<table class="role-table">
+<thead><tr><th>活动</th><th>业务层</th><th>项目总监</th><th>高级用户</th><th>高级供应商</th><th>项目经理</th><th>小组经理</th><th>项目保证</th><th>项目支持</th></tr>
+</thead>
+<tbody>
+<tr><td>准备按计划收尾</td><td>A</td><td>C</td><td>C</td><td>R</td><td>C</td><td>C</td><td>C</td><td></td></tr>
 
-    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+<tr><td>准备提前收尾</td><td>A</td><td>C</td><td>C</td><td>R</td><td>C</td><td>C</td><td>C</td><td></td></tr>
+
+<tr><td>确认项目验收</td><td>A</td><td>C</td><td>C</td><td>R</td><td>I</td><td>I</td><td>I</td><td></td></tr>
+
+<tr><td>评估项目</td><td>A</td><td>C</td><td>C</td><td>R</td><td>C</td><td>C</td><td>C</td><td></td></tr>
+
+<tr><td>请求项目收尾</td><td>I</td><td>A</td><td>C</td><td>C</td><td>R</td><td>I</td><td>C</td><td>I</td></tr>
+
+</tbody>
+</table>
+</div>
+<div class="figure-note">表 19.2 项目收尾 RACI 图表</div>
+<div class="section-content"><p>R = 负责人，A = 问责人，C = 咨询人，I = 知情人</p></div>
+<h2 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 19.7 为此流程应用实践</h2>
+<div class="section-content"><p>表 19.3 总结了每项<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>如何支持<a href="../entities/process.html#entity-项目收尾" class="entity-link entity-process" title="流程：项目收尾">项目收尾</a>流程的活动。</p></div>
+<div class="table-scroll">
+<table class="role-table">
+<thead><tr><th>实践</th><th>应用到项目收尾流程</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a></td><td>在项目结束时评估项目的绩效，并更新商业论证，以反映实际成本和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>以及尚未实现的收益<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>。如果需要，审查和更新<a href="../entities/product.html#entity-收益管理方法" class="entity-link entity-product" title="管理产品：收益管理方法">收益管理方法</a>和可持续性管理方法，以履行项目后职责。</td></tr>
+
+<tr><td><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></td><td>审查项目团队绩效以及健康和福利，以输入关于经验教训和<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>的意见。审查<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>、变更管理方法和商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法，以了解与项目收尾相关的任何<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，例如，被通知人员。项目管理团队解散，离职活动完成。</td></tr>
+
+<tr><td><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a></td><td>对计划进行审查，将项目的实际绩效与计划绩效进行比较，为吸取的经验教训和<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>提供输入。</td></tr>
+
+<tr><td><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></td><td>检查<a href="../entities/product.html#entity-质量登记单" class="entity-link entity-product" title="管理产品：质量登记单">质量登记单</a>以确认已执行最终阶段所需的质量活动，并为最终报告提供输入。审查<a href="../entities/product.html#entity-质量管理方法" class="entity-link entity-product" title="管理产品：质量管理方法">质量管理方法</a>，以了解与项目收尾有关的任何需求。关闭质量登记单。</td></tr>
+
+<tr><td><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></td><td>对<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>进行审查，以消除最后阶段的风险，将任何剩余风险转移到业务中，并为经验教训和<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>提供输入。审查<a href="../entities/product.html#entity-风险管理方法" class="entity-link entity-product" title="管理产品：风险管理方法">风险管理方法</a>，以了解与项目收尾有关的任何需求。关闭风险登记单。</td></tr>
+
+<tr><td><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a></td><td>对<a href="../entities/product.html#entity-问题登记单" class="entity-link entity-product" title="管理产品：问题登记单">问题登记单</a>进行审查，以消除最后阶段的问题，捕获业务相关的任何后续行动，并为经验教训和<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>提供输入。审查<a href="../entities/product.html#entity-问题管理方法" class="entity-link entity-product" title="管理产品：问题管理方法">问题管理方法</a>，以了解与项目收尾相关的任何需求。关闭问题登记单。</td></tr>
+
+<tr><td><a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a></td><td>检查<a href="../entities/product.html#entity-产品登记单" class="entity-link entity-product" title="管理产品：产品登记单">产品登记单</a>，以确认最后阶段所需的产品已经交付，并为经验教训和<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>提供输入。关闭产品登记单。审查<a href="../entities/product.html#entity-日志" class="entity-link entity-product" title="管理产品：日志">日志</a>和<a href="../entities/product.html#entity-经验教训记录单" class="entity-link entity-product" title="管理产品：经验教训记录单">经验教训记录单</a>，为项目竣工报告提供输入。审查数字化和数据管理方法，以了解与项目收尾有关的任何需求，例如，如何以及在何处存档或使用项目数据。创建并发布<a href="../entities/product.html#entity-项目竣工报告" class="entity-link entity-product" title="管理产品：项目竣工报告">项目竣工报告</a>。日志和经验教训记录单已关闭。</td></tr>
+
+</tbody>
+</table>
+</div>
+<div class="figure-note">表 19.3 为项目收尾流程应用实践</div>
+    </div>
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid var(--accent); border-bottom: none;">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch18.html" class="nav-link">◁ 第18章 阶段边界管理</a> | <a href="appendix_a.html" class="nav-link">附录A 管理产品 ▷</a>
     </div>
 
@@ -360,27 +356,35 @@
         <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
     </div>
 
-    <script>
-        function toggleToc() {
-            var list = document.getElementById('tocList');
-            var icon = document.querySelector('.toc-icon');
-            list.classList.toggle('collapsed');
-            icon.style.transform = list.classList.contains('collapsed')
-                ? 'rotate(0deg)' : 'rotate(90deg)';
-        }
+    <script src="../assets/chapter-common.js"></script>
+<script>
+    (function() {
+        var list = document.getElementById('tocList');
+        var icon = document.querySelector('.toc-icon');
+        if (list) { list.classList.add('collapsed'); }
+        if (icon) { icon.style.transform = 'rotate(0deg)'; }
+    })();
 
-        // Purple Numbers: 点击复制链接
-        document.querySelectorAll('.pn-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var url = window.location.href.split('#')[0] + link.getAttribute('href');
-                navigator.clipboard.writeText(url).then(function() {
-                    link.style.color = '#2E8B57';
-                    setTimeout(function() { link.style.color = ''; }, 1000);
-                });
-            });
+    /* 阅读进度条 & 返回顶部 */
+    (function() {
+        var bar = document.createElement('div');
+        bar.className = 'progress-bar';
+        document.body.prepend(bar);
+
+        var btn = document.createElement('div');
+        btn.className = 'back-to-top';
+        btn.innerHTML = '\u25B2';
+        btn.title = '\u8FD4\u56DE\u9876\u90E8';
+        document.body.appendChild(btn);
+        btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+        window.addEventListener('scroll', function() {
+            var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+            bar.style.width = Math.min(pct, 100) + '%';
+            btn.classList.toggle('visible', window.scrollY > 400);
         });
-    </script>
+    })();
+</script>
 <script src="../assets/floating-toc.js"></script>
 </body>
 </html>

@@ -4,676 +4,870 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第6章 组织 - PRINCE2 知识库</title>
+    <link rel="stylesheet" href="../assets/chapter.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
-            background-color: #faf6f0;
-            color: #3e2a1a;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.8;
+        /* 浮动目录智能避让：默认半隐藏，悬停展开 */
+        #floating-toc {
+            transform: translateX(172px);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -3px 0 8px color-mix(in srgb, var(--accent) 8%, transparent);
+            z-index: 103 !important;
         }
-
-        /* 导航栏 */
-        .nav-bar {
-            padding: 12px 0;
-            border-bottom: 2px solid #d4af37;
-            margin-bottom: 24px;
-            font-size: 0.9em;
+        #floating-toc:hover {
+            transform: translateX(0);
+            box-shadow: -4px 0 16px color-mix(in srgb, var(--accent) 15%, transparent);
         }
-        .nav-link {
-            color: #8B4513;
-            text-decoration: none;
-            padding: 4px 8px;
-        }
-        .nav-link:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-
-        /* 分类标签 */
-        .category-tag {
-            display: inline-block;
-            background: #8B4513;
-            color: #faf6f0;
-            padding: 3px 12px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            margin-bottom: 8px;
-        }
-
-        /* 章节标题 */
-        .chapter-title {
-            font-size: 1.8em;
-            color: #5c3d1a;
-            border-bottom: 3px double #d4af37;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-        }
-
-        /* 章节目录 */
-        .chapter-toc {
-            background: #f0e8d8;
-            border: 1px solid #d4c8a8;
-            border-left: 4px solid #d4af37;
-            padding: 16px;
-            margin-bottom: 30px;
-            border-radius: 0 4px 4px 0;
-        }
-        .toc-title {
-            cursor: pointer;
-            color: #5c3d1a;
-            font-size: 1em;
+        .ftoc-toggle {
+            display: flex; align-items: center; justify-content: center;
+            writing-mode: vertical-rl; text-orientation: upright;
+            background: var(--kb-accent-dark); color: var(--kb-tag-text);
+            padding: 10px 5px; border-radius: 4px 0 0 4px;
+            font-size: 0.78em; cursor: default; letter-spacing: 4px;
+            position: absolute; left: 0; top: 16px;
+            transform: translateX(-100%);
+            box-shadow: -2px 0 6px rgba(0,0,0,0.10);
             user-select: none;
         }
-        .toc-title:hover { color: #d4af37; }
-        .toc-icon { transition: transform 0.3s; display: inline-block; }
-        .toc-list {
-            list-style: none;
-            padding-left: 20px;
-            margin-top: 10px;
-            max-height: 500px;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-        .toc-list.collapsed { max-height: 0; margin-top: 0; }
-        .toc-list li {
-            padding: 3px 0;
-            border-bottom: 1px dotted #d4c8a8;
-        }
-        .toc-list a {
-            color: #8B4513;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        .toc-list a:hover { color: #d4af37; }
 
-        /* 内容区 */
-        .section-heading {
-            color: #5c3d1a;
-            margin-top: 32px;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e0d5c0;
+        /* 顶部导航栏固定悬浮 */
+        .nav-bar {
+            position: sticky; top: 0; z-index: 102;
+            background: var(--bg-main);
         }
-        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
-        h3.section-heading { font-size: 1.2em; }
-        h4.section-heading { font-size: 1.05em; }
 
-        .pn-link {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 0.75em;
-            vertical-align: super;
-            margin-right: 4px;
-            cursor: pointer;
-        }
-        .pn-link:hover { color: #8B4513; }
+        @media (min-width: 1201px) { .chapter-toc { display: none; } }
 
-        .section-content {
-            margin-bottom: 20px;
+        .nav-link:first-child { color: var(--kb-accent-dark); font-weight: bold; }
+        .nav-link:not(:first-child) { color: #6e6e6e; }
+
+        body { line-height: 1.9; }
+        .section-content p { margin-bottom: 16px; }
+
+        .progress-bar {
+            position: fixed; top: 0; left: 0;
+            width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--kb-accent-dark));
+            z-index: 200; transition: width 0.1s linear;
         }
-        .section-content p {
-            margin-bottom: 12px;
-            text-indent: 2em;
+
+        .chapter-content {
+            background: #fffef9;
+            border: 1px solid var(--border-card);
+            border-radius: 6px;
+            padding: 32px 36px;
+            box-shadow: 0 2px 12px rgba(139, 69, 19, 0.06);
+        }
+
+        .back-to-top {
+            position: fixed; right: 24px; bottom: 32px;
+            width: 42px; height: 42px;
+            background: var(--kb-accent-dark); color: var(--kb-tag-text);
+            border: 2px solid var(--accent); border-radius: 50%;
+            cursor: pointer; font-size: 1.2em;
+            display: none; align-items: center; justify-content: center;
+            z-index: 99; opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, background 0.2s;
+        }
+        .back-to-top.visible { display: flex; opacity: 0.85; transform: translateY(0); }
+        .back-to-top:hover { background: var(--accent); color: var(--text-heading); opacity: 1; }
+
+        .content-list li { transition: background 0.2s; border-radius: 3px; }
+        .content-list li:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
+        @media (max-width: 768px) {
+            .chapter-content { padding: 20px 18px; border-radius: 4px; }
+        }
+
+        /* 内容类型区分 */
+        .key-info {
+            background: var(--bg-intro);
+            border-left: 4px solid var(--accent);
+            padding: 12px 16px; margin: 16px 0;
+            border-radius: 0 4px 4px 0; font-style: italic;
+        }
+        .key-info::before {
+            content: "🔑 关键信息"; display: block;
+            font-weight: bold; font-style: normal;
+            color: var(--kb-accent-dark); margin-bottom: 8px; font-size: 0.9em;
+        }
+        .definition-box {
+            background: var(--kb-paper-3);
+            border-left: 4px solid var(--kb-accent-dark);
+            padding: 14px 18px; margin: 16px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .definition-box::before {
+            content: "📘 定义"; display: block;
+            font-weight: bold; color: var(--text-heading);
+            margin-bottom: 8px; font-size: 0.9em;
+        }
+        .definition-box .def-term { font-weight: bold; color: var(--kb-muted); }
+        .scenario-box {
+            background: var(--kb-paper-2);
+            border-left: 4px solid var(--kb-border-mid);
+            padding: 14px 18px; margin: 16px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .scenario-box::before {
+            content: "🎯 场景"; display: block;
+            font-weight: bold; color: var(--accent);
+            margin-bottom: 8px; font-size: 0.9em;
+        }
+        .figure-note {
+            text-align: center; color: var(--kb-muted);
+            font-style: italic; font-size: 0.9em; margin: 12px 0;
+        }
+        .product-card {
+            background: var(--kb-paper-1);
+            border: 1px solid var(--kb-border-light);
+            border-radius: 6px; padding: 16px 20px; margin: 16px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .product-card .product-name {
+            font-weight: bold; color: var(--kb-accent-dark);
+            border-bottom: 1px dashed var(--kb-border-mid);
+            padding-bottom: 6px; margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+        .product-card .product-purpose {
+            font-weight: bold; color: var(--text-heading);
+            margin-bottom: 6px; font-size: 0.95em;
+        }
+        .product-card .product-content { font-size: 0.92em; color: var(--text-normal); }
+
+        .role-table {
+            width: 100%; border-collapse: collapse; margin: 16px 0;
+            font-size: 0.88em;
+        }
+        .role-table th {
+            background: var(--kb-paper-4); color: var(--text-heading);
+            padding: 8px 10px; text-align: center;
+            border: 1px solid var(--kb-border-light); font-weight: bold;
+        }
+        .role-table td {
+            padding: 7px 10px; border: 1px solid var(--border-card);
+            vertical-align: top;
+        }
+        .role-table tbody tr:nth-child(even) td { background: var(--kb-paper-1); }
+        .role-table .td-left { text-align: left; }
+        .role-table .td-center { text-align: center; white-space: nowrap; }
+        .role-table .td-role { font-weight: bold; color: var(--kb-accent-dark); }
+
+        .table-scroll { overflow-x: auto; margin: 16px 0; }
+        .cols-stake { width: 18%; }
+        .cols-layer { width: 20%; }
+        .cols-princ { width: 25%; }
+        .cols-raci { width: 22%; }
+        .cols-duty { width: 18%; }
+
+        .figure-svg {
+            background: var(--kb-paper-1);
+            border: 1px solid var(--kb-border-light);
+            border-radius: 6px; padding: 16px; margin: 20px 0;
+            display: flex; justify-content: center;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.04);
+        }
+        .figure-svg svg { max-width: 100%; height: auto; }
+
+        .role-list {
+            list-style: none; padding-left: 0; margin: 8px 0;
+        }
+        .role-list li {
+            position: relative; padding-left: 1.4em; margin-bottom: 5px;
             text-align: justify;
         }
-
-        /* 列表 */
-        .content-list {
-            list-style: none;
-            padding-left: 2em;
-            margin: 12px 0;
-        }
-        .content-list li {
-            position: relative;
-            padding-left: 1.2em;
-            margin-bottom: 6px;
-            text-align: justify;
-        }
-        .content-list li::before {
-            content: "●";
-            color: #d4af37;
-            position: absolute;
-            left: 0;
-        }
-
-        /* 实体链接 */
-        .entity-link {
-            text-decoration: none;
-            border-bottom: 1px dashed;
-            padding: 0 1px;
-            transition: all 0.2s;
-        }
-        .entity-link:hover {
-            background: rgba(212, 175, 55, 0.15);
-        }
-        .entity-principle { color: #b8860b; border-color: #b8860b; }
-        .entity-practice { color: #8B4513; border-color: #8B4513; }
-        .entity-process { color: #2E8B57; border-color: #2E8B57; }
-        .entity-role { color: #4169E1; border-color: #4169E1; }
-        .entity-product { color: #8B008B; border-color: #8B008B; }
-        .entity-term { color: #A0522D; border-color: #A0522D; }
-
-        /* 页脚 */
-        .footer {
-            margin-top: 48px;
-            padding-top: 16px;
-            border-top: 2px solid #d4af37;
-            text-align: center;
-            font-size: 0.85em;
-            color: #8B7355;
-        }
-
-        /* 响应式 */
-        @media (max-width: 600px) {
-            body { padding: 12px; }
-            .chapter-title { font-size: 1.4em; }
+        .role-list li::before {
+            content: "●"; color: var(--accent);
+            position: absolute; left: 0; font-size: 0.8em;
         }
     </style>
 </head>
 <body>
-    <div class="nav-bar"><a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch05.html" class="nav-link">◁ 第5章 商业论证</a> | <a href="ch07.html" class="nav-link">第7章 计划 ▷</a></div>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+    <div class="nav-bar">
+        <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch05.html" class="nav-link">◁ 第5章 商业论证</a> | <a href="ch07.html" class="nav-link">第7章 计划 ▷</a>
+    </div>
 
     <span class="category-tag">实践</span>
     <h1 class="chapter-title">第6章 组织</h1>
 
-    
-        <nav class="chapter-toc">
-            <h3 class="toc-title" onclick="toggleToc()">
-                <span class="toc-icon">▸</span> 本章目录（35 节）
-            </h3>
-            <ul class="toc-list" id="tocList">
-                <li><a href="#pn-2">6.1 目的</a></li><li><a href="#pn-3">6.2 对有效组织的指导</a></li><li><a href="#pn-4">6.2.1 三种主要项目利益</a></li><li><a href="#pn-5">6.2.2 组织层面</a></li><li><a href="#pn-6">6.2.3 项目管理团队结构</a></li><li><a href="#pn-7">6.2.4 PRINCE2 角色</a></li><li><a href="#pn-8">16.6 节描述了阶段控制流程的职责。</a></li><li><a href="#pn-9">6.2.4.1 项目总监</a></li><li><a href="#pn-10">6.2.4.2 高级用户</a></li><li><a href="#pn-11">6.2.4.3 高级供应商</a></li><li><a href="#pn-12">6.2.4.4 项目管理委员会</a></li><li><a href="#pn-13">6.2.4.5 项目经理</a></li><li><a href="#pn-14">6.2.4.6 小组经理</a></li><li><a href="#pn-15">6.2.4.7 项目保证</a></li><li><a href="#pn-16">6.2.4.8 项目支持</a></li><li><a href="#pn-17">6.2.5 工作分解结构</a></li><li><a href="#pn-18">6.3 技术</a></li><li><a href="#pn-19">6.3.1 PRINCE2 组织设计和开发技术</a></li><li><a href="#pn-20">6.3.1.1 了解组织生态系统</a></li><li><a href="#pn-21">6.3.1.2 设计项目生态系统</a></li><li><a href="#pn-22">6.3.1.3 开发项目生态系统</a></li><li><a href="#pn-23">6.3.1.4 管理项目生态系统的持续变更</a></li><li><a href="#pn-24">6.3.1.5 将项目转换到组织生态系统</a></li><li><a href="#pn-25">6.3.2 支持技术</a></li><li><a href="#pn-26">6.3.2.1 交付模式</a></li><li><a href="#pn-27">6.3.2.2 RACI 图表</a></li><li><a href="#pn-28">6.4 应用实践</a></li><li><a href="#pn-29">6.4.1 组织情境</a></li><li><a href="#pn-30">6.4.2 商务情境</a></li><li><a href="#pn-31">6.4.3 交付方法</a></li><li><a href="#pn-32">6.4.4 可持续性</a></li><li><a href="#pn-33">6.4.5 规模</a></li><li><a href="#pn-34">6.5 支为实践提供支持的管理产品</a></li><li><a href="#pn-35">6.6 实践中关键角色的重点</a></li><li><a href="#pn-36">6.7 与原则的关键关系</a></li>
-            </ul>
-        </nav>
+    <nav class="chapter-toc">
+        <h3 class="toc-title" onclick="toggleToc()">
+            <span class="toc-icon">▸</span> 本章目录（36 节）
+        </h3>
+        <ul class="toc-list" id="tocList">
+            <li><a href="#pn-2">6.1 目的</a></li>
+            <li><a href="#pn-3">6.2 对有效组织的指导</a></li>
+            <li><a href="#pn-4">6.2.1 三种主要项目利益</a></li>
+            <li><a href="#pn-5">6.2.2 组织层面</a></li>
+            <li><a href="#pn-6">6.2.3 项目管理团队结构</a></li>
+            <li><a href="#pn-7">6.2.4 PRINCE2 角色</a></li>
+            <li><a href="#pn-8">6.2.4.1 项目总监</a></li>
+            <li><a href="#pn-9">6.2.4.2 高级用户</a></li>
+            <li><a href="#pn-10">6.2.4.3 高级供应商</a></li>
+            <li><a href="#pn-11">6.2.4.4 项目管理委员会</a></li>
+            <li><a href="#pn-12">6.2.4.5 项目经理</a></li>
+            <li><a href="#pn-13">6.2.4.6 小组经理</a></li>
+            <li><a href="#pn-14">6.2.4.7 项目保证</a></li>
+            <li><a href="#pn-15">6.2.4.8 项目支持</a></li>
+            <li><a href="#pn-16">6.2.5 工作分解结构</a></li>
+            <li><a href="#pn-17">6.3 技术</a></li>
+            <li><a href="#pn-18">6.3.1 PRINCE2 组织设计和开发技术</a></li>
+            <li><a href="#pn-19">6.3.1.1 了解组织生态系统</a></li>
+            <li><a href="#pn-20">6.3.1.2 设计项目生态系统</a></li>
+            <li><a href="#pn-21">6.3.1.3 开发项目生态系统</a></li>
+            <li><a href="#pn-22">6.3.1.4 管理项目生态系统的持续变更</a></li>
+            <li><a href="#pn-23">6.3.1.5 将项目转换到组织生态系统</a></li>
+            <li><a href="#pn-24">6.3.2 支持技术</a></li>
+            <li><a href="#pn-25">6.3.2.1 交付模式</a></li>
+            <li><a href="#pn-26">6.3.2.2 RACI 图表</a></li>
+            <li><a href="#pn-27">6.4 应用实践</a></li>
+            <li><a href="#pn-28">6.4.1 组织情境</a></li>
+            <li><a href="#pn-29">6.4.2 商务情境</a></li>
+            <li><a href="#pn-30">6.4.3 交付方法</a></li>
+            <li><a href="#pn-31">6.4.4 可持续性</a></li>
+            <li><a href="#pn-32">6.4.5 规模</a></li>
+            <li><a href="#pn-33">6.5 为实践提供支持的管理产品</a></li>
+            <li><a href="#pn-34">6.6 实践中关键角色的重点</a></li>
+            <li><a href="#pn-35">6.7 与原则的关键关系</a></li>
+        </ul>
+    </nav>
 
     <div class="chapter-content">
-        <div class="section-content"><p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 6.1 目的</h2>
-<div class="section-content"><p>关键信息 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>实践的目的是定义和建立项目的问责制和职责结构（谁？）。 项目是复杂的生态系统，由不断变更的关系网组成。项目要取得成功，就必须建立有效的项目 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构，来为应对这种复杂性提供支持。因此，PRINCE2 的原则之一是，项目必须在与 <a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>、用户和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>小组互动并代表其利益的组织结构内，为项目<a href="../entities/principle.html#entity-定义角色、职责和关系" class="entity-link entity-principle" title="原则：定义角色、职责和关系">定义角色、职责和关系</a>。 为了灵活应对并满足不同情境的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，PRINCE2 定义了一系列需要承担的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>及其职责。 PRINCE2 并未定义向相关人员一对一分配的任务<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>据项目需要，角色在一定的<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>条件内可 以共享或合并<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>必须分配相关的职责。 定义：角色 分配给特定项目中的组或个人的职能。这与人员在该项目之外的岗位或职位不同。</p></div>
-<h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 6.2 对有效组织的指导</h2>
-<h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 6.2.1 三种主要项目利益</h3>
-<div class="section-content"><p>在一个项目中，对项目有兴趣并且有能力对项目产生影响的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>（例如政府、监管机构 和特殊利益团体）可能<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>广泛。然而，PRINCE2 方法仅侧重于三个<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>利益相关方类 别（业务、<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>），并将他们纳入项目的<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>和<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>安排之中。</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 表 6.1 三种项目<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>群体的描述 利益相关方 描述 <a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a> 项目是为了满足业务<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>而创建，在项目的整个寿命中，需要不断证明项 目具有成本效益。PRINCE2 定义了<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>角色，用于代表项目在整个寿 命中具有成本效益这一观点。 <a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a> 项目的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>应该为一组明确定义的用户提供利益<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>些用户不仅为与产品 需求的定义提供<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，还要确保这些需求得<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>足。用户可以是业务内部 的最终用户，也可以是受<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>影响的用户，还可以是在操作或维护产品方 面具有一定<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的用户。用户也可以是业务外部的最终用户，或受到项目 <a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>的影响。PRINCE2 定义了<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>角色，用于代表项目用户利益。 <a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a> 项目的产品需要具有必要技能和知识的人员协作来交付。<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>人员可以来 自组织内部，也可以是具有适当技<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>识的外部供应商。PRINCE2 定义 了<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>角色，用于代表项目供应商利益。 成<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>项<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>团队由来自业务、用户和供应商小组的人员组成。“<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>”PRINCE2 原 则能够为<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>项目的日常<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>需求提供支持，在知识和精力所在的最基层实现多层次决策<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>业务 供应商 用户 项目 图 6.1<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>利益相关方群体 业务、用户和供应商的利益汇集在<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>中，项目管理委员会对项目的成功问责 （见 6.2.4.4 节）。</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 定义：<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a> 对项目的成功问责，并有权在<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>设定的职<a href="../entities/term.html#entity-权范围内指导项目。" class="entity-link entity-term" title="术语：权范围内指导项目。">权范围内指导项目。</a></p></div>
-<h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 6.2.2 组织层面</h3>
-<div class="section-content"><p>委托 （<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a>） 指导 （<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>） 管理 （项目经理） 交付 （<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>） 项目管理团队 图 6.2 四个<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>层</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 表 6.2 四个组织层的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a> 组织层面 角色 委托（<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a>） 业务内部的委托方负责提供项目任务书、识别项目主管、定义项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 委员会开展工作时的项目层面<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，并决定是否针对任何可能违<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>层面容许偏差的情况提供<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。 指导（项目管理委 员会） <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>由来自业务、用户和供应商的代表组成，对项目的成功 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会还负责在业务层建立的<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>下对<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>进行总体指<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会提供授权来开始和完<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>段，包括设置 阶段容许偏差（例如人员、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>线、资源和可持续性目标）。项目管理 委员会负责确定是否为违反或<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>将违反协定<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>容许偏差的任何情况 提供<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>，并按照<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>中协定的方式与业务和其他受影响的利 益相关方进行沟通。 管理（<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>） 项目经理负责在项<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>理委员会建立的约束<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内进行项目<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>理。项目经理的主要职责是管理项目内部的各种关系，确保项目按照 战略目标和协定的要求（例如<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>、可持续性、时间、成本、范围、 <a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a><a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>）生产产品。 交付（<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>） <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和小组成员负责在项目经理建立的约束下，对项目中各自负责 的部分进行日常管理和决策，并在必要时与整个项目生态系统中的其他 小组成员共同协作开展创建工作。</p></div>
-<h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 6.2.3 项目管理团队结构</h3>
-<div class="section-content"><p>PRINCE2 方法要求在一个项目中履行某些<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>（以及相关职责）。只要职责得到<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>分配， 这些角色就可以在一定<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内共享或合并，以与项目团队的技能和能力以及项目的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>保持 一致。 定义 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构：项目管理团队结构由<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>、项目经理、小组经理、<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>ENTITY_2⟧与项目支持角色组成。 项目团队：<a href="../entities/term.html#entity-PRINCE2 使用“项目团队”一词来涵盖所有" class="entity-link entity-term" title="术语：PRINCE2 使用“项目团队”一词来涵盖所有">PRINCE2 使用“项目团队”一词来涵盖所有</a>需要在项目上分配时间的 人员。</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 图 6.3 项目管理团队结构 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a> 高级用户 项目总监 <a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a> 业务层 小组成员 <a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a> <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a> 小组经理 项目支持 <a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>线 项目保证职责 支持/建议线 来自<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a> 来自<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a> 项目管理团队中的其他<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a> 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队内部 项目管理团队外部</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 6.2.4 PRINCE2 角色</h3>
-<div class="section-content"><p>本节概述了 PRINCE2 的每个<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>。 每个 PRINC<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a> 实践中每个角色的具体职责在<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>章节中进行了描述，例如，第 5.6 节描述了 <a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>ENTITY_0⟧实践相关的角色具体职责。 每个<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>也以 RACI 表（负责、问责、咨询、知<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>的形式描述了流程活动的职责，例如第</p></div>
-<h2 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 16.6 节描述了阶段控制流程的职责。</h2>
-<div class="section-content"><p>附录 B 汇总了每个 PRINCE2 <a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的概述和所有职责，为 PRINCE2 项目中使用的<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>提供 了基础。</p></div>
-<h4 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 6.2.4.1 项目总监</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>由业务任命，是项目的唯一问责制责任人，最终对项目的成功问责。这种问责制<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>权。项目总监负责确保项目资金，并对项目的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和持续业务理由负责。他们负责以符 合<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>战略的方式有效治理项目，包括确保在诸如环境或社会影响等方面进<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>虑。 不能有多个项目总监<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>，并且该角色不能与<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>角色合并。在实行工作共享方案的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 中，业务角色（工作）仍然会一<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>地分配给项目角色（项目总监）。然而，可<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>要额外的 安排，来确保与业务角色分担工作的职员能够清晰地维护单一问责制<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>工作共享相关的业务 政策和指导文件可能会涵盖此类情况，并且这些政策和指导应该在项目总监的<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>和项目 启动文件中有所反映。</p></div>
-<h4 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 6.2.4.2 高级用户</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>代表用户团体，并且对捕捉<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a><a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的方法以及与<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>一致的收益规格问责。 高级用户负责：</p>
-<ul class="content-list">
-  <li>确保方法获得<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>对项目的认同</li>
-</ul>
-<ul class="content-list">
-  <li>监视<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>是否符合<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中的需求</li>
-</ul>
-<ul class="content-list">
-  <li>向<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>证明<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中预测的收益正在逐步实现</li>
-</ul>
-<ul class="content-list">
-  <li>控制<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>的变更（无论是由用户、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>还是项目本身引起的变更）</li>
-</ul>
-<ul class="content-list">
-  <li>在项目结束后，成功地将<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>移交给业务、加以采用，并继续实现<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>。
-<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>必须确保用户团体中的人员作出充分的持续承诺来支持这些活动，特别是在项目生命
-周期结束后还需要作出<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>承诺（如实现收益）的情况下。
-根据<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>团体的规模和复杂性，可能需要<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>一个人来代表用户，但这应保持在最低限度。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h4 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 6.2.4.3 高级供应商</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>代表参与项目产品交付各个方面工作的供<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>高级供应商必须确保供应商组 织持续承诺提供充足的人员和资<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>项目工作。高级供应商对<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>交付的产品质量和 项目的技术完整性问责。 在许<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>下，高级供应商还代表了那些将在项目结束后提供<a href="../entities/term.html#entity-专业产品" class="entity-link entity-term" title="术语：专业产品">专业产品</a>维护服务的人员的利益 （例如，工程维护与支持）。 不过，确实存在<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>情况（ 例如，维护服务由内部 IT 部门等<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>提供，或者外包给其他供应 商）。在这种情况下，更有可能由<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>代表运营和维护利益。这种区分不是很重要，重要 的是运营、服务和支持的利益从项目开<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>适当地予以体现。 根据供应商团体的规模和复杂性，可能需要不止一个人代表供应商，但应将其保持在最低限度。</p></div>
-<h4 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 6.2.4.4 项目管理委员会</h4>
-<div class="section-content"><p>所有 PRINCE2 项目都必须有一个由<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>、高级用户和<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>角色组成的项目管理委 员会。在规模较小、复杂程度较<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>中，项目总监的角色可与<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>高级供应商角色 合并<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>高级用户和高级供应商<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>合并，以避免在决策过程中出现利益冲突，并确保 <a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>小组的观点和利益在项目中得到充分体现。 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>在业务设定的项目容许偏差<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内对项目拥职权和职责，这通常体现在项目任 务书中。他们负责为项目成功创造合适的环境，包括：</p>
-<ul class="content-list">
-  <li>拥有足够的资金、人员和资源来交付项目目标</li>
-</ul>
-<ul class="content-list">
-  <li>建立清晰的反馈循环，以支持项目的调整和发展</li>
-</ul>
-<ul class="content-list">
-  <li>确保对项目所有方面的绩效和<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>进行独立审查，不受<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>的干扰</li>
-</ul>
-<ul class="content-list">
-  <li>确保<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>战略和目标在<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>中得到体现</li>
-</ul>
-<ul class="content-list">
-  <li>确保项目及其<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法符合业务的环境、社会和<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a> (ESG) 承诺</li>
-</ul>
-<ul class="content-list">
-  <li>设定<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>度，以便进行<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>项目并确定指导各级决策所需的规则、<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>、共同价值观和视角</li>
-</ul>
-<ul class="content-list">
-  <li>建立<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>和<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>，以支持有效决策</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>项目团队的安全和福利</li>
-</ul>
-<ul class="content-list">
-  <li>监视和支持项目生态系统中的社会凝聚力</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统与项目生态系统连接之间的关系
-一个有效的<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>需要根据项目的性质和规模拥有适当的<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>，并在整个项目生态系
-统中具备良好的信誉。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h4 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 6.2.4.5 项目经理</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>拥有代表<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>在协定的项目容许偏差和<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>内开展<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>权。项目经理 负责项目的日常<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>，包括：</p>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>并酌情向<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>或小组成员授权工作</li>
-</ul>
-<ul class="content-list">
-  <li>为<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>和项目支持角色设定工作包<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>和约束</li>
-</ul>
-<ul class="content-list">
-  <li>确保决策符合<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>的指导和容许偏差</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目生态系统内的关系，包括<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>角色和<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a></li>
-</ul>
-<ul class="content-list">
-  <li>监视和支持小组成员的安全和福利以及项目方法的可持续性
-根据项目的规模和复杂性以及<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>的技能和精力，项目经理还可以执行<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>和项目支
-持角色，或直接将这些<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>授权<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>员。项目经理的职责属于唯一<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>，这意味着该角色
-不应与其他角色共享或合并。
-在实行工作共享方<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>中，业务角色（工作）仍然会一对一地分配给项目角色（项目经
-理）。然而，可能需要额外的安排，来确保与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>角色分担工作的职员能够清晰地维护单一问
-责制<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>工作共享相关的业务政策和指导文件可能会涵盖<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>。这些政策应该在项目经理
-的<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>和<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中有所反映。</li>
-</ul></div>
-<h4 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 6.2.4.6 小组经理</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>负责在与<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>协定的容许偏差和约束<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内交付分配给<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>作。项目经理按 照商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法，以<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的形式<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>配给小组经理。小组经理负责：</p>
-<ul class="content-list">
-  <li>按照协定的规格交付<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></li>
-</ul>
-<ul class="content-list">
-  <li>为小组成员设定工作<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>和约束</li>
-</ul>
-<ul class="content-list">
-  <li>确保团队需要做出的任何决策都符合<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>的指导和容许偏差</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队内部的关系，以及与其他团队、<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>、项目保证和项目支持的关系</li>
-</ul>
-<ul class="content-list">
-  <li>监视和支持小组成员的安全和福利以及团队方法的可持续性
-场景：<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>的角色和可能的人选
-由于购物中心的建设涉及多个专业领域，LouisShopping 项目的经理将工作分配给多
-个团队，每个<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>一名小组经理直接向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>报告。BuildyBrick 的首席电气建
-筑服务工程师和维修管道工<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>电力和管道团队的小组经理。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 场景：<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>在自我组织敏捷团队中的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a> Data Knowledge 项目中的软件开发团队是一个经验丰富的敏捷团队，<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>信任和自 我组织。团<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>为，小组经理角色将由整<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>体担任。这意味着小组经理的 所有职责领域将由整个团队和每个小组成员负责。这些职责领域包括规划、监视和管 理<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>、管理<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>和<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>、获得验收和移交产品。团队还指定了一个人，作为项目 经理的单点联系人，与<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>进行沟通，并告知项目经理他们所需的所有信<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a> 所有敏捷团队角色名称<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>变。项目经理已接受这些团队安排，将其视为根据 PRINCE2 方法在团队层面进行的适当<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>。</p></div>
-<h4 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 6.2.4.7 项目保证</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>成员对各自的关注领域（<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>保证、用户保证、<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>保证）问责。项目管理 委员会负责确定<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>的执行方式，确保在角色和职责方面有明确的规定，并确定被指定担 任保证<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的人员彼此之间如何互动。 根据是否拥有为项目团队提供支持所需的知识、技能 和精力，保证任务可以由<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会成员自己承担、从更广泛的业务中任命，或从外<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>拔。项目保证角色不能分配给<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>、小组经理、项目小组成员或<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>。在授权项目保 证角色的情况下，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会成员仍要承担问责制职责。</p></div>
-<h4 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 6.2.4.8 项目支持</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>负责提供各种服务，例如行政支持、协调开展会议和研讨会、就项目工具提供建议和 指导、规划支持、<a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>、问题管理和<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>。 这一角色的职责由<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>负责履行，但也可以将其<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>给<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>、个人、业务内部的团体或 其他小组成员。这取决于项目的规模和<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>以及项目经理的技能、知识和精力。一些<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 建立了项目办公室，以支持项目的交付，从而履行这一<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的职责（请参见项目组合、项目群 和项目办公室 (P3O<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>。 项目支持可以协助集成项目生态系统，包括获取反馈以帮助改进工作方式、<a href="../entities/process.html#entity-项目指导" class="entity-link entity-process" title="流程：项目指导">项目指导</a>的演进以 及建立社会凝聚力。 为了维护<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>的独立性，项目支持和项目保证角色应该是分开的。</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h3 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 6.2.5 工作分解结构</h3>
-<div class="section-content"><p>定义：<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a> 项目期间要完成的所有工作的层级，它在<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>分解结构与<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>之间建立了<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>分解结构是项目期间要完成的工作的层级结构，通常以可<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>示。工作分解结构 在工作包和产品分解结构之间建立了联系（请参见第 7 章），有助于<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>确定如何构建项 目团队以及确定项目团队之间的界限<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>存在多个工作包，特别<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>部人员和外部提供的混合工作包时，工作分解结构最为有用。 对于前者，它清晰地表明了内部工作人员工作量水平，而对于后者，它有助于创建所需工作的 说明。然而，对于非常简单的项目，例如只需一个小团队交付一个工作包的项目，通常不需要 工作分解结构。 如果在项目中使用单个工作包，则最好不要同时包括内部和外部小组成员。内部协议和外部合 同之间存在根本不同的性质和关系。因此，最好将它们分开<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。</p></div>
-<h2 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 6.3 技术</h2>
-<h3 id="pn-19" class="section-heading"><a href="#pn-19" class="pn-link" title="点击复制链接">[19]</a> 6.3.1 PRINCE2 组织设计和开发技术</h3>
-<div class="section-content"><p>关系，以及最终的有效项目团队。 PRINCE2 包括一个分五个步骤的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>设计和开发技术，如图 6.4 所示。可以使用替代程序代替 它，例如，如果<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>已<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>发了特定于其组织的程序。应将使用替代程序的决策作为<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a> 文件中的剪裁决策的一部分来记录。 将项目转换到 组织生态系统 <a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目 生态系统的 变更 开发项目 生<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>统 设计项目 生态系统 了解组织 生态系统 图 6.4 PRINCE2 组织设计和开发技术</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h4 id="pn-20" class="section-heading"><a href="#pn-20" class="pn-link" title="点击复制链接">[20]</a> 6.3.1.1 了解组织生态系统</h4>
-<div class="section-content"><p>对于已经定义<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>结构和公司治理需求的组织，组织中的人员通过项目联合在一起<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>功设计 项目组织，并决定项目生态系统如何作为一个与组织生态系<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>同的实体而发展，就必须了解 组织生态系统。 作为一个临时组织，项目方法需要定义将如何在需要的情况下与组织生态系统连接和保持一 致。必须明确以下<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>的职责归属：</p>
-<ul class="content-list">
-  <li>人员<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>：例如，绩效管理、奖励、晋升和福利</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>：例如，哪些决策受公司治理或治理路径的<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法：例如政策、程序和工作方式</li>
-</ul>
-<ul class="content-list">
-  <li>方式和时机：项目团队成员在项目内外的转换</li>
-</ul></div>
-<h4 id="pn-21" class="section-heading"><a href="#pn-21" class="pn-link" title="点击复制链接">[21]</a> 6.3.1.2 设计项目生态系统</h4>
-<div class="section-content"><p>项目<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>设计描述了如何组织工作和人员以实现项目目标。这包括：</p>
-<ul class="content-list">
-  <li>确定团队的有效结构</li>
-</ul>
-<ul class="content-list">
-  <li>确定所需的人员和资源</li>
-</ul>
-<ul class="content-list">
-  <li>实施综合工作<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a></li>
-</ul>
-<ul class="content-list">
-  <li>培养项目行为和<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a>
-所进行的设计是为了应对项目各个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的需求、项目的工作情境以及项目所需人员或指派人员
-的技能、能力和精力的了解。
-根据项目的规模、复杂性、项目方法和交付方法，<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>结构可能需要在项目的不同阶段进行转
-换，例如从<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>主导的设计团队转变为<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>主导的交付团队。在可能的情况下，应在启动阶
-段识别和<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>这种转换，从而在不同阶段建立有计划的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构。需要考虑支持这些
-不同结构之间转换所需的人员和资源，以及变更对项目团队的影响。
-<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>和商务管理方法为项目组织设计提供了依据。它们将决定团队的数量和规模<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>
-队来自哪些组织，以及所<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>何客户或供应商关系经理的性质。完全由<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>内部人员交付的<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>所需的能力与主要由外部供应商交付的项目所需的能力大不相同。
-<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>在项目经理的支持下负责项目组织设计。这应当在<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中有所记录。由于项
-<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>有临时性并且不断变更，项<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>组织设计需要与业务组织设计截然不同的专业知识。根据
-项目的规<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>性，项目总监可能需要在组织内部（如果他们具备这方面的技能）<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>这一
-职责，或者将这一职责外包给专业供应商。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 场景：项目不同阶段的不同团队结构 Findef 即将发布多款新<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，因此为项目的不同阶段建立足够的团队结构至关重要。 该项目现在处于第 3 <a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>（<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>设计）的初期，产品 1 的早期市场测试和 <a href="../entities/term.html#entity-DevOps" class="entity-link entity-term" title="术语：DevOps">DevOps</a> 技 能提升是关键的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>活动，因此需要组建新的团队。 签订合同为市场测试提供建议的营销机构，以<a href="../entities/term.html#entity-DevOps" class="entity-link entity-term" title="术语：DevOps">DevOps</a>vOps 团队技能提升培训合同 的培训公司，现在都将作为<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>角色发挥积极作用。<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>角色还将在项目管 理委员会中担任代<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>责管理与供应商的关系并进行供<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>保证。 在这一阶段，还将任命一名变更经理，预计变更经理将与项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队合作，以确<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>变更得到有效计划、管理和嵌入，为产品 1 的<a href="../entities/term.html#entity-最小可行产品" class="entity-link entity-term" title="术语：最小可行产品">最小可行产品</a> (MVP) 软启动做好准备。 随着产品<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>到全面发布并转换到正常经营 (BAU) 支持，运营代表将开始更多地参与 项目。他们将与变更经理合作，以实现平稳转换和有效的<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>采用。</p></div>
-<h4 id="pn-22" class="section-heading"><a href="#pn-22" class="pn-link" title="点击复制链接">[22]</a> 6.3.1.3 开发项目生态系统</h4>
-<div class="section-content"><p>项目<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>开发涉及实施项目组织设计，并随着项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>进行调整和演变。项目生态系统将需 要持续开发，以应对不断变更的项目<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>、小组成员及其新出现的关系，确保建立的项目能 够实现目标并持续改进。 开发活动可能包括：</p>
-<ul class="content-list">
-  <li>将人员加入项目，例如现场访问、就职或认证</li>
-</ul>
-<ul class="content-list">
-  <li>项目团队的技能和能力评估或审计</li>
-</ul>
-<ul class="content-list">
-  <li>对项目团队进行培训，例如介绍新方法或填补技能和能力差距</li>
-</ul>
-<ul class="content-list">
-  <li>团队建设</li>
-</ul>
-<ul class="content-list">
-  <li>建立和维护特定的项目<a href="../entities/term.html#entity-文化" class="entity-link entity-term" title="术语：文化">文化</a></li>
-</ul>
-<ul class="content-list">
-  <li>继任<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>，包括认识到有人可能会在项目完成之前离开项目</li>
-</ul>
-<ul class="content-list">
-  <li>开展离职活动，总结经验教训
-向<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>生态系统交付新功能的<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>方法（见第 3 章）也可用于向项目生态系统交付新功
-能，特别是在准备转换点（例如任命关键<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>）时。正如组织生态系统中存在关键影响者一
-样，项目生态系统中也存在关键影响者，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>需要咨询和影响这些关键影响者，以成功开
-发项目能力。
-<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>负责项目组织发展，并由项目经理<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>支持。与项目组织设计一样，必须要认识到这
-需要具备专业技能的人员并具备相应资源来发挥适当能力。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h4 id="pn-23" class="section-heading"><a href="#pn-23" class="pn-link" title="点击复制链接">[23]</a> 6.3.1.4 管理项目生态系统的持续变更</h4>
-<div class="section-content"><p>人们需要<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>来熟悉项目、获得能力和发展关系，以履行自己的职责。为了决定是否存在任何 能力或精力差距或者关系<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>需要解决，建立明确的反馈循环非常关键。 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>负责充分利用现有人员和资源并在必要时增强能力。为此，他们要确保人员的职责与 能力相匹配，寻找额外的技能和精力，或通过辅导和学习机会提升人员的技能。 项目所需的能力会在项目生命周期中发生变<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>要求项目经理确保商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法支持这一 点，根据需要将人员转换到项目之中和<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>增强精力和能力。项目经理还必须确保建立强 大的<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>程序，确保在决策中考虑到对项目生态系统不同领域的影响。要做到这一点，方 法之一是识别<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>将提供的新功能，并审查将这种新能力嵌入到正常经营活动时遇到的任何障 碍。在项目生命周期的早期<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>澄清这些障碍将凸显新的项目<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>或问题，并就实现收益的现 实时间框<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>立期望。 项目阶段通常由所需能力的这些转换点来定<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>这是审查项目管理团队结构及相关<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>和职责 的好时机，可确保商务管理方法支持提议的变更。</p></div>
-<h4 id="pn-24" class="section-heading"><a href="#pn-24" class="pn-link" title="点击复制链接">[24]</a> 6.3.1.5 将项目转换到组织生态系统</h4>
-<div class="section-content"><p>与项目开始时一样，在项目结束时，了解项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和任何剩余项目团队成员将要转换到的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 生态系统非常重要。作为转换的一部分，<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>需要考虑三个关键方面：</p>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>：确保所有产品均已进入<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>，并且与产品相关的任何持续活动（例如进一步开发、
-监视<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、运营和维护产品）都归属于业务的适当部门</li>
-</ul>
-<ul class="content-list">
-  <li>人员：确保任何剩余的项目小组成员成功转换回<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>或按照外部<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的商务安排进行
-管理</li>
-</ul>
-<ul class="content-list">
-  <li>学习：确保以最有效的方式分享经验教训并利用所获得的知识，在开展项目工作的过程
-中，项目小组成员可能已经掌握了一些技能和能力，这些技能和能力可能会给更广泛的
-<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>和相关<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>带来收益。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h3 id="pn-25" class="section-heading"><a href="#pn-25" class="pn-link" title="点击复制链接">[25]</a> 6.3.2 支持技术</h3>
-<div class="section-content"><p>PRINCE2 项目可使用的其他技术包括<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>或 RACI 矩阵。</p></div>
-<h4 id="pn-26" class="section-heading"><a href="#pn-26" class="pn-link" title="点击复制链接">[26]</a> 6.3.2.1 交付模式</h4>
-<div class="section-content"><p>如果<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>中尚不存在所需的精力或能力，并且没有长期开发这些精力或能力的需要，则项目可 以选择引入外部<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>，要么作为支持项目的额外人员，或外包一部分或全部<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>交付工作。 业务可以通过描述项目如何在<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>中获得所需的人员和资源来做出此类决<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>义：交付模式 根据用户、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>和供应商组织的项目约束和能力，为实<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>目目标而部署的组织和 商务<a href="../entities/term.html#entity-安排。交付模式在商务管理方法中描述，并" class="entity-link entity-term" title="术语：安排。交付模式在商务管理方法中描述，并">安排。交付模式在商务管理方法中描述，并</a>反映在项目管理团队结构中。 交付模式的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>可以从瘦客户端模式（大<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>目工作由供应商承担）到胖<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>端模式（大部 分工作<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>务承担）。在瘦客户端模式中，<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>发项目产品的工作由外部供应商完成，<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 项目的大部分工<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>部供应商完成。 交付模式将定义项目管理的哪些方面由内部人员负责，哪些方面由外部人员负责。其中还会确 定外部<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>商完成的工作以产品合同还是以劳务为基础签订合同。区分在于，以劳务为基础签<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>的合同意味<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>客户通常对其工作的绩效负责，而以产品为基础签订签订的合同意味着，供 应商仍然对其绩效负责。 <a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>在与项目经理协商的基础上，负责确定内部和外部供应商之间的适当平衡以及 他们之间所需的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>安排。这在商务管理方法中有所体现。 交付模式的选<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>可能受到项目对业务独特程度的影响。对于高度独特的项目或可能成为政治 项目的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>NTITY_2⟧委员会可能会选择组织投入程度较高的模式来为工作提供保证。对于标<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>化程度较高<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会（作为治理机构）因技术能力或理解能力不足而无 法做出明智决策或适当质疑项目团队的情况，可以选择利用外部供应商的专业知识来为工作提 供保证和为决策提供支持的模式。交付模式应支持将<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>分配给组织生态系统中最擅长管理风 险的部分。</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 场景：<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>示例 由于 NowByou 内部缺乏专业的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>能力，因此必须就如何交付新的反歧视宣传 活动做出“自制或外购”的决策。由于 NowByou 可用的资金有限，主要依靠捐款， 因此这一决策受到了可用资源的严重限制。 成本<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>聘请专业项目管理提供方（例如咨询公司）的主要原因。尽管如此<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>NowByou 明白专业的项目管理是成功宣传活动的促成因素，对其长期战略至关重要。 随后，管理层决定聘请一名专业<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>，为 NowByou 的良好<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>奠定基础，其职 责还包括提高内部工作人员的项目管理能力。项目的其他方面将由内部完成，除了咨 询的一些元素，将由 NowByou<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>作的一些志愿组织承担。 <a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>3 交付模式示例 工作/技能 内部或外部 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或人工（外部）备注 项目管理 外部 人工 聘<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>专业项目经理， 签订固定期限合同。合同包括 技能转移 保证 内部 不适用 <a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和保证委员会 咨询 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 产品 内部沟通部门辅以志愿组织来 完成额外的研究 营销沟通 内部 不适用 内部沟通部门</p></div>
-<h4 id="pn-27" class="section-heading"><a href="#pn-27" class="pn-link" title="点击复制链接">[27]</a> 6.3.2.2 RACI 图表</h4>
-<div class="section-content"><p>尽管 PRINCE2 明确提供了核心项目团队内的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、职责和关系，但使用 RACI 图表等技术为更 广泛的项目生态系统的各<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>面定义相同的角色、职责和关系也可能非常有用。RACI 图表是 项目中所有活动或决<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>构的矩阵，显示所涉及的人员或角色。RACI 代表：</p>
-<ul class="content-list">
-  <li>负责人 (Responsible)：执行任务的一个或多个人员</li>
-</ul>
-<ul class="content-list">
-  <li>问责人 (Accountable)：“拥有”任务的单个人员</li>
-</ul>
-<ul class="content-list">
-  <li>咨询人 (Consulted)：需要为任务提供输入意见的人员</li>
-</ul>
-<ul class="content-list">
-  <li>知情人 (Informed)：受告知任务<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>或完成情况的人员
-任何任务通常都有许多不同人员参与，而且这些人员的职责不同，RACI 图表能够让关系和职
-权变得明确。RACI 图表的好处包括：</li>
-</ul>
-<ul class="content-list">
-  <li>明确的所有权</li>
-</ul>
-<ul class="content-list">
-  <li>明确的交付职责</li>
-</ul>
-<ul class="content-list">
-  <li>更强的团队合作</li>
-</ul>
-<ul class="content-list">
-  <li>视觉格式减少混淆并确保没有遗漏</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h2 id="pn-28" class="section-heading"><a href="#pn-28" class="pn-link" title="点击复制链接">[28]</a> 6.4 应用实践</h2>
-<h3 id="pn-29" class="section-heading"><a href="#pn-29" class="pn-link" title="点击复制链接">[29]</a> 6.4.1 组织情境</h3>
-<div class="section-content"><p>项目存在于更广泛的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>情境中，从在职能结构内部交付的一<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>项目，到多个组织在项目团 队中协作交付的项目群或项目组合的一部分。构成项目群一部分的项目可能会发现，第 3 章 （人员）中提及的许多<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>活动将在项目群层面进行协调和执行，并可能受到项目群结构 及其各种<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>要求的影响。 项目群和项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构和角色需要进行整合，以确保：</p>
-<ul class="content-list">
-  <li>从上到下设有清晰的职责和问责制线</li>
-</ul>
-<ul class="content-list">
-  <li>避免重复</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>和审查均更高效，例如，作为项目群审查的一部分，一个项目群下共用项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委
-员会成员的多个项目可以整合<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>边界，并统一召开会议<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>所有项目进行阶段竣工
-评估
-<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的集成可能涉及如下内容：</li>
-</ul>
-<ul class="content-list">
-  <li>项目群经理可以担任一个或多个项目的<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>在项目群中，可能会有多个<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>、一个指导多个项目的机构（有效替代多个项
-目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会 ）或这两种形式的结合。</li>
-</ul>
-<ul class="content-list">
-  <li>来自项目群的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>变更经理可以兼任一个或多个项目的<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>的项目角色（或参与高级
-<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>的任命），或者担任一个或多个项目的<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>单个项目群办公室可能为所有项目承担<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>职责。</li>
-</ul></div>
-<h3 id="pn-30" class="section-heading"><a href="#pn-30" class="pn-link" title="点击复制链接">[30]</a> 6.4.2 商务情境</h3>
-<div class="section-content"><p>如果项目需要多个<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>协同工作，就需要考虑如何在各组织不同的工作<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>和治理方式之间架 起桥<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>在定义项目的组织结构时，可能需要考虑<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的政治因素。这些因素将影响商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a> 方法以及<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和回报分配等问题，特别是业务在项目交付方面的跟踪记录，以及在竞争相同人 员和资源方面的竞争冲突。 在商务<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>/<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>情境中，有多种方法构<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>目管理团队角色。旨在确保双方组织建<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>维 护充分的业务理由，并遵循各自的<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>规则。 下面探讨了一些商务情境注意事项：</p>
-<ul class="content-list">
-  <li><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>需要充分了解他们在与<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>组织签订的任何合同中所应履行的相关义务。项目
-经理通常<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>户组织。供应商的工作人员可以充当项目中的部分<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>角色，他们在
-供应商<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>内<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>为“项目经理” 。需要明确职位与项目<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>名称之间的差异。</li>
-</ul>
-<ul class="content-list">
-  <li>可能有些项目的<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>来自供应商组织 。客户可能选择脱离日常工作，且希望由<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>
-管理项目。客户可能会提高<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>的严格性，可能选派其<a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a>担任项目保证角色。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p>
-<ul class="content-list">
-  <li>可能会有一个联合<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>，其中的代表来自客户及<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>选择的所有<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>。这个<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会中的项目总监可能由客户方的人员出任， <a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>将代表每一个
-供应商。</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>可以将客户项目中的<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>视为供应商组织内的项目。这可能意味着需要建<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>个单独的供应商<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>。这种委员会和客户方项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会的关系需要
-定义。</li>
-</ul>
-<ul class="content-list">
-  <li>如果有多个<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>，这些供应商均可在<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>中获得代表，因为委员会可为其
-提供论坛，以便整合其指<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>策。如果供应商超过三个或四个，通常由负责所有供应
-商合同绩效的合同经理代表供应<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会更为有效。或者也可任命一个主<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会是否要包括外部供应商？这个决策可能更大程度上关乎文
-化，根源在于<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>对泄露商务或财务<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的看法。</li>
-</ul>
-<ul class="content-list">
-  <li>在采购期间，项目可能需要从<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>（例如，采购团队）中临时任命<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>角色，
-直到正式任命<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>。
-当商务管理方法需要对项目团队进行重大变更时，应详细说明商务安排如何通过转换点支持项
-目团队成员，例如与<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>一致的固定期限<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>
-场景：供应商参加部分委员会会议
-LouisShopping<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>目已接近关键阶段，新购物中心的设计方案即将确定并达成协定。
-BuildyBrick 是主承包商，负责提供设计选项，以确保基础架构与环境保持一致，同时
-还提供由最新技术支持的现代化设施。
-为了让<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>能够就 BuildyBrick 的设计方案提出<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>，<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>从拥有技
-术专业知识的供应商那里获得完整、及时的回复和建议，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>要求设立一个
-常设委员会。BuildyBrick 的代表会参加每次会议的前半部分。在这一部分中，会
-提供有关设计和交付的状态更新，而会议的另一部分则侧重于与内部<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>相关
-的事项。</li>
-</ul></div>
-<h3 id="pn-31" class="section-heading"><a href="#pn-31" class="pn-link" title="点击复制链接">[31]</a> 6.4.3 交付方法</h3>
-<div class="section-content"><p>当项目部署特定的交付方法时，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>需要了解：</p>
-<ul class="content-list">
-  <li>交付方法规定的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>如何与 PRINCE2 角色保持一致？在某些情况下，只需变更术语和对
-<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>稍作修改即可。例如，迭代-增量<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>开发技术通常包括产品负责人的角色，这
-可以与<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>角色保持一致。在其他情况下，<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>需要将不同的角色添加到项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团
-队结构，并就这些角色与 PRINCE2 角色之间的关系达成一致。</li>
-</ul>
-<ul class="content-list">
-  <li>当各团队使用不同的交付方法（例如线性-顺序和迭代-增量的混合方法）时，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>将
-如何与各团队联络？</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p>
-<ul class="content-list">
-  <li>如果使用自我<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>交付团队，他们与<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>角色的关系如何？小组经理<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>是由
-Scrum Master 担任，由小组成员集<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>还是小组经理的职责由小组成员、<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>负责
-人和 Scrum 大师分担？
-PRINCE2 与迭代-增量技术的有效协同工作离不开<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>的应用。这授权了项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队
-权利，确保其可在清晰定义<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>界内进行自我组织。（有关如何将 PRINCE2 与迭代-增量技术
-结合相关的更多详细信息，请参阅“PRINCE2 敏捷”）。</li>
-</ul></div>
-<h3 id="pn-32" class="section-heading"><a href="#pn-32" class="pn-link" title="点击复制链接">[32]</a> 6.4.4 可持续性</h3>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>负责确保项目与业务目标保持一致。这通常包括环境、社会和<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a> (ESG) 目标、联合 国可持续发展目标 (SDG)、净零排放、减少废物目标、材料再利用、淘汰方法等。 项目通常是推动<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>实现可持续性目标的工具，无论这是项目的主要<a href="../entities/term.html#entity-关注" class="entity-link entity-term" title="术语：关注">关注</a>点还是作为项目交付 的副<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。为了支持这一点，整个项目生态系统都应该对可持续性目标有明确的问责制，并在 <a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>、需求设定和人员角色描述中<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>体现。项目的组织会影响其可持续交付的能力。项 目方法应<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>小组成员能够以具可持续性的方式交付，将可持续性因素纳入所有决策中，并确 保观点的多样性，以挑战过去的做事方式。 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构和<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>应定义实现可持续性目标的职责，<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目结束后如何管理这些 目标。商<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>理方法应确保产品的采购方式符合道德规范，所采用的绩效措施能够实现可持续 性目标。 场景：<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>中的代表 对可持续性的<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>不仅与环境有关，还体现在组织如何管理其项目对当地社区的影 响上。NowByou 正在以无家可归者和难民作为新宣传活动的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>关键目标群体， 因此该非政府组织希望将这些群体的言辞付诸<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>。NowByou 邀请了靠近其总部 的两个当地组织积极参与这项宣传活动<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会中担任高级用户的 <a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>。 这两个组织将帮助项目团队了解对当地社区的影响，并确保他们的利益得到考虑。 他们还将确保所做的决定提供具有可持续性的成果，并且这种可持续性会在宣传 活动结束后继续保持。</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h3 id="pn-33" class="section-heading"><a href="#pn-33" class="pn-link" title="点击复制链接">[33]</a> 6.4.5 规模</h3>
-<div class="section-content"><p>在大型、复杂项目中，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构可能包括将 PRINCE2 <a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>分解为多个任命。例如， 可以任命几个<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>或<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>。然而，良好实践是保持<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>规模尽可能小， 同时，仍然代表所有商业、<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的利益。在规模较小、较为简单的项目中，只要遵守 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>、<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>和项目保证人员之间的分工，就可以<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>目人员分配多个角色。 大型复杂项目的另一个方面的特<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会通常需要被授权<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>来<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>变更请求或 <a href="../entities/term.html#entity-不合格项" class="entity-link entity-term" title="术语：不合格项">不合格项</a>，这样他们就不会被大量的请求淹没或在响应请求时<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会可以选择建<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>同于项目经理的<a href="../entities/role.html#entity-变更职权组织" class="entity-link entity-role" title="角色：变更职权组织">变更职权组织</a>，该组织向项目管理委员 会<a href="../entities/role.html#entity-变更职权组织" class="entity-link entity-role" title="角色：变更职权组织">变更职权组织</a>职权组织的授权应与协定的项目<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>保持一致，并支持最基层的决策和 所有权，因为最基层有做出决策所<a href="../entities/role.html#entity-变更职权组织" class="entity-link entity-role" title="角色：变更职权组织">变更职权组织</a>力。变更职权组织的使用和组成应在<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>管 理方法中有所记录。 项目管理委员会负责确保明<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>在什么容许偏差范围内做出决策。这些职权应在启动阶 段建立，并在<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>和相关管理方法中有所<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>每个阶段以及每当项目容许偏差或授 权人员发生变更时，都应对<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>进行审查。（有关<a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>和问题管理的更多信息，请参见</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：商务管理方法 商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法是<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的一部分。 目的 商务管理方法的目的是描述要应用的程序、技术和标<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>以及有效商务管理的职责。 这包括对于项目成功而言，为所需的所有商务协议开展确保、服务和维护工作的方法。<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>可能 包括市场参与、采购和合同管理等活动。 概括性内容 <a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>：描述所需的商务关系；例如，是否需要任何<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>协议，需要哪些<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>合同 <a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>：描述项目工作的交付模式<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>，由外部供应商交付的<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>的要素） 资源：用于市场参与、采购和合同管理活动 职责：定义市场参与、采购和合同管理活动的职责 支持工具和技术：例如，要使用的招标系统或合同管理系统 标准：适用于市场参与、采购或合同管理的任何标准（例如，商务或采购政策、现有采购框架的 使用） 参考资料：任何相关文件或<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a></p></div>
-<h2 id="pn-34" class="section-heading"><a href="#pn-34" class="pn-link" title="点击复制链接">[34]</a> 6.5 支为实践提供支持的管理产品</h2>
-<div class="section-content"><p>PRINCE2 包括用于<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目的 15 种<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。下面描述了特定于组织<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>的管理<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：项目管理团队结构 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构是<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的一部分。 目的 项目管理团队结构的目的是定义参与项目的人员、他们的关系以及他们将如何协同工作。其中还 可能包括对项目团队之外相关关键人员的描述。 概括性内容 项目结构：显示团队结构及其<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>关系的图表 职权和职责摘要：<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>安排（可能采用<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>形式），显示管理层面、他们获<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>做出的决定、 谁对他们问责制，以及谁向他们保证。位于同一地点的工作<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a> 安排或远程团队安排 支持信息：<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>关键<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>系 管理产品：角色描述 角<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>启动文件的一部分。 目的 <a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>的目的是描述项目管理团队中的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>及其具体职责。 概括性内容 角色<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>色名称 职权：角色有<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的内容 职责：分配给角<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>职责列表<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>责：角色向谁报告 支持信息：角色是兼职还是全职，角色是否与任何其他角色组合</p>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h2 id="pn-35" class="section-heading"><a href="#pn-35" class="pn-link" title="点击复制链接">[35]</a> 6.6 实践中关键角色的重点</h2>
-<div class="section-content"><p>PRINCE2 定义了项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的七项关键角色。下面描述了他们特定于<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>实践的职责。 表 6.4 与组织<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>有关的关键<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的重点领域 角色 职责 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a></p>
-<ul class="content-list">
-  <li>任命<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>和（如可能）项目经理</li>
-</ul>
-<ul class="content-list">
-  <li>提供<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>所需的沟通标准</li>
-</ul>
-<ul class="content-list">
-  <li>按照<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>中的定义，向项目提供信息
-<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a></li>
-</ul>
-<ul class="content-list">
-  <li>任命<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>（如果不是由业务完成）</li>
-</ul>
-<ul class="content-list">
-  <li>与<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>合作，确认项目的组织设计并<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a> 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构</li>
-</ul>
-<ul class="content-list">
-  <li>确认项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队任命</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法、<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>和变更管理方法</li>
-</ul>
-<ul class="content-list">
-  <li>审查并确认项目方法和<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>的选择，并确保它们与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的 ESG
-目标兼容
-<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a></li>
-</ul>
-<ul class="content-list">
-  <li>确保<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>团体人员的适当参与</li>
-</ul>
-<ul class="content-list">
-  <li>同意商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法、<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>和变更管理方法</li>
-</ul>
-<ul class="content-list">
-  <li>为<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>分析做出贡献</li>
-</ul>
-<ul class="content-list">
-  <li>就<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>团体的人员方面提供建议，例如，谁是关键影响者
-<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a></li>
-</ul>
-<ul class="content-list">
-  <li>确保<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>团体人员的适当参与</li>
-</ul>
-<ul class="content-list">
-  <li>同意商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法（如果适用）、<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>和变更管理方法</li>
-</ul>
-<ul class="content-list">
-  <li>就<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>团队的人员方面提供建议，例如，特定的健康、安全和
-福利<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>
-<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a></li>
-</ul>
-<ul class="content-list">
-  <li>准备和更新商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法、<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>和变更管理方法</li>
-</ul>
-<ul class="content-list">
-  <li>设计、审查和更新项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构和<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a></li>
-</ul>
-<ul class="content-list">
-  <li>准备<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a></li>
-</ul>
-<ul class="content-list">
-  <li>建立和维护健康的项目生态系统，确保项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队的福利
-<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a></li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>小组成员</li>
-</ul>
-<ul class="content-list">
-  <li>确保团队的福利</li>
-</ul>
-<ul class="content-list">
-  <li>就小组成员在项目中的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>选择提供建议</li>
-</ul>
-<ul class="content-list">
-  <li>实施<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中协定的沟通管理程序、<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>程序和商务管理
-程序
-（接下页）</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 角色 职责 <a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a></p>
-<ul class="content-list">
-  <li>对项目团队成员的挑选向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提供建议</li>
-</ul>
-<ul class="content-list">
-  <li>就<a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>、变更管理方法和商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法向<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>提供
-建议</li>
-</ul>
-<ul class="content-list">
-  <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>确认沟通管理方法、变更<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法和商务管理方
-法符合<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>政策</li>
-</ul>
-<ul class="content-list">
-  <li>向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>保证沟通管理方法、变更<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法和商务管理方
-法的实施情况（<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>正确执行商务管理程序）
-<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a></li>
-</ul>
-<ul class="content-list">
-  <li>提供就职和离职方面的帮助</li>
-</ul>
-<ul class="content-list">
-  <li>提供<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>分析方面的帮助</li>
-</ul>
-<ul class="content-list">
-  <li>提供沟通<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>活动方面的帮助</li>
-</ul>
-<ul class="content-list">
-  <li>提供<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a>活动方面的帮助</li>
-</ul>
-<ul class="content-list">
-  <li>提供商务<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>活动方面的帮助</li>
-</ul>
-<p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a></p></div>
-<h2 id="pn-36" class="section-heading"><a href="#pn-36" class="pn-link" title="点击复制链接">[36]</a> 6.7 与原则的关键关系</h2>
-<div class="section-content"><p><a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>实践有助于在整个项目生命周期中遵守 PRINCE2 原<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a> 表 6.5 组织实践与 PRINCE2 原则之间的关键关系 原则 实现方式 导致 <a href="../entities/principle.html#entity-确保持续业务理由" class="entity-link entity-principle" title="原则：确保持续业务理由">确保持续业务理由</a> 分配业务中的某个人担任<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a> 角色，该人员代表业务观点，并具 有足够的<a href="../entities/term.html#entity-职权" class="entity-link entity-term" title="术语：职权">职权</a>和可用性来履行该角 色并对项目进行问责 项目能够适应不断变更的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a> <a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a> 做出与<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>保持一致的适当 决策 <a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a> 利用经验教训告知项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结 构、<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>和健康的项目生 态系统的信息 正确的人员在正确的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>担任正 确的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>来交付项目 定义角色、职责和 关<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>建立明确的项目管理团队结构，确 保每个相关人员都充分意识到自己 的职责和关系 没有职责重复或职责缺失；整个 项目生态系统之间以及项目与受 项目影响者之间存在积极关系 <a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a> 评估并在必要时调整项目管理团队<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>构、<a href="../entities/term.html#entity-角色描述" class="entity-link entity-term" title="术语：角色描述">角色描述</a>、商务管理方法、 <a href="../entities/product.html#entity-沟通管理方法" class="entity-link entity-product" title="管理产品：沟通管理方法">沟通管理方法</a>以及阶段边界的变更 管理<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a> 项目能够随着需求的变更而发 展，在项目的每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>都能部署 适当的技能和能力 <a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a> 授权那些最有能力的人在适当的时 候做出决策 促进有效和及时的决策，加强问 责制以及对行动和决策的所有权 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a> 确保项目管理团队中有使用项目产 品的人员，并了解成功部署项目产 品所需的<a href="../entities/term.html#entity-变更管理" class="entity-link entity-term" title="术语：变更管理">变更管理</a> 产品更容易被用户接受并投入运 营使用，带来预期<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a> <a href="../entities/principle.html#entity-根据项目剪裁" class="entity-link entity-principle" title="原则：根据项目剪裁">根据项目剪裁</a> 创建一支与项目需求以及相关组织 和人员的能力相适应的项目管理 团队 创建有效的团队结构，该结构规 模适当，并具备交付项目所需的 必要职责、技能和能力</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a></p></div>
+        <div class="key-info">组织实践的目的是定义和建立项目的问责制和职责结构（谁？）。</div>
+
+        <h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 6.1 目的</h2>
+        <div class="section-content">
+            <p>项目是复杂的生态系统，由不断变更的关系网组成。项目要取得成功，就必须建立有效的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队结构，来为应对这种复杂性提供支持。因此，PRINCE2 的原则之一是，项目必须在与<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>、用户和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>小组互动并代表其利益的组织结构内，为项目<a href="../entities/principle.html#entity-定义角色、职责和关系" class="entity-link entity-principle" title="原则：定义角色、职责和关系">定义角色、职责和关系</a>。</p>
+            <p>为了灵活应对并满足不同情境的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，PRINCE2 定义了一系列需要承担的<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>及其职责。PRINCE2 并未定义向相关人员一对一分配的任务。根据项目需要，角色在一定的<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>条件内可以共享或合并，但必须分配相关的职责。</p>
+            <div class="definition-box">
+                <span class="def-term">角色：</span>分配给特定项目中的组或个人的职能。这与人员在该项目之外的岗位或职位不同。
+            </div>
+        </div>
+
+        <h2 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 6.2 对有效组织的指导</h2>
+
+        <h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 6.2.1 三种主要项目利益</h3>
+        <div class="section-content">
+            <p>在一个项目中，对项目有兴趣并且有能力对项目产生影响的<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>（例如政府、监管机构和特殊利益团体）可能范围广泛。然而，PRINCE2 方法仅侧重于三个主要的项目利益相关方类别（业务、用户和供应商），并将他们纳入项目的<a href="../entities/term.html#entity-治理" class="entity-link entity-term" title="术语：治理">治理</a>和<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>安排之中。</p>
+            <div class="table-scroll">
+                <table class="role-table">
+                    <thead><tr><th class="cols-stake">利益相关方</th><th>描述</th></tr></thead>
+                    <tbody>
+                        <tr><td class="td-role td-center">业务</td><td>项目是为了满足业务<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>而创建，在项目的整个寿命中，需要不断证明项目具有成本效益。PRINCE2 定义了<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>角色，用于代表项目在整个寿命中具有成本效益这一观点。</td></tr>
+                        <tr><td class="td-role td-center">用户</td><td>项目的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>应该为一组明确定义的用户提供利益，这些用户不仅为产品需求的定义提供支持，还要确保这些需求得到满足。用户可以是业务内部的最终用户，也可以是受项目影响的用户，还可以是在操作或维护产品方面具有一定角色的用户。用户也可以是业务外部的最终用户，或受到项目<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>的影响。PRINCE2 定义了<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>角色，用于代表项目用户利益。</td></tr>
+                        <tr><td class="td-role td-center">供应商</td><td>项目的产品需要具有必要技能和知识的人员协作来交付。这些人员可以来自组织内部，也可以是具有适当技能和知识的外部供应商。PRINCE2 定义了<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>角色，用于代表项目供应商利益。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="figure-note">表 6.1 三种项目利益相关方群体的描述</p>
+            <p>成功的项目管理团队由来自业务、用户和供应商小组的人员组成。<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">"按例外管理"</a>原则能够为满足项目的日常管理需求提供支持，在知识和精力所在的最基层实现多层次决策。</p>
+
+            <div class="figure-svg">
+<svg viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr6" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--kb-accent-dark)"/></marker>
+  </defs>
+  <!-- 业务圆 -->
+  <circle cx="340" cy="140" r="110" fill="color-mix(in srgb, var(--accent) 20%, transparent)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="340" y="100" text-anchor="middle" font-family="serif" font-size="16" fill="var(--text-heading)" font-weight="bold">业务</text>
+  <!-- 用户圆 -->
+  <circle cx="250" cy="300" r="110" fill="color-mix(in srgb, var(--accent) 20%, transparent)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="250" y="340" text-anchor="middle" font-family="serif" font-size="16" fill="var(--text-heading)" font-weight="bold">用户</text>
+  <!-- 供应商圆 -->
+  <circle cx="430" cy="300" r="110" fill="color-mix(in srgb, var(--accent) 20%, transparent)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="430" y="340" text-anchor="middle" font-family="serif" font-size="16" fill="var(--text-heading)" font-weight="bold">供应商</text>
+  <!-- 中心重叠区 -->
+  <circle cx="340" cy="247" r="42" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" opacity="0.85"/>
+  <text x="340" y="252" text-anchor="middle" font-family="serif" font-size="14" fill="white" font-weight="bold">项目</text>
+</svg>
+            </div>
+            <p class="figure-note">图 6.1 三种项目利益相关方群体</p>
+            <p>业务、用户和供应商的利益汇集在<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>中，项目管理委员会对项目的成功问责（见 <a href="#pn-11">6.2.4.4</a> 节）。</p>
+            <div class="definition-box">
+                <span class="def-term">项目管理委员会：</span>对项目的成功问责，并有权在业务设定的职权范围内指导项目。
+            </div>
+        </div>
+
+        <h3 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 6.2.2 组织层面</h3>
+        <div class="section-content">
+            <div class="figure-svg">
+<svg viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg">
+  <!-- 连接线 -->
+  <line x1="340" y1="110" x2="340" y2="430" stroke="var(--kb-accent-dark)" stroke-width="2"/>
+  <!-- 四个圆 -->
+  <circle cx="340" cy="80" r="60" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="340" y="75" text-anchor="middle" font-family="serif" font-size="13" fill="white" font-weight="bold">委托</text>
+  <text x="340" y="92" text-anchor="middle" font-family="serif" font-size="11" fill="white">（业务层）</text>
+
+  <circle cx="340" cy="200" r="60" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="340" y="195" text-anchor="middle" font-family="serif" font-size="13" fill="white" font-weight="bold">指导</text>
+  <text x="340" y="212" text-anchor="middle" font-family="serif" font-size="11" fill="white">（项目管理委员会）</text>
+
+  <circle cx="340" cy="320" r="60" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="340" y="315" text-anchor="middle" font-family="serif" font-size="13" fill="white" font-weight="bold">管理</text>
+  <text x="340" y="332" text-anchor="middle" font-family="serif" font-size="11" fill="white">（项目经理）</text>
+
+  <circle cx="340" cy="440" r="60" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="340" y="435" text-anchor="middle" font-family="serif" font-size="13" fill="white" font-weight="bold">交付</text>
+  <text x="340" y="452" text-anchor="middle" font-family="serif" font-size="11" fill="white">（小组经理）</text>
+
+  <!-- 左侧括号 -->
+  <path d="M230,140 Q210,140 210,200 L210,380 Q210,440 230,440" fill="none" stroke="var(--kb-accent-dark)" stroke-width="2"/>
+  <text x="145" y="295" text-anchor="middle" font-family="serif" font-size="14" fill="var(--text-heading)" font-weight="bold">项目管理团队</text>
+</svg>
+            </div>
+            <p class="figure-note">图 6.2 四个组织层</p>
+
+            <div class="table-scroll">
+                <table class="role-table">
+                    <thead><tr><th class="cols-layer">组织层面</th><th>角色</th></tr></thead>
+                    <tbody>
+                        <tr><td class="td-role td-center">委托<br>（业务层）</td><td>业务内部的委托方负责提供项目任务书、识别项目主管、定义项目管理委员会开展工作时的项目层面<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，并决定是否针对任何可能违反项目层面容许偏差的情况提供授权。</td></tr>
+                        <tr><td class="td-role td-center">指导<br>（项目管理委员会）</td><td>项目管理委员会由来自业务、用户和供应商的代表组成，对项目的成功问责。项目管理委员会还负责在业务层建立的约束下对项目进行总体指导和管理。项目管理委员会提供授权来开始和完成每个阶段，包括设置阶段容许偏差（例如人员、时间线、资源和可持续性目标）。项目管理委员会负责确定是否为违反或预测将违反协定阶段容许偏差的任何情况提供授权，并按照沟通管理方法中协定的方式与业务和其他受影响的利益相关方进行沟通。</td></tr>
+                        <tr><td class="td-role td-center">管理<br>（项目经理）</td><td>项目经理负责在项目管理委员会建立的约束范围内进行项目日常管理。项目经理的主要职责是管理项目内部的各种关系，确保项目按照战略目标和协定的要求（例如质量、可持续性、时间、成本、范围、收益和风险绩效目标）生产产品。</td></tr>
+                        <tr><td class="td-role td-center">交付<br>（小组经理）</td><td>小组经理和小组成员负责在项目经理建立的约束下，对项目中各自负责的部分进行日常管理和决策，并在必要时与整个项目生态系统中的其他小组成员共同协作开展创建工作。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="figure-note">表 6.2 四个组织层的角色</p>
+        </div>
+
+        <h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 6.2.3 项目管理团队结构</h3>
+        <div class="section-content">
+            <p>PRINCE2 方法要求在一个项目中履行某些<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>（以及相关职责）。只要职责得到充分分配，这些角色就可以在一定范围内共享或合并，以与项目团队的技能和能力以及项目的需求保持一致。</p>
+            <div class="definition-box">
+                <span class="def-term">项目管理团队结构：</span>项目管理团队结构由<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>、项目经理、小组经理、项目保证与项目支持角色组成。
+            </div>
+            <div class="definition-box">
+                <span class="def-term">项目团队：</span>PRINCE2 使用"项目团队"一词来涵盖所有需要在项目上分配时间的人员。
+            </div>
+
+            <div class="figure-svg">
+<svg viewBox="0 0 680 540" xmlns="http://www.w3.org/2000/svg">
+  <!-- 顶部业务层条 -->
+  <rect x="140" y="10" width="400" height="28" rx="4" fill="var(--kb-accent-dark)" stroke="none"/>
+  <text x="340" y="29" text-anchor="middle" font-family="serif" font-size="12" fill="white" font-weight="bold">业务层</text>
+  <!-- 项目管理委员会标签 -->
+  <text x="340" y="55" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">项目管理委员会</text>
+  <!-- 三层圆 -->
+  <circle cx="220" cy="95" r="44" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="220" y="99" text-anchor="middle" font-family="serif" font-size="11" fill="white" font-weight="bold">高级用户</text>
+  <circle cx="340" cy="95" r="44" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="340" y="99" text-anchor="middle" font-family="serif" font-size="11" fill="white" font-weight="bold">项目总监</text>
+  <circle cx="460" cy="95" r="44" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="460" y="99" text-anchor="middle" font-family="serif" font-size="11" fill="white" font-weight="bold">高级供应商</text>
+
+  <!-- 连接线 上→中 -->
+  <line x1="220" y1="139" x2="220" y2="180" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="340" y1="139" x2="340" y2="180" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="460" y1="139" x2="460" y2="180" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+
+  <!-- 中间层圆 -->
+  <circle cx="220" cy="210" r="44" fill="color-mix(in srgb, var(--accent) 45%, #1a5fa0)" stroke="none"/>
+  <text x="220" y="214" text-anchor="middle" font-family="serif" font-size="11" fill="white" font-weight="bold">项目保证</text>
+  <circle cx="340" cy="210" r="44" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="340" y="214" text-anchor="middle" font-family="serif" font-size="11" fill="white" font-weight="bold">项目经理</text>
+  <circle cx="460" cy="210" r="44" fill="color-mix(in srgb, var(--accent) 45%, #1a5fa0)" stroke="none"/>
+  <text x="460" y="214" text-anchor="middle" font-family="serif" font-size="11" fill="white" font-weight="bold">项目支持</text>
+
+  <!-- 连接线 中→下 -->
+  <line x1="340" y1="254" x2="340" y2="295" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="220" y1="254" x2="340" y2="295" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="460" y1="254" x2="340" y2="295" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- 小组经理 -->
+  <circle cx="340" cy="325" r="44" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="340" y="329" text-anchor="middle" font-family="serif" font-size="11" fill="white" font-weight="bold">小组经理</text>
+
+  <!-- 底部小组成员条 -->
+  <rect x="140" y="390" width="400" height="28" rx="4" fill="var(--kb-accent-dark)" stroke="none"/>
+  <text x="340" y="409" text-anchor="middle" font-family="serif" font-size="12" fill="white" font-weight="bold">小组成员</text>
+
+  <!-- 连接 小组经理→小组成员 -->
+  <line x1="340" y1="369" x2="340" y2="390" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+
+  <!-- 图例 -->
+  <text x="560" y="95" font-family="serif" font-size="10" fill="var(--text-heading)" font-weight="bold">图例</text>
+  <rect x="560" y="105" width="14" height="14" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" rx="2"/>
+  <text x="580" y="116" font-family="serif" font-size="9" fill="var(--text-normal)">项目管理团队内部</text>
+  <circle cx="567" cy="135" r="7" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="580" y="139" font-family="serif" font-size="9" fill="var(--text-normal)">来自业务</text>
+  <circle cx="567" cy="155" r="7" fill="color-mix(in srgb, var(--accent) 45%, #1a5fa0)"/>
+  <text x="580" y="159" font-family="serif" font-size="9" fill="var(--text-normal)">来自供应商</text>
+  <line x1="560" y1="175" x2="574" y2="175" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <text x="580" y="179" font-family="serif" font-size="9" fill="var(--text-normal)">职权线</text>
+  <line x1="560" y1="195" x2="574" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="580" y="199" font-family="serif" font-size="9" fill="var(--text-normal)">支持/建议线</text>
+</svg>
+            </div>
+            <p class="figure-note">图 6.3 项目管理团队结构</p>
+        </div>
+
+        <h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 6.2.4 PRINCE2 角色</h3>
+        <div class="section-content">
+            <p>本节概述了 PRINCE2 的每个角色。每个 PRINCE2 实践中每个角色的具体职责在实践章节中进行了描述，例如，第 <a href="ch05.html#pn-6">5.6</a> 节描述了与商业论证实践相关的角色具体职责。每个<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>也以 RACI 表（负责、问责、咨询、知情）的形式描述了流程活动的职责，例如第 <a href="ch16.html#pn-6">16.6</a> 节描述了阶段控制流程的职责。</p>
+            <p>附录 B 汇总了每个 PRINCE2 角色的概述和所有职责，为 PRINCE2 项目中使用的角色描述提供了基础。</p>
+        </div>
+
+        <h4 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 6.2.4.1 项目总监</h4>
+        <div class="section-content">
+            <p><a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>由业务任命，是项目的唯一问责制责任人，最终对项目的成功问责。这种问责制无法授权。项目总监负责确保项目资金，并对项目的<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>和持续业务理由负责。他们负责以符合业务战略的方式有效治理项目，包括确保在诸如环境或社会影响等方面进行长期考虑。</p>
+            <p>不能有多个项目总监角色，并且该角色不能与<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>角色合并。在实行工作共享方案的组织中，业务角色（工作）仍然会一对一地分配给项目角色（项目总监）。然而，可能需要额外的安排，来确保与业务角色分担工作的职员能够清晰地维护单一问责制。与工作共享相关的业务政策和指导文件可能会涵盖此类情况，并且这些政策和指导应该在项目总监的角色描述和项目启动文件中有所反映。</p>
+        </div>
+
+        <h4 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 6.2.4.2 高级用户</h4>
+        <div class="section-content">
+            <p><a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>代表用户团体，并且对捕捉用户需求的方法以及与商业论证一致的收益规格问责。高级用户负责：</p>
+            <ul class="content-list">
+                <li>确保方法获得用户对项目的认同</li>
+                <li>监视产品是否符合商业论证中的需求</li>
+                <li>向业务证明商业论证中预测的收益正在逐步实现</li>
+                <li>控制需求和收益的变更（无论是由用户、业务还是项目本身引起的变更）</li>
+                <li>在项目结束后，成功地将产品移交给业务、加以采用，并继续实现收益。</li>
+            </ul>
+            <p>高级用户必须确保用户团体中的人员作出充分的持续承诺来支持这些活动，特别是在项目生命周期结束后还需要作出长期承诺（如实现收益）的情况下。</p>
+            <p>根据用户团体的规模和复杂性，可能需要不止一个人来代表用户，但这应保持在最低限度。</p>
+        </div>
+
+        <h4 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 6.2.4.3 高级供应商</h4>
+        <div class="section-content">
+            <p><a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>代表参与项目产品交付各个方面工作的供应商团体。高级供应商必须确保供应商组织持续承诺提供充足的人员和资源，以支持项目工作。高级供应商对供应商交付的产品质量和项目的技术完整性问责。</p>
+            <p>在许多情况下，高级供应商还代表了那些将在项目结束后提供专业产品维护服务的人员的利益（例如，工程维护与支持）。</p>
+            <p>不过，确实存在例外情况（例如，维护服务由内部 IT 部门等业务提供，或者外包给其他供应商）。在这种情况下，更有可能由<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>代表运营和维护利益。这种区分不是很重要，重要的是运营、服务和支持的利益从项目开始就被适当地予以体现。</p>
+            <p>根据供应商团体的规模和复杂性，可能需要不止一个人代表供应商，但应将其保持在最低限度。</p>
+        </div>
+
+        <h4 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 6.2.4.4 项目管理委员会</h4>
+        <div class="section-content">
+            <p>所有 PRINCE2 项目都必须有一个由<a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>、高级用户和<a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a>角色组成的项目管理委员会。在规模较小、复杂程度较低的项目中，项目总监的角色可与高级用户或高级供应商角色合并。不建议将高级用户和高级供应商角色合并，以避免在决策过程中出现利益冲突，并确保用户和供应商小组的观点和利益在项目中得到充分体现。</p>
+            <p>项目管理委员会在业务设定的项目容许偏差范围内对项目拥有职权和职责，这通常体现在项目任务书中。他们负责为项目成功创造合适的环境，包括：</p>
+            <ul class="content-list">
+                <li>拥有足够的资金、人员和资源来交付项目目标</li>
+                <li>建立清晰的反馈循环，以支持项目的调整和发展</li>
+                <li>确保对项目所有方面的绩效和产品进行独立审查，不受项目经理的干扰</li>
+                <li>确保业务战略和目标在商业论证中得到体现</li>
+                <li>确保项目及其管理方法符合业务的环境、社会和治理 (ESG) 承诺</li>
+                <li>设定阶段容许偏差，以便进行<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a></li>
+                <li>治理项目并确定指导各级决策所需的规则、约束、共同价值观和视角</li>
+                <li>建立容许偏差和变更预算，以支持有效决策</li>
+                <li>关注项目团队的安全和福利</li>
+                <li>监视和支持项目生态系统中的社会凝聚力</li>
+                <li>管理组织生态系统与项目生态系统连接之间的关系</li>
+            </ul>
+            <p>一个有效的项目管理委员会需要根据项目的性质和规模拥有适当的职权，并在整个项目生态系统中具备良好的信誉。</p>
+        </div>
+
+        <h4 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 6.2.4.5 项目经理</h4>
+        <div class="section-content">
+            <p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>拥有代表项目管理委员会在协定的项目容许偏差和约束内开展项目的职权。项目经理负责项目的日常管理，包括：</p>
+            <ul class="content-list">
+                <li>管理并酌情向小组经理或小组成员授权工作</li>
+                <li>为小组经理和项目支持角色设定工作包容许偏差和约束</li>
+                <li>确保决策符合项目管理委员会的指导和容许偏差</li>
+                <li>管理项目生态系统内的关系，包括项目保证角色和项目管理委员会</li>
+                <li>监视和支持小组成员的安全和福利以及项目方法的可持续性</li>
+            </ul>
+            <p>根据项目的规模和复杂性以及项目经理的技能和精力，项目经理还可以执行小组经理和项目支持角色，或直接将这些角色授权给小组成员。项目经理的职责属于唯一焦点，这意味着该角色不应与其他角色共享或合并。</p>
+            <p>在实行工作共享方案的组织中，业务角色（工作）仍然会一对一地分配给项目角色（项目经理）。然而，可能需要额外的安排，来确保与业务角色分担工作的职员能够清晰地维护单一问责制。与工作共享相关的业务政策和指导文件可能会涵盖此类情况。这些政策应该在项目经理的角色描述和项目启动文件中有所反映。</p>
+        </div>
+
+        <h4 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 6.2.4.6 小组经理</h4>
+        <div class="section-content">
+            <p><a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>负责在与项目经理协定的容许偏差和约束范围内交付分配给他们的工作。项目经理按照商务管理方法，以<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的形式将工作分配给小组经理。小组经理负责：</p>
+            <ul class="content-list">
+                <li>按照协定的规格交付产品</li>
+                <li>为小组成员设定工作容许偏差和约束</li>
+                <li>确保团队需要做出的任何决策都符合项目经理的指导和容许偏差</li>
+                <li>管理团队内部的关系，以及与其他团队、项目经理、项目保证和项目支持的关系</li>
+                <li>监视和支持小组成员的安全和福利以及团队方法的可持续性</li>
+            </ul>
+            <div class="scenario-box">
+                <strong>小组经理的角色和可能的人选</strong><br>
+                由于购物中心的建设涉及多个专业领域，LouisShopping 项目的经理将工作分配给多个团队，每个团队都有一名小组经理直接向项目经理报告。BuildyBrick 的首席电气建筑服务工程师和维修管道工被指派为电力和管道团队的小组经理。
+            </div>
+            <div class="scenario-box">
+                <strong>小组经理在自我组织敏捷团队中的角色</strong><br>
+                Data Knowledge 项目中的软件开发团队是一个经验丰富的敏捷团队，重视信任和自我组织。团队一致认为，小组经理角色将由整个团队集体担任。这意味着小组经理的所有职责领域将由整个团队和每个小组成员负责。这些职责领域包括规划、监视和管理进展、管理问题和风险、获得验收和移交产品。团队还指定了一个人，作为项目经理的单点联系人，与项目经理进行沟通，并告知项目经理他们所需的所有信息。<br><br>
+                所有敏捷团队角色名称将保持不变。项目经理已接受这些团队安排，将其视为根据 PRINCE2 方法在团队层面进行的适当<a href="../entities/term.html#entity-剪裁" class="entity-link entity-term" title="术语：剪裁">剪裁</a>。
+            </div>
+        </div>
+
+        <h4 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 6.2.4.7 项目保证</h4>
+        <div class="section-content">
+            <p>项目管理委员会成员对各自的关注领域（业务保证、用户保证、供应商保证）问责。项目管理委员会负责确定项目保证的执行方式，确保在角色和职责方面有明确的规定，并确定被指定担任保证角色的人员彼此之间如何互动。根据是否拥有为项目团队提供支持所需的知识、技能和精力，保证任务可以由管理委员会成员自己承担、从更广泛的业务中任命，或从外部方选拔。项目保证角色不能分配给项目经理、小组经理、项目小组成员或项目支持。在授权项目保证角色的情况下，相应的项目管理委员会成员仍要承担问责制职责。</p>
+        </div>
+
+        <h4 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 6.2.4.8 项目支持</h4>
+        <div class="section-content">
+            <p>项目支持负责提供各种服务，例如行政支持、协调开展会议和研讨会、就项目工具提供建议和指导、规划支持、风险管理、问题管理和变更管理。</p>
+            <p>这一角色的职责由项目经理负责履行，但也可以将其授权给供应商、个人、业务内部的团体或其他小组成员。这取决于项目的规模和复杂性，以及项目经理的技能、知识和精力。一些组织建立了项目办公室，以支持项目的交付，从而履行这一角色的职责（请参见项目组合、项目群和项目办公室 (P3O®)）。</p>
+            <p>项目支持可以协助集成项目生态系统，包括获取反馈以帮助改进工作方式、项目指导的演进以及建立社会凝聚力。</p>
+            <p>为了维护项目保证的独立性，项目支持和项目保证角色应该是分开的。</p>
+        </div>
+
+        <h3 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 6.2.5 工作分解结构</h3>
+        <div class="section-content">
+            <div class="definition-box">
+                <span class="def-term">工作分解结构：</span>项目期间要完成的所有工作的层级，它在产品分解结构与工作包之间建立了联系。
+            </div>
+            <p>工作分解结构是项目期间要完成的工作的层级结构，通常以可视化的方式表示。工作分解结构在工作包和产品分解结构之间建立了联系（请参见第 7 章），有助于项目经理确定如何构建项目团队以及确定项目团队之间的界限。</p>
+            <p>当存在多个工作包，特别是有内部人员和外部提供的混合工作包时，工作分解结构最为有用。对于前者，它清晰地表明了内部工作人员工作量水平，而对于后者，它有助于创建所需工作的说明。然而，对于非常简单的项目，例如只需一个小团队交付一个工作包的项目，通常不需要工作分解结构。</p>
+            <p>如果在项目中使用单个工作包，则最好不要同时包括内部和外部小组成员。内部协议和外部合同之间存在根本不同的性质和关系。因此，最好将它们分开管理。</p>
+        </div>
+
+        <h2 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 6.3 技术</h2>
+
+        <h3 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 6.3.1 PRINCE2 组织设计和开发技术</h3>
+        <div class="section-content">
+            <p>第 3 章（人员）中提到的许多领域可以通过积极的组织设计和开发来解决，包括文化、协作、关系，以及最终的有效项目团队。</p>
+            <p>PRINCE2 包括一个分五个步骤的组织设计和开发技术，如图 6.4 所示。可以使用替代程序代替它，例如，如果业务已经开发了特定于其组织的程序。应将使用替代程序的决策作为<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中的剪裁决策的一部分来记录。</p>
+
+            <div class="figure-svg">
+<svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 五个箭头/燕尾形状 -->
+  <defs>
+    <marker id="chevArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--kb-accent-dark)"/></marker>
+  </defs>
+  <!-- 箭头1 -->
+  <path d="M20,40 L140,40 L160,100 L140,160 L20,160 L40,100 Z" fill="color-mix(in srgb, var(--accent) 25%, transparent)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="90" y="85" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">了解组织</text>
+  <text x="90" y="102" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">生态系统</text>
+  <!-- 箭头2 -->
+  <path d="M160,40 L280,40 L300,100 L280,160 L160,160 L140,100 Z" fill="color-mix(in srgb, var(--accent) 30%, transparent)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="220" y="85" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">设计项目</text>
+  <text x="220" y="102" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">生态系统</text>
+  <!-- 箭头3 -->
+  <path d="M300,40 L420,40 L440,100 L420,160 L300,160 L280,100 Z" fill="color-mix(in srgb, var(--accent) 35%, transparent)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="360" y="85" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">开发项目</text>
+  <text x="360" y="102" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">生态系统</text>
+  <!-- 箭头4 -->
+  <path d="M440,40 L560,40 L580,100 L560,160 L440,160 L420,100 Z" fill="color-mix(in srgb, var(--accent) 40%, transparent)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="500" y="85" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">管理项目</text>
+  <text x="500" y="102" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">生态系统的变更</text>
+  <!-- 箭头5 -->
+  <path d="M580,40 L660,40 L660,100 L660,160 L580,160 L560,100 Z" fill="color-mix(in srgb, var(--accent) 50%, transparent)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="610" y="85" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">将项目转换到</text>
+  <text x="610" y="102" text-anchor="middle" font-family="serif" font-size="11" fill="var(--text-heading)" font-weight="bold">组织生态系统</text>
+  <!-- 连接箭头 -->
+  <line x1="145" y1="100" x2="155" y2="100" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#chevArr)"/>
+  <line x1="285" y1="100" x2="295" y2="100" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#chevArr)"/>
+  <line x1="425" y1="100" x2="435" y2="100" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#chevArr)"/>
+  <line x1="565" y1="100" x2="575" y2="100" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#chevArr)"/>
+</svg>
+            </div>
+            <p class="figure-note">图 6.4 PRINCE2 组织设计和开发技术</p>
+        </div>
+
+        <h4 id="pn-19" class="section-heading"><a href="#pn-19" class="pn-link" title="点击复制链接">[19]</a> 6.3.1.1 了解组织生态系统</h4>
+        <div class="section-content">
+            <p>对于已经定义组织结构和公司治理需求的组织，组织中的人员通过项目联合在一起。成功设计项目组织，并决定项目生态系统如何作为一个与组织生态系统不同的实体而发展，就必须了解组织生态系统。</p>
+            <p>作为一个临时组织，项目方法需要定义将如何在需要的情况下与组织生态系统连接和保持一致。必须明确以下问题的职责归属：</p>
+            <ul class="content-list">
+                <li>人员管理：例如，绩效管理、奖励、晋升和福利</li>
+                <li>治理：例如，哪些决策受公司治理或治理路径的约束</li>
+                <li>管理方法：例如政策、程序和工作方式</li>
+                <li>方式和时机：项目团队成员在项目内外的转换</li>
+            </ul>
+        </div>
+
+        <h4 id="pn-20" class="section-heading"><a href="#pn-20" class="pn-link" title="点击复制链接">[20]</a> 6.3.1.2 设计项目生态系统</h4>
+        <div class="section-content">
+            <p>项目组织设计描述了如何组织工作和人员以实现项目目标。这包括：</p>
+            <ul class="content-list">
+                <li>确定团队的有效结构</li>
+                <li>确定所需的人员和资源</li>
+                <li>实施综合工作实践</li>
+                <li>培养项目行为和文化</li>
+            </ul>
+            <p>所进行的设计是为了应对项目各个阶段的需求、项目的工作情境以及项目所需人员或指派人员的技能、能力和精力的了解。</p>
+            <p>根据项目的规模、复杂性、项目方法和交付方法，组织结构可能需要在项目的不同阶段进行转换，例如从客户主导的设计团队转变为供应商主导的交付团队。在可能的情况下，应在启动阶段识别和计划这种转换，从而在不同阶段建立有计划的项目管理团队结构。需要考虑支持这些不同结构之间转换所需的人员和资源，以及变更对项目团队的影响。</p>
+            <p>工作分解结构和商务管理方法为项目组织设计提供了依据。它们将决定团队的数量和规模、团队来自哪些组织，以及所需的任何客户或供应商关系经理的性质。完全由业务内部人员交付的项目所需的能力与主要由外部供应商交付的项目所需的能力大不相同。</p>
+            <p>项目总监在项目经理的支持下负责项目组织设计。这应当在项目启动文件中有所记录。由于项目具有临时性并且不断变更，项目的组织设计需要与业务组织设计截然不同的专业知识。根据项目的规模和复杂性，项目总监可能需要在组织内部（如果他们具备这方面的技能）授权这一职责，或者将这一职责外包给专业供应商。</p>
+            <div class="scenario-box">
+                <strong>项目不同阶段的不同团队结构</strong><br>
+                Findef 即将发布多款新产品，因此为项目的不同阶段建立足够的团队结构至关重要。该项目现在处于第 3 阶段（详细设计）的初期，产品 1 的早期市场测试和 DevOps 技能提升是关键的计划活动，因此需要组建新的团队。<br><br>
+                签订合同为市场测试提供建议的营销机构，以及获得 DevOps 团队技能提升培训合同的培训公司，现在都将作为供应商角色发挥积极作用。高级供应商角色还将在项目管理委员会中担任代表，负责管理与供应商的关系并进行供应商保证。<br><br>
+                在这一阶段，还将任命一名变更经理，预计变更经理将与项目管理团队合作，以确保变更得到有效计划、管理和嵌入，为产品 1 的最小可行产品 (MVP) 软启动做好准备。<br><br>
+                随着产品进展到全面发布并转换到正常经营 (BAU) 支持，运营代表将开始更多地参与项目。他们将与变更经理合作，以实现平稳转换和有效的用户采用。
+            </div>
+        </div>
+
+        <h4 id="pn-21" class="section-heading"><a href="#pn-21" class="pn-link" title="点击复制链接">[21]</a> 6.3.1.3 开发项目生态系统</h4>
+        <div class="section-content">
+            <p>项目组织开发涉及实施项目组织设计，并随着项目进展进行调整和演变。项目生态系统将需要持续开发，以应对不断变更的项目需求、小组成员及其新出现的关系，确保建立的项目能够实现目标并持续改进。</p>
+            <p>开发活动可能包括：</p>
+            <ul class="content-list">
+                <li>将人员加入项目，例如现场访问、就职或认证</li>
+                <li>项目团队的技能和能力评估或审计</li>
+                <li>对项目团队进行培训，例如介绍新方法或填补技能和能力差距</li>
+                <li>团队建设</li>
+                <li>建立和维护特定的项目文化</li>
+                <li>继任计划，包括认识到有人可能会在项目完成之前离开项目</li>
+                <li>开展离职活动，总结经验教训</li>
+            </ul>
+            <p>向组织生态系统交付新功能的变更管理方法（见第 3 章）也可用于向项目生态系统交付新功能，特别是在准备转换点（例如任命关键供应商）时。正如组织生态系统中存在关键影响者一样，项目生态系统中也存在关键影响者，项目经理需要咨询和影响这些关键影响者，以成功开发项目能力。</p>
+            <p>项目总监负责项目组织发展，并由项目经理提供支持。与项目组织设计一样，必须要认识到这需要具备专业技能的人员并具备相应资源来发挥适当能力。</p>
+        </div>
+
+        <h4 id="pn-22" class="section-heading"><a href="#pn-22" class="pn-link" title="点击复制链接">[22]</a> 6.3.1.4 管理项目生态系统的持续变更</h4>
+        <div class="section-content">
+            <p>人们需要时间来熟悉项目、获得能力和发展关系，以履行自己的职责。为了决定是否存在任何能力或精力差距或者关系问题需要解决，建立明确的反馈循环非常关键。</p>
+            <p>项目经理负责充分利用现有人员和资源并在必要时增强能力。为此，他们要确保人员的职责与能力相匹配，寻找额外的技能和精力，或通过辅导和学习机会提升人员的技能。</p>
+            <p>项目所需的能力会在项目生命周期中发生变更，这就要求项目经理确保商务管理方法支持这一点，根据需要将人员转换到项目之中和之外，并增强精力和能力。项目经理还必须确保建立强大的变更管理程序，确保在决策中考虑到对项目生态系统不同领域的影响。要做到这一点，方法之一是识别产品将提供的新功能，并审查将这种新能力嵌入到正常经营活动时遇到的任何障碍。在项目生命周期的早期阶段澄清这些障碍将凸显新的项目风险或问题，并就实现收益的现实时间框架建立期望。</p>
+            <p>项目阶段通常由所需能力的这些转换点来定义。这是审查项目管理团队结构及相关角色和职责的好时机，可确保商务管理方法支持提议的变更。</p>
+        </div>
+
+        <h4 id="pn-23" class="section-heading"><a href="#pn-23" class="pn-link" title="点击复制链接">[23]</a> 6.3.1.5 将项目转换到组织生态系统</h4>
+        <div class="section-content">
+            <p>与项目开始时一样，在项目结束时，了解项目产品和任何剩余项目团队成员将要转换到的组织生态系统非常重要。作为转换的一部分，项目管理委员会需要考虑三个关键方面：</p>
+            <ul class="content-list">
+                <li><strong>产品：</strong>确保所有产品均已进入业务，并且与产品相关的任何持续活动（例如进一步开发、监视收益、运营和维护产品）都归属于业务的适当部门</li>
+                <li><strong>人员：</strong>确保任何剩余的项目小组成员成功转换回业务或按照外部供应商的商务安排进行管理</li>
+                <li><strong>学习：</strong>确保以最有效的方式分享经验教训并利用所获得的知识，在开展项目工作的过程中，项目小组成员可能已经掌握了一些技能和能力，这些技能和能力可能会给更广泛的业务和相关组织带来收益。</li>
+            </ul>
+        </div>
+
+        <h3 id="pn-24" class="section-heading"><a href="#pn-24" class="pn-link" title="点击复制链接">[24]</a> 6.3.2 支持技术</h3>
+        <div class="section-content">
+            <p>PRINCE2 项目可使用的其他技术包括<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>或 RACI 矩阵。</p>
+        </div>
+
+        <h4 id="pn-25" class="section-heading"><a href="#pn-25" class="pn-link" title="点击复制链接">[25]</a> 6.3.2.1 交付模式</h4>
+        <div class="section-content">
+            <p>如果组织中尚不存在所需的精力或能力，并且没有长期开发这些精力或能力的需要，则项目可以选择引入外部供应商，要么作为支持项目的额外人员，或外包一部分或全部产品交付工作。业务可以通过描述项目如何在交付模式中获得所需的人员和资源来做出此类决策。</p>
+            <div class="definition-box">
+                <span class="def-term">交付模式：</span>根据用户、业务和供应商组织的项目约束和能力，为实现项目目标而部署的组织和商务安排。交付模式在商务管理方法中描述，并反映在项目管理团队结构中。
+            </div>
+            <p>交付模式的范围可以从瘦客户端模式（大部分项目工作由供应商承担）到胖客户端模式（大部分工作由业务承担）。在瘦客户端模式中，不仅开发项目产品的工作由外部供应商完成，管理项目的大部分工作也由外部供应商完成。</p>
+            <p>交付模式将定义项目管理的哪些方面由内部人员负责，哪些方面由外部人员负责。其中还会确定外部供应商完成的工作以产品合同还是以劳务为基础签订合同。区分在于，以劳务为基础签订的合同意味着，客户通常对其工作的绩效负责，而以产品为基础签订的合同意味着，供应商仍然对其绩效负责。</p>
+            <p>项目管理委员会在与项目经理协商的基础上，负责确定内部和外部供应商之间的适当平衡以及他们之间所需的商务安排。这在商务管理方法中有所体现。</p>
+            <p>交付模式的选择也可能受到项目对业务独特程度的影响。对于高度独特的项目或可能成为政治项目的项目，项目管理委员会可能会选择组织投入程度较高的模式来为工作提供保证。对于标准化程度较高的工作，或者项目管理委员会（作为治理机构）因技术能力或理解能力不足而无法做出明智决策或适当质疑项目团队的情况，可以选择利用外部供应商的专业知识来为工作提供保证和为决策提供支持的模式。交付模式应支持将风险分配给组织生态系统中最擅长管理风险的部分。</p>
+            <div class="scenario-box">
+                <strong>交付模式示例</strong><br>
+                由于 NowByou 内部缺乏专业的项目管理能力，因此必须就如何交付新的反歧视宣传活动做出"自制或外购"的决策。由于 NowByou 可用的资金有限，主要依靠捐款，因此这一决策受到了可用资源的严重限制。<br><br>
+                成本是不聘请专业项目管理提供方（例如咨询公司）的主要原因。尽管如此，NowByou 明白专业的项目管理是成功宣传活动的促成因素，对其长期战略至关重要。<br><br>
+                随后，管理层决定聘请一名专业项目经理，为 NowByou 的良好实践奠定基础，其职责还包括提高内部工作人员的项目管理能力。项目的其他方面将由内部完成，除了咨询的一些元素，将由 NowByou 合作的一些志愿组织承担。
+            </div>
+            <div class="table-scroll">
+                <table class="role-table">
+                    <thead><tr><th>工作/技能</th><th class="td-center">内部或外部</th><th class="td-center">产品或人工（外部）</th><th>备注</th></tr></thead>
+                    <tbody>
+                        <tr><td class="td-role">项目管理</td><td class="td-center">外部</td><td class="td-center">人工</td><td>聘请了一名专业项目经理，签订固定期限合同。合同包括技能转移</td></tr>
+                        <tr><td class="td-role">保证</td><td class="td-center">内部</td><td class="td-center">不适用</td><td>风险和保证委员会</td></tr>
+                        <tr><td class="td-role">咨询</td><td class="td-center">混合</td><td class="td-center">产品</td><td>内部沟通部门辅以志愿组织来完成额外的研究</td></tr>
+                        <tr><td class="td-role">营销沟通</td><td class="td-center">内部</td><td class="td-center">不适用</td><td>内部沟通部门</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="figure-note">表 6.3 交付模式示例</p>
+        </div>
+
+        <h4 id="pn-26" class="section-heading"><a href="#pn-26" class="pn-link" title="点击复制链接">[26]</a> 6.3.2.2 RACI 图表</h4>
+        <div class="section-content">
+            <p>尽管 PRINCE2 明确提供了核心项目团队内的角色、职责和关系，但使用 RACI 图表等技术为更广泛的项目生态系统的各个方面定义相同的角色、职责和关系也可能非常有用。RACI 图表是项目中所有活动或决策机构的矩阵，显示所涉及的人员或角色。RACI 代表：</p>
+            <ul class="content-list">
+                <li><strong>负责人 (Responsible)：</strong>执行任务的一个或多个人员</li>
+                <li><strong>问责人 (Accountable)：</strong>"拥有"任务的单个人员</li>
+                <li><strong>咨询人 (Consulted)：</strong>需要为任务提供输入意见的人员</li>
+                <li><strong>知情人 (Informed)：</strong>受告知任务进展或完成情况的人员</li>
+            </ul>
+            <p>任何任务通常都有许多不同人员参与，而且这些人员的职责不同，RACI 图表能够让关系和职权变得明确。RACI 图表的好处包括：</p>
+            <ul class="content-list">
+                <li>明确的所有权</li>
+                <li>明确的交付职责</li>
+                <li>更强的团队合作</li>
+                <li>视觉格式减少混淆并确保没有遗漏</li>
+            </ul>
+        </div>
+
+        <h2 id="pn-27" class="section-heading"><a href="#pn-27" class="pn-link" title="点击复制链接">[27]</a> 6.4 应用实践</h2>
+
+        <h3 id="pn-28" class="section-heading"><a href="#pn-28" class="pn-link" title="点击复制链接">[28]</a> 6.4.1 组织情境</h3>
+        <div class="section-content">
+            <p>项目存在于更广泛的组织情境中，从在职能结构内部交付的一次性项目，到多个组织在项目团队中协作交付的项目群或项目组合的一部分。构成项目群一部分的项目可能会发现，第 3 章（人员）中提及的许多变更管理活动将在项目群层面进行协调和执行，并可能受到项目群结构及其各种报告要求的影响。</p>
+            <p>项目群和项目管理团队结构和角色需要进行整合，以确保：</p>
+            <ul class="content-list">
+                <li>从上到下设有清晰的职责和问责制线</li>
+                <li>避免重复</li>
+                <li>报告和审查均更高效，例如，作为项目群审查的一部分，一个项目群下共用项目管理委员会成员的多个项目可以整合阶段边界，并统一召开会议，对所有项目进行阶段竣工评估</li>
+            </ul>
+            <p>角色的集成可能涉及如下内容：</p>
+            <ul class="content-list">
+                <li>项目群经理可以担任一个或多个项目的项目总监。</li>
+                <li>在项目群中，可能会有多个项目管理委员会、一个指导多个项目的机构（有效替代多个项目管理委员会）或这两种形式的结合。</li>
+                <li>来自项目群的业务变更经理可以兼任一个或多个项目的高级用户的项目角色（或参与高级用户的任命），或者担任一个或多个项目的项目总监。</li>
+                <li>单个项目群办公室可能为所有项目承担项目支持职责。</li>
+            </ul>
+        </div>
+
+        <h3 id="pn-29" class="section-heading"><a href="#pn-29" class="pn-link" title="点击复制链接">[29]</a> 6.4.2 商务情境</h3>
+        <div class="section-content">
+            <p>如果项目需要多个组织协同工作，就需要考虑如何在各组织不同的工作实践和治理方式之间架起桥梁。在定义项目的组织结构时，可能需要考虑业务的政治因素。这些因素将影响商务管理方法以及风险和回报分配等问题，特别是业务在项目交付方面的跟踪记录，以及在竞争相同人员和资源方面的竞争冲突。</p>
+            <p>在商务客户/供应商情境中，有多种方法构建项目管理团队角色。旨在确保双方组织建立和维护充分的业务理由，并遵循各自的治理规则。</p>
+            <p>下面探讨了一些商务情境注意事项：</p>
+            <ul class="content-list">
+                <li>项目经理需要充分了解他们在与供应商组织签订的任何合同中所应履行的相关义务。项目经理通常来自客户组织。供应商的工作人员可以充当项目中的部分小组经理角色，他们在供应商组织内部可能称为"项目经理"。需要明确职位与项目角色名称之间的差异。</li>
+                <li>可能有些项目的项目经理来自供应商组织。客户可能选择脱离日常工作，且希望由供应商管理项目。客户可能会提高项目保证的严格性，可能选派其工作人员担任项目保证角色。</li>
+                <li>可能会有一个联合项目管理委员会，其中的代表来自客户及客户选择的所有供应商。这个联合项目管理委员会中的项目总监可能由客户方的人员出任，高级供应商将代表每一个供应商。</li>
+                <li>供应商可以将客户项目中的工作包视为供应商组织内的项目。这可能意味着需要建立一个单独的供应商项目管理委员会。这种委员会和客户方项目管理委员会的关系需要定义。</li>
+                <li>如果有多个供应商，这些供应商均可在项目管理委员会中获得代表，因为委员会可为其提供论坛，以便整合其指导与决策。如果供应商超过三个或四个，通常由负责所有供应商合同绩效的合同经理代表供应商参与项目管理委员会更为有效。或者也可任命一个主要承包商。项目管理委员会是否要包括外部供应商？这个决策可能更大程度上关乎文化，根源在于客户对泄露商务或财务问题风险的看法。</li>
+                <li>在采购期间，项目可能需要从客户组织（例如，采购团队）中临时任命高级供应商角色，直到正式任命供应商。</li>
+            </ul>
+            <p>当商务管理方法需要对项目团队进行重大变更时，应详细说明商务安排如何通过转换点支持项目团队成员，例如与阶段一致的固定期限合同。</p>
+            <div class="scenario-box">
+                <strong>供应商参加部分委员会会议</strong><br>
+                LouisShopping 项目已接近关键阶段，新购物中心的设计方案即将确定并达成协定。BuildyBrick 是主承包商，负责提供设计选项，以确保基础架构与环境保持一致，同时还提供由最新技术支持的现代化设施。<br><br>
+                为了让项目管理委员会能够就 BuildyBrick 的设计方案提出问题，并直接从拥有技术专业知识的供应商那里获得完整、及时的回复和建议，项目经理要求设立一个常设委员会。BuildyBrick 的代表会参加每次会议的前半部分。在这一部分中，会提供有关设计和交付的状态更新，而会议的另一部分则侧重于与内部商业论证相关的事项。
+            </div>
+        </div>
+
+        <h3 id="pn-30" class="section-heading"><a href="#pn-30" class="pn-link" title="点击复制链接">[30]</a> 6.4.3 交付方法</h3>
+        <div class="section-content">
+            <p>当项目部署特定的交付方法时，项目经理需要了解：</p>
+            <ul class="content-list">
+                <li>交付方法规定的角色如何与 PRINCE2 角色保持一致？在某些情况下，只需变更术语和对角色描述稍作修改即可。例如，迭代-增量产品开发技术通常包括产品负责人的角色，这可以与<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>角色保持一致。在其他情况下，可能需要将不同的角色添加到项目管理团队结构，并就这些角色与 PRINCE2 角色之间的关系达成一致。</li>
+                <li>当各团队使用不同的交付方法（例如线性-顺序和迭代-增量的混合方法）时，项目经理将如何与各团队联络？</li>
+                <li>如果使用自我组织交付团队，他们与小组经理角色的关系如何？小组经理角色是由 Scrum Master 担任，由小组成员集体担任，还是小组经理的职责由小组成员、产品负责人和 Scrum 大师分担？</li>
+            </ul>
+            <p>PRINCE2 与迭代-增量技术的有效协同工作离不开按例外管理的应用。这授权了项目管理团队权利，确保其可在清晰定义的边界内进行自我组织。（有关如何将 PRINCE2 与迭代-增量技术结合相关的更多详细信息，请参阅"PRINCE2 敏捷"）。</p>
+        </div>
+
+        <h3 id="pn-31" class="section-heading"><a href="#pn-31" class="pn-link" title="点击复制链接">[31]</a> 6.4.4 可持续性</h3>
+        <div class="section-content">
+            <p><a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a>负责确保项目与业务目标保持一致。这通常包括环境、社会和治理 (ESG) 目标、联合国可持续发展目标 (SDG)、净零排放、减少废物目标、材料再利用、淘汰方法等。</p>
+            <p>项目通常是推动组织实现可持续性目标的工具，无论这是项目的主要关注点还是作为项目交付的副产品。为了支持这一点，整个项目生态系统都应该对可持续性目标有明确的问责制，并在商业论证、需求设定和人员角色描述中加以体现。项目的组织会影响其可持续交付的能力。项目方法应授权小组成员能够以具可持续性的方式交付，将可持续性因素纳入所有决策中，并确保观点的多样性，以挑战过去的做事方式。</p>
+            <p>项目管理团队结构和角色描述应定义实现可持续性目标的职责，包括项目结束后如何管理这些目标。商务管理方法应确保产品的采购方式符合道德规范，所采用的绩效措施能够实现可持续性目标。</p>
+            <div class="scenario-box">
+                <strong>项目管理委员会中的代表</strong><br>
+                对可持续性的关注不仅与环境有关，还体现在组织如何管理其项目对当地社区的影响上。NowByou 正在以无家可归者和难民作为新宣传活动的两个关键目标群体，因此该非政府组织希望将这些群体的言辞付诸实践。NowByou 邀请了靠近其总部的两个当地组织积极参与这项宣传活动，并在项目管理委员会中担任高级用户的角色。<br><br>
+                这两个组织将帮助项目团队了解对当地社区的影响，并确保他们的利益得到考虑。他们还将确保所做的决定提供具有可持续性的成果，并且这种可持续性会在宣传活动结束后继续保持。
+            </div>
+        </div>
+
+        <h3 id="pn-32" class="section-heading"><a href="#pn-32" class="pn-link" title="点击复制链接">[32]</a> 6.4.5 规模</h3>
+        <div class="section-content">
+            <p>在大型、复杂项目中，项目管理团队结构可能包括将 PRINCE2 角色分解为多个任命。例如，可以任命几个高级用户或高级供应商。然而，良好实践是保持项目管理委员会规模尽可能小，同时，仍然代表所有商业、用户和供应商的利益。在规模较小、较为简单的项目中，只要遵守项目经理、项目总监和项目保证人员之间的分工，就可以为项目人员分配多个角色。</p>
+            <p>大型复杂项目的另一个方面的特点是，项目管理委员会通常需要被授权职权来批准变更请求或不合格项，这样他们就不会被大量的请求淹没或在响应请求时进展缓慢。</p>
+            <p>项目管理委员会可以选择建立一个不同于项目经理的变更职权组织，该组织向项目管理委员会报告。对变更职权组织的授权应与协定的项目容许偏差保持一致，并支持最基层的决策和所有权，因为最基层有做出决策所需的知识和精力。变更职权组织的使用和组成应在问题管理方法中有所记录。</p>
+            <p>项目管理委员会负责确保明确谁有权在什么容许偏差范围内做出决策。这些职权应在启动阶段建立，并在角色描述和相关管理方法中有所体现。在每个阶段以及每当项目容许偏差或授权人员发生变更时，都应对授权进行审查。（有关变更控制和问题管理的更多信息，请参见第 <a href="ch10.html">10</a> 章。）</p>
+        </div>
+
+        <h2 id="pn-33" class="section-heading"><a href="#pn-33" class="pn-link" title="点击复制链接">[33]</a> 6.5 为实践提供支持的管理产品</h2>
+        <div class="section-content">
+            <p>PRINCE2 包括用于管理项目的 15 种管理产品。下面描述了特定于组织实践的管理产品。</p>
+
+            <div class="product-card">
+                <div class="product-name">管理产品：商务管理方法</div>
+                <div class="product-purpose">目的</div>
+                <div class="product-content">商务管理方法的目的是描述要应用的程序、技术和标准，以及有效商务管理的职责。这包括对于项目成功而言，为所需的所有商务协议开展确保、服务和维护工作的方法。其中可能包括市场参与、采购和合同管理等活动。</div>
+                <div class="product-purpose" style="margin-top:10px">概括性内容</div>
+                <div class="product-content">
+                    <ul class="role-list">
+                        <li><strong>范围：</strong>描述所需的商务关系；例如，是否需要任何用户协议，需要哪些供应商合同</li>
+                        <li><strong>交付模式：</strong>描述项目工作的交付模式（例如，由外部供应商交付的工作分解结构的要素）</li>
+                        <li><strong>资源：</strong>用于市场参与、采购和合同管理活动</li>
+                        <li><strong>职责：</strong>定义市场参与、采购和合同管理活动的职责</li>
+                        <li><strong>支持工具和技术：</strong>例如，要使用的招标系统或合同管理系统</li>
+                        <li><strong>标准：</strong>适用于市场参与、采购或合同管理的任何标准（例如，商务或采购政策、现有采购框架的使用）</li>
+                        <li><strong>参考资料：</strong>任何相关文件或产品</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-name">管理产品：项目管理团队结构</div>
+                <div class="product-purpose">目的</div>
+                <div class="product-content">项目管理团队结构的目的是定义参与项目的人员、他们的关系以及他们将如何协同工作。其中还可能包括对项目团队之外相关关键人员的描述。</div>
+                <div class="product-purpose" style="margin-top:10px">概括性内容</div>
+                <div class="product-content">
+                    <ul class="role-list">
+                        <li><strong>项目结构：</strong>显示团队结构及其报告关系的图表</li>
+                        <li><strong>职权和职责摘要：</strong>治理安排（可能采用矩阵形式），显示管理层面、他们获授权做出的决定、谁对他们问责制，以及谁向他们保证。位于同一地点的工作实践安排或远程团队安排</li>
+                        <li><strong>支持信息：</strong>其他关键人员、关系</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-name">管理产品：角色描述</div>
+                <div class="product-purpose">目的</div>
+                <div class="product-content">角色描述的目的是描述项目管理团队中的角色及其具体职责。</div>
+                <div class="product-purpose" style="margin-top:10px">概括性内容</div>
+                <div class="product-content">
+                    <ul class="role-list">
+                        <li><strong>角色：</strong>角色名称</li>
+                        <li><strong>职权：</strong>角色有职权批准的内容</li>
+                        <li><strong>职责：</strong>分配给角色的职责列表</li>
+                        <li><strong>问责：</strong>角色向谁报告</li>
+                        <li><strong>支持信息：</strong>角色是兼职还是全职，角色是否与任何其他角色组合</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <h2 id="pn-34" class="section-heading"><a href="#pn-34" class="pn-link" title="点击复制链接">[34]</a> 6.6 实践中关键角色的重点</h2>
+        <div class="section-content">
+            <p>PRINCE2 定义了项目管理的七项关键角色。下面描述了他们特定于组织实践的职责。</p>
+            <div class="table-scroll">
+                <table class="role-table">
+                    <thead><tr><th class="cols-duty">角色</th><th>职责</th></tr></thead>
+                    <tbody>
+                        <tr><td class="td-role">业务层</td><td>
+                            <ul class="role-list"><li>任命项目总监和（如可能）项目经理</li><li>提供业务所需的沟通标准</li><li>按照沟通管理方法中的定义，向项目提供信息</li></ul>
+                        </td></tr>
+                        <tr><td class="td-role">项目总监</td><td>
+                            <ul class="role-list"><li>任命项目经理（如果不是由业务完成）</li><li>与项目经理合作，确认项目的组织设计并批准项目管理团队结构</li><li>确认项目管理团队任命</li><li>批准商务管理方法、沟通管理方法和变更管理方法</li><li>审查并确认项目方法和交付模式的选择，并确保它们与业务的 ESG 目标兼容</li></ul>
+                        </td></tr>
+                        <tr><td class="td-role">高级用户</td><td>
+                            <ul class="role-list"><li>确保用户团体人员的适当参与</li><li>同意商务管理方法、沟通管理方法和变更管理方法</li><li>为利益相关方分析做出贡献</li><li>就用户团体的人员方面提供建议，例如，谁是关键影响者</li></ul>
+                        </td></tr>
+                        <tr><td class="td-role">高级供应商</td><td>
+                            <ul class="role-list"><li>确保供应商团体人员的适当参与</li><li>同意商务管理方法（如果适用）、沟通管理方法和变更管理方法</li><li>就供应商团队的人员方面提供建议，例如，特定的健康、安全和福利需求</li></ul>
+                        </td></tr>
+                        <tr><td class="td-role">项目经理</td><td>
+                            <ul class="role-list"><li>准备和更新商务管理方法、沟通管理方法和变更管理方法</li><li>设计、审查和更新项目管理团队结构和工作分解结构</li><li>准备角色描述</li><li>建立和维护健康的项目生态系统，确保项目管理团队的福利</li></ul>
+                        </td></tr>
+                        <tr><td class="td-role">小组经理</td><td>
+                            <ul class="role-list"><li>管理小组成员</li><li>确保团队的福利</li><li>就小组成员在项目中的角色选择提供建议</li><li>实施工作包描述中协定的沟通管理程序、变更管理程序和商务管理程序</li></ul>
+                        </td></tr>
+                        <tr><td class="td-role">项目保证</td><td>
+                            <ul class="role-list"><li>对项目团队成员的挑选向项目经理提供建议</li><li>就沟通管理方法、变更管理方法和商务管理方法向项目经理提供建议</li><li>向项目管理委员会确认沟通管理方法、变更管理方法和商务管理方法符合业务政策</li><li>向项目管理委员会保证沟通管理方法、变更管理方法和商务管理方法的实施情况（例如正确执行商务管理程序）</li></ul>
+                        </td></tr>
+                        <tr><td class="td-role">项目支持</td><td>
+                            <ul class="role-list"><li>提供就职和离职方面的帮助</li><li>提供利益相关方分析方面的帮助</li><li>提供沟通管理活动方面的帮助</li><li>提供变更管理活动方面的帮助</li><li>提供商务管理活动方面的帮助</li></ul>
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="figure-note">表 6.4 与组织实践有关的关键角色的重点领域</p>
+        </div>
+
+        <h2 id="pn-35" class="section-heading"><a href="#pn-35" class="pn-link" title="点击复制链接">[35]</a> 6.7 与原则的关键关系</h2>
+        <div class="section-content">
+            <p>组织实践有助于在整个项目生命周期中遵守 PRINCE2 原则。</p>
+            <div class="table-scroll">
+                <table class="role-table">
+                    <thead><tr><th class="cols-princ">原则</th><th class="cols-princ">实现方式</th><th>导致</th></tr></thead>
+                    <tbody>
+                        <tr><td class="td-role"><a href="../entities/principle.html#entity-确保持续业务理由" class="entity-link entity-principle" title="原则：确保持续业务理由">确保持续业务理由</a></td><td>分配业务中的某个人担任项目总监角色，该人员代表业务观点，并具有足够的职权和可用性来履行该角色并对项目进行问责</td><td>项目能够适应不断变更的业务需求<br>做出与商业论证保持一致的适当决策</td></tr>
+                        <tr><td class="td-role"><a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a></td><td>利用经验教训告知项目管理团队结构、工作分解结构和健康的项目生态系统的信息</td><td>正确的人员在正确的时间担任正确的角色来交付项目</td></tr>
+                        <tr><td class="td-role"><a href="../entities/principle.html#entity-定义角色、职责和关系" class="entity-link entity-principle" title="原则：定义角色、职责和关系">定义角色、职责和关系</a></td><td>建立明确的项目管理团队结构，确保每个相关人员都充分意识到自己的职责和关系</td><td>没有职责重复或职责缺失；整个项目生态系统之间以及项目与受项目影响者之间存在积极关系</td></tr>
+                        <tr><td class="td-role"><a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a></td><td>评估并在必要时调整项目管理团队结构、角色描述、商务管理方法、沟通管理方法以及阶段边界的变更管理方法</td><td>项目能够随着需求的变更而发展，在项目的每个阶段都能部署适当的技能和能力</td></tr>
+                        <tr><td class="td-role"><a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a></td><td>授权那些最有能力的人在适当的时候做出决策</td><td>促进有效和及时的决策，加强问责制以及对行动和决策的所有权</td></tr>
+                        <tr><td class="td-role"><a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a></td><td>确保项目管理团队中有使用产品的人员，并了解成功部署项目产品所需的变更管理</td><td>产品更容易被用户接受并投入运营使用，带来预期收益</td></tr>
+                        <tr><td class="td-role"><a href="../entities/principle.html#entity-根据项目剪裁" class="entity-link entity-principle" title="原则：根据项目剪裁">根据项目剪裁</a></td><td>创建一支与项目需求以及相关组织和人员的能力相适应的项目管理团队</td><td>创建有效的团队结构，该结构规模适当，并具备交付项目所需的必要职责、技能和能力</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="figure-note">表 6.5 组织实践与 PRINCE2 原则之间的关键关系</p>
+        </div>
     </div>
 
-    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid var(--accent); border-bottom: none;">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch05.html" class="nav-link">◁ 第5章 商业论证</a> | <a href="ch07.html" class="nav-link">第7章 计划 ▷</a>
     </div>
 
@@ -681,27 +875,7 @@ PRINCE2 与迭代-增量技术的有效协同工作离不开<a href="../entities
         <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
     </div>
 
-    <script>
-        function toggleToc() {
-            var list = document.getElementById('tocList');
-            var icon = document.querySelector('.toc-icon');
-            list.classList.toggle('collapsed');
-            icon.style.transform = list.classList.contains('collapsed')
-                ? 'rotate(0deg)' : 'rotate(90deg)';
-        }
-
-        // Purple Numbers: 点击复制链接
-        document.querySelectorAll('.pn-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var url = window.location.href.split('#')[0] + link.getAttribute('href');
-                navigator.clipboard.writeText(url).then(function() {
-                    link.style.color = '#2E8B57';
-                    setTimeout(function() { link.style.color = ''; }, 1000);
-                });
-            });
-        });
-    </script>
-<script src="../assets/floating-toc.js"></script>
+    <script src="../assets/chapter-common.js"></script>
+    <script src="../assets/floating-toc.js"></script>
 </body>
 </html>

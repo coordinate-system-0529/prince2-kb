@@ -4,175 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第7章 计划 - PRINCE2 知识库</title>
+    <link rel="stylesheet" href="../assets/chapter.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        #floating-toc {
+            transform: translateX(172px);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -3px 0 8px color-mix(in srgb, var(--accent) 8%, transparent);
+            z-index: 103 !important;
+        }
+        #floating-toc:hover {
+            transform: translateX(0);
+            box-shadow: -4px 0 16px color-mix(in srgb, var(--accent) 15%, transparent);
+        }
+        .ftoc-toggle {
+            display: flex; align-items: center; justify-content: center;
+            writing-mode: vertical-rl; text-orientation: upright;
+            background: var(--kb-accent-dark); color: var(--kb-tag-text);
+            padding: 10px 5px; border-radius: 4px 0 0 4px; font-size: 0.78em;
+            cursor: default; letter-spacing: 4px; position: absolute;
+            left: 0; top: 16px; transform: translateX(-100%);
+            box-shadow: -2px 0 6px rgba(0,0,0,0.10); user-select: none;
+        }
+        .nav-bar { position: sticky; top: 0; z-index: 102; background: var(--bg-main); }
+        @media (min-width: 1201px) { .chapter-toc { display: none; } }
+        .nav-link:first-child { color: var(--kb-accent-dark); font-weight: bold; }
+        .nav-link:not(:first-child) { color: #6e6e6e; }
+        body { line-height: 1.9; }
+        .section-content p { margin-bottom: 16px; }
+        .progress-bar { position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--kb-accent-dark));
+            z-index: 200; transition: width 0.1s linear; }
+        .chapter-content { background: #fffef9; border: 1px solid var(--border-card);
+            border-radius: 6px; padding: 32px 36px; box-shadow: 0 2px 12px rgba(139,69,19,0.06); }
+        .back-to-top { position: fixed; right: 24px; bottom: 32px; width: 42px; height: 42px;
+            background: var(--kb-accent-dark); color: var(--kb-tag-text);
+            border: 2px solid var(--accent); border-radius: 50%; cursor: pointer; font-size: 1.2em;
+            display: none; align-items: center; justify-content: center; z-index: 99; opacity: 0;
+            transform: translateY(20px); transition: opacity 0.3s, transform 0.3s, background 0.2s; }
+        .back-to-top.visible { display: flex; opacity: 0.85; transform: translateY(0); }
+        .back-to-top:hover { background: var(--accent); color: var(--text-heading); opacity: 1; }
+        .content-list li { transition: background 0.2s; border-radius: 3px; }
+        .content-list li:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+        @media (max-width: 768px) { .chapter-content { padding: 20px 18px; border-radius: 4px; } }
 
-        body {
-            font-family: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
-            background-color: #faf6f0;
-            color: #3e2a1a;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.8;
-        }
-
-        /* 导航栏 */
-        .nav-bar {
-            padding: 12px 0;
-            border-bottom: 2px solid #d4af37;
-            margin-bottom: 24px;
-            font-size: 0.9em;
-        }
-        .nav-link {
-            color: #8B4513;
-            text-decoration: none;
-            padding: 4px 8px;
-        }
-        .nav-link:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-
-        /* 分类标签 */
-        .category-tag {
-            display: inline-block;
-            background: #8B4513;
-            color: #faf6f0;
-            padding: 3px 12px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            margin-bottom: 8px;
-        }
-
-        /* 章节标题 */
-        .chapter-title {
-            font-size: 1.8em;
-            color: #5c3d1a;
-            border-bottom: 3px double #d4af37;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-        }
-
-        /* 章节目录 */
-        .chapter-toc {
-            background: #f0e8d8;
-            border: 1px solid #d4c8a8;
-            border-left: 4px solid #d4af37;
-            padding: 16px;
-            margin-bottom: 30px;
-            border-radius: 0 4px 4px 0;
-        }
-        .toc-title {
-            cursor: pointer;
-            color: #5c3d1a;
-            font-size: 1em;
-            user-select: none;
-        }
-        .toc-title:hover { color: #d4af37; }
-        .toc-icon { transition: transform 0.3s; display: inline-block; }
-        .toc-list {
-            list-style: none;
-            padding-left: 20px;
-            margin-top: 10px;
-            max-height: 500px;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-        .toc-list.collapsed { max-height: 0; margin-top: 0; }
-        .toc-list li {
-            padding: 3px 0;
-            border-bottom: 1px dotted #d4c8a8;
-        }
-        .toc-list a {
-            color: #8B4513;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        .toc-list a:hover { color: #d4af37; }
-
-        /* 内容区 */
-        .section-heading {
-            color: #5c3d1a;
-            margin-top: 32px;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e0d5c0;
-        }
-        h2.section-heading { font-size: 1.4em; border-bottom-width: 2px; }
-        h3.section-heading { font-size: 1.2em; }
-        h4.section-heading { font-size: 1.05em; }
-
-        .pn-link {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 0.75em;
-            vertical-align: super;
-            margin-right: 4px;
-            cursor: pointer;
-        }
-        .pn-link:hover { color: #8B4513; }
-
-        .section-content {
-            margin-bottom: 20px;
-        }
-        .section-content p {
-            margin-bottom: 12px;
-            text-indent: 2em;
-            text-align: justify;
-        }
-
-        /* 列表 */
-        .content-list {
-            list-style: none;
-            padding-left: 2em;
-            margin: 12px 0;
-        }
-        .content-list li {
-            position: relative;
-            padding-left: 1.2em;
-            margin-bottom: 6px;
-            text-align: justify;
-        }
-        .content-list li::before {
-            content: "●";
-            color: #d4af37;
-            position: absolute;
-            left: 0;
-        }
-
-        /* 实体链接 */
-        .entity-link {
-            text-decoration: none;
-            border-bottom: 1px dashed;
-            padding: 0 1px;
-            transition: all 0.2s;
-        }
-        .entity-link:hover {
-            background: rgba(212, 175, 55, 0.15);
-        }
-        .entity-principle { color: #b8860b; border-color: #b8860b; }
-        .entity-practice { color: #8B4513; border-color: #8B4513; }
-        .entity-process { color: #2E8B57; border-color: #2E8B57; }
-        .entity-role { color: #4169E1; border-color: #4169E1; }
-        .entity-product { color: #8B008B; border-color: #8B008B; }
-        .entity-term { color: #A0522D; border-color: #A0522D; }
-
-        /* 页脚 */
-        .footer {
-            margin-top: 48px;
-            padding-top: 16px;
-            border-top: 2px solid #d4af37;
-            text-align: center;
-            font-size: 0.85em;
-            color: #8B7355;
-        }
-
-        /* 响应式 */
-        @media (max-width: 600px) {
-            body { padding: 12px; }
-            .chapter-title { font-size: 1.4em; }
-        }
+        .key-info { background: var(--bg-intro); border-left: 4px solid var(--accent);
+            padding: 12px 16px; margin: 16px 0; border-radius: 0 4px 4px 0; font-style: italic; }
+        .key-info::before { content: "🔑 关键信息"; display: block; font-weight: bold;
+            font-style: normal; color: var(--kb-accent-dark); margin-bottom: 8px; font-size: 0.9em; }
+        .definition-box { background: var(--kb-paper-3); border-left: 4px solid var(--kb-accent-dark);
+            padding: 14px 18px; margin: 16px 0; border-radius: 0 4px 4px 0; }
+        .definition-box::before { content: "📘 定义"; display: block; font-weight: bold;
+            color: var(--text-heading); margin-bottom: 8px; font-size: 0.9em; }
+        .scenario-box { background: var(--kb-paper-2); border-left: 4px solid var(--kb-border-mid);
+            padding: 14px 18px; margin: 16px 0; border-radius: 0 4px 4px 0; }
+        .scenario-box::before { content: "🎯 场景"; display: block; font-weight: bold;
+            color: var(--accent); margin-bottom: 8px; font-size: 0.9em; }
+        .figure-note { text-align: center; color: var(--kb-muted); font-style: italic; font-size: 0.9em; margin: 12px 0; }
+        .role-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88em; }
+        .role-table th { background: var(--kb-paper-4); color: var(--text-heading); padding: 8px 10px;
+            text-align: center; border: 1px solid var(--kb-border-light); font-weight: bold; }
+        .role-table td { padding: 7px 10px; border: 1px solid var(--border-card); vertical-align: top; }
+        .role-table tbody tr:nth-child(even) td { background: var(--kb-paper-1); }
+        .table-scroll { overflow-x: auto; margin: 12px 0; -webkit-overflow-scrolling: touch; }
+        .product-card { background: var(--kb-paper-1); border: 2px solid var(--kb-border-light);
+            border-radius: 6px; padding: 16px 20px; margin: 16px 0; }
+        .product-card .product-name { font-weight: bold; font-size: 1.05em; color: var(--text-heading);
+            border-bottom: 1px dashed var(--kb-border-light); padding-bottom: 6px; margin-bottom: 10px; }
+        .product-card ul { margin: 6px 0; padding-left: 1.2em; }
+        .product-card li { margin-bottom: 4px; }
+        .cols-plan th:first-child { width: 15%; }
+        .cols-plan td:first-child { white-space: nowrap; font-weight: bold; }
+        .cols-plan th:nth-child(2) { width: 85%; }
+        .cols-princ th:first-child { width: 22%; }
+        .cols-princ th:nth-child(2) { width: 40%; }
+        .cols-princ th:nth-child(3) { width: 38%; }
+        .figure-svg { background: var(--kb-paper-1); border: 1px solid var(--border-card);
+            border-radius: 6px; padding: 12px; margin: 16px 0; box-shadow: 0 1px 4px rgba(139,69,19,0.04); }
     </style>
 </head>
 <body>
@@ -181,444 +88,1068 @@
     <span class="category-tag">实践</span>
     <h1 class="chapter-title">第7章 计划</h1>
 
-    
-        <nav class="chapter-toc">
-            <h3 class="toc-title" onclick="toggleToc()">
-                <span class="toc-icon">▸</span> 本章目录（43 节）
-            </h3>
-            <ul class="toc-list" id="tocList">
-                <li><a href="#pn-2">7.1 目的</a></li><li><a href="#pn-3">7.1.1 计划促成了解和沟通</a></li><li><a href="#pn-4">7.1.2 计划促成控制</a></li><li><a href="#pn-5">7.2 对有效计划的指导</a></li><li><a href="#pn-6">7.2.1 规划周期</a></li><li><a href="#pn-7">7.2.2 计划层级</a></li><li><a href="#pn-8">7.2.2.1 项目计划</a></li><li><a href="#pn-9">7.2.2.2 阶段计划</a></li><li><a href="#pn-10">7.2.2.3 小组计划</a></li><li><a href="#pn-11">7.2.2.4 例外计划</a></li><li><a href="#pn-12">7.2.3 阶段</a></li><li><a href="#pn-13">7.2.3.1 阶段的数量</a></li><li><a href="#pn-14">7.2.3.2 阶段的长度</a></li><li><a href="#pn-15">7.2.3.3 阶段和工作包</a></li><li><a href="#pn-16">7.2.4 计划中的容许偏差</a></li><li><a href="#pn-17">7.2.5 基于产品的规划</a></li><li><a href="#pn-18">7.3 技术</a></li><li><a href="#pn-19">7.3.1 PRINCE2 规划技术</a></li><li><a href="#pn-20">7.3.1.1 定义和分析产品</a></li><li><a href="#pn-21">7.3.1.1.1 编写项目产品描述</a></li><li><a href="#pn-22">7.3.1.1.2 创建产品分解结构</a></li><li><a href="#pn-23">7.3.1.1.3 编写产品描述</a></li><li><a href="#pn-24">7.3.1.1.4 创建产品流程图</a></li><li><a href="#pn-25">7.3.1.2 组织工作包</a></li><li><a href="#pn-26">7.3.1.3 准备估算</a></li><li><a href="#pn-27">7.3.1.4 准备进度表</a></li><li><a href="#pn-28">7.3.1.5 编制预算</a></li><li><a href="#pn-29">7.3.1.6 分析风险</a></li><li><a href="#pn-30">9.3.1 节）。</a></li><li><a href="#pn-31">7.3.1.7 将计划记录成文</a></li><li><a href="#pn-32">7.3.2 支持技术</a></li><li><a href="#pn-33">7.3.2.1 优先级排序</a></li><li><a href="#pn-34">7.3.2.2 进度表编制</a></li><li><a href="#pn-35">7.3.2.3 估算</a></li><li><a href="#pn-36">7.4 应用实践</a></li><li><a href="#pn-37">7.4.1 组织情境</a></li><li><a href="#pn-38">7.4.2 商务情境</a></li><li><a href="#pn-39">7.4.3 交付方法</a></li><li><a href="#pn-40">7.4.4 可持续性</a></li><li><a href="#pn-41">7.4.5 规模</a></li><li><a href="#pn-42">7.5 为实践提供支持的管理产品</a></li><li><a href="#pn-43">7.6 实践中关键角色的重点</a></li><li><a href="#pn-44">7.7 与原则的关键关系</a></li>
-            </ul>
-        </nav>
+    <nav class="chapter-toc">
+        <h3 class="toc-title" onclick="toggleToc()">
+            <span class="toc-icon">▸</span> 本章目录（44 节）
+        </h3>
+        <ul class="toc-list" id="tocList">
+            <li><a href="#pn-2">7.1 目的</a></li>
+            <li><a href="#pn-3">7.1.1 计划促成了解和沟通</a></li>
+            <li><a href="#pn-4">7.1.2 计划促成控制</a></li>
+            <li><a href="#pn-5">7.2 对有效计划的指导</a></li>
+            <li><a href="#pn-6">7.2.1 规划周期</a></li>
+            <li><a href="#pn-7">7.2.2 计划层级</a></li>
+            <li><a href="#pn-8">7.2.2.1 项目计划</a></li>
+            <li><a href="#pn-9">7.2.2.2 阶段计划</a></li>
+            <li><a href="#pn-10">7.2.2.3 小组计划</a></li>
+            <li><a href="#pn-11">7.2.2.4 例外计划</a></li>
+            <li><a href="#pn-12">7.2.3 阶段</a></li>
+            <li><a href="#pn-13">7.2.3.1 阶段的数量</a></li>
+            <li><a href="#pn-14">7.2.3.2 阶段的长度</a></li>
+            <li><a href="#pn-15">7.2.3.3 阶段和工作包</a></li>
+            <li><a href="#pn-16">7.2.4 计划中的容许偏差</a></li>
+            <li><a href="#pn-17">7.2.5 基于产品的规划</a></li>
+            <li><a href="#pn-18">7.3 技术</a></li>
+            <li><a href="#pn-19">7.3.1 PRINCE2 规划技术</a></li>
+            <li><a href="#pn-20">7.3.1.1 定义和分析产品</a></li>
+            <li><a href="#pn-21">7.3.1.1.1 编写项目产品描述</a></li>
+            <li><a href="#pn-22">7.3.1.1.2 创建产品分解结构</a></li>
+            <li><a href="#pn-23">7.3.1.1.3 编写产品描述</a></li>
+            <li><a href="#pn-24">7.3.1.1.4 创建产品流程图</a></li>
+            <li><a href="#pn-25">7.3.1.2 组织工作包</a></li>
+            <li><a href="#pn-26">7.3.1.3 准备估算</a></li>
+            <li><a href="#pn-27">7.3.1.4 准备进度表</a></li>
+            <li><a href="#pn-28">7.3.1.5 编制预算</a></li>
+            <li><a href="#pn-29">7.3.1.6 分析风险</a></li>
+            <li><a href="#pn-30">7.3.1.7 将计划记录成文</a></li>
+            <li><a href="#pn-31">7.3.2 支持技术</a></li>
+            <li><a href="#pn-32">7.3.2.1 优先级排序</a></li>
+            <li><a href="#pn-33">7.3.2.2 进度表编制</a></li>
+            <li><a href="#pn-34">7.3.2.3 估算</a></li>
+            <li><a href="#pn-35">7.4 应用实践</a></li>
+            <li><a href="#pn-36">7.4.1 组织情境</a></li>
+            <li><a href="#pn-37">7.4.2 商务情境</a></li>
+            <li><a href="#pn-38">7.4.3 交付方法</a></li>
+            <li><a href="#pn-39">7.4.4 可持续性</a></li>
+            <li><a href="#pn-40">7.4.5 规模</a></li>
+            <li><a href="#pn-41">7.5 为实践提供支持的管理产品</a></li>
+            <li><a href="#pn-42">7.6 实践中关键角色的重点</a></li>
+            <li><a href="#pn-43">7.7 与原则的关键关系</a></li>
+        </ul>
+    </nav>
 
     <div class="chapter-content">
-        <div class="section-content"><p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a></p></div>
+<div class="section-content">
 <h2 id="pn-2" class="section-heading"><a href="#pn-2" class="pn-link" title="点击复制链接">[2]</a> 7.1 目的</h2>
-<div class="section-content"><p>关键信息 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>实践的目的是通过定义要交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>（“什么”）和交付方法（“谁”、 “如何”、“在哪里”以及对“何时”和“多少”的估算）来促进沟通和控制， 从而满足项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>（“为什么”）。</p></div>
+<div class="key-info">计划实践的目的是通过定义要交付的产品（"什么"）和交付方法（"谁"、"如何"、"在哪里"以及对"何时"和"多少"的估算）来促进沟通和控制，从而满足项目商业论证（"为什么"）。</div>
+
 <h3 id="pn-3" class="section-heading"><a href="#pn-3" class="pn-link" title="点击复制链接">[3]</a> 7.1.1 计划促成了解和沟通</h3>
-<div class="section-content"><p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>集成了三个视角：</p>
+<p>计划集成了三个视角：</p>
 <ul class="content-list">
-  <li><a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>对要交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和要实现的收益的期望</li>
+  <li>用户对要交付的产品和要实现的收益的期望</li>
+  <li>项目管理团队对满足这些期望的最有效方法的评估</li>
+  <li>项目的业务支持，包括资金、人员和资源的承诺</li>
 </ul>
+<div class="definition-box">
+  <span class="def-term">计划</span>：概述整个项目（或其活动的子集）的内容、地点、时间、方式和人员的提案。在 PRINCE2 中，有以下类型的计划：项目计划、阶段计划、小组计划，以及例外计划。
+</div>
+<p>计划的开发使项目管理团队能够评估和了解：</p>
 <ul class="content-list">
-  <li>项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队对满足这些期望的最有效方法的评估</li>
+  <li><strong>为什么</strong>：用户的驱动需求以及他们期望实现的收益</li>
+  <li><strong>什么</strong>：要交付的产品及其相关的验收准则和质量规格</li>
+  <li><strong>如何</strong>：交付方法和任何约束</li>
+  <li><strong>何时</strong>：交付活动的顺序和估算持续时间</li>
+  <li><strong>在哪里</strong>：交付和验收所涉及的地点和设施</li>
+  <li><strong>谁</strong>：项目团队所需的技能和职责以及人员的组织方式</li>
+  <li><strong>多少</strong>：协定产品以及相关交付和管理活动的估算成本</li>
 </ul>
+<p>此外，它将使项目管理团队能够评估和了解：</p>
 <ul class="content-list">
-  <li>项目的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>支持，包括资金、人员和资源的承诺
-定义：<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>
-概述整个项目（或其活动的子集）的内容、地点、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、方式和人员的提案。在
-PRINCE2 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>有以下类型的计划：项目计<a href="../entities/term.html#entity-划、阶段计划、小组计划，以及例外计划。" class="entity-link entity-term" title="术语：划、阶段计划、小组计划，以及例外计划。">划、阶段计划、小组计划，以及例外计划。</a>
-计划的开发使项目管理团队能够评估和了解：</li>
+  <li><strong>风险</strong>：在交付流程中可能遇到的风险</li>
+  <li><strong>问题</strong>：影响计划的准确性或现实性</li>
 </ul>
-<ul class="content-list">
-  <li>为什么：<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>的驱动<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>以及他们期望实现的<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a></li>
-</ul>
-<ul class="content-list">
-  <li>什么：要交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>及其相关的<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>和质量规格</li>
-</ul>
-<ul class="content-list">
-  <li>如何：交付方法和任何<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a></li>
-</ul>
-<ul class="content-list">
-  <li>何时：交付活动的顺序和估算持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a></li>
-</ul>
-<ul class="content-list">
-  <li>在哪里：交付和<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>所涉及的地点和设施</li>
-</ul>
-<ul class="content-list">
-  <li>谁：项目团队所需的技能和职责以及人员的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>方式</li>
-</ul>
-<ul class="content-list">
-  <li>多少：协定<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>以及相关交付和管理活动的估算成本
-此外，它将使项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队能够评估和了解：</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>：在交付流程中可能遇到的风险</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>：影响<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的准确性或现实性
-已批<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>已设定基线的计划使项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队与其<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>之间以及项目团队成员内部能够进
-行沟通。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划</p></div>
+<p>已批准且已设定基线的计划使项目管理团队与其利益相关方之间以及项目团队成员内部能够进行沟通。</p>
+</div>
+
+<div class="section-content">
 <h3 id="pn-4" class="section-heading"><a href="#pn-4" class="pn-link" title="点击复制链接">[4]</a> 7.1.2 计划促成控制</h3>
-<div class="section-content"><p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>提供了管理项目所需信息<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>柱。批准后，计划会提供一个基线，可以根据该<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>来衡量 进展和评估问题。没有计划，就没有可以用来监视和控制<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>、收益、<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>、风险、问题和进 展的参考点。 已<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>且已设定基线的<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>代表协定的项目范围。<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>代表阶段的范围，小组计划 （如果使用）表示分配<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>定团队的工作范围。明确了解已获批项目范围内与范围外的内<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>对于避免不受控变更（通常称为范围蔓延）至关重要。<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>义：范围 由已批准的计划及其<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>表示的产品、交付和管理活动的总和。</p></div>
+<p>计划提供了管理项目所需信息的支柱。批准后，计划会提供一个基线，可以根据该基线来衡量进展和评估问题。没有计划，就没有可以用来监视和控制范围、收益、质量、风险、问题和进展的参考点。</p>
+<p>已批准且已设定基线的项目计划代表协定的项目范围。阶段计划代表阶段的范围，小组计划（如果使用）表示分配给特定团队的工作范围。明确了解已获批项目范围内与范围外的内容对于避免不受控变更（通常称为范围蔓延）至关重要。</p>
+<div class="definition-box">
+  <span class="def-term">范围</span>：由已批准的计划及其产品描述和工作包描述表示的产品、交付和管理活动的总和。
+</div>
+</div>
+
+<div class="section-content">
 <h2 id="pn-5" class="section-heading"><a href="#pn-5" class="pn-link" title="点击复制链接">[5]</a> 7.2 对有效计划的指导</h2>
-<div class="section-content"><p>PRINCE2 提供了一种全面的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>方法和一套灵活的计划。计划考虑项目生命周期的所有<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 以及项目中发生的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>产品和活动。计划是持续<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的，因为所有问题都必须根据对计划的影 响来考虑。</p></div>
+<p>PRINCE2 提供了一种全面的计划方法和一套灵活的计划。计划考虑项目生命周期的所有阶段以及项目中发生的所有产品和活动。计划是持续进行的，因为所有问题都必须根据对计划的影响来考虑。</p>
+
 <h3 id="pn-6" class="section-heading"><a href="#pn-6" class="pn-link" title="点击复制链接">[6]</a> 7.2.1 规划周期</h3>
-<div class="section-content"><p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>始终基于估算。根据项目的长度、<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或<a href="../entities/term.html#entity-交付模式" class="entity-link entity-term" title="术语：交付模式">交付模式</a>的类型，或者项目环境的复杂性或动 态性，估算可能会变得越来<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>确定。因此，计划活动和<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>应只涵盖可以合理自信地进行 计划的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>段。此时间段称为<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>。 规划周期将影响可计划的详细层面。如果<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>具有较长的规划周期，它将是一个概括性计 划；<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>具有较短的规划周期，并且是更详细的计划<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>短的规划周期内，可以计划更多细节。 超出规划周期的计划包含不确定性，这些不确定性会给项目自身带来<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。例如，详细说明小 组<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>未来一年或更长时间的日常活动的计划几乎肯定是不准确的。 <a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a>的 PRINCE2 原<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>将计划保持在合理规划周期内的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。因此，PRINCE2 项 目具有：</p>
+<p>计划始终基于估算。根据项目的长度、产品或交付模式的类型，或者项目环境的复杂性或动态性，估算可能会变得越来越不确定。因此，计划活动和计划应只涵盖可以合理自信地进行计划的时间段。此时间段称为<strong>规划周期</strong>。</p>
+<p>规划周期将影响可计划的详细层面。如果项目计划具有较长的规划周期，它将是一个概括性计划；阶段计划具有较短的规划周期，并且是更详细的计划。在较短的规划周期内，可以计划更多细节。</p>
+<p>超出规划周期的计划包含不确定性，这些不确定性会给项目自身带来风险。例如，详细说明小组成员未来一年或更长时间的日常活动的计划几乎肯定是不准确的。</p>
+<p>PRINCE2 按阶段管理的原则满足了将计划保持在合理规划周期内的需求。因此，PRINCE2 项目具有：</p>
 <ul class="content-list">
-  <li><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>，作为对如何以及何时实现项目目标的概括性描述，并显示主要<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、活动以及
-所需的人员和资源（它提供了一个基线，用于在项目的整个生命周期内监视项目<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>。）</li>
+  <li>项目计划，作为对如何以及何时实现项目目标的概括性描述，并显示主要产品、活动以及所需的人员和资源（它提供了一个基线，用于在项目的整个生命周期内监视项目进展。）</li>
+  <li>当前阶段的阶段计划，作为详细文件，基于在规划周期内可实现的更精确估算。</li>
 </ul>
-<ul class="content-list">
-  <li>当前<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>，作为详细文件，基于在<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>内可实现的更精确估算。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 场景：说明合理的<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a> 作为一个复杂的基础设施项目，工作是连续执行的，且必须<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>多个依赖关系，因此 为 LouisShopping 项目的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 提供适当的计划是至关重要的。然而，该项目跨越三 个财政年，并且才刚刚开<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>计阶段。因此，尝试开发详细的计划来显示每个小组成 员在未来两年内的工作是不现实的，因为它可能会在短<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>内变得不准确。 因此，一个明智而有效的<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>方法是将规划周期和详细程度结合起来。具体方法 是，为项目剩余的两年（长期）制定概括性计划，同时为当前设计<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>（短期）制定 详细计划。此外，由于将通过招标活动<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>商业公司，建筑阶段的<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>将需要 Louistown 市议会和<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>之间的协作。这只有在授予合同后才能最终确定。 场景：<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>不确<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>短的规划周期 由于 <a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>ndef 项目范围的高度不确定性以及每个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>开发的迭代-增量方法<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>ENTITY_0⟧ 建议项目各个阶段的持续时间不超过 1 个月。在每个<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>时，项目经理和项目 管理委员会将有机会重新定义范围，详细计划下一阶段，并在需要时重新调整项目方 向，以尽<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>多地实现交付的产品和<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的价值。此外，启动和设计阶段 (1<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>) 之后 的每个阶段都将提供项目产品的即用型增量。</p></div>
+
+<div class="scenario-box">
+<strong>场景：说明合理的规划周期</strong><br>
+作为一个复杂的基础设施项目，工作是连续执行的，且必须管理多个依赖关系，因此为 LouisShopping 项目的实施提供适当的计划是至关重要的。然而，该项目跨越三个财政年，并且才刚刚开始设计阶段。因此，尝试开发详细的计划来显示每个小组成员在未来两年内的工作是不现实的，因为它可能会在短时间变得不准确。<br><br>
+因此，一个明智而有效的项目计划方法是将规划周期和详细程度结合起来。具体方法是，为项目剩余的两年（长期）制定概括性计划，同时为当前设计阶段（短期）制定详细计划。此外，由于将通过招标活动选择商业公司，建筑阶段的阶段计划将需要 Louistown 市议会和供应商之间的协作。这只有在授予合同后才能最终确定。
+</div>
+
+<div class="scenario-box">
+<strong>场景：范围不确定性和较短的规划周期</strong><br>
+由于 Findef 项目范围的高度不确定性以及每个产品开发的迭代-增量方法，项目经理建议项目各个阶段的持续时间不超过 1 个月。在每个阶段结束时，项目经理和项目管理委员会有机会重新定义范围，详细计划下一阶段，并在需要时重新调整项目方向，以尽可能多地实现交付的产品和需求的价值。此外，启动和设计阶段（1-3）之后的每个阶段都将提供项目产品的即用型增量。
+</div>
+</div>
+
+<div class="section-content">
 <h3 id="pn-7" class="section-heading"><a href="#pn-7" class="pn-link" title="点击复制链接">[7]</a> 7.2.2 计划层级</h3>
-<div class="section-content"><p>所有 PRINCE2 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>都具有相同的基础结构。不同的是目的、<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>和细节程度。例如， 涵盖整 个项目生命周期的<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>不如仅涵盖单个阶段的<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>详细。无论哪种类型的计划，它都 应该为项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队提供足够的信<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>让他们相信该计划代表了对要交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和交付所需工 作的现实评估。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划 项目任务书、<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和/或项目群计划 启<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>ENTITY_1⟧ 后续阶段计划 <a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> 小组计划 例外计划 （如需要） 项目外部 项目内部 依赖因素 影响因素 图 7.1 PRINCE2 计划之间的关系</p></div>
+<p>所有 PRINCE2 计划都具有相同的基础结构。不同的是目的、范围和细节程度。例如，涵盖整个项目生命周期的项目计划不如仅涵盖单个阶段的阶段计划详细。无论哪种类型的计划，它都应该为项目管理团队提供足够的信息，让他们相信该计划代表了对要交付的产品和交付所需工作的现实评估。</p>
+
+<div class="figure-svg">
+<svg viewBox="0 0 680 340" role="img" style="max-width:640px;display:inline-block;">
+  <title>图 7.1 PRINCE2 计划之间的关系</title>
+  <desc>PRINCE2 计划层级：项目任务书/业务计划/项目群计划 → 项目计划 → 启动阶段计划/后续阶段计划/例外计划 → 小组计划</desc>
+  <defs>
+    <marker id="fig71-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <!-- 顶部框 -->
+  <rect x="140" y="10" width="400" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="35" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">项目任务书、业务计划和/或项目群计划</text>
+  <!-- 向下箭头 -->
+  <line x1="340" y1="50" x2="340" y2="75" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig71-arr)"/>
+  <!-- 项目计划 -->
+  <rect x="260" y="75" width="160" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="100" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">项目计划</text>
+  <!-- 三条向下箭头 -->
+  <line x1="340" y1="115" x2="200" y2="140" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig71-arr)"/>
+  <line x1="340" y1="115" x2="340" y2="140" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig71-arr)"/>
+  <line x1="340" y1="115" x2="480" y2="140" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig71-arr)"/>
+  <!-- 三个计划框 -->
+  <rect x="120" y="140" width="160" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="200" y="165" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="white" font-weight="600">启动阶段计划</text>
+  <rect x="260" y="140" width="160" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="165" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="white" font-weight="600">后续阶段计划</text>
+  <rect x="440" y="140" width="120" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="500" y="165" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="white" font-weight="600">例外计划</text>
+  <text x="500" y="180" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="white" font-weight="400">（如需要）</text>
+  <!-- 箭头到小组计划 -->
+  <line x1="200" y1="180" x2="200" y2="200" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="340" y1="180" x2="340" y2="200" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="200" y1="200" x2="340" y2="200" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="340" y1="200" x2="340" y2="220" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig71-arr)"/>
+  <!-- 小组计划 -->
+  <rect x="260" y="220" width="160" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="245" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">小组计划</text>
+  <!-- 左侧标签 -->
+  <text x="60" y="120" text-anchor="middle" font-family="serif" font-size="11" fill="var(--kb-muted)">项目外部</text>
+  <text x="60" y="140" text-anchor="middle" font-family="serif" font-size="11" fill="var(--kb-muted)">项目内部</text>
+  <!-- 右侧标签 -->
+  <text x="620" y="120" text-anchor="middle" font-family="serif" font-size="11" fill="var(--kb-muted)">依赖因素</text>
+  <text x="620" y="140" text-anchor="middle" font-family="serif" font-size="11" fill="var(--kb-muted)">影响因素</text>
+</svg>
+<div class="figure-note">图 7.1 PRINCE2 计划之间的关系</div>
+</div>
+
 <h4 id="pn-8" class="section-heading"><a href="#pn-8" class="pn-link" title="点击复制链接">[8]</a> 7.2.2.1 项目计划</h4>
-<div class="section-content"><p>定义：<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> 一项说明项目的主要<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>及其交付日期、交<a href="../entities/term.html#entity-付方式和相应成本的高层次计划。" class="entity-link entity-term" title="术语：付方式和相应成本的高层次计划。">付方式和相应成本的高层次计划。</a> 项目计划的目的是为<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>提供信心，即项目将完成其<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>。项目计划还告知项 目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队，他们有一种可行的方法在<a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>的资源和<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>范围内交付所<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>。 项目计划应识别阶段数和<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>边界的细节，以及<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>产品交付活动的拟议<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>。这些工作 包通常表示项目<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>的顶层。项目计划应说明每个工作包是按顺序交付还是以迭代- 增量方式交付。在迭代-<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>目中，一些工作包可能会在后续<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>中详细说明，<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>般目的和范围应在项目<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>中说明。 项目计划是在启动项目的<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中创建的<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会批准后确定基线。在阶段边界 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>流程中，对项目计划的任何必要<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>目管理委员会的批准，并反映在更新和 基于基线的项目计划中。</p></div>
+<div class="definition-box">
+  <span class="def-term">项目计划</span>：一项说明项目的主要产品及其交付日期、交付方式和相应成本的高层次计划。
+</div>
+<p>项目计划的目的是为项目管理委员会提供信心，即项目将完成其商业论证。项目计划还告知项目管理团队，他们有一种可行的方法在批准的资源和容许偏差范围内交付所需的产品。</p>
+<p>项目计划应识别阶段数和阶段边界的细节，以及组织产品交付活动的拟议工作包。这些工作包通常表示项目工作分解结构的顶层。项目计划应说明每个工作包是按顺序交付还是以迭代-增量方式交付。在迭代-增量项目中，一些工作包可能会在后续阶段计划中详细说明，但其一般目的和范围应在项目计划中说明。</p>
+<p>项目计划是在启动项目的流程中创建的，并在项目管理委员会批准后确定基线。在阶段边界管理流程中，对项目计划的任何必要变更都应得到项目管理委员会的批准，并反映在更新和基于基线的项目计划中。</p>
+
 <h4 id="pn-9" class="section-heading"><a href="#pn-9" class="pn-link" title="点击复制链接">[9]</a> 7.2.2.2 阶段计划</h4>
-<div class="section-content"><p>定义：<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a> 一个详细的计划，用作整个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>中项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>控制的基础。 为每个<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>一个阶段计划。阶段计划与<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>在结构上类似，但每个元素的分解应该足 够详细，这样就能成为<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>进行日常控制的基础。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> <a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>中提供的信息应可追溯到<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>。项目面临范围蔓延风险的指标是<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>计划中的活 动或产<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>接到项目计划的高层面元素。每<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>段计划中应包括阶段的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>分解结构，显 示范围<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>产品及其<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>每个阶段计划中还应包括阶段的<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>，识别该阶段要执行的主要活动以及每项活动中 涉及的人员和资源<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>NTITY_2⟧阶段计划是在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流程中创建的。后续阶段计划在当前阶段结束时准备。<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>方 法使阶段计划能够：</p>
+<div class="definition-box">
+  <span class="def-term">阶段计划</span>：一个详细的计划，用作整个阶段中项目管理控制的基础。
+</div>
+<p>为每个阶段准备一个阶段计划。阶段计划与项目计划在结构上类似，但每个元素的分解应该足够详细，这样就能成为项目经理进行日常控制的基础。</p>
+<p>阶段计划中提供的信息应可追溯到项目计划。项目面临范围蔓延风险的指标是阶段计划中的活动或产品无法链接到项目计划的高层面元素。每个阶段计划中应包括阶段的产品分解结构，显示范围内的产品及其关系。</p>
+<p>每个阶段计划中还应包括阶段的工作分解结构，识别该阶段要执行的主要活动以及每项活动中涉及的人员和资源。</p>
+<p>项目启动阶段计划是在项目准备流程中创建的。后续阶段计划在当前阶段结束时准备。这一方法使阶段计划能够：</p>
 <ul class="content-list">
-  <li>在接近<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>活动将发生时编制</li>
+  <li>在接近计划活动将发生时编制</li>
+  <li>比项目计划的持续时间更短，这样可以适应规划周期</li>
+  <li>在了解以前阶段绩效的基础上编制</li>
 </ul>
-<ul class="content-list">
-  <li>比<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的持续时间更短，这样可以适应<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a></li>
-</ul>
-<ul class="content-list">
-  <li>在了解以前<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>绩效的基础上编制
-场景：在<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>创建流程中让专家参与
-Findef 缺乏与最终<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>合作（而不是通过银行和商家合作）的经验，这使得新<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>开
-发项目存在<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。为了缓解这种风险，Findef 已与一家市场研究、品牌和开发专家的
-营销机构签<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>以协助每个新产品的设计和早期市场测试，从概念到发布都提供密切
-监视。为了确保估算和<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>表是现实的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>考虑到共同的风险，根据以前的类似<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>每个阶段计划都是在营销机构专家的参与下制定的。</li>
-</ul></div>
+<div class="scenario-box">
+<strong>场景：在阶段计划创建流程中让专家参与</strong><br>
+Findef 缺乏与最终用户合作（而不是通过银行和商家合作）的经验，这使得新产品开发项目存在风险。为了缓解这种风险，Findef 已与一家市场研究、品牌和开发专家的营销机构签约，以协助每个新产品的设计和早期市场测试，从概念到发布都提供密切监视。为了确保估算和时间表是现实的，并考虑到共同的风险，根据以前的类似项目，每个阶段计划都是在营销机构专家的参与下制定的。
+</div>
+
 <h4 id="pn-10" class="section-heading"><a href="#pn-10" class="pn-link" title="点击复制链接">[10]</a> 7.2.2.3 小组计划</h4>
-<div class="section-content"><p>定义：<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a> 在执行工作包时，用作<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>和控制小组工作的<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>划。小组计划在 PRI<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a> 中是可选的。 小组<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>由<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>编制，用于帮助执行一个或多个<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>。对小组计划的需求由项目的规模 和复杂性以及所涉及资源的性质确定。<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>队是具有来自组织不同部分的工作人员构成的临<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>组织时，小组计划可能很有用。</p></div>
+<div class="definition-box">
+  <span class="def-term">小组计划</span>：在执行工作包时，用作组织和控制小组工作的基础的计划。小组计划在 PRINCE2 中是可选的。
+</div>
+<p>小组计划由小组经理编制，用于帮助执行一个或多个工作包。对小组计划的需求由项目的规模和复杂性以及所涉及资源的性质确定。当团队是具有来自组织不同部分的工作人员构成的临时组织时，小组计划可能很有用。</p>
+
 <h4 id="pn-11" class="section-heading"><a href="#pn-11" class="pn-link" title="点击复制链接">[11]</a> 7.2.2.4 例外计划</h4>
-<div class="section-content"><p>定义：<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a> 一种计划，它遵循例外<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>，并说明项目将如何响应<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>内的例外。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划 当项目或阶段超过（或预计超过）协定的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>时，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>将向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>提出例外报 告。如果项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会决定在阶段内解决<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>，项目管理团队将准备一个<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>，涵盖如何 执行指导<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>根据例外计划的影响程度，例外计划可能仅限于补救行动，例如针对<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>例外进行更频繁的 检查。如果解决例外需要超出当前<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a><a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>的操作，则必须通过变更<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>来解决这些行 动问题。 用于管理工<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>的小组计划不需要例外计划。</p></div>
+<div class="definition-box">
+  <span class="def-term">例外计划</span>：一种计划，它遵循例外报告，并说明项目将如何响应阶段内的例外。
+</div>
+<p>当项目或阶段超过（或预计超过）协定的容许偏差时，项目经理将向项目管理委员会提出例外报告。如果项目管理委员会决定在阶段内解决例外，项目管理团队将准备一个例外计划，涵盖如何执行指导操作。</p>
+<p>根据例外计划的影响程度，例外计划可能仅限于补救行动，例如针对质量例外进行更频繁的检查。如果解决例外需要超出当前阶段范围的操作，则必须通过变更项目计划来解决这些行动问题。</p>
+<p>用于管理工作包交付的小组计划不需要例外计划。</p>
+</div>
+
+<div class="section-content">
 <h3 id="pn-12" class="section-heading"><a href="#pn-12" class="pn-link" title="点击复制链接">[12]</a> 7.2.3 阶段</h3>
-<div class="section-content"><p><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的目标是让<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>和项目经理对继续交付充满信心。 PRINCE2 分<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>构建项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。结合<a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>的原则，<a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a>有助于项目管理团队在需要 时<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和交付所需的内容。 确定如何<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>目划分为多个阶段是关系到平衡：</p>
+<p>项目计划的目标是让项目管理委员会和项目经理对继续交付充满信心。PRINCE2 分阶段构建项目管理。结合关注产品的原则，按阶段管理有助于项目管理团队在需要时计划和交付所需的内容。</p>
+<p>确定如何将项目划分为多个阶段是关系到平衡：</p>
 <ul class="content-list">
   <li>交付方法（迭代-增量或线性-顺序）</li>
-</ul>
-<ul class="content-list">
   <li>交付活动的顺序</li>
-</ul>
-<ul class="content-list">
   <li>涉及的人员和资源类型</li>
+  <li>关键决策点的数量和时间</li>
+  <li>项目可以管理的风险量</li>
+  <li>在项目中提前多少对于计划来说是合理的</li>
 </ul>
-<ul class="content-list">
-  <li>关键决策点的数量和<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a></li>
-</ul>
-<ul class="content-list">
-  <li>项目可以<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>量</li>
-</ul>
-<ul class="content-list">
-  <li>在项目中提前多少对于<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>来说是合理的</li>
-</ul></div>
+
 <h4 id="pn-13" class="section-heading"><a href="#pn-13" class="pn-link" title="点击复制链接">[13]</a> 7.2.3.1 阶段的数量</h4>
-<div class="section-content"><p><a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>数量可能会根据<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的性质和必要的交付活动而有所不同。阶段数量越多，控制<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>越 高，但每个阶段边界都需要尽力<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>。因此，需要在项目的控制程度和管理开销层面之间做出 权衡。 对于一个简单的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，如果熟悉的产品数量少，交付方法成熟，可能只需要两个阶段。那<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 准备<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>的启动阶段和一个交付阶段。 对于具有一组复杂产品和多种交付方法的大型项目，将需要多<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>付阶段，每个阶段都有自己 的产品和阶段边界。<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>方法允许项目管理团队在每个<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>中优化其估算，并使项目管理 委员会确认项目继续满足其<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>理由。 对于迭代-增量项目，<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>可以提供多个交付阶段，在这些阶段中，通过使用产品待办事 项，在开发所需产品的同时对<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>和<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>进行细化。 某些项目可能需要将阶段边界与外部事件保持一致。例如，在有年度预算周期的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>中，可能 需要在授权项目预算的下一部分之前，在预算年度结束时对项目已经交付的内容以及正在进行 的内容进行核算。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a></p></div>
+<p>阶段数量可能会根据产品的性质和必要的交付活动而有所不同。阶段数量越多，控制程度越高，但每个阶段边界都需要尽力管理。因此，需要在项目的控制程度和管理开销层面之间做出权衡。</p>
+<p>对于一个简单的项目，如果熟悉的产品数量少，交付方法成熟，可能只需要两个阶段。那就是准备项目启动文件的启动阶段和一个交付阶段。</p>
+<p>对于具有一组复杂产品和多种交付方法的大型项目，将需要多个交付阶段，每个阶段都有自己的产品和阶段边界。这种方法允许项目管理团队在每个阶段计划中优化其估算，并使项目管理委员会确认项目继续满足其业务理由。</p>
+<p>对于迭代-增量项目，项目计划可以提供多个交付阶段，在这些阶段中，通过使用产品待办事项，在开发所需产品的同时对质量和验收准则进行细化。</p>
+<p>某些项目可能需要将阶段边界与外部事件保持一致。例如，在有年度预算周期的组织中，可能需要在授权项目预算的下一部分之前，在预算年度结束时对项目已经交付的内容以及正在进行的内容进行核算。</p>
+
 <h4 id="pn-14" class="section-heading"><a href="#pn-14" class="pn-link" title="点击复制链接">[14]</a> 7.2.3.2 阶段的长度</h4>
-<div class="section-content"><p>决定<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的适当长度需要评估以下内容：</p>
+<p>决定阶段的适当长度需要评估以下内容：</p>
 <ul class="content-list">
-  <li>复杂性：如果交付活动之间的数量和依赖关系较多，则较短的<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>可能有助于避免遇到批
-准<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>的例外。</li>
+  <li><strong>复杂性</strong>：如果交付活动之间的数量和依赖关系较多，则较短的阶段可能有助于避免遇到批准容许偏差的例外。</li>
+  <li><strong>风险级别</strong>：阶段可用于提供对高风险项目的控制。在资源的重大投入之前，如果可以先审查项目风险，则可以在关键点插入阶段中断。</li>
+  <li><strong>规划周期</strong>：如果资源估算数或活动持续时间存在重大不确定性，较短的阶段可以在下一阶段计划中完善这些估算数据。</li>
+  <li><strong>适当的决策点</strong>：阶段边界应与项目管理委员会要做出的关键决策（例如在交付原型后是否以及如何继续）或业务层决策或事件（例如业务规划周期）保持一致。</li>
+  <li><strong>与项目群活动保持一致</strong>：项目群可以围绕根据能力和交付阶段中的不同变更而构建的项目分组来进行组织。项目群可能要求项目将阶段的竣工与项目群阶段的竣工保持一致。</li>
 </ul>
-<ul class="content-list">
-  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>级别：阶段可用于提供对高风险项目的控制。在资源的重大投入之前，如果<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>先审查
-项目风险，则可以在关键点插入<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>中断。</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>：如果资源估算数或活动持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>存在重大不确定性，较短的<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>可以在下一阶
-段<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>中完善这些估算数据。</li>
-</ul>
-<ul class="content-list">
-  <li>适当的决策点：<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>边界应与<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>要做出的关键决策（例如在交付原型后是否
-以及如何继续）或<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a>决策或事件（例如业务<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>）保持一致。</li>
-</ul>
-<ul class="content-list">
-  <li>与项目群活动保持一致：项目群可以围绕根据能力和交付<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>中的不同变更而构建的项目
-分组来进行<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>。项目群可能要求项目将阶<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>竣工与项目群阶段的竣工保持一致。
-在整个项目中，阶段的长度不必是统一<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>例如，新系统的设计或原型设计阶段可能比构建阶段
-短得多。</li>
-</ul></div>
+<p>在整个项目中，阶段的长度不必是统一的。例如，新系统的设计或原型设计阶段可能比构建阶段短得多。</p>
+
 <h4 id="pn-15" class="section-heading"><a href="#pn-15" class="pn-link" title="点击复制链接">[15]</a> 7.2.3.3 阶段和工作包</h4>
-<div class="section-content"><p>PRINCE2 <a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>不重叠。相反，阶段通过引入交替运作的决策点来划分<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>。由于不重叠，阶段 使项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队和<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>能够审查进展，并评估项目是<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>有持续业务理由，因此应 进入下一阶段。<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>阶段还使项目管理<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会能够通过后续阶段的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和在阶 段边界做出的决策，保持与<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的一致性。 阶段 1 阶段 2 阶段 3 阶段 4 规格 高阶设计 详细设计 场地准备 基础工作 公用事业 装配 下层结构<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>层结构 运营计划 移动化运营 公共领域 图 7.2 阶段和<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>示意图 根据所使用的交付方法、所需的专业技能集或所涉及的<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的关系，项目工作可以被组织成工 作包的逻辑组。这种活动的逻辑分组可以并行运行并重叠。避免使用<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>段边界的工作包是 良好<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>，因为在阶段边界做出的决策可能会导致重复工作或与正在进行的工作相关的浪费。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划 如果<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>跨越阶段边界，例如涉及长<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>购项目的工作包，则需要在<a href="../entities/process.html#entity-阶段边界管理" class="entity-link entity-process" title="流程：阶段边界管理">阶段边界管理</a>流程中 审查其状态。</p></div>
+<p>PRINCE2 阶段不重叠。相反，阶段通过引入交替运作的决策点来划分项目。由于不重叠，阶段使项目管理团队和项目管理委员会能够审查进展，并评估项目是否具有持续业务理由，因此应进入下一阶段。这些阶段还使项目管理团队和项目管理委员会能够通过后续阶段的计划和在阶段边界做出的决策，保持与商业论证的一致性。</p>
+
+<div class="figure-svg">
+<svg viewBox="0 0 680 220" role="img" style="max-width:640px;display:inline-block;">
+  <title>图 7.2 阶段和工作包示意图</title>
+  <desc>展示4个阶段及每个阶段内的工作包分布</desc>
+  <defs>
+    <marker id="fig72-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <!-- 阶段条 -->
+  <rect x="20" y="20" width="140" height="35" rx="6" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="90" y="42" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="white" font-weight="600">阶段1</text>
+  <rect x="170" y="20" width="140" height="35" rx="6" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="240" y="42" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="white" font-weight="600">阶段2</text>
+  <rect x="320" y="20" width="140" height="35" rx="6" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="390" y="42" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="white" font-weight="600">阶段3</text>
+  <rect x="470" y="20" width="140" height="35" rx="6" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="540" y="42" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="13" fill="white" font-weight="600">阶段4</text>
+  
+  <!-- 分隔线 -->
+  <line x1="170" y1="20" x2="170" y2="55" stroke="white" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="320" y1="20" x2="320" y2="55" stroke="white" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="470" y1="20" x2="470" y2="55" stroke="white" stroke-width="2" stroke-dasharray="4,3"/>
+  
+  <!-- 工作包 -->
+  <rect x="30" y="70" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="90" y="88" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">规格</text>
+  
+  <rect x="30" y="110" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="90" y="128" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">高阶设计</text>
+  
+  <rect x="30" y="150" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="90" y="168" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">详细设计</text>
+  
+  <rect x="180" y="70" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="240" y="88" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">场地准备</text>
+  
+  <rect x="180" y="110" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="240" y="128" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">基础工作</text>
+  
+  <rect x="180" y="150" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="240" y="168" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">公用事业</text>
+  
+  <rect x="330" y="70" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="390" y="88" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">下层结构</text>
+  
+  <rect x="330" y="110" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="390" y="128" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">上层结构</text>
+  
+  <rect x="330" y="150" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="390" y="168" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">装配</text>
+  
+  <rect x="480" y="70" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="540" y="88" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">公共领域</text>
+  
+  <rect x="480" y="110" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="540" y="128" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">运营计划</text>
+  
+  <rect x="480" y="150" width="120" height="30" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="540" y="168" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">移动化运营</text>
+</svg>
+<div class="figure-note">图 7.2 阶段和工作包示意图</div>
+</div>
+
+<p>根据所使用的交付方法、所需的专业技能集或所涉及的组织的关系，项目工作可以被组织成工作包的逻辑组。这种活动的逻辑分组可以并行运行并重叠。避免使用跨越阶段边界的工作包是良好实践，因为在阶段边界做出的决策可能会导致重复工作或与正在进行的工作相关的浪费。</p>
+<p>如果工作包跨越阶段边界，例如涉及长周期采购项目的工作包，则需要在阶段边界管理流程中审查其状态。</p>
+</div>
+
+<div class="section-content">
 <h3 id="pn-16" class="section-heading"><a href="#pn-16" class="pn-link" title="点击复制链接">[16]</a> 7.2.4 计划中的容许偏差</h3>
-<div class="section-content"><p>许多项目都受到各种<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>，例如进度表和资源。例如，必须在某个日期之前完成的项目将被视 为进度表驱动的项目。另一方面，除了<a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中授权的资源外，必须在没有任何资源的 情况下交付的项目将被视为资源驱动型项目。有效<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的一个关键要素是了解哪些约束优先， 选择使用哪种方法，以及适当的控制<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>。 PRINCE2 包括对<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、成本、<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>、范围、风险<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>性的容许偏差，以便在计划的 每个层<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>理此类约束。计划的 PRINCE2 技<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>项目管理团队设置容许偏差，以平衡项 目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员会保持有效控制的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。同时，它使<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>或小组经理能够实现有效交付。 定义：<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>容许偏差 计划时间的容许偏差，一旦超出时间容许偏差，则需上报到更高<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>管理层。 进度表驱动的项目的计划将具有较窄的时间容许偏差，可能设置为零，表明任何推迟都会使项 目面临失效的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>。 定义：成本容许偏差 计划成本的容许偏差，一旦超出成本容许偏差，<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>上报到更高一级管理层。 必须在固定预算内交付的<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>将具有较窄的成本容许偏差，可能设置为零，表明没有增 加成本的余地。 定义：<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>容许偏差 计划范围的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>偏差，一旦超出范围容许偏差，则需上报到更高一级管理层。 交付<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>新产品的项目的计划可能会指定<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>后的初始支持和用户培训的容许偏差程度。 这是为了确保顺利转换正常经营新<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>。 为每个层级的计划设置多宽或多窄的容许偏差<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>以加深了解哪些约束优先以及如何将它们纳 入计划。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 场景：不同阶段的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>变更 随着项目交付的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>，对估算有了更多的确定性。因此，面向项目每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>协定的容 <a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>差应反映这一进展。在启动阶段，当 LouisShopping 项目开始时，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>委员 会同意对 BuildyBrick 开发<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>后提出的时间和成本的初步估算有 +/- 40% 的容 许<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>。现在，启动阶段已经完成，将在此阶段获得的知识重新运用于<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>，项目管 理委员会为开始设计阶段设置 +/-<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a> 的容许偏差范围。</p></div>
+<p>许多项目都受到各种约束，例如进度表和资源。例如，必须在某个日期之前完成的项目将被视为进度表驱动的项目。另一方面，除了在项目启动文件中授权的资源外，必须在没有任何资源的情况下交付的项目将被视为资源驱动型项目。有效计划的一个关键要素是了解哪些约束优先，选择使用哪种方法，以及适当的控制容许偏差。</p>
+<p>PRINCE2 包括对收益、时间、成本、质量、范围、风险和可持续性的容许偏差，以便在计划的每个层级管理此类约束。计划的 PRINCE2 技术可帮助项目管理团队设置容许偏差，以平衡项目管理委员会保持有效控制的需求。同时，它使项目经理或小组经理能够实现有效交付。</p>
+
+<div class="definition-box">
+  <span class="def-term">时间容许偏差</span>：计划时间的容许偏差，一旦超出时间容许偏差，则需上报到更高一级管理层。
+</div>
+<p>进度表驱动的项目的计划将具有较窄的时间容许偏差，可能设置为零，表明任何推迟都会使项目面临失效的风险。</p>
+
+<div class="definition-box">
+  <span class="def-term">成本容许偏差</span>：计划成本的容许偏差，一旦超出成本容许偏差，则需上报到更高一级管理层。
+</div>
+<p>必须在固定预算内交付的项目计划将具有较窄的成本容许偏差，可能设置为零，表明没有增加成本的余地。</p>
+
+<div class="definition-box">
+  <span class="def-term">范围容许偏差</span>：计划范围的容许偏差，一旦超出范围容许偏差，则需上报到更高一级管理层。
+</div>
+<p>交付组织新产品的项目的计划可能会指定验收产品后的初始支持和用户培训的容许偏差程度。这是为了确保顺利转换正常经营新业务。</p>
+<p>为每个层级的计划设置多宽或多窄的容许偏差，可以加深了解哪些约束优先以及如何将它们纳入计划。</p>
+
+<div class="scenario-box">
+<strong>场景：不同阶段的容许偏差变更</strong><br>
+随着项目交付的进展，对估算有了更多的确定性。因此，面向项目每个阶段协定的容许偏差应反映这一进展。在启动阶段，当 LouisShopping 项目开始时，项目管理委员会同意对 BuildyBrick 开发项目计划后提出的时间和成本的初步估算有 +/- 40% 的容许偏差。现在，启动阶段已经完成，将在此阶段获得的知识重新运用于项目，项目管理委员会为开始设计阶段设置 +/- 20% 的容许偏差范围。
+</div>
+</div>
+
+<div class="section-content">
 <h3 id="pn-17" class="section-heading"><a href="#pn-17" class="pn-link" title="点击复制链接">[17]</a> 7.2.5 基于产品的规划</h3>
-<div class="section-content"><p>定义：<a href="../entities/term.html#entity-基于产品的规划" class="entity-link entity-term" title="术语：基于产品的规划">基于产品的规划</a> 一种 PRINCE2 技术，可基于所需<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>的创建和交付来生成<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>。 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>是 PRINCE2 的一项原则。这意味着 P<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>NCE2 的计划关注首先识别所需的产品，然后 确定最有效的交付方式。<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>往往最关心他们期望从项目中得到<a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>因此关注产品有助于 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队避免对所需<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a><a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a>性贡献的活动。 关注产品<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>助于<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>在制定计划时知道从哪里开始<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>了解项目所需的产品后，决定项 目方法、必要的人员和资源、现实的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>线以及可能的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和问题会变得更加容易。 清<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>一致地识别和记录要由该计划生成的产品，以及产品之间的相互依赖关系，基于产品的 规划可以降低遗漏<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>略的范围方面的风险。它还有助于在确保项目成功的关键方面达成一 致，即明确定义项目<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>内的内<a href="../entities/term.html#entity-基于产品的规划" class="entity-link entity-term" title="术语：基于产品的规划">基于产品的规划</a>的规划简化了工作包的识别和<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的顺序工作。这种优势会延续到下级计划，例如 <a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>和小组计划。最后，如果项<a href="../entities/term.html#entity-基于产品的规划" class="entity-link entity-term" title="术语：基于产品的规划">基于产品的规划</a>于产品的规划可帮助例外计划专注于解决 <a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>，同时将对成本和进度表的影响降到最小。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划</p></div>
+<div class="definition-box">
+  <span class="def-term">基于产品的规划</span>：一种 PRINCE2 技术，可基于所需产品的创建和交付来生成计划。
+</div>
+<p>关注产品是 PRINCE2 的一项原则。这意味着 PRINCE2 的计划关注首先识别所需的产品，然后确定最有效的交付方式。用户往往最关心他们期望从项目中得到的产出，因此关注产品有助于项目管理团队避免对所需产出没有实质性贡献的活动。</p>
+<p>关注产品也有助于项目经理在制定计划时知道从哪里开始。当了解项目所需的产品后，决定项目方法、必要的人员和资源、现实的时间线以及可能的风险和问题会变得更加容易。</p>
+<p>清晰、一致地识别和记录要由该计划生成的产品，以及产品之间的相互依赖关系，基于产品的规划可以降低遗漏或忽略的范围方面的风险。它还有助于在确保项目成功的关键方面达成一致，即明确定义项目范围内的内容。</p>
+<p>基于产品的规划简化了工作包的识别和工作包的顺序工作。这种优势会延续到下级计划，例如阶段计划和小组计划。最后，如果项目遇到例外，基于产品的规划可帮助例外计划专注于解决例外，同时将对成本和进度表的影响降到最小。</p>
+</div>
+
+<div class="section-content">
 <h2 id="pn-18" class="section-heading"><a href="#pn-18" class="pn-link" title="点击复制链接">[18]</a> 7.3 技术</h2>
 <h3 id="pn-19" class="section-heading"><a href="#pn-19" class="pn-link" title="点击复制链接">[19]</a> 7.3.1 PRINCE2 规划技术</h3>
-<div class="section-content"><p>PRINCE2 包括一种<a href="../entities/term.html#entity-基于产品的规划" class="entity-link entity-term" title="术语：基于产品的规划">基于产品的规划</a>的规划技术，如图 7.3 所示。如果需要，可以使用替代<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 程序代替它，例如，如果<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>已经开发了特定于其<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的程序。应将使用替代程序的决策作为 <a href="../entities/product.html#entity-项目启动文件" class="entity-link entity-product" title="管理产品：项目启动文件">项目启动文件</a>中的剪裁决策的一部分来记<a href="../entities/term.html#entity-基于产品的规划" class="entity-link entity-term" title="术语：基于产品的规划">基于产品的规划</a>的规划将所需产品的定义和分析作为规划的起点，并从这些<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>中获取规划的任 何支持元素，例如<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>、估算和项目进度表。 规划技术没有严格顺序。例如，进度表编制和估算通常是相互依赖的，并以协作方式执行。另<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>，当产品描述、<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>和进度表相对成熟时，预算的编制通常更高效。 针对以下项重复： • <a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> • 阶段计划 • <a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a> 定义和分析产品 组织<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a> 准备估算 准备进度表 编制预算 将计划记录成文 分析<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a> 图 7.3 PRINCE2 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>技术 用于准备计划的技术涵<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>有<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>划：项目计划、阶段计划、小组计划和<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>。项目 管理团队或<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>应专注于与每个计划相关的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>，并决定必要的活动和资源，准备切合实 际的<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>表，并分析相关风险。 <a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>和小组计划的范围比项目计划更有限，但可能更详细。例如，项目计划中的进度表可 能表示项目在月或周层面的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>线。然而，<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>可能会详细说明要在天数层面执行的工 作。同样，项目计划可以通过技能集识别所<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>，但小组经理可以在小组计划中按姓名识 别这些人。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 在准备下级计划时，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队或<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>必须确保不引入无法追溯到获批<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的需求 或活动。因为这是引入<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>中不受控变更（称为范围蔓延）的常用方法。</p></div>
+<p>PRINCE2 包括一种基于产品的规划的规划技术，如图 7.3 所示。如果需要，可以使用替代计划程序代替它，例如，如果业务已经开发了特定于其组织的程序。应将使用替代程序的决策作为项目启动文件中的剪裁决策的一部分来记录。</p>
+<p>基于产品的规划将所需产品的定义和分析作为规划的起点，并从这些产品描述中获取规划的任何支持元素，例如工作分解结构、估算和项目进度表。</p>
+<p>规划技术没有严格顺序。例如，进度表编制和估算通常是相互依赖的，并以协作方式执行。另一方面，当产品描述、工作包描述和进度表相对成熟时，预算的编制通常更高效。</p>
+
+<div class="figure-svg">
+<svg viewBox="0 0 680 420" role="img" style="max-width:640px;display:inline-block;">
+  <title>图 7.3 PRINCE2 规划技术</title>
+  <desc>PRINCE2 规划技术流程：定义和分析产品 → 组织工作包 → 准备估算 → 准备进度表 → 编制预算 → 分析风险 → 将计划记录成文</desc>
+  <defs>
+    <marker id="fig73-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <!-- 分析风险 竖向标签 -->
+  <rect x="20" y="40" width="30" height="200" rx="4" fill="color-mix(in srgb, var(--accent) 30%, #e8a0a0)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="35" y="140" text-anchor="middle" font-family="serif" font-size="12" fill="var(--text-heading)" font-weight="600" transform="rotate(-90,35,140)">分析风险</text>
+  
+  <!-- 分析风险箭头到各步骤 -->
+  <line x1="50" y1="60" x2="120" y2="60" stroke="var(--kb-accent-dark)" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="50" y1="100" x2="120" y2="100" stroke="var(--kb-accent-dark)" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="50" y1="140" x2="120" y2="140" stroke="var(--kb-accent-dark)" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="50" y1="180" x2="120" y2="180" stroke="var(--kb-accent-dark)" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="50" y1="220" x2="120" y2="220" stroke="var(--kb-accent-dark)" stroke-width="1" stroke-dasharray="4,2"/>
+  
+  <!-- 步骤框 -->
+  <rect x="120" y="40" width="280" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="260" y="65" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">定义和分析产品</text>
+  
+  <line x1="260" y1="80" x2="260" y2="100" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig73-arr)"/>
+  
+  <rect x="120" y="100" width="280" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="260" y="125" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">组织工作包</text>
+  
+  <line x1="260" y1="140" x2="260" y2="160" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig73-arr)"/>
+  
+  <rect x="120" y="160" width="280" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="260" y="185" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">准备估算</text>
+  
+  <line x1="260" y1="200" x2="260" y2="220" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig73-arr)"/>
+  
+  <rect x="120" y="220" width="280" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="260" y="245" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">准备进度表</text>
+  
+  <line x1="260" y1="260" x2="260" y2="280" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig73-arr)"/>
+  
+  <rect x="120" y="280" width="280" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="260" y="305" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">编制预算</text>
+  
+  <line x1="260" y1="320" x2="260" y2="340" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig73-arr)"/>
+  
+  <rect x="120" y="340" width="280" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="260" y="365" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">将计划记录成文</text>
+  
+  <!-- 右侧循环标注 -->
+  <path d="M420 60 Q480 60 480 120 Q480 200 420 200" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <line x1="420" y1="200" x2="415" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="420" y1="200" x2="415" y2="205" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <text x="510" y="100" text-anchor="start" font-family="serif" font-size="11" fill="var(--kb-muted)">针对以下项重复：</text>
+  <text x="510" y="120" text-anchor="start" font-family="serif" font-size="11" fill="var(--kb-muted)">• 项目计划</text>
+  <text x="510" y="140" text-anchor="start" font-family="serif" font-size="11" fill="var(--kb-muted)">• 阶段计划</text>
+  <text x="510" y="160" text-anchor="start" font-family="serif" font-size="11" fill="var(--kb-muted)">• 小组计划</text>
+</svg>
+<div class="figure-note">图 7.3 PRINCE2 规划技术</div>
+</div>
+
+<p>用于准备计划的技术涵盖所有类型的计划：项目计划、阶段计划、小组计划和例外计划。项目管理团队或小组经理应专注于与每个计划相关的产品，并决定必要的活动和资源，准备切合实际的进度表，并分析相关风险。</p>
+<p>阶段计划和小组计划的范围比项目计划更有限，但可能更详细。例如，项目计划中的进度表可能表示项目在月或周层面的时间线。然而，阶段计划可能会详细说明要在天数层面执行的工作。同样，项目计划可以通过技能集识别所需的人员，但小组经理可以在小组计划中按姓名识别这些人。</p>
+<p>在准备下级计划时，项目管理团队或小组经理必须确保不引入无法追溯到获批项目计划的需求或活动。因为这是引入范围中不受控变更（称为范围蔓延）的常用方法。</p>
+</div>
+
+<div class="section-content">
 <h4 id="pn-20" class="section-heading"><a href="#pn-20" class="pn-link" title="点击复制链接">[20]</a> 7.3.1.1 定义和分析产品</h4>
-<div class="section-content"><p>定义和分析 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>包括四个步骤，如图 7.4 所示。 仅适用于<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a> 编写<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a> 创建产品分解结构 编写<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a> 创建产品流程图 适用于所有层面的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 图 7.4 定义和分析产品</p></div>
+<p>定义和分析产品包括四个步骤，如图 7.4 所示。</p>
+
+<div class="figure-svg">
+<svg viewBox="0 0 680 340" role="img" style="max-width:640px;display:inline-block;">
+  <title>图 7.4 定义和分析产品</title>
+  <desc>定义和分析产品的四个步骤：编写项目产品描述 → 创建产品分解结构 → 编写产品描述 → 创建产品流程图</desc>
+  <defs>
+    <marker id="fig74-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <!-- 步骤1 -->
+  <rect x="140" y="20" width="400" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="45" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">编写项目产品描述</text>
+  
+  <line x1="340" y1="60" x2="340" y2="85" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig74-arr)"/>
+  
+  <!-- 步骤2 -->
+  <rect x="140" y="85" width="400" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="110" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">创建产品分解结构</text>
+  
+  <line x1="340" y1="125" x2="340" y2="150" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig74-arr)"/>
+  
+  <!-- 步骤3 -->
+  <rect x="140" y="150" width="400" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="175" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">编写产品描述</text>
+  
+  <line x1="340" y1="190" x2="340" y2="215" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig74-arr)"/>
+  
+  <!-- 步骤4 -->
+  <rect x="140" y="215" width="400" height="40" rx="8" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="240" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="14" fill="white" font-weight="600">创建产品流程图</text>
+  
+  <!-- 右侧标注 -->
+  <text x="570" y="40" text-anchor="start" font-family="serif" font-size="11" fill="var(--kb-muted)" font-weight="600">仅适用于项目计划</text>
+  <line x1="540" y1="40" x2="565" y2="40" stroke="var(--kb-accent-dark)" stroke-width="1" stroke-dasharray="4,2"/>
+  
+  <text x="570" y="175" text-anchor="start" font-family="serif" font-size="11" fill="var(--kb-muted)" font-weight="600">适用于所有层面的计划</text>
+  <line x1="540" y1="175" x2="565" y2="175" stroke="var(--kb-accent-dark)" stroke-width="1" stroke-dasharray="4,2"/>
+</svg>
+<div class="figure-note">图 7.4 定义和分析产品</div>
+</div>
+
 <h4 id="pn-21" class="section-heading"><a href="#pn-21" class="pn-link" title="点击复制链接">[21]</a> 7.3.1.1.1 编写项目产品描述</h4>
-<div class="section-content"><p>项目<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>分两个渐进的层次进行详细定义和分析。 在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流程中，主要产品或成果以及关键<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>需求都记录在<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>中。此步骤旨在 确认，实现<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>预期成果所需的所有主要<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>已经被识别。重要的是要评估并确<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>有遗漏必 要的产品，也没有包<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>必要的产品。<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a>产品描述 项目主要产品或成果的描述，包括<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>，以及项目的验收准则和<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a> 方法。 建议以客观可测量的术语说明概括性<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>。但是，这可能并不总是可行的。因此，可以使 用一组描述性陈述，只要<a href="../entities/product.html#entity-项目概述文件" class="entity-link entity-product" title="管理产品：项目概述文件">项目概述文件</a>清楚地表明，这些陈述将被翻译成更精确的标准，作为 开发<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>的一部分。这不仅对于<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>之间达成共识很重要，而且对<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>建立一套有效的质量<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>也很重要。 可以考虑替代解决方案和项目方法，以确保最有可能满足<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的方法和产品包含在项目范 围内。它们可能只在概括性细节中描述。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划</p></div>
+<p>项目需求分两个渐进的层次进行详细定义和分析。</p>
+<p>在项目准备流程中，主要产品或成果以及关键质量需求都记录在项目产品描述中。此步骤旨在确认，实现用户预期成果所需的所有主要产品已经被识别。重要的是要评估并确认没有遗漏必要的产品，也没有包含不必要的产品。</p>
+<div class="definition-box">
+  <span class="def-term">项目产品描述</span>：项目主要产品或成果的描述，包括用户的质量期望，以及项目的验收准则和验收方法。
+</div>
+<p>建议以客观可测量的术语说明概括性验收准则。但是，这可能并不总是可行的。因此，可以使用一组描述性陈述，只要项目概述文件清楚地表明，这些陈述将被翻译成更精确的标准，作为开发产品描述的一部分。这不仅对于项目经理和项目管理委员会之间达成共识很重要，而且对于建立一套有效的质量容许偏差也很重要。</p>
+<p>可以考虑替代解决方案和项目方法，以确保最有可能满足商业论证的方法和产品包含在项目范围内。它们可能只在概括性细节中描述。</p>
+
 <h4 id="pn-22" class="section-heading"><a href="#pn-22" class="pn-link" title="点击复制链接">[22]</a> 7.3.1.1.2 创建产品分解结构</h4>
-<div class="section-content"><p>定义：<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>分解结构 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>期间生产的所有产品的层级。 产品分解结构<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>描述要交付的产品及其基本组件非常有用。每个产品都以分层方式划分为组 件元素，并收集对这些元素的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。 例如，在 Lou<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>town 市议会项目中，主要产品是购物中心及其周围的小径、广场和花园。购 物中心可进一步分为前期工程、商场、商场租户和运营准备。产品分解结构还可以显示项目 所依赖的<a href="../entities/term.html#entity-外部产品" class="entity-link entity-term" title="术语：外部产品">外部产品</a>。在这种情况下，这是前往购物中心的方式，包括修订后的公共交通路线 和<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>表<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>及停车和乘车计划。 LouisShopping 连接 购物中心 路径、广场、花园 修订后<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>交车路线 和时间表 修订后的铁路时间表 停车和换乘 前期工程 经过清理的安全现场 公用事业 系统 租户受到保护 租户装<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>租户就绪 运营需求评估 运营计划 移动化运营 下层结构 上层结构 机械、电气、管道 商场 商场租户<a href="../entities/term.html#entity-外部产品" class="entity-link entity-term" title="术语：外部产品">外部产品</a>备 外部产品 图 7.5 LouisShopping 项目产品分解结构 产品分解结构的一个功能是，允许以逻辑方式将特定<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>个产品或组件的需求组合在一<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>例 如，在房屋的例子中，对管道的需求是密切相关的，而对墙壁饰面的需求在很大程度上与管道 需求无关。 产品分解结构的另一个功能是对与同一采购或交付方法相关的需求进行分组。在房屋的例子 中，土地的购买方式和来源可能与房屋建筑不同。 可能值得考虑是否包含特定产品的不同状态。例如，商场可能从建筑师的设计开始，然后由建 筑团队进行施工，然后由室内装饰师进行室内装修。虽然业主的目标是获得一栋可以出租给租 户的单元楼，但每个州/省可能有<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a></p></div>
+<div class="definition-box">
+  <span class="def-term">产品分解结构</span>：计划期间生产的所有产品的层级。
+</div>
+<p>产品分解结构对于描述要交付的产品及其基本组件非常有用。每个产品都以分层方式划分为组件元素，并收集对这些元素的需求。</p>
+<p>例如，在 Louistown 市议会项目中，主要产品是购物中心及其周围的小径、广场和花园。购物中心可进一步分为前期工程、商场、商场租户和运营准备。产品分解结构还可以显示项目所依赖的外部产品。在这种情况下，这是前往购物中心的方式，包括修订后的公共交通路线和时间表，以及停车和乘车计划。</p>
+
+<div class="figure-svg">
+<svg viewBox="0 0 680 400" role="img" style="max-width:640px;display:inline-block;">
+  <title>图 7.5 LouisShopping 项目产品分解结构</title>
+  <desc>LouisShopping 项目的产品分解结构树状图</desc>
+  <defs>
+    <marker id="fig75-arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0L5 5L0 10" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <!-- 根 -->
+  <rect x="260" y="10" width="160" height="30" rx="6" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="30" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="12" fill="white" font-weight="600">LouisShopping</text>
+  
+  <!-- 一级分支 -->
+  <line x1="340" y1="40" x2="340" y2="60" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="100" y1="60" x2="580" y2="60" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <line x1="100" y1="60" x2="100" y2="80" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="340" y1="60" x2="340" y2="80" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="580" y1="60" x2="580" y2="80" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <rect x="20" y="80" width="160" height="30" rx="6" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="11" fill="white" font-weight="600">连接</text>
+  
+  <rect x="260" y="80" width="160" height="30" rx="6" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="340" y="100" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="11" fill="white" font-weight="600">购物中心</text>
+  
+  <rect x="500" y="80" width="160" height="30" rx="6" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)"/>
+  <text x="580" y="100" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="11" fill="white" font-weight="600">路径、广场、花园</text>
+  
+  <!-- 连接 子项 -->
+  <line x1="100" y1="110" x2="100" y2="130" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="40" y1="130" x2="160" y2="130" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="40" y1="130" x2="40" y2="150" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="100" y1="130" x2="100" y2="150" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="160" y1="130" x2="160" y2="150" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <rect x="5" y="150" width="70" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="40" y="167" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">修订后的公交</text>
+  
+  <rect x="85" y="150" width="70" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="120" y="167" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">修订后的铁路</text>
+  
+  <rect x="165" y="150" width="70" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="200" y="167" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">停车和换乘</text>
+  
+  <!-- 购物中心 子项 -->
+  <line x1="340" y1="110" x2="340" y2="130" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="180" y1="130" x2="500" y2="130" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="180" y1="130" x2="180" y2="150" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="300" y1="130" x2="300" y2="150" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="380" y1="130" x2="380" y2="150" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="500" y1="130" x2="500" y2="150" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <rect x="110" y="150" width="140" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="180" y="167" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">前期工程</text>
+  
+  <rect x="230" y="150" width="140" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="300" y="167" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">商场</text>
+  
+  <rect x="310" y="150" width="140" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="380" y="167" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">商场租户</text>
+  
+  <rect x="430" y="150" width="140" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="500" y="167" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--text-heading)">运营准备</text>
+  
+  <!-- 前期工程 子项 -->
+  <line x1="180" y1="178" x2="180" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="140" y1="195" x2="220" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="140" y1="195" x2="140" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="220" y1="195" x2="220" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <rect x="85" y="210" width="110" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="140" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">经过清理的安全现场</text>
+  
+  <rect x="195" y="210" width="110" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="250" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">公用事业</text>
+  
+  <!-- 商场 子项 -->
+  <line x1="300" y1="178" x2="300" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="250" y1="195" x2="350" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="250" y1="195" x2="250" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="300" y1="195" x2="300" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="350" y1="195" x2="350" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <rect x="195" y="210" width="110" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="250" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">下层结构</text>
+  
+  <rect x="305" y="210" width="90" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="350" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">上层结构</text>
+  
+  <rect x="405" y="210" width="110" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="460" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">机械、电气、管道</text>
+  
+  <!-- 商场租户 子项 -->
+  <line x1="380" y1="178" x2="380" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="330" y1="195" x2="430" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="330" y1="195" x2="330" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="380" y1="195" x2="380" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="430" y1="195" x2="430" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <rect x="275" y="210" width="110" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="330" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">租户受到保护</text>
+  
+  <rect x="385" y="210" width="90" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="430" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">租户装配</text>
+  
+  <rect x="485" y="210" width="90" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="530" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">租户就绪</text>
+  
+  <!-- 运营准备 子项 -->
+  <line x1="500" y1="178" x2="500" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="450" y1="195" x2="550" y2="195" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="450" y1="195" x2="450" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="500" y1="195" x2="500" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  <line x1="550" y1="195" x2="550" y2="210" stroke="var(--kb-accent-dark)" stroke-width="1.5"/>
+  
+  <rect x="395" y="210" width="110" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="450" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">运营需求评估</text>
+  
+  <rect x="505" y="210" width="90" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="550" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">运营计划</text>
+  
+  <rect x="605" y="210" width="90" height="24" rx="4" fill="var(--kb-paper-1)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="650" y="225" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">移动化运营</text>
+  
+  <!-- 外部产品标注 -->
+  <rect x="20" y="260" width="90" height="24" rx="4" fill="var(--kb-paper-2)" stroke="var(--kb-border-mid)" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="65" y="275" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--kb-muted)">外部产品</text>
+</svg>
+<div class="figure-note">图 7.5 LouisShopping 项目产品分解结构</div>
+</div>
+
+<p>产品分解结构的一个功能是，允许以逻辑方式将特定于一个产品或组件的需求组合在一起。例如，在房屋的例子中，对管道的需求是密切相关的，而对墙壁饰面的需求在很大程度上与管道需求无关。</p>
+<p>产品分解结构的另一个功能是对与同一采购或交付方法相关的需求进行分组。在房屋的例子中，土地的购买方式和来源可能与房屋建筑不同。</p>
+<p>可能值得考虑是否包含特定产品的不同状态。例如，商场可能从建筑师的设计开始，然后由建筑团队进行施工，然后由室内装饰师进行室内装修。虽然业主的目标是获得一栋可以出租给租户的单元楼，但每个州/省可能有质量规格。</p>
+
 <h4 id="pn-23" class="section-heading"><a href="#pn-23" class="pn-link" title="点击复制链接">[23]</a> 7.3.1.1.3 编写产品描述</h4>
-<div class="section-content"><p>在<a href="../entities/process.html#entity-项目启动" class="entity-link entity-process" title="流程：项目启动">项目启动</a>流程中，将更详细地描述所需的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>引出用户对这些产品的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>，并将 其记录在一个或多个<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>中。项目经理还咨询主题专家 (SME<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>以决定与这些产品在验收 后如何采购、开发、测试、使用和支<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>关的需求。这样做旨在确认主要产品的需求已经足够 详细地描述，以便能够进行现实的进度表编制和估算。 产品的定义和分析可能是一个迭代程序。在线性-顺序项目中，<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>应足够详细，以便能 够以适当的置信度估算成本和<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>。然而，在迭代-增量<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>中，产品的详细需求可以与产品 本身并行开发，并且<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>性的产品描述可能足以继续进行它们的开发<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>。 项目很少能够在不考虑<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>的情况<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>足所有用户期望。例如，具有高能源需求的所需产品选 项可能与为<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>设置的可持续性约束相冲突。因此，优先考虑每种产品的<a href="../entities/term.html#entity-质量规格" class="entity-link entity-term" title="术语：质量规格">质量规格</a>以确保满足 最重要的需求很有帮助。</p></div>
+<p>在项目启动流程中，将更详细地描述所需的产品。项目经理引出用户对这些产品的需求，并将其记录在一个或多个产品描述中。项目经理还咨询主题专家 (SME)，以决定与这些产品在验收后如何采购、开发、测试、使用和支持相关的需求。这样做旨在确认主要产品的需求已经足够详细地描述，以便能够进行现实的进度表编制和估算。</p>
+<p>产品的定义和分析可能是一个迭代程序。在线性-顺序项目中，产品描述应足够详细，以便能够以适当的置信度估算成本和时间。然而，在迭代-增量项目中，产品的详细需求可以与产品本身并行开发，并且一组概括性的产品描述可能足以继续进行它们的开发阶段。</p>
+<p>项目很少能够在不考虑约束的情况下满足所有用户期望。例如，具有高能源需求的所需产品选项可能与为项目设置的可持续性约束相冲突。因此，优先考虑每种产品的质量规格以确保满足最重要的需求很有帮助。</p>
+
 <h4 id="pn-24" class="section-heading"><a href="#pn-24" class="pn-link" title="点击复制链接">[24]</a> 7.3.1.1.4 创建产品流程图</h4>
-<div class="section-content"><p>定义：<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>流程图 产品流程图中呈现了产品<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>结构中列出的产品的生<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>序及相互依赖关系的 图表。 产品分解结构的开发有助于识别产品之间的依<a href="../entities/term.html#entity-赖关系。" class="entity-link entity-term" title="术语：赖关系。">赖关系。</a>这些依赖关系可以在产品流图中描述， 该产品<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>图说明了<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>中产品的开发顺序以及它们<a href="../entities/term.html#entity-赖关系。" class="entity-link entity-term" title="术语：赖关系。">赖关系。</a>何依赖关系。 在某些情况下，需要交付中间产品。中间产品是作为交付其他产品的基本输入而创建但不打算 供<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>使用的产品。例如，生产原型可能是降低全面生产<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的有效方法，但原型本身只是全 面生产<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的输入。产品流程图和产品分解结构必须包括中间产品和<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>产品，以及对计划范 <a href="../entities/term.html#entity-赖关系。" class="entity-link entity-term" title="术语：赖关系。">赖关系。</a>外部产品的任何依赖关系。 产品流程图自然会考虑交付产品所需的活动，并提供用于估算和进度表编制的信息。在 Louistown 市议会的例子中，确保租户的安全可以与商场的建筑同时进行，但是在公用设施到 位之前，商场的建筑不能进行。在购物中心开放之<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>修订后的公共交通及停车和乘车计划需 要准备就绪并投入运营。它们在项目之外，并被识别为<a href="../entities/term.html#entity-外部产品" class="entity-link entity-term" title="术语：外部产品">外部产品</a>。图 7.6 说明了如何将该项目 的产品<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>结构转换为产品流程图。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划 <a href="../entities/term.html#entity-外部产品" class="entity-link entity-term" title="术语：外部产品">外部产品</a> 修订后的公交车路线和 <a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>表 已建立停车和 换乘<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a> 修订后的铁路时间表 系统 租户受到保护 租户装配 租户就绪 运<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>求评估 运营计划 移动化运营 下层结构 上层结构 机械、电气、管道 经过清理的安全现场 公用事业 路径、广场、花园 开始 完成 图 7.6 LouisShopping 项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>流程图 产品流程图应该有一个明确的起点和一个明确的终点。其详细<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>应与所涉及的产品和工作的 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、持续时间和规模相适应。准备产品<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>图通常需要在交付和验收所需产品时咨询主题专 家 (SME)。 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和<a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a>可能会发现，使用产品分解结构和产品流程图来识别项目<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>（产品） 何时开始影响成果，并允许<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>开始测量<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>的实现情况十分有用。区分产品在哪个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>完 成也可能很有用，例如通过颜色区分。</p></div>
+<div class="definition-box">
+  <span class="def-term">产品流程图</span>：产品流程图中呈现了产品分解结构中列出的产品的生产顺序及相互依赖关系的图表。
+</div>
+<p>产品分解结构的开发有助于识别产品之间的依赖关系。这些依赖关系可以在产品流图中描述，该产品流程图说明了计划中产品的开发顺序以及它们之间的任何依赖关系。</p>
+<p>在某些情况下，需要交付中间产品。中间产品是作为交付其他产品的基本输入而创建但不打算供用户使用的产品。例如，生产原型可能是降低全面生产风险的有效方法，但原型本身只是全面生产阶段的输入。产品流程图和产品分解结构必须包括中间产品和最终产品，以及对计划范围之外的外部产品的任何依赖关系。</p>
+<p>产品流程图自然会考虑交付产品所需的活动，并提供用于估算和进度表编制的信息。在 Louistown 市议会的例子中，确保租户的安全可以与商场的建筑同时进行，但是在公用设施到位之前，商场的建筑不能进行。在购物中心开放之前，修订后的公共交通及停车和乘车计划需要准备就绪并投入运营。它们在项目之外，并被识别为外部产品。图 7.6 说明了如何将该项目的产品分解结构转换为产品流程图。</p>
+
+<div class="figure-svg">
+<svg viewBox="0 0 680 420" role="img" style="max-width:640px;display:inline-block;">
+  <title>图 7.6 LouisShopping 项目产品流程图</title>
+  <desc>LouisShopping 项目的产品流程图，展示产品之间的依赖关系和生产顺序</desc>
+  <defs>
+    <marker id="fig76-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="var(--kb-accent-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <!-- 开始 -->
+  <ellipse cx="60" cy="380" rx="40" ry="20" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="60" y="385" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="11" fill="white" font-weight="600">开始</text>
+  
+  <!-- 完成 -->
+  <ellipse cx="620" cy="30" rx="40" ry="20" fill="color-mix(in srgb, var(--accent) 55%, #1a5fa0)" stroke="none"/>
+  <text x="620" y="35" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="11" fill="white" font-weight="600">完成</text>
+  
+  <!-- 外部产品 -->
+  <ellipse cx="60" cy="30" rx="40" ry="20" fill="var(--kb-paper-2)" stroke="var(--kb-border-mid)" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="60" y="35" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="10" fill="var(--kb-muted)" font-weight="600">外部产品</text>
+  
+  <!-- 路径广场花园 -->
+  <rect x="480" y="10" width="90" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="525" y="27" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">路径、广场、花园</text>
+  <line x1="570" y1="24" x2="580" y2="30" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 外部产品 → 路径 -->
+  <line x1="100" y1="30" x2="480" y2="24" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 下层产品链 -->
+  <rect x="120" y="80" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="170" y="97" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">公用事业</text>
+  
+  <rect x="120" y="120" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="170" y="137" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">下层结构</text>
+  
+  <rect x="120" y="160" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="170" y="177" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">上层结构</text>
+  
+  <rect x="120" y="200" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="170" y="217" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">机械、电气、管道</text>
+  
+  <line x1="170" y1="108" x2="170" y2="120" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  <line x1="170" y1="148" x2="170" y2="160" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  <line x1="170" y1="188" x2="170" y2="200" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 开始 → 公用事业 -->
+  <line x1="100" y1="380" x2="120" y2="94" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 系统/租户链 -->
+  <rect x="260" y="120" width="80" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="300" y="137" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">系统</text>
+  
+  <rect x="260" y="160" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="310" y="177" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">租户受到保护</text>
+  
+  <rect x="260" y="200" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="310" y="217" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">租户装配</text>
+  
+  <rect x="260" y="240" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="310" y="257" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">租户就绪</text>
+  
+  <line x1="300" y1="148" x2="300" y2="160" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  <line x1="310" y1="188" x2="310" y2="200" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  <line x1="310" y1="228" x2="310" y2="240" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 上层结构 → 系统 -->
+  <line x1="220" y1="174" x2="260" y2="134" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 运营链 -->
+  <rect x="400" y="200" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="450" y="217" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">运营需求评估</text>
+  
+  <rect x="400" y="240" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="450" y="257" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">运营计划</text>
+  
+  <rect x="400" y="280" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="450" y="297" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">移动化运营</text>
+  
+  <line x1="450" y1="228" x2="450" y2="240" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  <line x1="450" y1="268" x2="450" y2="280" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 租户就绪 → 运营需求评估 -->
+  <line x1="360" y1="254" x2="400" y2="214" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 连接链 -->
+  <rect x="400" y="320" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="450" y="337" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">已建立停车和</text>
+  <text x="450" y="348" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">换乘系统</text>
+  
+  <rect x="400" y="360" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="450" y="377" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">修订后的铁路</text>
+  <text x="450" y="388" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">时间表</text>
+  
+  <rect x="260" y="320" width="100" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="310" y="337" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">修订后的公交</text>
+  <text x="310" y="348" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">路线和时间表</text>
+  
+  <!-- 连接汇总 -->
+  <rect x="520" y="340" width="80" height="28" rx="4" fill="var(--bg-intro)" stroke="var(--kb-border-mid)" stroke-width="1"/>
+  <text x="560" y="357" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="9" fill="var(--text-heading)">连接</text>
+  
+  <line x1="310" y1="348" x2="520" y2="354" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  <line x1="450" y1="334" x2="520" y2="354" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  <line x1="450" y1="374" x2="520" y2="354" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 连接 → 完成 -->
+  <line x1="600" y1="354" x2="600" y2="50" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 机械电气管道 → 租户装配 -->
+  <line x1="220" y1="214" x2="260" y2="214" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 移动化运营 → 连接 -->
+  <line x1="450" y1="308" x2="560" y2="354" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+  
+  <!-- 路径 → 完成 -->
+  <line x1="570" y1="24" x2="580" y2="30" stroke="var(--kb-accent-dark)" stroke-width="1.5" marker-end="url(#fig76-arr)"/>
+</svg>
+<div class="figure-note">图 7.6 LouisShopping 项目产品流程图</div>
+</div>
+
+<p>产品流程图应该有一个明确的起点和一个明确的终点。其详细程度应与所涉及的产品和工作的成本、持续时间和规模相适应。准备产品流程图通常需要在交付和验收所需产品时咨询主题专家 (SME)。</p>
+<p>项目经理和高级用户可能会发现，使用产品分解结构和产品流程图来识别项目产出（产品）何时开始影响成果，并允许用户开始测量收益的实现情况十分有用。区分产品在哪个阶段完成也可能很有用，例如通过颜色区分。</p>
+</div>
+
+<div class="section-content">
 <h4 id="pn-25" class="section-heading"><a href="#pn-25" class="pn-link" title="点击复制链接">[25]</a> 7.3.1.2 组织工作包</h4>
-<div class="section-content"><p><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>流程图可帮助项目管理团队决定项目应以线性-顺序还是迭代-增量方式交付。 确定交付方法<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>可以识别每个产品中涉及的交付活动并将其<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>到<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>中。每个工作包 都应结合密切相关的人员、资源和交付活动。此外，每个人都应创建至少一个必需的最终产 品或一个中间<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>作为后续工作包的输入。 如果工作包依赖<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>一个工作包或项目范围外活动的产品交付，则这种关系被视为依<a href="../entities/term.html#entity-赖关系。" class="entity-link entity-term" title="术语：赖关系。">赖关系。</a></p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 定义：依赖关系 依赖关系意味着一种<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>依赖于另一种产品。与项目相关的依赖关系至少有两种类 型：内部和外部。 内部依赖关系：内部依赖<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>是指项目的两个产品之间的依赖。在这些情况下， 项目团队可以控制该依<a href="../entities/term.html#entity-赖关系。" class="entity-link entity-term" title="术语：赖关系。">赖关系。</a> 外部依赖关系：外部依赖关系是指项目产品与项目<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>外产品或活动之间的依赖。 在这些情况下，项目团队无<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>ENTITY_8⟧该依赖关系。 产品流程图中显示的所有依赖关系都必须记录在关联的<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>中。无论工作包的交付是否 涉及合同（例如，可能没有内部<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a><a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>工作包描述都被视为项目经理和负责<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a> 的<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>之间的协议。 尽管工作包通常是相互关联的，但<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应确保任何两个工作包的范围没有重叠。这可能会 产生不必要的成本，并在团队之间造成<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>冲突。整个工作包应包括项目的全部交付范围。<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>流程图、产品分解结构和全套工作包之间不应有任何间隙。 将项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>活动<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>到每个阶段的单个工作包中会很有用，即使这些活动不被视为项目预算的 一部分。这<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>于记录所有项目管理任务，并显示与产品交付相关的<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>、里程碑和活动之间 的关系。 在 PRINCE2 规划技术中，<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>（见第 6 章）是一种具有多种应用的技术。它用于通 过将工作包映射到负责交付<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>品的团队或供应商来支持项目组织。当项目有混合工作包， 其中一个或多<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>部工作人员交付，其他由外部供应商交付时，此应用特别有用。如果人员 是项目成本的主要<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>分解结构允许根据技能类型、工作量和工作持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>来描述劳 动<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>后，工作分解结构有助于开发<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>，交付产品所需的工作可以根据任务和分配的小组成 员进行详细说明。对于具有一个或两个产品或工作包以及小型交付团队的简单项目，工作分解 结构是可选的。</p></div>
+<p>产品流程图可帮助项目管理团队决定项目应以线性-顺序还是迭代-增量方式交付。</p>
+<p>确定交付方法后，可以识别每个产品中涉及的交付活动并将其组织到工作包中。每个工作包都应结合密切相关的人员、资源和交付活动。此外，每个人都应创建至少一个必需的最终产品或一个中间产品，作为后续工作包的输入。</p>
+<p>如果工作包依赖于另一个工作包或项目范围外活动的产品交付，则这种关系被视为依赖关系。</p>
+
+<div class="definition-box">
+  <span class="def-term">依赖关系</span>：依赖关系意味着一种产品依赖于另一种产品。与项目相关的依赖关系至少有两种类型：内部和外部。<br><br>
+  <strong>内部依赖关系</strong>：内部依赖关系是指项目的两个产品之间的依赖。在这些情况下，项目团队可以控制该依赖关系。<br><br>
+  <strong>外部依赖关系</strong>：外部依赖关系是指项目产品与项目范围外产品或活动之间的依赖。在这些情况下，项目团队无法完全控制该依赖关系。
+</div>
+
+<p>产品流程图中显示的所有依赖关系都必须记录在关联的工作包描述中。无论工作包的交付是否涉及合同（例如，可能没有内部供应商的合同），工作包描述都被视为项目经理和负责工作包的小组经理之间的协议。</p>
+<p>尽管工作包通常是相互关联的，但项目经理应确保任何两个工作包的范围没有重叠。这可能会产生不必要的成本，并在团队之间造成潜在的冲突。整个工作包应包括项目的全部交付范围。产品流程图、产品分解结构和全套工作包之间不应有任何间隙。</p>
+<p>将项目管理活动组织到每个阶段的单个工作包中会很有用，即使这些活动不被视为项目预算的一部分。这有助于记录所有项目管理任务，并显示与产品交付相关的阶段、里程碑和活动之间的关系。</p>
+<p>在 PRINCE2 规划技术中，工作分解结构（见第 6 章）是一种具有多种应用的技术。它用于通过将工作包映射到负责交付相关产品的团队或供应商来支持项目组织。当项目有混合工作包，其中一个或多个由内部工作人员交付，其他由外部供应商交付时，此应用特别有用。如果人员是项目成本的主要要素，则工作分解结构允许根据技能类型、工作量和工作持续时间来描述劳动力成本。</p>
+<p>最后，工作分解结构有助于开发小组计划，交付产品所需的工作可以根据任务和分配的小组成员进行详细说明。对于具有一个或两个产品或工作包以及小型交付团队的简单项目，工作分解结构是可选的。</p>
+</div>
+
+<div class="section-content">
 <h4 id="pn-26" class="section-heading"><a href="#pn-26" class="pn-link" title="点击复制链接">[26]</a> 7.3.1.3 准备估算</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和小组经理始终使用以下估算值进行<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>：</p>
+<p>项目经理和小组经理始终使用以下估算值进行计划：</p>
 <ul class="content-list">
-  <li>人员：这些可以是所需的特定技能、所涉及的工作量以及何时何地需要这些技能。</li>
+  <li><strong>人员</strong>：这些可以是所需的特定技能、所涉及的工作量以及何时何地需要这些技能。</li>
+  <li><strong>资源</strong>：这些可以是特定的材料、设备、设施、访问渠道、自然资源或金钱，以及每种资源的数量或金额。</li>
+  <li><strong>活动持续时间</strong>：准备进度表需要估算完成任务可能需要的时间。</li>
+  <li><strong>人员和资源成本</strong>：对于人员而言，这些可以是劳动力费率、费用或工资，而对于材料等资源，可以是基于市场价格或供应商合同的单位成本。</li>
+  <li><strong>收益</strong>：这些可以是对项目产品所实现成果价值的估算。</li>
+  <li><strong>风险</strong>：这些可以是对风险及其相关风险应对的临近度、概率、速度和影响的估算。</li>
 </ul>
-<ul class="content-list">
-  <li>资源：这些可以是特定的材料、设备、设施、访问渠道、自然资源或金钱，以及每种资源
-的数量或金额。</li>
-</ul>
-<ul class="content-list">
-  <li>活动持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>：准备进度表需要估算完<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>务可能需要的时间。</li>
-</ul>
-<ul class="content-list">
-  <li>人员和资源成本：对于人员而言，这些可以是劳动力费率、费用或工资，而对于材料等
-资源，可以是基于市场价格或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>合同的单位成本。</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>：这些可以是对项目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>所实现成果价值的估算。</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>：这些可以是对风险及其相关<a href="../entities/term.html#entity-风险应对" class="entity-link entity-term" title="术语：风险应对">风险应对</a>的临近度、概率、速度和影响的估算。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划 在每个估算中包括置信水平很有用。估算的置信度越高，在交付<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中遇到意外变化的可能性 就越小。这使<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>能够就一组现实的容许偏差达成一致。 估算技术的示例在第 7.3.4 节中提供。</p></div>
+<p>在每个估算中包括置信水平很有用。估算的置信度越高，在交付流程中遇到意外变化的可能性就越小。这使项目经理和项目管理委员会能够就一组现实的容许偏差达成一致。</p>
+<p>估算技术的示例在第 7.3.4 节中提供。</p>
+</div>
+
+<div class="section-content">
 <h4 id="pn-27" class="section-heading"><a href="#pn-27" class="pn-link" title="点击复制链接">[27]</a> 7.3.1.4 准备进度表</h4>
-<div class="section-content"><p>定义：进度表 <a href="../entities/term.html#entity-计划的图形表示（例如，甘特图），通常是" class="entity-link entity-term" title="术语：计划的图形表示（例如，甘特图），通常是">计划的图形表示（例如，甘特图），通常是</a>描述一个序列的任务以及资源分配， 两者组合在一起共同实现<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>。 <a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>及其相关任务的顺序、相互关系和持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>都包含在进度表<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>段的所有工作包必须 包含在该<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的进度表中。 工作包包括一个或多个交付活动。反过来，这些活动可以分解为一组任务。对于每个任务，都 可以识别人员和资源。然后，可以估算所需的工作量<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>个任务的持续时间。 <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>应考虑规划周期，并使用<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>来制定进度表，因为这可<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>好地了解任务的工作 量和持续时间。</p></div>
+<div class="definition-box">
+  <span class="def-term">进度表</span>：计划的图形表示（例如，甘特图），通常是描述一个序列的任务以及资源分配，两者组合在一起共同实现计划。
+</div>
+<p>工作包及其相关任务的顺序、相互关系和持续时间都包含在进度表中。阶段的所有工作包必须包含在该阶段的进度表中。</p>
+<p>工作包包括一个或多个交付活动。反过来，这些活动可以分解为一组任务。对于每个任务，都可以识别人员和资源。然后，可以估算所需的工作量和每个任务的持续时间。</p>
+<p>项目经理应考虑规划周期，并使用阶段计划来制定进度表，因为这可以更好地了解任务的工作量和持续时间。</p>
+</div>
+
+<div class="section-content">
 <h4 id="pn-28" class="section-heading"><a href="#pn-28" class="pn-link" title="点击复制链接">[28]</a> 7.3.1.5 编制预算</h4>
-<div class="section-content"><p>人员和资源<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>可制作成表，将其成本和其他成本计算后编制成<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的预算。预算应该包括：</p>
+<p>人员和资源需求可制作成表，将其成本和其他成本计算后编制成计划的预算。预算应该包括：</p>
 <ul class="content-list">
-  <li>用于<a href="../entities/term.html#entity-产出" class="entity-link entity-term" title="术语：产出">产出</a>和交付产品的活动的成本（包括人员、设备、材料和设施），以及项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>活动
-的成本</li>
+  <li>用于产出和交付产品的活动的成本（包括人员、设备、材料和设施），以及项目管理活动的成本</li>
+  <li>风险预算（请参阅第 9.2 节）</li>
+  <li>变更预算（请参阅第 10.2.5 节）</li>
+  <li>成本容许偏差</li>
 </ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>（请参阅第 9.2 节）</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>（请参阅第 10.2.5 节）</li>
-</ul>
-<ul class="content-list">
-  <li>成本<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>
-定义：资源
-完成计划所需的商品、服务、设备、材料、<a href="../entities/term.html#entity-设施和资金。" class="entity-link entity-term" title="术语：设施和资金。">设施和资金。</a>
-根据所需资源的类型，可能需要使用几个不同的组件来记录<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的预算。例如，测试设施所需
-的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>可以在进度表中标明，而必要的资本资金可以在项目预算中详细说明。
-可选择是否使用不同的<a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>和<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>。它们的使用将取决于项目情境，即额外控制的价
-值是否超过额外的项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>成本和时间。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a></p></div>
+<div class="definition-box">
+  <span class="def-term">资源</span>：完成计划所需的商品、服务、设备、材料、设施和资金。
+</div>
+<p>根据所需资源的类型，可能需要使用几个不同的组件来记录计划的预算。例如，测试设施所需的时间可以在进度表中标明，而必要的资本资金可以在项目预算中详细说明。</p>
+<p>可选择是否使用不同的风险预算和变更预算。它们的使用将取决于项目情境，即额外控制的价值是否超过额外的项目管理成本和时间。</p>
+</div>
+
+<div class="section-content">
 <h4 id="pn-29" class="section-heading"><a href="#pn-29" class="pn-link" title="点击复制链接">[29]</a> 7.3.1.6 分析风险</h4>
-<div class="section-content"><p>随着<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的开发，需要在整个规划技术中对计划进<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>险分析。随着计划细节的扩充，应检查 其潜在<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>内容。所有已识别的风险都应输入到“项目记录单：<a href="../entities/product.html#entity-风险登记单" class="entity-link entity-product" title="管理产品：风险登记单">风险登记单</a>”中。 在生成了计划之后，仍应将其视<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>案，直至决定是否以及如何<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>计划中的内在风险为止。 根据这些决定，可能需要修改计划（有关 PRINCE2 <a href="../entities/term.html#entity-风险管理" class="entity-link entity-term" title="术语：风险管理">风险管理</a>程序的更多详细信息，请参见第</p></div>
-<h3 id="pn-30" class="section-heading"><a href="#pn-30" class="pn-link" title="点击复制链接">[30]</a> 9.3.1 节）。</h3>
-<h4 id="pn-31" class="section-heading"><a href="#pn-31" class="pn-link" title="点击复制链接">[31]</a> 7.3.1.7 将计划记录成文</h4>
-<div class="section-content"><p>PRINCE2 规划技术创建构成<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的多个<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。进度表和预算可以保存在单独的系统或文件 中。同时，<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>分解结构、产品流程图和<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>可以保存在文件、电子表格或图形计划 工具中。可以在团队协作工具中维护多个元素。即便如此，编制一份叙述性文件通常还是很有 用的，该<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>概括解释了该计划，并识别了：</p>
+<p>随着计划的开发，需要在整个规划技术中对计划进行风险分析。随着计划细节的扩充，应检查其潜在风险内容。所有已识别的风险都应输入到"项目记录单：风险登记单"中。</p>
+<p>在生成了计划之后，仍应将其视为草案，直至决定是否以及如何处理计划中的内在风险为止。根据这些决定，可能需要修改计划（有关 PRINCE2 风险管理程序的更多详细信息，请参见第 9.3.1 节）。</p>
+</div>
+
+<div class="section-content">
+<h4 id="pn-30" class="section-heading"><a href="#pn-30" class="pn-link" title="点击复制链接">[30]</a> 7.3.1.7 将计划记录成文</h4>
+<p>PRINCE2 规划技术创建构成计划的多个管理产品。进度表和预算可以保存在单独的系统或文件中。同时，产品分解结构、产品流程图和工作分解结构可以保存在文件、电子表格或图形计划工具中。可以在团队协作工具中维护多个元素。即便如此，编制一份叙述性文件通常还是很有用的，该文件概括解释了该计划，并识别了：</p>
 <ul class="content-list">
   <li>内部和外部依赖关系</li>
-</ul>
-<ul class="content-list">
-  <li>建议的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a></li>
-</ul>
-<ul class="content-list">
-  <li>监视和控制<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a></li>
-</ul>
-<ul class="content-list">
+  <li>建议的容许偏差</li>
+  <li>监视和控制需求</li>
   <li>预算</li>
+  <li>关键风险</li>
+  <li>基于上述任何一项的假设</li>
 </ul>
-<ul class="content-list">
-  <li>关键<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a></li>
-</ul>
-<ul class="content-list">
-  <li>基于上述任何一项的<a href="../entities/term.html#entity-假设" class="entity-link entity-term" title="术语：假设">假设</a>
-<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>还将包括对各阶段和计划的<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>决策的描述。</li>
-</ul></div>
-<h3 id="pn-32" class="section-heading"><a href="#pn-32" class="pn-link" title="点击复制链接">[32]</a> 7.3.2 支持技术</h3>
-<h4 id="pn-33" class="section-heading"><a href="#pn-33" class="pn-link" title="点击复制链接">[33]</a> 7.3.2.1 优先级排序</h4>
-<div class="section-content"><p>项目很少有资金、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>或资源来交付<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>、用户或<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>所需的一切，即使交付一切都有<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a> 理由。 这意味着，在大多数项目中，必须优先考虑<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>（包括<a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>和质量规格），尝试尽可能多 地交付项目<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>且交付那些有业务理由的成果。 有许多方法可以促进达成优先级高于<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>的协议。例如：</p>
+<p>项目计划还将包括对各阶段和计划的项目管理委员会决策的描述。</p>
+</div>
+
+<div class="section-content">
+<h3 id="pn-31" class="section-heading"><a href="#pn-31" class="pn-link" title="点击复制链接">[31]</a> 7.3.2 支持技术</h3>
+<h4 id="pn-32" class="section-heading"><a href="#pn-32" class="pn-link" title="点击复制链接">[32]</a> 7.3.2.1 优先级排序</h4>
+<p>项目很少有资金、时间或资源来交付组织、用户或供应商所需的一切，即使交付一切都有业务理由。</p>
+<p>这意味着，在大多数项目中，必须优先考虑范围（包括验收准则和质量规格），尝试尽可能多地交付项目，并且交付那些有业务理由的成果。</p>
+<p>有许多方法可以促进达成优先级高于需求的协议。例如：</p>
 <ul class="content-list">
   <li>将标准分类为必须具有、应该具有、可以具有或不会具有</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-产品待办事项" class="entity-link entity-term" title="术语：产品待办事项">产品待办事项</a>方法，用于解释向用户提供特征的顺序（或满足标准的顺序）</li>
-</ul>
-<ul class="content-list">
+  <li>产品待办事项方法，用于解释向用户提供特征的顺序（或满足标准的顺序）</li>
   <li>成对比较以了解标准之间的偏好</li>
+  <li>Kano 模型将特征描述为令人愉悦的特征、绩效特征和基本特征，作为衡量客户满意度的一种手段</li>
+  <li>Eisenhower 矩阵，从两个对比维度（例如，重要性与紧迫性或价值与实施简易性）评估标准</li>
 </ul>
+<p>优先级技术有助于定义范围容许偏差，支持按例外管理原则。</p>
+
+<h4 id="pn-33" class="section-heading"><a href="#pn-33" class="pn-link" title="点击复制链接">[33]</a> 7.3.2.2 进度表编制</h4>
+<p>项目进度表提供有关活动的顺序、依赖关系和持续时间以及里程碑的信息。可以使用各种进度表编制和演示技术，包括：</p>
 <ul class="content-list">
-  <li>Kano 模型将特征描述为令人愉悦的特征、绩效特征和基本特征，作为衡量<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>满意度的
-一种手段</li>
+  <li><strong>甘特图</strong>：甘特图是任务持续时间相对于时间进展的图形化呈现方式。甘特图对于具有大量活动和里程碑的项目很有用，并且与许多进度表编制工具兼容。</li>
+  <li><strong>电子表格</strong>：对于简单的项目，可以列出工作包和任务及其相应的时间线。对于大型项目或进度表频繁变更的项目，此表现形式可能难以维护。</li>
+  <li><strong>产品核查清单</strong>：产品核查清单是计划中主要产品及其关键交付日期的清单。如果需要显示计划交付日期和实际交付日期，此表现形式可以很好地总结项目生命周期中交付绩效。</li>
+  <li><strong>活动流程板</strong>：此技术显示每个产品或产品组件在开发或交付工作中的进展。它用于看板图以及迭代-增量项目中经常使用的其他工具。</li>
 </ul>
+<p>在不影响计划完成时间的情况下，进度表应识别活动可以推迟的时间量。这称为浮动或闲置。所有活动中浮动为零的进度表表示出现推迟和时间容许偏差例外的高风险。</p>
+<p>关键路径图说明了从项目开始到结束的总浮动量最少的活动的顺序。在关键路径上任何两个活动之间，任何超出计划浮动的推迟都意味着项目将超出其进度表。</p>
+<p>关键路径图的一个弱点是，它没有解决资源限制问题。因此，识别关键链也可能很有用。关键链是在给定可用资源的情况下，妨碍项目在给定的较短时间内完成的任务顺序。在房屋项目的例子中，关键链可能反映了当地法规禁止在周末进行外部建筑工作的事实。</p>
+<p>通过识别进度表约束，项目经理能够将活动进度表、关键路径或关键链的变更作为潜在例外予以关注。此外，项目经理可以通过调整活动的时间安排，使用可用的浮动或资源灵活性来避免例外。</p>
+
+<h4 id="pn-34" class="section-heading"><a href="#pn-34" class="pn-link" title="点击复制链接">[34]</a> 7.3.2.3 估算</h4>
+<p>项目经理可以使用各种估算技术。包括如下几项：</p>
 <ul class="content-list">
-  <li>Eisenhower 矩阵，从两个对比维度（例如，重要性与紧迫性或价值与实施简易性）评估
-标准
-优先级技术有助于定义<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a><a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，支持<a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a>原则。</li>
+  <li><strong>自上而下</strong>：自上而下的技术假设主要产品和工作包的成本、持续时间和工作量可估算到高水平的置信度。然后将它们分配给产品分解结构和工作分解结构的下级元素。这种技术可用于迭代-增量项目，在该项目中，交付被结构化为具有固定时间范围和资源的阶段和冲刺。</li>
+  <li><strong>自下而上</strong>：自下而上的技术在单个产品、组件、活动或任务的最低定义层面上制定估算。然后汇总较低级别的估算以获得总体估算。当熟悉对较低层面的元素，但此类元素将以项目独有的方式或组织的新方式组合时，此技术很有用。</li>
+  <li><strong>比较</strong>：当材料、产品或交付工作得到充分了解并基于通用实践时，可以根据类似的项目或公开可用的市场信息进行估算。</li>
+  <li><strong>参数化</strong>：当测量或有关材料、工作量和持续时间的经验数据可用并有估算模型支持时（例如在建筑行业），可以使用项目中的值（例如结构的数量、单位或大小）进行估算。</li>
+  <li><strong>数据分析</strong>：描述性分析（了解任务的特征）和预测性分析（了解任务对特定成果的倾向）可用于帮助改进估算。这将需要访问可能由项目生成、由业务层保存或源自数据信托的数据。</li>
+  <li><strong>主题专业知识</strong>：基于共识的技术，如 Delphi 和计划扑克，可用于在主题专家 (SME) 的参与下就估算达成共识。</li>
 </ul>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划</p></div>
-<h4 id="pn-34" class="section-heading"><a href="#pn-34" class="pn-link" title="点击复制链接">[34]</a> 7.3.2.2 进度表编制</h4>
-<div class="section-content"><p>项目进度表提供有关活动的顺序、依赖关系和持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>以及里程碑的信息。可以使用各种进度 表编制和演示技术，包括：</p>
+<p>在大型和复杂的项目中经常使用多种估算技术。如果成本估算专家可以参与项目，项目经理可以向他们寻求支持。</p>
+</div>
+
+<div class="section-content">
+<h2 id="pn-35" class="section-heading"><a href="#pn-35" class="pn-link" title="点击复制链接">[35]</a> 7.4 应用实践</h2>
+<p>PRINCE2 提供了一种灵活的方法，可以将规划技术应用于各种项目。</p>
+
+<h3 id="pn-36" class="section-heading"><a href="#pn-36" class="pn-link" title="点击复制链接">[36]</a> 7.4.1 组织情境</h3>
+<p>项目计划通常受组织情境的影响，包括政策、程序和支持。例如，项目预算可能需要根据用于处理资本投资支出的程序编制。政府或其他公共组织的项目可能需要遵守监管要求，并确保记录保存的透明度。</p>
+
+<div class="scenario-box">
+<strong>场景：遵守法规的示例</strong><br>
+Findef 的业务模式变更意味着他们直接向消费者销售，而不是通过银行等中介机构。这意味着他们现在要遵守消费者保护法规，此类法规以前是其中介机构的职责。FindefTwo 项目群委托进行了一项研究，来决定为了遵守消费者保护法规及任何其他法规，他们需要在整个业务中进行哪些变更。研究表明，这些法规还对产品设计提出了需求。这些需求被纳入了产品描述。项目团队在阶段计划（阶段 3、4 和 5）中添加了额外的审查，目的是验证合规性。
+</div>
+
+<p>对于属于项目群一部分的项目，项目群管理团队可能扮演主要支持角色，甚至领导其项目的计划。项目群可能会安排专门的计划人员，他们可以为管理产品提供模板，并协助项目经理准备和维护项目计划和阶段计划。</p>
+<p>阶段的数量和长度会受到项目群计划的影响。它可能需要或必须符合项目群里程碑的阶段审查（例如，项目群阶段末期）。项目群是指还可能定义一套标准的阶段，项目群中的项目必须统一执行。</p>
+<p>项目群交付计划将揭示每个项目产品是怎样为项目群中的其他项目所用的。任何指向或来自某项目的依赖关系都应该纳入该项目的计划。</p>
+
+<h3 id="pn-37" class="section-heading"><a href="#pn-37" class="pn-link" title="点击复制链接">[37]</a> 7.4.2 商务情境</h3>
+<p>对于商务情境下的项目，供应商的角色是一个重要的考虑因素。许多项目依靠外部供应商来交付工作包。这就是为什么将工作包与其负责的供应商（无论是外部还是内部）保持一致十分有用。但是，当外部供应商负责工作包时，这种安排可以通过合同等正式协议反映出来。</p>
+<p>建议确保协议要求供应商的计划对用户项目计划的适用元素提供清晰的可追溯性。协议应要求与项目管理委员会批准的验收准则和质量规格保持一致。这种方法通常称为背靠背协议。</p>
+<p>协议应说明如何编制这些计划，以及用户有哪些检查和审计权利。供应商的计划应包含充足的活动或里程碑，以便让用户的项目经理维护他们的计划。</p>
+<p>用户和供应商的计划都可能对另一方保密，因为它们可能包含其他信息，例如与其他客户项目的依赖关系或分包商成本。因此，最好准备计划的可共享的非机密版本，同时省略私密信息。</p>
+<p>计划需要包括与采购相关的里程碑，例如，与每个阶段保持一致的采购订单和里程碑付款。</p>
+
+<div class="scenario-box">
+<strong>场景：分阶段进行采购/招标</strong><br>
+Findef 将交付的三种创新网络安全产品需要在整个项目中开展招标活动，以确保咨询、营销专家和培训的交付。由于总体设计采用线性-顺序混合方法，每种产品的开发采用迭代-增量方法，因此服务采购已于第 2 阶段全面完成。这包括 Findef 开展了大量工作，发布征求建议书，然后由入围供应商进行多轮演示。在根据加权标准和采购小组的保证对每个候选人的提案进行详细评估后，已将合同授予当前的营销机构和培训提供方。
+</div>
+
+<h3 id="pn-38" class="section-heading"><a href="#pn-38" class="pn-link" title="点击复制链接">[38]</a> 7.4.3 交付方法</h3>
+<p>PRINCE2 规划技术可以应用于线性-顺序和迭代-增量项目。对于线性-顺序项目，大多数计划工作都是在项目准备和项目启动流程中提前进行的。这是因为这些项目的特点往往是熟悉的产品和成熟的交付活动。类似项目的示例有助于建立规划周期并建议必要的产品、工作包和阶段。可以高置信度估算持续时间、工作量和成本。项目计划中的估算在阶段计划中得到了细化，小组计划和产品描述在后续阶段得到了进一步的详细说明，但项目计划通常不会变更，除非出现项目级别的例外。</p>
+<p>另一方面，迭代-增量项目侧重于在固定时间段（例如冲刺或时间盒）内可以生产多少。这样做的目标是快速交付初始产品，并迭代完善和改进它。</p>
+<p>当使用迭代-增量方法（如敏捷）时，常见的计划方法将包括：</p>
 <ul class="content-list">
-  <li>甘特图：甘特图是任务持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>相对于时间<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>的图形化呈现方式。甘特图对于具有大量
-活动和里程碑的项目很有用，并且与许多进度表编制工具兼容。</li>
+  <li>为每次迭代设置容许偏差，以有效地固定时间和成本，并在范围上实现更大的灵活性</li>
+  <li>根据预期成果和收益编制项目产品描述</li>
+  <li>开发用户故事、史诗和产品待办事项，而不是产品描述</li>
+  <li>决定发布或时间盒的长度并将它们定义为阶段</li>
+  <li>估算每个阶段的资源需求并编制项目预算</li>
+  <li>将产品待办事项和工作流程结合到协作计划工具中，例如看板图。看板图可以用来代替小组计划，并由整个开发团队共同开发</li>
 </ul>
+<p>迭代-增量方法适用于在每个周期的一部分进行计划的审查和更新，就像在线性项目中准备阶段计划一样。但是，它反映了协作计划工具中的更新。</p>
+
+<div class="scenario-box">
+<strong>场景：时间盒交付方法</strong><br>
+Data Knowledge 正在使用时间盒交付方法，来确保新的时间报告解决方案和报告套件可以快速部署到多个新项目中，并在其推广到其他业务的过程中得到增强。在固定的预算和时间（三个月）下，项目管理团队将项目划分为较小的时间单位，两周为一个单位。根据协定的产品待办事项列表，团队将计划和管理时间盒中适合的范围。当这段时间结束后，将评估时间盒的绩效，优化待办事项，并计划后续时间盒。这种方法确保了 Data Knowledge 的持续和增量交付，从而能在项目早期感知到价值。
+</div>
+
+<h3 id="pn-39" class="section-heading"><a href="#pn-39" class="pn-link" title="点击复制链接">[39]</a> 7.4.4 可持续性</h3>
+<p>计划至少可以通过三种不同的方式解决可持续性问题：</p>
 <ul class="content-list">
-  <li>电子表格：对于简单的项目，可以列出<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>和任务及其相应的时间线。对于大型项目或
-进度表频繁变更的项目，此表现形式可能难以维护。</li>
+  <li><strong>产品可持续性</strong>：在识别和描述所需产品时，决定产品整个生命周期的环境影响十分有用，包括在适当的情况下进行处置。</li>
+  <li><strong>交付可持续性</strong>：项目在计划工作包和阶段时经常面临选择，这些选择可能会影响交付活动对气候的影响。协定可持续性容许偏差是项目经理和项目管理委员会使燃料消耗和生产浪费等事项与组织战略保持一致的有效方式。</li>
+  <li><strong>收益可持续性</strong>：项目通常在结束后很长时间内都能带来收益。项目有时也无法实现预期收益，因为维持这些收益的手段有限。例如，在定义项目范围时，不考虑正在进行的培训和用户支持。避免此难点问题的有效方法是识别确保收益可持续性的需求。</li>
 </ul>
+
+<h3 id="pn-40" class="section-heading"><a href="#pn-40" class="pn-link" title="点击复制链接">[40]</a> 7.4.5 规模</h3>
+<p>PRINCE2 规划技术支持广泛的项目。尽管基于产品的规划始终适用，但计划所涉及的工作量可以根据项目的特征和需求轻松增加或减少。</p>
+<p>影响计划的项目规模方面包括：</p>
 <ul class="content-list">
-  <li><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>核查清单：产品核查清单是<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>中主要产品及其关键交付日期的清单<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>果需要
-显示计划交付日期和实际交付日期，此表现形式可以很好地总结项目生命周期中交付
-绩效。</li>
+  <li><strong>持续时间</strong>：项目生命周期越长，项目计划就越有可能适应外部环境和内部项目交付活动的变更。在组织工作包和阶段以及估算变更预算时，应考虑持续时间。此外，多年期项目的项目团队可能发生变更，包括项目经理等关键角色。应准备项目计划，以帮助确定方向、保持连续性并减少人员流动的影响。</li>
+  <li><strong>项目团队的规模</strong>：庞大而分散的项目团队通常需要更多的项目支持，并且易于使用的项目计划和报告工具和文件对他们十分有用。</li>
+  <li><strong>复杂性</strong>：可以使用相对简单的文件和工具来计划产品和工作包数量较少的项目。例如，项目进度表可以是主要里程碑的列表或演示幻灯片。但是，随着产品和工作包数量的增加，使用专用工具（如项目时间进度表编制应用）将使分析和合并变更变得更加容易。</li>
+  <li><strong>新颖性</strong>：如果产品或交付方法是组织从未接触过的，则可能很难依靠经验或类似项目来捕获需求或估算进度表和成本。因此，计划包含高度的不确定性，且使用风险缓解技术（如原型设计）或迭代-增量方法可能更为合理。</li>
+  <li><strong>成本</strong>：项目计划是降低项目失效风险的最谨慎方法之一。因此，明智的做法是确保项目计划的工作量与项目的总体成本一致。项目计划和支持的成本将取决于项目的重要性和复杂性。在某些情况下，它可能是项目总成本的百分之十或更多。</li>
 </ul>
-<ul class="content-list">
-  <li>活动<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>板：此技术显示每个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或产品组件在开发或交付工作中的<a href="../entities/practice.html#entity-进展" class="entity-link entity-practice" title="实践：进展">进展</a>。它用于看板图
-以及迭代-增量项目中经常使用的其他工具。
-在不影响<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>完成时间的情况下，进度表应识别活动可以推迟的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>量。这称为浮动或闲置。
-所有活动中浮动为零的进<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>表示出现推迟和时间<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>例外的高风险。
-关键路径图说明了从项目开始到结束的总浮动量最少的活动的顺序。在关键路径上任何两个活
-<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>间，任何超出计划浮动的推迟都意味着项目将超出其进度表。
-关键路径图的一个弱点是，它没有解决资源限制<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>。因此，识别关键链也可能很有用。关键
-链是在给定可<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>源的情况下，妨碍项目在给定的较短时间内完成的任务顺序。在房屋项目的
-例子中，关键链可能反映了当地法规禁止在周末进行外部建筑工作的事实。
-通过识别进度表<a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>能够将活动进度表、关键路径或关键链的变更作为潜在<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>予
-以<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>外，项目经理可以通过调整活动的时间安排，使用可用的浮动或资<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>活性来避免
-例外。</li>
-</ul></div>
-<h4 id="pn-35" class="section-heading"><a href="#pn-35" class="pn-link" title="点击复制链接">[35]</a> 7.3.2.3 估算</h4>
-<div class="section-content"><p><a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可以使用各种估算技术。包括如下几项：</p>
-<ul class="content-list">
-  <li>自上而下：自上而下的技术<a href="../entities/term.html#entity-假设" class="entity-link entity-term" title="术语：假设">假设</a>主要<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的成本、持续时间和工作量可估算到高
-水平的置信度。<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>将它们分配给产品分解结构和<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>的下级元素。这种技术
-可用于迭代-增量项目，在该项目中，交付被结构化为具有固定<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a><a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>和资源的阶段和
-<a href="../entities/term.html#entity-冲刺" class="entity-link entity-term" title="术语：冲刺">冲刺</a>。</li>
-</ul>
-<ul class="content-list">
-  <li>自下而上：自下而上的技术在单个<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>、组件、活动或任务的最低定义层面上制定估算。
-然后汇总较低级别的估算以获得总体估算。当熟悉对较低层面的元素，但此类元素将以项
-目独有的方式或<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的新方式组合时，此技术很有用。</li>
-</ul>
-<ul class="content-list">
-  <li>比较：当材料、<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或交付工作得到充分了解并基于通用<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>时，可以根据类似的项目或
-公开可用的市场信息进行估算。</li>
-</ul>
-<ul class="content-list">
-  <li>参数化：当测量或有关材料、工作量和持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>的经验数据可用并有估算模型支持时（例
-如在建筑行业），可以使用项目中的值（例如结构的数量、单位或大小）进行估算。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a></p>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-数据分析" class="entity-link entity-term" title="术语：数据分析">数据分析</a>：描述性分析（了解任务的特征）和<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>性分析（了解任务对特定成果的倾向）
-可用于帮助改进估算。这将需要访问可能由项目生成、由<a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a>保存或源自数据信托的
-数据。</li>
-</ul>
-<ul class="content-list">
-  <li>主题专业知识：基于共识的技术，如 Delphi 和<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>扑克，可用于在主题专家 (SME) 的参
-与下就估算达成共识。
-在大型和复杂的项目中经常使用多种估算技术。如果成本估算专家可以参与项目，<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>可
-以向他们寻求支持。</li>
-</ul></div>
-<h2 id="pn-36" class="section-heading"><a href="#pn-36" class="pn-link" title="点击复制链接">[36]</a> 7.4 应用实践</h2>
-<div class="section-content"><p>PRINCE2 提供了一种灵活的方法，可以将规划技术应用于各种项目。</p></div>
-<h3 id="pn-37" class="section-heading"><a href="#pn-37" class="pn-link" title="点击复制链接">[37]</a> 7.4.1 组织情境</h3>
-<div class="section-content"><p><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>通常受组织情境的影响，包括政策、程序和支持。例如，项目预算可能需要根据用于 处理资本投资支出的程序编制。政府或其他公共<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>的项目可能需要遵守监管要求，并确保记 录保存的透明度。 场景：遵守法规的示例 Findef 的<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>模式变更意味着他们直接向消费者销售，而不是通过银行等中介机 构。这意味着他们现在要遵守消费者保护法规，此类法规以前是其中介机构的职责。 FindefTwo 项目群委托进行了一项研究，来决定为了遵守消费者保护法规及任何其他 法<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>他们需要在整个业务中进行哪些变更。研究表明，这些法规还对<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>设计提出 了需求。这些<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>被纳入了<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>。项目团队在阶段计划（<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a> 3、4 和 5）中添 加了额外的审查，目的是验证合规性。 对于属于项目群一部分的项目，项目群<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队可能扮演主要支持<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>，甚至领导其项目的计 划。项目群可能会安排专门的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>人员，他们可以为<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>提供模板，并协助<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>准备 和维护项目计划和<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>。 阶段的数量和长度会受到项目群计划的影响 。它可能需要或必须<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>项目群里程碑的阶段审 查（例如，项目群阶段末期 <a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>。项目群是指还可能定义一套标准的阶段，项目群中的项目必 须统一执<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 项目群交付计划将揭示每个项目产品是怎样为项目群中的其他项目所用的。任何指向或来自某 <a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的依赖关系都应该纳入该项目的计划。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划</p></div>
-<h3 id="pn-38" class="section-heading"><a href="#pn-38" class="pn-link" title="点击复制链接">[38]</a> 7.4.2 商务情境</h3>
-<div class="section-content"><p>对于商务情境下的项目，<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>的角色是一个重要的考虑因素。许<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>依靠外部供应商来 交付<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>。这就是为什么将工作包与其负责的供应商（无论是外部还是内部）保持一致十 分有用。但是，当<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>应商负责工作包时，这种安排可以通过合同等正式协议<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>来。 建议确保协议要求供应商的<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>对用户<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的适用元素提供清晰的可追溯性。协议应 应要求与<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>批准的验收准则和质量规格保持一致。这种方法通常称为背靠背 协议。 协议应<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>如何编制这些计划，以及用<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>哪些检查和审计权利。供应商的计划应包含充足 的活动或里程碑，以便让<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>的<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>维护他们的计划。 用户和供应商的计划都可能对另一方保密，因为它们可能包含其他信息，例如与其他<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a> 项目的依赖关系或分包商成本。因此，最好准备计划的可共享的非机密版本，同时省略私密 信息。 计划需要包括与采购相关的里程碑，例如，与每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>保持一致的采购订单和里程<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>款。 场景：分阶段进行采购/招标 Findef 将交付的三种创新网络安全<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>需要在整个项目中开展招标活动，以确保咨 询、营销专家和培训的交付。由于总体设计采用线性-<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>混合方法，每种产品的开 发采用迭代<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>量方法，因此服务采购已于第 2 阶段全面完成。这包括 Findef 开展了 大量工作，发布征求建议书，然后由入围供应商进行多轮演示。在根据加权标准和采 购小组的保证对每个候选人的提案进行详细评估后，已将合同授予当前的营销机构和 培训提供方。</p></div>
-<h3 id="pn-39" class="section-heading"><a href="#pn-39" class="pn-link" title="点击复制链接">[39]</a> 7.4.3 交付方法</h3>
-<div class="section-content"><p>PRINCE2 规划技术可以应用于线性-顺序和迭代-增量项目。对于线性-顺序项目，大多数<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>工 作都是在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>和项目启动流程中提前进行的。这是因为这些项目的特点往往是熟悉的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a> 和成熟的交付活动。类似项目的示例有助于建立<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>并建议必要的产品、工作包和<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>。 可以高置信度估算持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、工作量和成本。<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>中的估算在阶段计划中得<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>细化，小 组计划和<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>在后续阶段得到了进一<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a><a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>，但项目计划通常不会变更，除非出现 项目级别的<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>。 另一方面，迭代-增<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>目侧重于在固定时间段（例如<a href="../entities/term.html#entity-冲刺" class="entity-link entity-term" title="术语：冲刺">冲刺</a>或<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>）内可以生产多少。这样 做的目<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>快速交付初始产品，并迭代完善和改进它。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 当使用迭代-增量方法（如<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>）时，常见的计划方法将包括：</p>
-<ul class="content-list">
-  <li>为每次迭代设置<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，以有效地固定时间和成本，并在<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>上实现更大的灵活性</li>
-</ul>
-<ul class="content-list">
-  <li>根据预期成果和<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>编制<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a></li>
-</ul>
-<ul class="content-list">
-  <li>开发<a href="../entities/term.html#entity-用户故事" class="entity-link entity-term" title="术语：用户故事">用户故事</a>、史诗和<a href="../entities/term.html#entity-产品待办事项" class="entity-link entity-term" title="术语：产品待办事项">产品待办事项</a>，而不是产品描述</li>
-</ul>
-<ul class="content-list">
-  <li>决定发布或<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>的长度并将它们定义为<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a></li>
-</ul>
-<ul class="content-list">
-  <li>估算每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的资源需求并编制项目预算</li>
-</ul>
-<ul class="content-list">
-  <li>将<a href="../entities/term.html#entity-产品待办事项" class="entity-link entity-term" title="术语：产品待办事项">产品待办事项</a>和工作流程结合到协作<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>工具中，例如看板图。看板图可<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>来代替小
-组计划，并由整个开发团队共同开发
-迭代-增量<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>适用于在每个周期的一部分进行计划的审查和更新，就像在线性项目中准备阶
-段计划一样。但是，它反映了协作计划工具中的更新。
-场景：<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>交付方法
-Data Knowled<a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>正在使用时间盒交付方法，来确保新的<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a><a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>解决方案和报告套
-件可以快速部署到多个新项目中，并在其推广到其他<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>的过程中得到增强<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>固定
-的预算和时间（三个月）下，项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>团队将项目划分为较小的时间单位，两周为一
-个单位。根<a href="../entities/term.html#entity-产品待办事项" class="entity-link entity-term" title="术语：产品待办事项">产品待办事项</a>待办事项列表，团队将计划和管理时间盒中适合的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a><a href="../entities/term.html#entity-时间盒" class="entity-link entity-term" title="术语：时间盒">时间盒</a>这段时间结束后，将评估时<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>的绩效，优化待办事项，并计划后续时间盒。这种方
-法确保了 Data Knowledge 的持续和增量交付，从而能在项目早期感知到价值。</li>
-</ul></div>
-<h3 id="pn-40" class="section-heading"><a href="#pn-40" class="pn-link" title="点击复制链接">[40]</a> 7.4.4 可持续性</h3>
-<div class="section-content"><p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>至少可以通过三种不同的方式解决可持续性<a href="../entities/practice.html#entity-问题" class="entity-link entity-practice" title="实践：问题">问题</a>：</p>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>可持续性：在识别和描述<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>产品时，决定产品整个生命周期的环境影响十分有用，
-包括在适当的情况下进行处置。</li>
-</ul>
-<ul class="content-list">
-  <li>交付可持续性：项目在<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a><a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>和阶段时经常面临选择，这些选择可能会影响交付活动
-对气候的影响。协定可持续性<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>是<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>使燃料消耗和生产浪
-费等事项与<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>战略保持一致的有效方式。</li>
-</ul>
-<ul class="content-list">
-  <li><a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>可持续性：项目通常在结束后很长<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>内都能带来收益。项目有时也无法实现预期收
-<a href="../entities/term.html#entity-收益" class="entity-link entity-term" title="术语：收益">收益</a>因为维持这些收益的手段有限。例如，在定义项目<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>时，不考虑正在进行的培训和
-<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>支持。避免此<a href="../entities/term.html#entity-难点问题" class="entity-link entity-term" title="术语：难点问题">难点问题</a>的有效方法是识别确保收益可持续性的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划</p></div>
-<h3 id="pn-41" class="section-heading"><a href="#pn-41" class="pn-link" title="点击复制链接">[41]</a> 7.4.5 规模</h3>
-<div class="section-content"><p>PRINCE2 规划技术支持广泛的项目。尽管<a href="../entities/term.html#entity-基于产品的规划" class="entity-link entity-term" title="术语：基于产品的规划">基于产品的规划</a>始终适用，但计划所涉及的工作量可 以根据项目的特征和<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>轻松增加或减少。 影响<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的项目规模方面包括：</p>
-<ul class="content-list">
-  <li>持续<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>：项目生命周期越长，<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>就越有可能适应外部环境和内部项目交付活动的
-变更。在<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a><a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>和阶段以及估算<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a>时，应考虑持续时间。此外，多年期项目的
-项目团队可能发生变更，包括<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>等关键角色。应准备项目<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>，以帮助确定方向、
-保持连续性并减少人员流动的影响。</li>
-</ul>
-<ul class="content-list">
-  <li>项目团队的规模：庞大而分散的项目团队通常需要更多的<a href="../entities/role.html#entity-项目支持" class="entity-link entity-role" title="角色：项目支持">项目支持</a>，并且易于使用的项目
-<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和报告工具和文件对他们十分有用。</li>
-</ul>
-<ul class="content-list">
-  <li>复杂性：可以使用相对简单的文件和工具来<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>产品和<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>数量较少的项目。例如，项
-目进度表可以是主要里程碑的列表或演示幻灯片。但<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>着产品和工作包数量的增加，
-使用专用工具（如项目<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>进度表编制应用）将使分析和合并变更变得更加容易。</li>
-</ul>
-<ul class="content-list">
-  <li>新颖性：如果<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>或交付方法是<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>从未接触过的，则可能很难依靠经验或类似项目来捕
-获<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>或估算进度表和成本。因此，<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>包含高度的不确定性，且使用<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>缓解技术（如
-原型设计）或迭代-增量方法可能更为合理。</li>
-</ul>
-<ul class="content-list">
-  <li>成本：<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>是降低项目失效风险的最谨慎方法之一。因此，明智的做法是确保项目计
-划的工作量与项目的总<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>致。项目计划和支持的成本将取决于项目的重要性和复杂
-性。在某些情况下，它可能是项目总成本的百分之十或更多。
-场景：对比规模
-项目具有不同的规模、<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和复杂性。<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>应反映这些差异，以尝试在方法中应用相
-称原则。
-LouisShopping 项目是一个中等复杂性（对<a href="../entities/term.html#entity-客户" class="entity-link entity-term" title="术语：客户">客户</a>来说）的典型项目（对<a href="../entities/term.html#entity-供应商" class="entity-link entity-term" title="术语：供应商">供应商</a>来
-说），跨度为三个财政年。因此，随着<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>的延长，项目在计划时需要结合高
-层面的细节（整体项目）和低层面的细节（<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>）。这是为了使团队领导和项目管
-理团队能够在日常基础上进行充分的监督，同时向<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>保证整个项目处
-于正轨。
-相比之下，在同一财政年内跨越六<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>的、复杂性和风险<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>的简单项目在计划和控
-制方面的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>较低。NowByou 的新宣传活动可以证明这一点。在这种情况下，提出与
-整个<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>的单一时间范围（项目计划）就足够了。</li>
-</ul>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：计划 目的 计划的目的是概述整个项目（或其活动的子集）的执行内容、地点、<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、方式和人员<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>案。 批准后，计划会提供一个基线，可以根据该基线来衡量<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>和评估问题。 概括性内容 <a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>：计划范围（项目、阶段、团队和<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>）的描述 依赖关系：计划所依赖的<a href="../entities/term.html#entity-外部产品" class="entity-link entity-term" title="术语：外部产品">外部产品</a>或活动 计划假设和先决条件：计划所基于的<a href="../entities/term.html#entity-假设" class="entity-link entity-term" title="术语：假设">假设</a>以及计划取得成功所必须建立或保持的任何基础方面 包括的经验教训：已经过审查并纳入本计划的，以前类似项目的相关经验教训细节 要交付的<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>：计划范围内的产品分解结构、产品<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>图和<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a> 要执行的工作：通过<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a>和相关的工作包描述显示的计划范围内的工作 预算：项目成本，包括<a href="../entities/term.html#entity-风险预算" class="entity-link entity-term" title="术语：风险预算">风险预算</a>和<a href="../entities/term.html#entity-变更预算" class="entity-link entity-term" title="术语：变更预算">变更预算</a> 进度表：项目阶段和活动、项目持续时间和顺序的表示形式，例如甘特图 目标和<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>：计划层面上允许的范围<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>时间容许偏差。<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>和小组计划还可能包 括可持续性和<a href="../entities/term.html#entity-风险容许偏差" class="entity-link entity-term" title="术语：风险容许偏差">风险容许偏差</a> 监视、控制和报告安排：描述如何监视和控制项目以及<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>程序和职责</p></div>
-<h2 id="pn-42" class="section-heading"><a href="#pn-42" class="pn-link" title="点击复制链接">[42]</a> 7.5 为实践提供支持的管理产品</h2>
-<div class="section-content"><p>PRINCE2 包括用于<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>项目的 15 种<a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>。下面描述了特定于计划<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>的管理<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>。</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划 <a href="../entities/term.html#entity-管理产品" class="entity-link entity-term" title="术语：管理产品">管理产品</a>：<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a> 管理产品：<a href="../entities/product.html#entity-项目产品描述" class="entity-link entity-product" title="管理产品：项目产品描述">项目产品描述</a> 目的 项目产品描述的目的是描述项目的主要<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>和预期用途，包括<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>以及项目的验收准 则和<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>方法。<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>是在<a href="../entities/process.html#entity-项目准备" class="entity-link entity-process" title="流程：项目准备">项目准备</a>流程中创建的，并在项目启动<a href="../entities/term.html#entity-流程" class="entity-link entity-term" title="术语：流程">流程</a>中进行完善。 概括性内<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>目的：描述项目产品的使用目的以及产品使用对象 <a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a>产品：<a href="../entities/product.html#entity-产品描述" class="entity-link entity-product" title="管理产品：产品描述">产品描述</a>主要产品描述 来源：产品基于什么，例如现有产品或对新能力的<a href="../entities/term.html#entity-用户的质量期望" class="entity-link entity-term" title="术语：用户的质量期望">用户的质量期望</a>量期望：描述对项目产品的<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>期望以及实现这些期望所需应用的标准和程序 <a href="../entities/term.html#entity-验收准则" class="entity-link entity-term" title="术语：验收准则">验收准则</a>：项目产品必须满足才能被<a href="../entities/term.html#entity-用户" class="entity-link entity-term" title="术语：用户">用户</a>接受的<a href="../entities/term.html#entity-验收" class="entity-link entity-term" title="术语：验收">验收</a>的优先级列表 验收方法和职责：确认验收的方法和验收决定<a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a>人 项目层面的质量<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>：用于验收准则的任何容许偏<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>工作包描述的目的是描述如何生产和交付一个或多个产品。它用于将工作职责正式传递给小组经 理或小组成员。 概括性内容 待完成工作描述：工作说明书和相关的<a href="../entities/term.html#entity-工作分解结构" class="entity-link entity-term" title="术语：工作分解结构">工作分解结构</a> 团队管理员或授权人员：负责<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>的<a href="../entities/role.html#entity-小组经理" class="entity-link entity-role" title="角色：小组经理">小组经理</a>或个人的姓名 产品描述：与工作包关联的产品描述 技术和程序：关于如何完成工作的<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a> <a href="../entities/term.html#entity-变更控制" class="entity-link entity-term" title="术语：变更控制">变更控制</a>需求：对工作包范围内的项目和产品基线的控制安排 <a href="../entities/term.html#entity-约束" class="entity-link entity-term" title="术语：约束">约束</a>：对工作的限制，如<a href="../entities/term.html#entity-授权" class="entity-link entity-term" title="术语：授权">授权</a>工作<a href="../entities/term.html#entity-时间" class="entity-link entity-term" title="术语：时间">时间</a>、安全和安保措施 监视、控制和<a href="../entities/term.html#entity-报告" class="entity-link entity-term" title="术语：报告">报告</a>：描述如何监视、控制和报告<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>目标和容许偏差：工作包的<a href="../entities/term.html#entity-范围" class="entity-link entity-term" title="术语：范围">范围</a>、成本和时间的容许偏差 参考<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>：来自更高阶层计划的适用参考资料 <a href="../entities/term.html#entity-批准" class="entity-link entity-term" title="术语：批准">批准</a>：批准已完成产品的人员 协议：<a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a>和小组经理之间工作包的初始授权和最终完成的记录</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a></p></div>
-<h2 id="pn-43" class="section-heading"><a href="#pn-43" class="pn-link" title="点击复制链接">[43]</a> 7.6 实践中关键角色的重点</h2>
-<div class="section-content"><p>PRINCE2 定义了项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>的七项关键角色。下面描述了他们特定于<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>实践的职责。 表 7.1 与计划<a href="../entities/term.html#entity-实践" class="entity-link entity-term" title="术语：实践">实践</a>有关的关键<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>的重点领域 角色 职责 <a href="../entities/term.html#entity-业务层" class="entity-link entity-term" title="术语：业务层">业务层</a> 设置项目<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>，并将它们记录在项目任务书中，或与<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>确认包 含在项目概述文件中 在<a href="../entities/term.html#entity-预测" class="entity-link entity-term" title="术语：预测">预测</a>到<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>目层面容许偏差时，批准<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a> 提供业务所需的计划标准 <a href="../entities/role.html#entity-项目总监" class="entity-link entity-role" title="角色：项目总监">项目总监</a> 批准项目计划 设定每个<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>的容许偏差并批准<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a> 在预测将超出阶段层面<a href="../entities/product.html#entity-例外计划" class="entity-link entity-product" title="管理产品：例外计划">例外计划</a>时批准例外计划 将人员和<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>投入到阶段计划（例如，财务团队和系统） <a href="../entities/role.html#entity-高级用户" class="entity-link entity-role" title="角色：高级用户">高级用户</a> 建议并协助项目经理<a href="../entities/product.html#entity-阶段计划" class="entity-link entity-product" title="管理产品：阶段计划">阶段计划</a>NTITY_11⟧和阶段计划 从用户视角<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>项目计划和阶段计划保持一致 将人<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>用户资源投入到阶段计划（例如，培训或测试和测试环境的运营工作 人员） <a href="../entities/role.html#entity-高级供应商" class="entity-link entity-role" title="角色：高级供应商">高级供应商</a> 建议并协助项目经理准备项目、阶段计划和<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a> 从供应商视角确保项目计划和阶段计划保持一致 将人员和<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>NTITY_26⟧资源投入到阶段计划（例如，开发人员和机器） <a href="../entities/role.html#entity-项目经理" class="entity-link entity-role" title="角色：项目经理">项目经理</a> 设计计划 准备项目计划、<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>工作包描述，并根据需要进行更新 决定如何应用阶段和交付步<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>测到要超出工作包层面容许偏差时，指示<a href="../entities/term.html#entity-纠正行动" class="entity-link entity-term" title="术语：纠正行动">纠正行动</a><a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>委员会关于例外报告的决定准备<a href="../entities/term.html#entity-例外" class="entity-link entity-term" title="术语：例外">例外</a>计划 小组经<a href="../entities/product.html#entity-工作包描述" class="entity-link entity-product" title="管理产品：工作包描述">工作包描述</a>目经理准备工作包描述 准备<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a> 为每个工作包准备进度表 <a href="../entities/role.html#entity-项目保证" class="entity-link entity-role" title="角色：项目保证">项目保证</a> 根据协定的目标及其容许<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>阶段和项目计划的可行性 审查项目计划的变更，以了解是否影响商业或项目<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>的需求 项目支持 协助编制项目计划、阶段计划<a href="../entities/term.html#entity-小组计划" class="entity-link entity-term" title="术语：小组计划">小组计划</a>描述和小组计划 贡献专业知识（例如，<a href="../entities/product.html#entity-项目计划" class="entity-link entity-product" title="管理产品：项目计划">项目计划</a>） 基线、存储和分发项目计划、阶段计划、小组计划和<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>描述</p>
-<p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 计划</p></div>
-<h2 id="pn-44" class="section-heading"><a href="#pn-44" class="pn-link" title="点击复制链接">[44]</a> 7.7 与原则的关键关系</h2>
-<div class="section-content"><p><a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>实践有助于在整个项目生命周期中遵守 PRINCE2 原<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a> 表 7.2 计划实践与 PRINCE2 原则之间的关键关系 原则 实<a href="../entities/practice.html#entity-计划" class="entity-link entity-practice" title="实践：计划">计划</a>式 导致 确保持续业务 理由 使计划的<a href="../entities/term.html#entity-绩效目标" class="entity-link entity-term" title="术语：绩效目标">绩效目标</a>与<a href="../entities/practice.html#entity-商业论证" class="entity-link entity-practice" title="实践：商业论证">商业论证</a>目标保 持一致，并提供<a href="../entities/role.html#entity-项目管理委员会" class="entity-link entity-role" title="角色：项目管理委员会">项目管理委员会</a>可以 确认项目是否可行的估算 确保计划与整体<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>战略保持一 致，并且可以在定义的<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>范 围内交付 <a href="../entities/principle.html#entity-吸取经验教训" class="entity-link entity-principle" title="原则：吸取经验教训">吸取经验教训</a> 利用经验教训告知计划信息，包括从 先前项目或项目内已完成的工作中获 得的经验教训（例如，在下一<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>应 用当前阶段的经验教训）；分享未来 项目的计划经验 通过分享数据和经验教训，提高项 目团队交付计划的能力，以及相关 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>未来计划类似项目的能力 定义<a href="../entities/term.html#entity-角色" class="entity-link entity-term" title="术语：角色">角色</a>、职责 和关系 建立特定于计划的角色和职责；根据 项目情<a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>交付方法产生的组织因 <a href="../entities/practice.html#entity-组织" class="entity-link entity-practice" title="实践：组织">组织</a>通过<a href="../entities/term.html#entity-工作包" class="entity-link entity-term" title="术语：工作包">工作包</a>和团队组织项目 明确计划绩效和结果的问责制，实 现高效决策 <a href="../entities/principle.html#entity-按阶段管理" class="entity-link entity-principle" title="原则：按阶段管理">按阶段管理</a> 将项目生命周期分解为多个阶段，以 适应<a href="../entities/term.html#entity-规划周期" class="entity-link entity-term" title="术语：规划周期">规划周期</a>，并根据需要使各个阶 段与关键决策<a href="../entities/term.html#entity-业务" class="entity-link entity-term" title="术语：业务">业务</a>持一致 以适合业务<a href="../entities/term.html#entity-需求" class="entity-link entity-term" title="术语：需求">需求</a>和对资源、进度 表、<a href="../entities/practice.html#entity-风险" class="entity-link entity-practice" title="实践：风险">风险</a>和问题的实际估算的方式 <a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>阶段和容许偏差 <a href="../entities/principle.html#entity-按例外管理" class="entity-link entity-principle" title="原则：按例外管理">按例外管理</a> 定义计划层级（项目、阶<a href="../entities/term.html#entity-容许偏差" class="entity-link entity-term" title="术语：容许偏差">容许偏差</a>） 并为其建立目标和容许偏差 适<a href="../entities/term.html#entity-阶段" class="entity-link entity-term" title="术语：阶段">阶段</a>划层级（项目、阶段或团 队）的高效决策和上报 <a href="../entities/principle.html#entity-关注产品" class="entity-link entity-principle" title="原则：关注产品">关注产品</a> 所有计划和计划活动都以识别所需产 品和最有效的交付方法为基础 与<a href="../entities/term.html#entity-利益相关方" class="entity-link entity-term" title="术语：利益相关方">利益相关方</a>进行有效沟通，避免 不必要的工作和<a href="../entities/term.html#entity-产品" class="entity-link entity-term" title="术语：产品">产品</a> <a href="../entities/principle.html#entity-根据项目剪裁" class="entity-link entity-principle" title="原则：根据项目剪裁">根据项目剪裁</a> 只需要计划适合项目方法和情境的活 动和计划 项目<a href="../entities/term.html#entity-管理" class="entity-link entity-term" title="术语：管理">管理</a>、交付活动和资源之间的 适当平衡</p>
-<p><a href="../entities/practice.html#entity-质量" class="entity-link entity-practice" title="实践：质量">质量</a></p></div>
+
+<div class="scenario-box">
+<strong>场景：对比规模</strong><br>
+项目具有不同的规模、风险和复杂性。计划应反映这些差异，以尝试在方法中应用相称原则。<br><br>
+LouisShopping 项目是一个中等复杂性（对客户来说）的典型项目（对供应商来说），跨度为三个财政年。因此，随着规划周期的延长，项目在计划时需要结合高层面的细节（整体项目）和低层面的细节（阶段）。这是为了使团队领导和项目管理团队能够在日常基础上进行充分的监督，同时向项目管理委员会保证整个项目处于正轨。<br><br>
+相比之下，在同一财政年内跨越六个月的、复杂性和风险较低的简单项目在计划和控制方面的需求较低。NowByou 的新宣传活动可以证明这一点。在这种情况下，提出与整个项目相关的单一时间范围（项目计划）就足够了。
+</div>
+</div>
+
+<div class="section-content">
+<h2 id="pn-41" class="section-heading"><a href="#pn-41" class="pn-link" title="点击复制链接">[41]</a> 7.5 为实践提供支持的管理产品</h2>
+<p>PRINCE2 包括用于管理项目的 15 种管理产品。下面描述了特定于计划实践的管理产品。</p>
+
+<div class="product-card">
+  <div class="product-name">管理产品：计划</div>
+  <p><strong>目的</strong>：计划的目的是概述整个项目（或其活动的子集）的执行内容、地点、时间、方式和人员的提案。批准后，计划会提供一个基线，可以根据该基线来衡量进展和评估问题。</p>
+  <p><strong>概括性内容</strong>：</p>
+  <ul>
+    <li><strong>范围</strong>：计划范围（项目、阶段、团队和例外）的描述</li>
+    <li><strong>依赖关系</strong>：计划所依赖的外部产品或活动</li>
+    <li><strong>计划假设和先决条件</strong>：计划所基于的假设以及计划取得成功所必须建立或保持的任何基础方面</li>
+    <li><strong>包括的经验教训</strong>：已经过审查并纳入本计划的，以前类似项目的相关经验教训细节</li>
+    <li><strong>要交付的产品</strong>：计划范围内的产品分解结构、产品流程图和产品描述</li>
+    <li><strong>要执行的工作</strong>：通过工作分解结构和相关的工作包描述显示的计划范围内的工作</li>
+    <li><strong>预算</strong>：项目成本，包括风险预算和变更预算</li>
+    <li><strong>进度表</strong>：项目阶段和活动、项目持续时间和顺序的表示形式，例如甘特图</li>
+    <li><strong>目标和容许偏差</strong>：计划层面上允许的范围、成本和时间容许偏差。阶段计划和小组计划还可能包括可持续性和风险容许偏差</li>
+    <li><strong>监视、控制和报告安排</strong>：描述如何监视和控制项目以及报告程序和职责</li>
+  </ul>
+</div>
+
+<div class="product-card">
+  <div class="product-name">管理产品：项目产品描述</div>
+  <p><strong>目的</strong>：项目产品描述的目的是描述项目的主要产品和预期用途，包括用户的质量期望以及项目的验收准则和验收方法。产品描述是在项目准备流程中创建的，并在项目启动流程中进行完善。</p>
+  <p><strong>概括性内容</strong>：</p>
+  <ul>
+    <li><strong>目的</strong>：描述项目产品的使用目的以及产品使用对象</li>
+    <li><strong>主要产品</strong>：要交付的主要产品描述</li>
+    <li><strong>来源</strong>：产品基于什么，例如现有产品或对新能力的需求</li>
+    <li><strong>用户的质量期望</strong>：描述对项目产品的质量期望以及实现这些期望所需应用的标准和程序</li>
+    <li><strong>验收准则</strong>：项目产品必须满足才能被用户接受的标准的优先级列表</li>
+    <li><strong>验收方法和职责</strong>：确认验收的方法和验收决定负责人</li>
+    <li><strong>项目层面的质量容许偏差</strong>：用于验收准则的任何容许偏差</li>
+  </ul>
+</div>
+
+<div class="product-card">
+  <div class="product-name">管理产品：工作包描述</div>
+  <p><strong>目的</strong>：工作包描述的目的是描述如何生产和交付一个或多个产品。它用于将工作职责正式传递给小组经理或小组成员。</p>
+  <p><strong>概括性内容</strong>：</p>
+  <ul>
+    <li><strong>待完成工作描述</strong>：工作说明书和相关的工作分解结构</li>
+    <li><strong>团队管理员或授权人员</strong>：负责工作包的小组经理或个人的姓名</li>
+    <li><strong>产品描述</strong>：与工作包关联的产品描述</li>
+    <li><strong>技术和程序</strong>：关于如何完成工作的需求</li>
+    <li><strong>变更控制需求</strong>：对工作包范围内的项目和产品基线的控制安排</li>
+    <li><strong>约束</strong>：对工作的限制，如授权工作时间、安全和安保措施</li>
+    <li><strong>监视、控制和报告</strong>：描述如何监视、控制和报告工作包</li>
+    <li><strong>目标和容许偏差</strong>：工作包的范围、成本和时间的容许偏差</li>
+    <li><strong>参考资料</strong>：来自更高阶层计划的适用参考资料</li>
+    <li><strong>批准</strong>：批准已完成产品的人员</li>
+    <li><strong>协议</strong>：项目经理和小组经理之间工作包的初始授权和最终完成的记录</li>
+  </ul>
+</div>
+</div>
+
+<div class="section-content">
+<h2 id="pn-42" class="section-heading"><a href="#pn-42" class="pn-link" title="点击复制链接">[42]</a> 7.6 实践中关键角色的重点</h2>
+<p>PRINCE2 定义了项目管理的七项关键角色。下面描述了他们特定于计划实践的职责。</p>
+
+<div class="table-scroll">
+<table class="role-table cols-plan">
+  <thead>
+    <tr><th>角色</th><th>职责</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>业务层</td><td>设置项目容许偏差，并将它们记录在项目任务书中，或与项目管理委员会确认包含在项目概述文件中；在预测到将超出项目层面容许偏差时，批准例外计划；提供业务所需的计划标准</td></tr>
+    <tr><td>项目总监</td><td>批准项目计划；设定每个阶段的容许偏差并批准阶段计划；在预测将超出阶段层面容许偏差时批准例外计划；将人员和业务资源投入到阶段计划（例如，财务团队和系统）</td></tr>
+    <tr><td>高级用户</td><td>建议并协助项目经理准备项目计划和阶段计划；从用户视角确保项目计划和阶段计划保持一致；将人员和用户资源投入到阶段计划（例如，培训或测试和测试环境的运营工作人员）</td></tr>
+    <tr><td>高级供应商</td><td>建议并协助项目经理准备项目、阶段计划和工作包描述；从供应商视角确保项目计划和阶段计划保持一致；将人员和供应商资源投入到阶段计划（例如，开发人员和机器）</td></tr>
+    <tr><td>项目经理</td><td>设计计划；准备项目计划、阶段计划和工作包描述，并根据需要进行更新；决定如何应用阶段和交付步骤；在预测到要超出工作包层面容许偏差时，指示纠正行动；根据项目管理委员会关于例外报告的决定准备例外计划</td></tr>
+    <tr><td>小组经理</td><td>协助项目经理准备工作包描述；准备小组计划；为每个工作包准备进度表</td></tr>
+    <tr><td>项目保证</td><td>根据协定的目标及其容许偏差审查阶段和项目计划的可行性；审查项目计划的变更，以了解是否影响商业或项目商业论证的需求</td></tr>
+    <tr><td>项目支持</td><td>协助编制项目计划、阶段计划、工作包描述和小组计划；贡献专业知识（例如，计划工具）；基线、存储和分发项目计划、阶段计划、小组计划和工作包描述</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="figure-note">表 7.1 与计划实践有关的关键角色的重点领域</p>
+</div>
+
+<div class="section-content">
+<h2 id="pn-43" class="section-heading"><a href="#pn-43" class="pn-link" title="点击复制链接">[43]</a> 7.7 与原则的关键关系</h2>
+<p>计划实践有助于在整个项目生命周期中遵守 PRINCE2 原则。</p>
+
+<div class="table-scroll">
+<table class="role-table cols-princ">
+  <thead>
+    <tr><th>原则</th><th>实现方式</th><th>导致</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>确保持续业务理由</td><td>使计划的绩效目标与商业论证目标保持一致，并提供项目管理委员会可以确认项目是否可行的估算</td><td>确保计划与整体业务战略保持一致，并且可以在定义的容许偏差范围内交付</td></tr>
+    <tr><td>吸取经验教训</td><td>利用经验教训告知计划信息，包括从先前项目或项目内已完成的工作中获得的经验教训（例如，在下一阶段应用当前阶段的经验教训）；分享未来项目的计划经验</td><td>通过分享数据和经验教训，提高项目团队交付计划的能力，以及相关组织未来计划类似项目的能力</td></tr>
+    <tr><td>定义角色、职责和关系</td><td>建立特定于计划的角色和职责；根据项目情境和交付方法产生的组织因素，通过工作包和团队组织项目</td><td>明确计划绩效和结果的问责制，实现高效决策</td></tr>
+    <tr><td>按阶段管理</td><td>将项目生命周期分解为多个阶段，以适应规划周期，并根据需要使各个阶段与关键决策点保持一致</td><td>以适合业务需求和对资源、进度表、风险和问题的实际估算的方式计划项目阶段和容许偏差</td></tr>
+    <tr><td>按例外管理</td><td>定义计划层级（项目、阶段和团队）并为其建立目标和容许偏差</td><td>适合计划层级（项目、阶段或团队）的高效决策和上报</td></tr>
+    <tr><td>关注产品</td><td>所有计划和计划活动都以识别所需产品和最有效的交付方法为基础</td><td>与利益相关方进行有效沟通，避免不必要的工作和产品</td></tr>
+    <tr><td>根据项目剪裁</td><td>只需要计划适合项目方法和情境的活动和计划</td><td>项目管理、交付活动和资源之间的适当平衡</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="figure-note">表 7.2 计划实践与 PRINCE2 原则之间的关键关系</p>
+</div>
+
     </div>
 
-    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid #d4af37; border-bottom: none;">
+    <div class="nav-bar" style="margin-top: 40px; border-top: 2px solid var(--accent); border-bottom: none;">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch06.html" class="nav-link">◁ 第6章 组织</a> | <a href="ch08.html" class="nav-link">第8章 质量 ▷</a>
     </div>
 
@@ -626,27 +1157,45 @@ LouisShopping 项目是一个中等复杂性（对<a href="../entities/term.html
         <p>PRINCE2® 7 知识库 | 基于古籍风格的结构化知识图谱</p>
     </div>
 
-    <script>
-        function toggleToc() {
-            var list = document.getElementById('tocList');
-            var icon = document.querySelector('.toc-icon');
-            list.classList.toggle('collapsed');
-            icon.style.transform = list.classList.contains('collapsed')
-                ? 'rotate(0deg)' : 'rotate(90deg)';
-        }
+<script src="../assets/chapter-common.js"></script>
+<script>
+(function(){
+    var list=document.getElementById('tocList');var icon=document.querySelector('.toc-icon');
+    if(list){list.classList.add('collapsed');}
+    if(icon){icon.style.transform='rotate(0deg)';}
+    var bar=document.createElement('div');bar.className='progress-bar';document.body.prepend(bar);
+    var btn=document.createElement('div');btn.className='back-to-top';btn.innerHTML='\u25B2';
+    btn.title='\u8FD4\u56DE\u9876\u90E8';document.body.appendChild(btn);
+    btn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+    window.addEventListener('scroll',function(){
+        var pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+        bar.style.width=Math.min(pct,100)+'%';
+        btn.classList.toggle('visible',window.scrollY>400);
+    });
+})();
+</script>
+<script src="../assets/floating-toc.js"></script>
+</body>
+</html>
+</div>
 
-        // Purple Numbers: 点击复制链接
-        document.querySelectorAll('.pn-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var url = window.location.href.split('#')[0] + link.getAttribute('href');
-                navigator.clipboard.writeText(url).then(function() {
-                    link.style.color = '#2E8B57';
-                    setTimeout(function() { link.style.color = ''; }, 1000);
-                });
-            });
-        });
-    </script>
+<script src="../assets/chapter-common.js"></script>
+<script>
+(function(){
+    var list=document.getElementById('tocList');var icon=document.querySelector('.toc-icon');
+    if(list){list.classList.add('collapsed');}
+    if(icon){icon.style.transform='rotate(0deg)';}
+    var bar=document.createElement('div');bar.className='progress-bar';document.body.prepend(bar);
+    var btn=document.createElement('div');btn.className='back-to-top';btn.innerHTML='\u25B2';
+    btn.title='\u8FD4\u56DE\u9876\u90E8';document.body.appendChild(btn);
+    btn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+    window.addEventListener('scroll',function(){
+        var pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+        bar.style.width=Math.min(pct,100)+'%';
+        btn.classList.toggle('visible',window.scrollY>400);
+    });
+})();
+</script>
 <script src="../assets/floating-toc.js"></script>
 </body>
 </html>
