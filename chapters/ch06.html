@@ -184,9 +184,6 @@
     </style>
 </head>
 <body>
-    <div class="progress-bar" id="progressBar"></div>
-    <div class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
-
     <div class="nav-bar">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> | <a href="ch05.html" class="nav-link">◁ 第5章 商业论证</a> | <a href="ch07.html" class="nav-link">第7章 计划 ▷</a>
     </div>
@@ -876,6 +873,27 @@
     </div>
 
     <script src="../assets/chapter-common.js"></script>
+    <script>
+        /* 阅读进度条 & 返回顶部 */
+        (function() {
+            var bar = document.createElement('div');
+            bar.className = 'progress-bar';
+            document.body.prepend(bar);
+
+            var btn = document.createElement('div');
+            btn.className = 'back-to-top';
+            btn.innerHTML = '\u25B2';
+            btn.title = '返回顶部';
+            document.body.appendChild(btn);
+            btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+            window.addEventListener('scroll', function() {
+                var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+                bar.style.width = Math.min(pct, 100) + '%';
+                btn.classList.toggle('visible', window.scrollY > 400);
+            });
+        })();
+    </script>
     <script src="../assets/floating-toc.js"></script>
 </body>
 </html>
