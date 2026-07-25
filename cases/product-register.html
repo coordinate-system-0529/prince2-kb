@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品登记单生命周期 - 住宅装修案例</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="case-library.css">
+    <link rel="stylesheet" href="product-register-case.css">
+    <script src="case-library.js" defer></script>
+    <script src="renovation-register-data.js" defer></script>
+    <script src="product-register-case.js" defer></script>
+</head>
+<body data-case-product="产品登记单">
+    <header class="site-header">
+        <a class="back-link" href="renovation.html#product-register-story">← 返回装修项目时间线</a>
+        <span class="site-label">PRINCE2 案例库 · 单产品视图</span>
+    </header>
+
+    <main class="register-case-page">
+        <section class="register-case-hero" aria-labelledby="page-title">
+            <div class="register-hero-copy">
+                <span class="case-kicker">教学虚构案例 · REN-001 · 动态记录</span>
+                <h1 id="page-title">产品登记单</h1>
+                <p class="register-hero-lead">项目产品组合的动态状态账本，用于持续记录每项产品的状态、版本、验收日期、验收结果和参考资料。</p>
+                <div class="register-hero-links">
+                    <a href="../entities/product.html#entity-产品登记单">查看通用定义</a>
+                    <a href="renovation.html#timeline-title">回到完整项目进展</a>
+                </div>
+            </div>
+            <aside class="current-register-card" aria-label="登记单当前状态">
+                <span>当前案例快照</span>
+                <strong>第 4 次更新</strong>
+                <p>第 7 周，防水返工成果已纳入受控版本，等待再次闭水试验。</p>
+                <div><i></i>持续维护中</div>
+            </aside>
+        </section>
+
+        <dl class="product-passport" aria-label="产品登记单基本信息">
+            <div>
+                <dt>它是什么</dt>
+                <dd>一份跨阶段延续的动态记录，不是某个流程的专属产物。</dd>
+            </div>
+            <div>
+                <dt>谁维护</dt>
+                <dd><b>许静</b>，项目支持。项目经理组织和检查，小组经理提供状态。</dd>
+            </div>
+            <div>
+                <dt>谁使用</dt>
+                <dd><b>陈默</b>用于控制交付，项目保证核查完整性，项目管理委员会用于决策。</dd>
+            </div>
+            <div>
+                <dt>当前范围</dt>
+                <dd>14 项产品，7 项已发生状态变化，7 项待交付或等待安排。</dd>
+            </div>
+        </dl>
+
+        <section class="register-lifecycle" aria-labelledby="lifecycle-title">
+            <header class="section-heading register-section-heading">
+                <div>
+                    <span class="section-index">01</span>
+                    <h2 id="lifecycle-title">产品生命周期轨迹</h2>
+                </div>
+                <p>阶段提供管理环境，事件触发人员动作，最终形成登记单字段变化。</p>
+            </header>
+
+            <aside class="lifecycle-reading-note">
+                <strong>阅读顺序</strong>
+                <span>发生阶段</span><i>→</i><span>触发事件</span><i>→</i><span>人员动作</span><i>→</i><span>字段变化</span><i>→</i><span>管理结果</span>
+                <small>“更新序号”只表示登记单被维护的次数，每项产品保留自己的版本号。</small>
+            </aside>
+
+            <div class="lifecycle-map">
+                <div class="stage-bands" aria-hidden="true">
+                    <span>项目启动</span>
+                    <span>管理阶段 1</span>
+                    <span>阶段边界</span>
+                    <span>项目收尾</span>
+                </div>
+                <div class="update-track" role="tablist" aria-label="产品登记单更新历史">
+                    <button class="update-node is-complete" id="update-01" type="button" role="tab" aria-selected="false" aria-controls="update-panel-01" tabindex="-1">
+                        <span>更新 01</span>
+                        <strong>创建登记单</strong>
+                        <small>建立首批产品记录</small>
+                    </button>
+                    <button class="update-node is-complete" id="update-02" type="button" role="tab" aria-selected="false" aria-controls="update-panel-02" tabindex="-1">
+                        <span>更新 02</span>
+                        <strong>设计验收</strong>
+                        <small>记录验收和开工</small>
+                    </button>
+                    <button class="update-node is-complete" id="update-03" type="button" role="tab" aria-selected="false" aria-controls="update-panel-03" tabindex="-1">
+                        <span>更新 03</span>
+                        <strong>供应状态</strong>
+                        <small>木门等待排产</small>
+                    </button>
+                    <button class="update-node is-current" id="update-04" type="button" role="tab" aria-selected="true" aria-controls="update-panel-04" tabindex="0">
+                        <span>更新 04</span>
+                        <strong>防水复验</strong>
+                        <small>当前正在处理</small>
+                    </button>
+                    <button class="update-node is-planned" id="update-05" type="button" role="tab" aria-selected="false" aria-controls="update-panel-05" tabindex="-1">
+                        <span>计划 05</span>
+                        <strong>阶段核对</strong>
+                        <small>尚未发生</small>
+                    </button>
+                    <button class="update-node is-planned" id="update-06" type="button" role="tab" aria-selected="false" aria-controls="update-panel-06" tabindex="-1">
+                        <span>计划 06</span>
+                        <strong>最终关闭</strong>
+                        <small>尚未发生</small>
+                    </button>
+                </div>
+            </div>
+
+            <div class="update-detail" aria-live="polite">
+                <article class="update-panel" id="update-panel-01" role="tabpanel" aria-labelledby="update-01" hidden>
+                    <header>
+                        <div><span class="update-status is-done">已发生</span><small>第 2 至 3 周 · 项目启动</small></div>
+                        <h3>创建统一的产品状态账本</h3>
+                        <p>交付范围和职责得到确认，项目需要一份跨阶段延续的产品记录。</p>
+                    </header>
+                    <div class="update-detail-grid">
+                        <section class="event-context">
+                            <h4>阶段与触发事件</h4>
+                            <dl>
+                                <div><dt>发生阶段</dt><dd>启动管理阶段</dd></div>
+                                <div><dt>触发事件</dt><dd>产品分解、交付范围和初始职责得到确认。</dd></div>
+                            </dl>
+                        </section>
+                        <section class="people-actions">
+                            <h4>人员动作</h4>
+                            <ul>
+                                <li><img src="assets/renovation/people/xu-jing.webp" alt="" width="42" height="42"><p><b>许静</b><span>项目支持</span><small>创建并持续维护登记单</small></p></li>
+                                <li><img src="assets/renovation/people/chen-mo.webp" alt="" width="42" height="42"><p><b>陈默</b><span>项目经理</span><small>组织建立并检查记录</small></p></li>
+                                <li><img src="assets/renovation/people/song-yan.webp" alt="" width="42" height="42"><p><b>宋妍、赵建国</b><span>小组经理</span><small>提供首批产品清单和状态</small></p></li>
+                            </ul>
+                        </section>
+                        <section class="field-changes">
+                            <h4>登记单字段变化</h4>
+                            <div class="change-table" role="table" aria-label="第 1 次更新字段变化">
+                                <div class="change-row change-head" role="row"><span>字段</span><span>更新前</span><i></i><span>更新后</span></div>
+                                <div class="change-row" role="row"><b>登记单状态</b><span>不存在</span><i>→</i><strong>启用</strong></div>
+                                <div class="change-row" role="row"><b>产品记录</b><span>0 项</span><i>→</i><strong>建立首批清单</strong></div>
+                                <div class="change-row" role="row"><b>产品描述</b><span>未关联</span><i>→</i><strong>关联受控描述</strong></div>
+                            </div>
+                        </section>
+                    </div>
+                    <p class="management-result"><b>管理结果</b>项目开始使用同一份动态记录跟踪产品交付，而不是按流程分别建立孤立清单。</p>
+                </article>
+
+                <article class="update-panel" id="update-panel-02" role="tabpanel" aria-labelledby="update-02" hidden>
+                    <header>
+                        <div><span class="update-status is-done">已发生</span><small>第 4 周 · 管理阶段 1</small></div>
+                        <h3>记录设计验收并启动下一项交付</h3>
+                        <p>全屋设计方案通过确认，水电工作包获准开始。</p>
+                    </header>
+                    <div class="update-detail-grid">
+                        <section class="event-context">
+                            <h4>阶段与触发事件</h4>
+                            <dl>
+                                <div><dt>发生阶段</dt><dd>管理阶段 1，设计与隐蔽工程</dd></div>
+                                <div><dt>触发事件</dt><dd>设计成果通过授权验收，水电工作包开始执行。</dd></div>
+                            </dl>
+                        </section>
+                        <section class="people-actions">
+                            <h4>人员动作</h4>
+                            <ul>
+                                <li><img src="assets/renovation/people/song-yan.webp" alt="" width="42" height="42"><p><b>宋妍</b><span>设计小组经理</span><small>提交设计成果和版本</small></p></li>
+                                <li><img src="assets/renovation/people/lin-yue.webp" alt="" width="42" height="42"><p><b>林悦</b><span>高级用户</span><small>按授权确认适用性</small></p></li>
+                                <li><img src="assets/renovation/people/xu-jing.webp" alt="" width="42" height="42"><p><b>许静</b><span>项目支持</span><small>记录状态、版本和验收结果</small></p></li>
+                            </ul>
+                        </section>
+                        <section class="field-changes">
+                            <h4>登记单字段变化</h4>
+                            <div class="change-table" role="table" aria-label="第 2 次更新字段变化">
+                                <div class="change-row change-head" role="row"><span>记录</span><span>更新前</span><i></i><span>更新后</span></div>
+                                <div class="change-row" role="row"><b>DEC-001 状态</b><span>开发中</span><i>→</i><strong>已验收</strong></div>
+                                <div class="change-row" role="row"><b>DEC-001 版本</b><span>未记录</span><i>→</i><strong>v1.0</strong></div>
+                                <div class="change-row" role="row"><b>MEP-006 状态</b><span>未开始</span><i>→</i><strong>进行中</strong></div>
+                            </div>
+                        </section>
+                    </div>
+                    <p class="management-result"><b>管理结果</b>设计完成与水电开工形成可追溯连接，验收人员不因此承担登记单维护责任。</p>
+                </article>
+
+                <article class="update-panel" id="update-panel-03" role="tabpanel" aria-labelledby="update-03" hidden>
+                    <header>
+                        <div><span class="update-status is-done">已发生</span><small>第 5 至 6 周 · 管理阶段 1</small></div>
+                        <h3>记录木门供应状态变化</h3>
+                        <p>供应商预测交付延期，产品状态需要反映排产不确定性。</p>
+                    </header>
+                    <div class="update-detail-grid">
+                        <section class="event-context">
+                            <h4>阶段与触发事件</h4>
+                            <dl>
+                                <div><dt>发生阶段</dt><dd>管理阶段 1，隐蔽工程推进</dd></div>
+                                <div><dt>触发事件</dt><dd>定制木门排产可能影响后续安装接口。</dd></div>
+                            </dl>
+                        </section>
+                        <section class="people-actions">
+                            <h4>人员动作</h4>
+                            <ul>
+                                <li><img src="assets/renovation/people/zhao-jianguo.webp" alt="" width="42" height="42"><p><b>赵建国</b><span>施工小组经理</span><small>报告现场接口日期</small></p></li>
+                                <li><img src="assets/renovation/people/lu-mingyuan.webp" alt="" width="42" height="42"><p><b>陆明远</b><span>高级供应商</span><small>协调供应和排产资源</small></p></li>
+                                <li><img src="assets/renovation/people/xu-jing.webp" alt="" width="42" height="42"><p><b>许静</b><span>项目支持</span><small>维护状态和关联记录</small></p></li>
+                            </ul>
+                        </section>
+                        <section class="field-changes">
+                            <h4>登记单字段变化</h4>
+                            <div class="change-table" role="table" aria-label="第 3 次更新字段变化">
+                                <div class="change-row change-head" role="row"><span>记录</span><span>更新前</span><i></i><span>更新后</span></div>
+                                <div class="change-row" role="row"><b>DOOR-018 状态</b><span>未开始</span><i>→</i><strong>等待排产</strong></div>
+                                <div class="change-row is-unchanged" role="row"><b>DOOR-018 版本</b><span>v0.1</span><i>=</i><strong>v0.1</strong></div>
+                                <div class="change-row" role="row"><b>相关记录</b><span>无</span><i>→</i><strong>RISK-004</strong></div>
+                            </div>
+                        </section>
+                    </div>
+                    <p class="management-result"><b>管理结果</b>登记单发生更新，但木门产品本身没有修订，因此产品版本保持不变。</p>
+                </article>
+
+                <article class="update-panel" id="update-panel-04" role="tabpanel" aria-labelledby="update-04">
+                    <header>
+                        <div><span class="update-status is-current">正在处理</span><small>第 7 周 · 管理阶段 1</small></div>
+                        <h3>保留防水失败结果并安排复验</h3>
+                        <p>闭水试验未通过，返工成果已经受控，验收仍需等待再次试验。</p>
+                    </header>
+                    <div class="update-detail-grid">
+                        <section class="event-context">
+                            <h4>阶段与触发事件</h4>
+                            <dl>
+                                <div><dt>发生阶段</dt><dd>管理阶段 1，隐蔽工程质量检查</dd></div>
+                                <div><dt>触发事件</dt><dd>卫生间防水闭水试验未通过，需要返工和复验。</dd></div>
+                            </dl>
+                        </section>
+                        <section class="people-actions">
+                            <h4>人员动作</h4>
+                            <ul>
+                                <li><img src="assets/renovation/people/zhao-jianguo.webp" alt="" width="42" height="42"><p><b>赵建国</b><span>施工小组经理</span><small>报告失败并组织返工</small></p></li>
+                                <li><img src="assets/renovation/people/wang-zhiheng.webp" alt="" width="42" height="42"><p><b>王志衡</b><span>项目保证</span><small>核查处理程序和证据</small></p></li>
+                                <li><img src="assets/renovation/people/xu-jing.webp" alt="" width="42" height="42"><p><b>许静</b><span>项目支持</span><small>更新状态、版本和参考资料</small></p></li>
+                                <li><img src="assets/renovation/people/chen-mo.webp" alt="" width="42" height="42"><p><b>陈默</b><span>项目经理</span><small>检查并安排再次验收</small></p></li>
+                            </ul>
+                        </section>
+                        <section class="field-changes">
+                            <h4>登记单字段变化</h4>
+                            <div class="change-table" role="table" aria-label="第 4 次更新字段变化">
+                                <div class="change-row change-head" role="row"><span>WPF-011</span><span>更新前</span><i></i><span>更新后</span></div>
+                                <div class="change-row" role="row"><b>状态</b><span>待验收</span><i>→</i><strong>待复验</strong></div>
+                                <div class="change-row" role="row"><b>产品版本</b><span>v1.0</span><i>→</i><strong>v1.1</strong></div>
+                                <div class="change-row is-unchanged" role="row"><b>验收日期</b><span>空白</span><i>=</i><strong>仍为空白</strong></div>
+                                <div class="change-row" role="row"><b>验收结果</b><span>无</span><i>→</i><strong>整改后复验</strong></div>
+                            </div>
+                        </section>
+                    </div>
+                    <p class="management-result"><b>管理结果</b>不合格事实保留在质量记录中，产品登记单只反映当前状态、受控版本和待完成验收。</p>
+                    <a class="quality-record-link" href="waterproof-quality-records.html">查看防水质量记录包 →</a>
+                </article>
+
+                <article class="update-panel is-planned" id="update-panel-05" role="tabpanel" aria-labelledby="update-05" hidden>
+                    <header>
+                        <div><span class="update-status is-planned">计划动作</span><small>第 8 周 · 阶段边界</small></div>
+                        <h3>核对本阶段并增补下一阶段产品</h3>
+                        <p>这是计划中的管理动作，尚未形成实际登记单更新。</p>
+                    </header>
+                    <div class="update-detail-grid">
+                        <section class="event-context">
+                            <h4>阶段与触发事件</h4>
+                            <dl>
+                                <div><dt>发生阶段</dt><dd>管理阶段 1 边界</dd></div>
+                                <div><dt>触发事件</dt><dd>项目管理委员会准备评审是否授权下一阶段。</dd></div>
+                            </dl>
+                        </section>
+                        <section class="people-actions">
+                            <h4>计划人员动作</h4>
+                            <ul>
+                                <li><img src="assets/renovation/people/xu-jing.webp" alt="" width="42" height="42"><p><b>许静</b><span>项目支持</span><small>核对当前记录完整性</small></p></li>
+                                <li><img src="assets/renovation/people/chen-mo.webp" alt="" width="42" height="42"><p><b>陈默</b><span>项目经理</span><small>确认状态并增补产品</small></p></li>
+                                <li><img src="assets/renovation/people/zhou-cheng.webp" alt="" width="42" height="42"><p><b>项目管理委员会</b><span>项目指导</span><small>使用汇总结果作出授权决定</small></p></li>
+                            </ul>
+                        </section>
+                        <section class="field-changes">
+                            <h4>预期字段变化</h4>
+                            <div class="change-table" role="table" aria-label="计划第 5 次更新字段变化">
+                                <div class="change-row change-head" role="row"><span>范围</span><span>当前</span><i></i><span>计划</span></div>
+                                <div class="change-row" role="row"><b>本阶段产品</b><span>状态分散</span><i>→</i><strong>完成统一核对</strong></div>
+                                <div class="change-row" role="row"><b>下一阶段产品</b><span>未录入</span><i>→</i><strong>加入计划记录</strong></div>
+                                <div class="change-row" role="row"><b>计划日期</b><span>未确定</span><i>→</i><strong>随阶段计划补充</strong></div>
+                            </div>
+                        </section>
+                    </div>
+                    <p class="management-result"><b>预期结果</b>同一份登记单跨越管理阶段延续，不为下一阶段另建一份孤立记录。</p>
+                </article>
+
+                <article class="update-panel is-planned" id="update-panel-06" role="tabpanel" aria-labelledby="update-06" hidden>
+                    <header>
+                        <div><span class="update-status is-planned">计划动作</span><small>第 16 周 · 项目收尾</small></div>
+                        <h3>记录最终验收并关闭登记单</h3>
+                        <p>这是计划中的项目收尾动作，只有全部验收证据成立后才能执行。</p>
+                    </header>
+                    <div class="update-detail-grid">
+                        <section class="event-context">
+                            <h4>阶段与触发事件</h4>
+                            <dl>
+                                <div><dt>发生阶段</dt><dd>最终管理阶段结束</dd></div>
+                                <div><dt>触发事件</dt><dd>全部交付产品完成验收，资料具备移交条件。</dd></div>
+                            </dl>
+                        </section>
+                        <section class="people-actions">
+                            <h4>计划人员动作</h4>
+                            <ul>
+                                <li><img src="assets/renovation/people/song-yan.webp" alt="" width="42" height="42"><p><b>小组经理</b><span>专业交付</span><small>提供最终受控版本</small></p></li>
+                                <li><img src="assets/renovation/people/lin-yue.webp" alt="" width="42" height="42"><p><b>家庭用户</b><span>高级用户</span><small>按授权完成使用验收</small></p></li>
+                                <li><img src="assets/renovation/people/xu-jing.webp" alt="" width="42" height="42"><p><b>许静</b><span>项目支持</span><small>补齐日期、结果并归档</small></p></li>
+                                <li><img src="assets/renovation/people/zhou-cheng.webp" alt="" width="42" height="42"><p><b>周诚</b><span>项目总监</span><small>授权项目关闭</small></p></li>
+                            </ul>
+                        </section>
+                        <section class="field-changes">
+                            <h4>预期字段变化</h4>
+                            <div class="change-table" role="table" aria-label="计划第 6 次更新字段变化">
+                                <div class="change-row change-head" role="row"><span>范围</span><span>当前</span><i></i><span>计划</span></div>
+                                <div class="change-row" role="row"><b>产品状态</b><span>存在未完成项</span><i>→</i><strong>全部验收或移交</strong></div>
+                                <div class="change-row" role="row"><b>验收信息</b><span>部分空白</span><i>→</i><strong>补齐日期与结果</strong></div>
+                                <div class="change-row" role="row"><b>登记单状态</b><span>持续维护</span><i>→</i><strong>关闭并归档</strong></div>
+                            </div>
+                        </section>
+                    </div>
+                    <p class="management-result"><b>预期结果</b>登记单为项目竣工报告提供最终产品状态，并保留完整交付证据链。</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="register-sheet-section" aria-labelledby="register-sheet-title">
+            <header class="section-heading register-section-heading">
+                <div>
+                    <span class="section-index">02</span>
+                    <h2 id="register-sheet-title">装修项目产品登记单</h2>
+                </div>
+                <p>这是一份教学仿真记录。点击产品名称，在原位查看具体内容、人员责任、验收标准和变化历史。</p>
+            </header>
+
+            <article class="register-document" aria-labelledby="register-document-title">
+                <header class="register-document-header">
+                    <div>
+                        <span>教学仿真管理记录</span>
+                        <h3 id="register-document-title"><b id="registerDocumentId">REN-PR-001</b> 住宅全屋装修项目产品登记单</h3>
+                        <p>本案例按项目需要增加负责人、来源、计划验收和最后更新字段，不代表 PRINCE2 规定的固定模板。</p>
+                    </div>
+                    <strong id="registerDocumentStatus">持续维护中</strong>
+                </header>
+
+                <dl class="register-control-grid" aria-label="登记单控制信息">
+                    <div><dt>维护人</dt><dd id="registerMaintainer">许静 · 项目支持</dd></div>
+                    <div><dt>管理使用</dt><dd id="registerManager">陈默 · 项目经理</dd></div>
+                    <div><dt>当前阶段</dt><dd id="registerCurrentStage">管理阶段 1 · 隐蔽工程</dd></div>
+                    <div><dt>当前更新</dt><dd id="registerCurrentUpdate">更新 04</dd></div>
+                    <div><dt>最后触发事件</dt><dd id="registerTrigger">防水闭水试验未通过</dd></div>
+                </dl>
+
+                <div class="register-audit-summary">
+                    <strong>登记单更新历史</strong>
+                    <div id="registerAuditItems" aria-label="登记单更新历史"></div>
+                    <p id="registerImpactNote">当前选择更新 04，影响 1 项产品，已在下表标记。</p>
+                </div>
+
+                <div class="full-register-wrap">
+                    <table class="full-register-table">
+                        <colgroup>
+                            <col class="col-product">
+                            <col class="col-type">
+                            <col class="col-source">
+                            <col class="col-owner">
+                            <col class="col-status">
+                            <col class="col-version">
+                            <col class="col-date">
+                            <col class="col-date">
+                            <col class="col-date">
+                            <col class="col-result">
+                            <col class="col-update">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th scope="col">产品</th>
+                                <th scope="col">类型</th>
+                                <th scope="col">来源与阶段</th>
+                                <th scope="col">负责人</th>
+                                <th scope="col">状态</th>
+                                <th scope="col">版本</th>
+                                <th scope="col">描述批准</th>
+                                <th scope="col">计划验收</th>
+                                <th scope="col">实际验收</th>
+                                <th scope="col">结果</th>
+                                <th scope="col">最后更新</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fullRegisterBody"></tbody>
+                    </table>
+                    <noscript><p class="register-noscript">需要启用 JavaScript 才能查看完整仿真登记单。</p></noscript>
+                </div>
+
+                <footer class="register-document-footer">
+                    <p><b>登记单更新</b>表示这份动态记录被维护，<b>产品版本</b>表示某项受控成果发生版本变化。两者不会自动同步。</p>
+                    <span>共 <b id="registerProductCount">14</b> 项产品</span>
+                </footer>
+            </article>
+            <p class="case-data-note">案例名称、编号、日期和状态均为虚构数据，仅用于说明产品、阶段、人员和触发事件之间的关系。</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>PRINCE2® 7 知识库 · 教学虚构案例</p>
+        <div class="footer-links">
+            <a href="renovation.html#product-register-story">返回装修项目</a>
+            <a href="../entities/product.html#entity-产品登记单">查看产品通用说明</a>
+        </div>
+    </footer>
+</body>
+</html>
