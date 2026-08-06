@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理产品索引 - PRINCE2 知识库</title>
     <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../cases/case-library.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -31,12 +32,84 @@
                 radial-gradient(circle at 88% 24%, rgba(116, 20, 95, 0.05), transparent 32%),
                 var(--paper);
             color: var(--ink);
-            max-width: 1040px;
-            margin: 0 auto;
-            padding: 20px 28px 48px;
+            min-width: 0;
+            max-width: none;
+            margin: 0;
+            padding: 0;
             line-height: 1.8;
             min-height: 100vh;
         }
+
+        .product-knowledge-main {
+            width: min(1040px, calc(100% - 56px));
+            margin: 0 auto;
+            padding: 20px 0 48px;
+        }
+
+        .knowledge-guide {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 18px;
+            padding: 18px 20px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 253, 249, 0.9);
+            box-shadow: var(--shadow);
+        }
+
+        .knowledge-guide strong { color: var(--plum); }
+        .knowledge-guide p { margin: 4px 0 0; color: var(--ink-soft); font-size: 0.9rem; }
+        .knowledge-guide-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+        .knowledge-guide-links a {
+            padding: 7px 11px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--plum);
+            background: #fffdfa;
+            font-family: var(--ui-font);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+        .knowledge-guide-links a.is-case { border-color: rgba(180, 138, 44, 0.55); color: #5b410e; background: #f3df9b; }
+
+        .formal-parent-notes {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .formal-parent-note {
+            scroll-margin-top: 90px;
+            padding: 13px 15px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: rgba(255, 253, 249, 0.72);
+        }
+        .formal-parent-note strong { color: var(--plum); font-family: var(--ui-font); font-size: 0.86rem; }
+        .formal-parent-note p { margin: 3px 0 6px; color: var(--ink-soft); font-size: 0.8rem; line-height: 1.55; }
+        .formal-parent-note a { margin-right: 10px; color: var(--plum); font-family: var(--ui-font); font-size: 0.75rem; font-weight: 800; text-decoration: none; }
+
+        body[data-product-index] .sidebar-case-link {
+            margin: -4px 20px 5px 50px;
+            padding: 3px 8px;
+            border: 0;
+            border-radius: 4px;
+            color: #654807;
+            background: rgba(242, 223, 161, 0.38);
+            font-size: 10px;
+            font-weight: 800;
+        }
+        body[data-product-index] .product-sidebar-component .sidebar-case-link {
+            margin-left: 72px;
+            padding-left: 8px;
+        }
+        body[data-product-index] .sidebar-case-link::before { display: none; content: none; }
+
+        /* 原有类型浏览器与生命周期面板属于旧 27 条平铺视图，保留 DOM 供旧脚本兼容但不再展示。 */
+        .legacy-product-browser { display: none !important; }
 
         .nav-bar {
             padding: 12px 0;
@@ -690,47 +763,6 @@
             35% { box-shadow: 0 0 0 4px rgba(116, 20, 95, 0.2), var(--shadow); }
         }
 
-        /* 快速导航 */
-        .quick-nav {
-            background: rgba(239, 228, 210, 0.68);
-            border: 1px solid var(--line);
-            padding: 11px 16px;
-            margin-bottom: 18px;
-            border-radius: 8px;
-            font-family: var(--ui-font);
-        }
-        .quick-nav summary {
-            color: var(--ink-soft);
-            cursor: pointer;
-            font-weight: 700;
-            list-style-position: outside;
-        }
-        .quick-nav-count {
-            color: var(--muted);
-            font-weight: 400;
-            font-size: 0.86em;
-            margin-left: 6px;
-        }
-        .quick-nav-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding-top: 12px;
-        }
-        .quick-nav a {
-            color: var(--plum);
-            text-decoration: none;
-            padding: 4px 10px;
-            border: 1px solid rgba(116, 20, 95, 0.28);
-            background: rgba(255, 253, 249, 0.76);
-            border-radius: 999px;
-            font-size: 0.8em;
-        }
-        .quick-nav a:hover {
-            background: var(--plum);
-            color: #fff;
-        }
-
         /* 实体条目 */
         .entity-list {
             display: grid;
@@ -852,6 +884,16 @@
             font-weight: 900;
             letter-spacing: 0.08em;
             white-space: nowrap;
+        }
+        .product-source-label {
+            color: inherit;
+            white-space: nowrap;
+            text-decoration: underline;
+            text-underline-offset: 0.18em;
+        }
+        .product-source-label:hover,
+        .product-source-label:focus-visible {
+            color: #fff0b8;
         }
         .product-deep-content {
             display: grid;
@@ -1593,6 +1635,110 @@
             border: 0;
         }
 
+        .official-products {
+            margin: 24px 0;
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.58);
+        }
+
+        .official-products-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .official-products-heading h2 {
+            margin: 4px 0 8px;
+            color: var(--ink);
+        }
+
+        .official-products-heading p {
+            max-width: 760px;
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .official-counts {
+            flex: 0 0 auto;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(116, 20, 95, 0.1);
+            color: var(--plum);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .official-product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+            gap: 12px;
+        }
+
+        .official-product-card {
+            scroll-margin-top: 20px;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--paper);
+        }
+
+        .official-product-card[data-type="baseline"] { border-top: 3px solid #8b5e34; }
+        .official-product-card[data-type="report"] { border-top: 3px solid #276357; }
+        .official-product-card[data-type="record"] { border-top: 3px solid #8b6b00; }
+
+        .official-product-title {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 7px;
+        }
+
+        .official-product-code {
+            color: var(--plum);
+            font-weight: 800;
+        }
+
+        .official-product-name {
+            color: var(--ink);
+            font-size: 1.02rem;
+            font-weight: 750;
+        }
+
+        .official-product-type {
+            margin-left: auto;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .official-component-list {
+            margin: 8px 0 0;
+            padding-left: 18px;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.65;
+        }
+
+        .official-detail-link {
+            display: inline-block;
+            margin-top: 9px;
+            color: var(--plum);
+            font-size: 0.86rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .supplementary-heading {
+            margin: 32px 0 14px;
+        }
+
+        .supplementary-heading h2 { margin-bottom: 6px; }
+        .supplementary-heading p { margin: 0; color: var(--muted); line-height: 1.7; }
+
         a:focus-visible,
         button:focus-visible,
         input:focus-visible,
@@ -1608,9 +1754,10 @@
         }
 
         @media (max-width: 760px) {
-            body { padding: 12px 16px 36px; }
+            .product-knowledge-main { width: calc(100% - 24px); padding: 12px 0 36px; }
             .page-heading { align-items: flex-start; flex-direction: column; }
             .page-heading-actions { flex-wrap: wrap; }
+            .official-products-heading { flex-direction: column; }
             .product-tools { position: static; grid-template-columns: 1fr; }
             .sort-box { justify-content: space-between; }
             .result-count { text-align: left; }
@@ -1632,6 +1779,17 @@
             .entity-entry.product-prototype { padding: 0; }
             .source-overview { align-items: flex-start; flex-direction: column; gap: 4px; }
             .back-to-top { right: 18px; bottom: 18px; }
+            .knowledge-guide { grid-template-columns: 1fr; padding: 15px 16px; }
+            .knowledge-guide-links { justify-content: flex-start; }
+            .formal-parent-notes { grid-template-columns: 1fr; }
+        }
+
+        @media (min-width: 1380px) {
+            .product-knowledge-main {
+                width: min(1040px, calc(100% - 382px));
+                margin-right: 28px;
+                margin-left: max(342px, calc((100vw - 1320px) / 2));
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1643,7 +1801,8 @@
         }
     </style>
 </head>
-<body>
+<body data-product-index="true">
+<main class="product-knowledge-main">
     <div class="nav-bar">
         <a href="../index.html" class="nav-link">◁ 回到主页</a> |
         <a href="principle.html" class="nav-link">原则</a> |
@@ -1657,7 +1816,7 @@
     <div class="page-heading">
         <div>
             <h1 class="page-title">◫ 管理产品索引</h1>
-            <p class="page-stats">共 27 个管理产品相关条目，在文本中共出现 739 次</p>
+            <p class="page-stats">PRINCE2 第七版共 15 项正式管理产品：7 个基准、7 个报告、1 个项目记录单</p>
         </div>
         <div class="page-heading-actions">
             <a href="../cases/renovation.html" class="case-library-link">装修项目案例 →</a>
@@ -1665,11 +1824,29 @@
         </div>
     </div>
 
-    <section class="product-tools" aria-label="管理产品查找工具">
+    <section class="knowledge-guide" aria-label="管理产品知识与装修案例阅读入口">
+        <div>
+            <strong>以 15 项正式管理产品为主目录</strong>
+            <p>左侧产品导航统一读取 Appendix A 分类；A9、A12、A13 可展开查看计划类型、管理方法和项目记录单组成项。正文继续保留原有详细解读和稳定锚点。</p>
+        </div>
+        <nav class="knowledge-guide-links" aria-label="阅读模式">
+            <a href="product.html" aria-current="page">产品知识</a>
+            <a class="is-case" href="../cases/renovation.html">住宅装修案例</a>
+        </nav>
+    </section>
+
+    <section class="formal-parent-notes" aria-label="正式父产品归属说明">
+        <article class="formal-parent-note" id="entity-商业论证"><strong>A1 商业论证</strong><p>概要版与完整版是同一正式产品在项目生命周期中的演进状态。</p><a href="../chapters/ch05.html">查看产品知识</a><a href="../cases/project-brief.html#business-case">装修案例</a></article>
+        <article class="formal-parent-note" id="entity-经验教训报告"><strong>A8 经验教训报告</strong><p>项目或阶段结束时形成的正式报告，与持续维护的经验教训记录单不同。</p><a href="../chapters/appendix_a.html">查看 Appendix A</a></article>
+        <article class="formal-parent-note" id="entity-计划"><strong>A9 计划</strong><p>项目计划、阶段计划、例外计划及可选的小组计划均属于计划类型。</p><a href="#entity-项目计划">查看详细条目</a></article>
+        <article class="formal-parent-note" id="entity-项目记录单"><strong>A13 项目记录单</strong><p>日志及六类登记单共同构成动态项目记录，详细内容继续在下方按组成项查询。A13 完整案例尚在建设，现有入口只对应组成项。</p><a href="#entity-产品登记单">产品登记单知识</a><a href="../cases/product-register.html">组成项案例：产品登记单</a></article>
+    </section>
+
+    <section class="product-tools" aria-label="详细条目查找工具">
         <div class="search-box">
-            <label class="sr-only" for="productSearch">搜索管理产品</label>
+            <label class="sr-only" for="productSearch">搜索详细条目</label>
             <span class="search-icon" aria-hidden="true">⌕</span>
-            <input class="search-input" id="productSearch" type="search" placeholder="搜索产品名称或定义" autocomplete="off">
+            <input class="search-input" id="productSearch" type="search" placeholder="搜索下方 27 条详细解读" autocomplete="off">
         </div>
         <div class="sort-box">
             <label for="productSort">排序</label>
@@ -1678,37 +1855,37 @@
                 <option value="count-desc">按出现次数从高到低</option>
             </select>
         </div>
-        <div class="result-count" id="resultCount" aria-live="polite">显示 27 项</div>
+        <div class="result-count" id="resultCount" aria-live="polite">显示 27 条详细内容</div>
     </section>
 
-    <section class="relation-atlas product-overview" aria-labelledby="relationTitle">
+    <section class="relation-atlas product-overview legacy-product-browser" aria-labelledby="relationTitle" aria-hidden="true">
         <div class="relation-heading overview-heading">
             <div>
-                <span class="relation-eyebrow">管理产品全景</span>
-                <h2 id="relationTitle">先看信息类型，再看生命周期</h2>
-                <p>本页将 27 个管理产品相关条目按信息性质组织为基准、记录和报告。它们可能是正式管理产品，也可能是某个管理产品的组成部分，并会在多个流程中被处理。</p>
+                <span class="relation-eyebrow">详细内容浏览器</span>
+                <h2 id="relationTitle">按内容形态查看生命周期</h2>
+                <p>这里沿用原有 27 条详细内容，帮助查看各项信息如何在流程中被创建、更新和使用。正式分类请以上方 A1 至 A15 为准。</p>
             </div>
-            <button class="overview-reset" id="clearTypeFilter" type="button">显示全部 27 项</button>
+            <button class="overview-reset" id="clearTypeFilter" type="button">显示全部 27 条</button>
         </div>
 
         <div class="product-type-grid" id="productTypeGrid" aria-label="按信息类型筛选管理产品">
             <button class="product-type-card" type="button" data-type="baseline" aria-pressed="false">
                 <span class="type-symbol" aria-hidden="true">定</span>
-                <span class="type-title">基准</span>
+                <span class="type-title">基准相关内容</span>
                 <span class="type-count" data-count-for="baseline">14 项</span>
                 <span class="type-purpose">先定义项目要如何做、交付什么，作为授权和控制的依据。</span>
                 <span class="type-examples">例如：计划、产品描述、管理方法</span>
             </button>
             <button class="product-type-card" type="button" data-type="record" aria-pressed="false">
                 <span class="type-symbol" aria-hidden="true">记</span>
-                <span class="type-title">记录</span>
+                <span class="type-title">记录组成项</span>
                 <span class="type-count" data-count-for="record">6 项</span>
                 <span class="type-purpose">持续保存项目事实和当前状态，为日常控制与追溯提供依据。</span>
                 <span class="type-examples">例如：产品登记单、日志、风险登记单</span>
             </button>
             <button class="product-type-card" type="button" data-type="report" aria-pressed="false">
                 <span class="type-symbol" aria-hidden="true">报</span>
-                <span class="type-title">报告</span>
+                <span class="type-title">报告及流程输出</span>
                 <span class="type-count" data-count-for="report">7 项</span>
                 <span class="type-purpose">在特定时点汇总状态、例外或结果，支持上报、审查和决策。</span>
                 <span class="type-examples">例如：检查点报告、例外报告、竣工报告</span>
@@ -1718,7 +1895,7 @@
         <div class="type-filter-feedback" id="typeFilterFeedback" aria-live="polite">
             <strong class="filter-feedback-title" id="typeFilterTitle">产品选择</strong>
             <div class="filter-feedback-body">
-                <span class="filter-feedback-prompt" id="typeFilterPrompt">选择上方信息类型，查看对应的管理产品</span>
+                <span class="filter-feedback-prompt" id="typeFilterPrompt">选择上方内容形态，查看对应的详细条目</span>
                 <div class="filter-feedback-products" id="typeFilterProducts"></div>
             </div>
         </div>
@@ -1796,11 +1973,6 @@
         </section>
     </section>
 
-    <details class="quick-nav" id="quickNav">
-        <summary>快速跳转到产品 <span class="quick-nav-count" id="quickNavCount">27 项</span></summary>
-        <div class="quick-nav-links" id="quickNavLinks"></div>
-    </details>
-
     <div class="entity-list">
 
         <div class="entity-entry" id="entity-产品描述">
@@ -1825,12 +1997,12 @@
                     <span class="product-deep-title">产品登记单</span>
                     <span class="product-deep-overview">
                         <span class="product-deep-overview-item">
-                            <b>定义</b>
-                            <span>项目记录单的一个组成部分，用于标识项目要交付的产品并记录其验收情况。</span>
+                            <b><a class="product-source-label" href="../chapters/ch08.html#source-product-register-definition" title="跳转到定义原文">定义</a></b>
+                            <span>项目记录单的一个组件，用于标识项目要交付的产品并记录其验收情况。</span>
                         </span>
                         <span class="product-deep-overview-item">
-                            <b>用途</b>
-                            <span>列出计划所需的所有产品及其当前状态，是项目产品组合的动态状态账本。</span>
+                            <b><a class="product-source-label" href="../chapters/appendix_a.html#source-product-register-purpose" title="跳转到用途原文">用途</a></b>
+                            <span>产品登记单的目的是列出计划所需的所有产品以及这些产品的状态。</span>
                         </span>
                     </span>
                 </summary>
@@ -2510,11 +2682,11 @@
 
         <div class="entity-entry" id="entity-项目收尾建议">
             <div class="entity-header">
-                <span class="entity-icon">◫</span>
+                <span class="entity-icon" aria-label="流程输出">→</span>
                 <span class="entity-name">项目收尾建议</span>
                 <span class="occ-count">(2次)</span>
             </div>
-            <div class="entity-desc">项目经理为项目管理委员会准备的收尾建议书。</div>
+            <div class="entity-desc"><strong>流程动作/输出，不是 Appendix A 正式管理产品。</strong>项目经理为项目管理委员会准备项目收尾建议，以请求授权收尾。</div>
             <div class="entity-sources">出处：<span class="source-chapter">第19章 项目收尾 <a href="../chapters/ch19.html#pn-7" class="pn-ref">[7]</a></span> <span class="source-chapter">术语表 <a href="../chapters/glossary.html#pn-1" class="pn-ref">[1]</a></span></div>
         </div>
 
@@ -2700,7 +2872,7 @@
     </div>
 
     <div class="empty-state" id="emptyState">
-        <p>没有找到匹配的管理产品，请尝试其他关键词。</p>
+        <p>没有找到匹配的详细条目，请尝试其他关键词。</p>
     </div>
 
     <div class="footer">
@@ -2709,17 +2881,97 @@
 
     <button class="back-to-top" id="backToTop" type="button" aria-label="返回顶部" title="返回顶部">▲</button>
 
+</main>
+
+    <script src="../assets/prince2-products.js"></script>
+    <script src="../cases/case-library.js"></script>
     <script>
         (function() {
             'use strict';
+
+            function renderOfficialProducts() {
+                var taxonomy = window.PRINCE2_PRODUCT_TAXONOMY;
+                var grid = document.getElementById('officialProductGrid');
+                if (!taxonomy) { return; }
+                var stats = document.querySelector('.page-stats');
+                if (stats) {
+                    stats.textContent = taxonomy.edition + ' 共 ' + taxonomy.counts.total + ' 项正式管理产品：' +
+                        taxonomy.counts.baseline + ' 个基准、' + taxonomy.counts.report + ' 个报告、' +
+                        taxonomy.counts.record + ' 个项目记录单';
+                }
+                if (!grid) { return; }
+
+                taxonomy.products.forEach(function(product) {
+                    var card = document.createElement('article');
+                    card.className = 'official-product-card';
+                    card.id = 'official-' + product.code.toLowerCase();
+                    card.dataset.type = product.type;
+
+                    var existingDetailTarget = document.getElementById(product.detailId);
+                    if (!existingDetailTarget) {
+                        var parentAnchor = document.createElement('span');
+                        parentAnchor.id = product.detailId;
+                        parentAnchor.className = 'official-product-anchor';
+                        parentAnchor.setAttribute('aria-hidden', 'true');
+                        card.appendChild(parentAnchor);
+                    }
+
+                    var title = document.createElement('div');
+                    title.className = 'official-product-title';
+
+                    var code = document.createElement('span');
+                    code.className = 'official-product-code';
+                    code.textContent = product.code;
+
+                    var name = document.createElement('span');
+                    name.className = 'official-product-name';
+                    name.textContent = product.name;
+
+                    var type = document.createElement('span');
+                    type.className = 'official-product-type';
+                    type.textContent = taxonomy.typeLabels[product.type];
+
+                    title.appendChild(code);
+                    title.appendChild(name);
+                    title.appendChild(type);
+                    card.appendChild(title);
+
+                    if (product.components.length) {
+                        var list = document.createElement('ul');
+                        list.className = 'official-component-list';
+                        product.components.forEach(function(componentName) {
+                            var item = document.createElement('li');
+                            var componentTarget = document.getElementById('entity-' + componentName);
+                            if (componentTarget) {
+                                var componentLink = document.createElement('a');
+                                componentLink.href = '#entity-' + componentName;
+                                componentLink.textContent = componentName;
+                                item.appendChild(componentLink);
+                            } else {
+                                item.textContent = componentName;
+                            }
+                            list.appendChild(item);
+                        });
+                        card.appendChild(list);
+                    }
+
+                    var detailTarget = existingDetailTarget;
+                    var link = document.createElement('a');
+                    link.className = 'official-detail-link';
+                    link.href = detailTarget ? '#' + product.detailId : '../chapters/appendix_a.html';
+                    link.textContent = detailTarget ? '查看详细解读 ↓' : '查看 Appendix A 原文 →';
+                    card.appendChild(link);
+                    grid.appendChild(card);
+                });
+            }
+
+            renderOfficialProducts();
 
             var list = document.querySelector('.entity-list');
             var cards = Array.prototype.slice.call(document.querySelectorAll('.entity-entry'));
             var searchInput = document.getElementById('productSearch');
             var sortSelect = document.getElementById('productSort');
             var resultCount = document.getElementById('resultCount');
-            var quickNavCount = document.getElementById('quickNavCount');
-            var quickNavLinks = document.getElementById('quickNavLinks');
             var emptyState = document.getElementById('emptyState');
             var backToTop = document.getElementById('backToTop');
             var exampleTriggers = Array.prototype.slice.call(document.querySelectorAll('.register-example-trigger[data-example-dialog]'));
@@ -2758,7 +3010,7 @@
                 review: { label: '审查' },
                 close: { label: '关闭' }
             };
-            var typeLabels = { baseline: '基准', record: '记录', report: '报告' };
+            var typeLabels = { baseline: '基准相关内容', record: '记录组成项', report: '报告及流程输出' };
             var typeOrder = ['baseline', 'record', 'report'];
             var productsByType = {
                 baseline: ['产品描述', '例外计划', '可持续性管理方法', '工作包描述', '收益管理方法', '沟通管理方法', '质量管理方法', '问题管理方法', '阶段计划', '项目产品描述', '项目启动文件', '项目概述文件', '项目计划', '风险管理方法'],
@@ -3110,13 +3362,13 @@
                 if (!hasTypeFilter) {
                     typeFilterFeedback.removeAttribute('data-type');
                     typeFilterTitle.textContent = '产品选择';
-                    typeFilterPrompt.textContent = '选择上方信息类型，查看对应的管理产品';
+                    typeFilterPrompt.textContent = '选择上方内容形态，查看对应的详细条目';
                     return;
                 }
 
                 typeFilterFeedback.dataset.type = activeTypeFilter;
-                typeFilterTitle.textContent = typeLabels[activeTypeFilter] + '类产品 · ' + visibleCards.length + ' 项';
-                typeFilterPrompt.textContent = visibleCards.length === 0 ? '当前搜索条件下没有匹配产品' : '';
+                typeFilterTitle.textContent = typeLabels[activeTypeFilter] + ' · ' + visibleCards.length + ' 条';
+                typeFilterPrompt.textContent = visibleCards.length === 0 ? '当前搜索条件下没有匹配条目' : '';
                 visibleCards.forEach(function(card, index) {
                     var button = document.createElement('button');
                     button.className = 'filter-feedback-product';
@@ -3141,10 +3393,10 @@
                     }).length;
                     button.setAttribute('aria-pressed', String(activeTypeFilter === type));
                     button.querySelector('.type-count').textContent = query ?
-                        matching + ' / ' + total + ' 项' : total + ' 项';
+                        matching + ' / ' + total + ' 条' : total + ' 条';
                 });
                 clearTypeFilter.textContent = activeTypeFilter === 'all' ?
-                    '显示全部 27 项' : '清除“' + typeLabels[activeTypeFilter] + '”筛选';
+                    '显示全部 27 条' : '清除“' + typeLabels[activeTypeFilter] + '”筛选';
                 renderTypeFeedback(visibleCards);
             }
 
@@ -3161,22 +3413,10 @@
                 });
                 focusLocate.addEventListener('click', locateProduct);
                 focusOpenSources.addEventListener('click', toggleSelectedSources);
-                var initialCard = getCardByName('产品登记单') || cards[0];
-                activeTypeFilter = initialCard.dataset.type || 'all';
+                var initialCard = cards[0];
+                activeTypeFilter = 'all';
                 selectProduct(initialCard.dataset.name);
             }
-            function renderQuickNav(visibleCards) {
-                quickNavLinks.textContent = '';
-                visibleCards.forEach(function(card) {
-                    var link = document.createElement('a');
-                    link.href = '#' + card.id;
-                    link.textContent = getName(card);
-                    link.addEventListener('click', function() { selectProduct(card.dataset.name); });
-                    quickNavLinks.appendChild(link);
-                });
-                quickNavCount.textContent = visibleCards.length + ' 项';
-            }
-
             function applyView() {
                 var query = searchInput.value.trim().toLowerCase();
                 var visibleCards = cards.filter(function(card) {
@@ -3196,10 +3436,9 @@
                 });
 
                 visibleCards.forEach(function(card) { list.appendChild(card); });
-                var typePrefix = activeTypeFilter === 'all' ? '' : typeLabels[activeTypeFilter] + '类 · ';
-                resultCount.textContent = typePrefix + (query ? '找到 ' : '显示 ') + visibleCards.length + ' 项';
+                var typePrefix = activeTypeFilter === 'all' ? '' : typeLabels[activeTypeFilter] + ' · ';
+                resultCount.textContent = typePrefix + (query ? '找到 ' : '显示 ') + visibleCards.length + ' 条详细内容';
                 emptyState.classList.toggle('is-visible', visibleCards.length === 0);
-                renderQuickNav(visibleCards);
                 updateTypeOverview(query, visibleCards);
                 if (visibleCards.length > 0 && (!selectedProductName || !getCardByName(selectedProductName) || getCardByName(selectedProductName).classList.contains('is-hidden'))) {
                     selectProduct(visibleCards[0].dataset.name);

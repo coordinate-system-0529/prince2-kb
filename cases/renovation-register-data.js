@@ -53,7 +53,7 @@ window.RENOVATION_PRODUCT_REGISTER = {
             id: "MGT-001",
             name: "项目概述文件",
             caseHref: "project-brief.html",
-            type: "管理产品",
+            type: "A11 正式产品",
             source: "项目准备",
             stage: "项目准备",
             owner: "陈默",
@@ -84,7 +84,7 @@ window.RENOVATION_PRODUCT_REGISTER = {
         {
             id: "MGT-002",
             name: "项目启动文件",
-            type: "管理产品",
+            type: "A12 正式产品",
             source: "项目启动",
             stage: "启动管理阶段",
             owner: "陈默",
@@ -115,7 +115,7 @@ window.RENOVATION_PRODUCT_REGISTER = {
         {
             id: "MGT-003",
             name: "管理阶段 1 阶段计划",
-            type: "管理产品",
+            type: "A9 计划类型",
             source: "项目启动文件",
             stage: "管理阶段 1",
             owner: "陈默",
@@ -146,7 +146,7 @@ window.RENOVATION_PRODUCT_REGISTER = {
         {
             id: "MGT-004",
             name: "管理阶段 2 阶段计划",
-            type: "管理产品",
+            type: "A9 计划类型",
             source: "阶段边界管理",
             stage: "阶段边界",
             owner: "陈默",

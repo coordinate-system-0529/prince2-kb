@@ -1,0 +1,20 @@
+/* 从产品索引跳转到原文时，精确定位并持续突出对应句子 */
+.source-reference-target {
+    scroll-margin-top: 88px;
+    border-radius: 3px;
+}
+
+@keyframes source-reference-flash {
+    0%, 28% {
+        background-color: color-mix(in srgb, var(--accent, #d4af37) 30%, transparent);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .source-reference-target:target {
+        animation: source-reference-flash 2s ease-out both;
+    }
+}
