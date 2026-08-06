@@ -6,6 +6,7 @@
     <title>住宅全屋装修项目档案 - PRINCE2 案例库</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="case-library.css">
+    <script src="../assets/prince2-products.js" defer></script>
     <script src="case-library.js" defer></script>
 </head>
 <body>
@@ -19,7 +20,7 @@
             <div class="case-hero-copy">
                 <span class="case-kicker">教学虚构案例 · REN-001</span>
                 <h1 id="case-title">住宅全屋装修项目档案</h1>
-                <p>用同一个装修项目串联人物、流程和管理产品，观察项目如何被授权、交付、纠偏，并在收尾时留下可追溯记录。</p>
+                <p>用同一个装修项目串联人物、流程和 PRINCE2 7 的 15 项正式管理产品，观察项目如何被授权、交付、纠偏，并在收尾时留下可追溯记录。</p>
             </div>
             <aside class="case-notice">
                 <strong>阅读说明</strong>
@@ -65,24 +66,24 @@
             </header>
             <aside class="role-reading-note">
                 <strong>阅读方式</strong>
-                <p><b>人物分组</b>说明现实中的参与关系，<b>项目角色</b>说明其在项目中的授权和责任。同一个人可以既是家庭用户，也是项目管理委员会成员。</p>
+                <p><b>现实身份</b>说明人物在现实中是谁，<b>项目角色</b>说明其在项目中的授权和责任。下方三类仅表示本案例中的合同与协作关系，不是 PRINCE2 角色分类。</p>
             </aside>
 
-            <div class="people-lanes">
-                <section class="people-lane is-family" aria-labelledby="family-title">
-                    <header>
-                        <span>家庭用户</span>
+            <div class="people-parties" aria-label="按案例合同与协作关系划分的人物名册">
+                <section class="people-party" aria-labelledby="client-party-title">
+                    <header class="people-party-header">
+                        <span>案例合同与协作关系</span>
                         <div>
-                            <h3 id="family-title">共同业主与常住使用者</h3>
-                            <p>提出居住需求、承担投资结果，并参与适用性和最终验收。</p>
+                            <h3 id="client-party-title">甲方</h3>
+                            <p>家庭业主与实际使用者，提出需求并承担投资和使用结果。</p>
                         </div>
                     </header>
-                    <div class="people-grid people-grid-four">
+                    <div class="people-roster">
                         <article class="person-card">
                             <img class="person-avatar" src="assets/renovation/people/zhou-cheng.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>周诚</h4>
-                                <p>丈夫、共同业主、常住使用者</p>
+                                <p><span>现实身份</span>丈夫、共同业主、常住使用者</p>
                             </div>
                             <strong><span>项目角色</span>项目总监</strong>
                             <small>既参与居住和验收，也对预算、商业理由和项目成功最终问责。</small>
@@ -91,7 +92,7 @@
                             <img class="person-avatar" src="assets/renovation/people/lin-yue.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>林悦</h4>
-                                <p>妻子、共同业主、主要使用者</p>
+                                <p><span>现实身份</span>妻子、共同业主、主要使用者</p>
                             </div>
                             <strong><span>项目角色</span>高级用户</strong>
                             <small>统筹全家需求，代表使用者确认适用性、验收标准和预期价值。</small>
@@ -100,37 +101,37 @@
                             <img class="person-avatar" src="assets/renovation/people/zhou-guoan.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>周国安</h4>
-                                <p>爷爷、常住使用者</p>
+                                <p><span>现实身份</span>爷爷、常住使用者</p>
                             </div>
-                            <strong class="is-participation"><span>参与关系</span>用户代表</strong>
+                            <strong class="is-unassigned"><span>项目角色</span>未分配正式角色</strong>
                             <small>提出适老、安全和夜间照明需求，参与相关产品验收。</small>
                         </article>
                         <article class="person-card">
                             <img class="person-avatar" src="assets/renovation/people/chen-xiulan.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>陈秀兰</h4>
-                                <p>奶奶、常住使用者</p>
+                                <p><span>现实身份</span>奶奶、常住使用者</p>
                             </div>
-                            <strong class="is-participation"><span>参与关系</span>用户代表</strong>
+                            <strong class="is-unassigned"><span>项目角色</span>未分配正式角色</strong>
                             <small>提出收纳、动线和日常使用需求，参与相关产品验收。</small>
                         </article>
                     </div>
                 </section>
 
-                <section class="people-lane is-management" aria-labelledby="management-title">
-                    <header>
-                        <span>项目管理与保证</span>
+                <section class="people-party" aria-labelledby="delegated-party-title">
+                    <header class="people-party-header">
+                        <span>案例合同与协作关系</span>
                         <div>
-                            <h3 id="management-title">日常统筹与独立检查</h3>
-                            <p>把委员会的授权转化为计划、记录和可验证的管理动作。</p>
+                            <h3 id="delegated-party-title">受托管理方</h3>
+                            <p>由甲方委托，承担项目日常管理、支持和独立检查的人员。</p>
                         </div>
                     </header>
-                    <div class="people-grid">
+                    <div class="people-roster">
                         <article class="person-card">
                             <img class="person-avatar" src="assets/renovation/people/chen-mo.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>陈默</h4>
-                                <p>独立装修项目经理</p>
+                                <p><span>现实身份</span>独立装修项目经理</p>
                             </div>
                             <strong><span>项目角色</span>项目经理</strong>
                             <small>在容许偏差内负责日常管理、协调和上报。</small>
@@ -139,7 +140,7 @@
                             <img class="person-avatar" src="assets/renovation/people/xu-jing.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>许静</h4>
-                                <p>资料与协调专员</p>
+                                <p><span>现实身份</span>资料与协调专员</p>
                             </div>
                             <strong><span>项目角色</span>项目支持</strong>
                             <small>维护登记单、版本、会议记录和证据链接。</small>
@@ -148,7 +149,7 @@
                             <img class="person-avatar" src="assets/renovation/people/wang-zhiheng.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>王志衡</h4>
-                                <p>第三方监理，王工</p>
+                                <p><span>现实身份</span>第三方监理，王工</p>
                             </div>
                             <strong><span>项目角色</span>项目保证</strong>
                             <small>独立核查质量、进展和资料，不替代项目经理。</small>
@@ -156,20 +157,20 @@
                     </div>
                 </section>
 
-                <section class="people-lane is-delivery" aria-labelledby="delivery-title">
-                    <header>
-                        <span>专业交付方</span>
+                <section class="people-party" aria-labelledby="contractor-party-title">
+                    <header class="people-party-header">
+                        <span>案例合同与协作关系</span>
                         <div>
-                            <h3 id="delivery-title">设计、施工与供应管理</h3>
-                            <p>把需求转化为设计和施工产品，并对专业质量和交付负责。</p>
+                            <h3 id="contractor-party-title">乙方装修公司</h3>
+                            <p>装修公司的管理、设计和施工人员，负责专业资源与交付。</p>
                         </div>
                     </header>
-                    <div class="people-grid">
+                    <div class="people-roster">
                         <article class="person-card">
                             <img class="person-avatar" src="assets/renovation/people/lu-mingyuan.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>陆明远</h4>
-                                <p>设计施工公司老板</p>
+                                <p><span>现实身份</span>设计施工公司老板</p>
                             </div>
                             <strong><span>项目角色</span>高级供应商</strong>
                             <small>对专业资源、技术完整性和供应方能力问责。</small>
@@ -178,7 +179,7 @@
                             <img class="person-avatar" src="assets/renovation/people/song-yan.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>宋妍</h4>
-                                <p>主案设计师</p>
+                                <p><span>现实身份</span>主案设计师</p>
                             </div>
                             <strong><span>项目角色</span>设计小组经理</strong>
                             <small>负责设计工作包、设计变更和成果质量。</small>
@@ -187,7 +188,7 @@
                             <img class="person-avatar" src="assets/renovation/people/zhao-jianguo.webp" alt="" width="68" height="68" loading="lazy" decoding="async">
                             <div>
                                 <h4>赵建国</h4>
-                                <p>施工包工头</p>
+                                <p><span>现实身份</span>施工包工头</p>
                             </div>
                             <strong><span>项目角色</span>施工小组经理</strong>
                             <small>负责施工工作包、现场进度和整改交付。</small>
@@ -200,29 +201,31 @@
                 <header>
                     <div>
                         <span>PRINCE2 项目组织</span>
-                        <h3 id="project-org-title">现实参与关系之外，再看授权和交付关系</h3>
+                        <h3 id="project-org-title">PRINCE2 项目组织与授权关系</h3>
                     </div>
-                    <p>人物卡说明“现实中是谁”，这里说明“在项目中向谁负责”。</p>
+                    <p>这里只展示正式项目角色，以及角色之间的任命、支持、保证和交付关系。</p>
                 </header>
                 <div class="org-flow">
-                    <div class="org-cluster is-board">
-                        <span class="org-cluster-label">项目管理委员会</span>
-                        <div class="org-person"><b>周诚</b><small>项目总监</small></div>
-                        <div class="org-person"><b>林悦</b><small>高级用户</small></div>
-                        <div class="org-person"><b>陆明远</b><small>高级供应商</small></div>
+                    <div class="org-cluster is-board" role="group" aria-labelledby="org-board-title">
+                        <span class="org-cluster-label" id="org-board-title">项目管理委员会</span>
+                        <div class="org-person"><b>周诚</b><span class="org-identity">业主</span><small>项目总监</small></div>
+                        <div class="org-person"><b>林悦</b><span class="org-identity">业主 / 主要使用者</span><small>高级用户</small></div>
+                        <div class="org-person"><b>陆明远</b><span class="org-identity">装修公司负责人</span><small>高级供应商</small></div>
                     </div>
-                    <div class="org-flow-arrow" aria-hidden="true"><span>授权与监督</span><b>→</b></div>
-                    <div class="org-cluster is-management">
-                        <span class="org-cluster-label">项目管理层</span>
-                        <div class="org-person is-primary"><b>陈默</b><small>项目经理</small></div>
-                        <div class="org-person is-assurance"><b>王志衡</b><small>项目保证，独立核查</small></div>
-                        <div class="org-person"><b>许静</b><small>项目支持</small></div>
+                    <div class="org-flow-arrow" aria-hidden="true"><span>任命与授权</span><b>→</b></div>
+                    <div class="org-cluster is-management" role="group" aria-labelledby="org-management-title">
+                        <span class="org-cluster-label" id="org-management-title">项目管理与保证</span>
+                        <div class="org-management-pair" role="group" aria-label="项目经理与独立项目保证">
+                            <div class="org-person is-primary"><b>陈默</b><span class="org-identity">独立项目经理</span><small>项目经理</small></div>
+                            <div class="org-person is-assurance"><b>王志衡</b><span class="org-identity">第三方监理</span><small>项目保证<br>委员会负责，独立于项目经理</small></div>
+                        </div>
+                        <div class="org-person"><b>许静</b><span class="org-identity">资料协调专员</span><small>项目支持</small></div>
                     </div>
                     <div class="org-flow-arrow" aria-hidden="true"><span>分派工作包</span><b>→</b></div>
-                    <div class="org-cluster is-delivery">
-                        <span class="org-cluster-label">专业小组</span>
-                        <div class="org-person"><b>宋妍</b><small>设计小组经理</small></div>
-                        <div class="org-person"><b>赵建国</b><small>施工小组经理</small></div>
+                    <div class="org-cluster is-delivery" role="group" aria-labelledby="org-delivery-title">
+                        <span class="org-cluster-label" id="org-delivery-title">专业小组</span>
+                        <div class="org-person"><b>宋妍</b><span class="org-identity">主案设计师</span><small>设计小组经理</small></div>
+                        <div class="org-person"><b>赵建国</b><span class="org-identity">施工负责人</span><small>施工小组经理</small></div>
                     </div>
                 </div>
             </section>
@@ -247,7 +250,7 @@
                 <span>单产品验证</span>
                 <div>
                     <h3 id="register-story-title">产品登记单如何随项目变化</h3>
-                    <p>阶段是变化发生的环境，不是产品的固定归属。点击时间线中的“产品登记单”，在当前事件内查看完整关系。</p>
+                    <p>阶段是变化发生的环境，不是产品的固定归属。产品登记单是 A13 项目记录单的组成项，点击时间线中的更新事件可查看完整关系。</p>
                 </div>
                 <ol aria-label="产品变化阅读顺序">
                     <li>阶段环境</li>
@@ -430,7 +433,7 @@
                         <dl class="timeline-dimensions">
                             <div><dt>人</dt><dd><span class="person-ref" data-person="zhou-cheng">周诚<small>项目总监</small></span><span class="person-ref" data-person="lin-yue">林悦<small>高级用户</small></span><span class="person-ref" data-person="family">周国安、陈秀兰<small>用户代表</small></span><span class="person-ref" data-person="wang-zhiheng">王志衡<small>项目保证</small></span><span class="person-ref" data-person="xu-jing">许静<small>项目支持</small></span><span class="person-ref" data-person="chen-mo">陈默<small>项目经理</small></span></dd></div>
                             <div><dt>流程</dt><dd><span class="process-ref">CP 项目收尾</span><span class="process-ref is-directing">DP 项目指导</span></dd></div>
-                            <div><dt>产品</dt><dd><button class="product-ref is-linked register-event-trigger" type="button" aria-expanded="false" aria-controls="register-event-close"><span>产品登记单</span><small>计划 06 · 最终关闭</small></button><a class="product-ref is-linked" href="../entities/product.html#entity-经验教训记录单">经验教训记录单</a><span class="product-ref">项目竣工报告</span><span class="product-ref">项目收尾建议</span></dd></div>
+                            <div><dt>产品与流程动作</dt><dd><button class="product-ref is-linked register-event-trigger" type="button" aria-expanded="false" aria-controls="register-event-close"><span>产品登记单</span><small>A13 组成项 · 计划 06</small></button><a class="product-ref is-linked" href="../entities/product.html#entity-经验教训记录单">经验教训记录单</a><span class="product-ref">项目竣工报告</span><span class="product-ref">项目收尾建议<small>流程动作 · 非正式产品</small></span></dd></div>
                             <div><dt>进展</dt><dd>计划完成全部产品验收、最终版本归档和遗留事项移交，并约定入住后的收益复查时间。</dd></div>
                         </dl>
                         <section class="register-event-panel is-planned" id="register-event-close" hidden aria-labelledby="register-event-close-title">
