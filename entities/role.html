@@ -102,14 +102,10 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px color-mix(in srgb, var(--entity-accent) 30%, transparent);
         }
+        /* 统一所有框外观：去掉填充色区分，与基础节点保持一致 */
         .org-node.org-top {
-            background: var(--entity-accent);
-            color: white;
             font-size: 0.95em;
             padding: 10px 24px;
-        }
-        .org-node.org-top:hover {
-            background: var(--entity-accent-dark);
         }
         .org-node .org-count {
             font-size: 0.75em;
@@ -151,10 +147,9 @@
             border-left: 2px dashed var(--entity-accent);
             opacity: 0.5;
         }
-        /* 虚线连接的节点样式 */
+        /* 虚线连接的节点样式：统一为普通框，不再做视觉区分 */
         .org-node.org-dashed {
-            border-style: dashed;
-            opacity: 0.85;
+            /* 保持与其他节点一致，不区分样式 */
         }
         /* 连接线标签 */
         .org-line-label {
@@ -504,7 +499,7 @@
                         项目保证
                         <div class="org-count">42次</div>
                     </div>
-                    <div class="org-node org-top" style="background:var(--entity-accent-dark);" onclick="scrollToEntity('entity-项目经理')">
+                    <div class="org-node org-top" onclick="scrollToEntity('entity-项目经理')">
                         项目经理
                         <div class="org-count">182次</div>
                     </div>
