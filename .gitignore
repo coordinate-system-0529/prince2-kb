@@ -6,8 +6,8 @@
 *.pdf
 /流程图/
 
-# graph-full 废案备份（本地留档，不入仓库）
-/graph-full-旧版备份/
+# graph-full 废案备份（统一归档到旧版目录，本地留档，不入仓库）
+/旧版/关系图/
 
 # 编辑备份文件
 *.bak
@@ -15,3 +15,14 @@
 
 # 临时图片产物
 /assets/figures/
+
+# 本地手册查询语料，不上传版权资料
+/doc/prince2-7/
+/doc/prince2-2017/
+
+# 浏览器验证临时产物与本地输出
+/.playwright-cli/
+/output/
+/tmp/
+/cases/*-qa*.png
+/cases/assets/renovation/people-cartoon/

@@ -80,8 +80,7 @@ a.tag-mp:hover { filter:brightness(0.92); }
 
       <!-- CS 容器 -->
       <rect x="80" y="150" width="940" height="460" rx="14" fill="#f6fbf8" stroke="#2E8B57" stroke-width="2" stroke-dasharray="7 4"/>
-      <text x="100" y="174" text-anchor="start" font-size="13" font-weight="bold" fill="#2E8B57">阶段控制 CS · 流程内部</text>
-      <text x="100" y="190" text-anchor="start" font-size="10" fill="#6a9c7f">下：执行 → 中：评估 → 上：汇报</text>
+      <text x="550" y="172" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">阶段控制 CS · 流程内部（下：执行 → 中：评估 → 上：汇报）</text>
 
       <!-- ── 汇报排（面向 DP）── -->
       <a href="../chapters/ch16.html#pn-12"><rect x="470" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="560" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">上报问题和风险</text><text x="560" y="237" text-anchor="middle" font-size="11" fill="#888">16.4.7</text></a>
@@ -129,13 +128,14 @@ a.tag-mp:hover { filter:brightness(0.92); }
       <line x1="560" y1="478" x2="560" y2="384" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
 
       <!-- CS ↔ MP 接口（三条：派活↓ / 检查点↑ / 完成通知↑） -->
-      <line x1="220" y1="534" x2="220" y2="686" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
-      <rect x="158" y="614" width="124" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
-      <text x="220" y="629" text-anchor="middle" font-size="10" fill="#9a5b06">工作包已授权</text>
-      <text x="282" y="629" text-anchor="start" font-size="9" fill="#999">派活↓ + 工作包描述</text>
+      <line x1="220" y1="534" x2="220" y2="614" stroke="#2E8B57" stroke-width="2.5"/>
+      <line x1="220" y1="636" x2="220" y2="686" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
+      <rect x="150" y="614" width="124" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
+      <text x="212" y="629" text-anchor="middle" font-size="10" fill="#9a5b06">工作包已授权</text>
+      <text x="282" y="629" text-anchor="start" font-size="9" fill="#999">派活↓ + A15 工作包描述</text>
       <line x1="560" y1="686" x2="560" y2="534" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
       <rect x="505" y="614" width="110" height="22" rx="11" fill="#f6e4f6" stroke="#8B008B" stroke-width="1.2"/>
-      <text x="560" y="629" text-anchor="middle" font-size="10" fill="#6b1a6b">检查点报告</text>
+      <text x="560" y="629" text-anchor="middle" font-size="10" fill="#6b1a6b">A2 检查点报告</text>
       <text x="622" y="629" text-anchor="start" font-size="9" fill="#999">MP 定期↑</text>
       <line x1="900" y1="686" x2="900" y2="534" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
       <rect x="828" y="614" width="144" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
@@ -150,7 +150,7 @@ a.tag-mp:hover { filter:brightness(0.92); }
 
       <!-- 图例 -->
       <rect x="80" y="746" width="16" height="16" rx="3" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
-      <text x="102" y="758" font-size="11" fill="#444">橙 = 事件　紫 = 管理产品　绿框 = 活动（加粗 = 决策枢纽）　实绿条 = 上下游流程(DP/MP)　蓝字 = 出处(可点)</text>
+      <text x="102" y="758" font-size="11" fill="#444">橙 = 事件　紫 = 正式管理产品或标明所属的组成项　绿框 = 活动（加粗 = 决策枢纽）　实绿条 = 上下游流程(DP/MP)　蓝字 = 出处(可点)</text>
     </svg>
   </div>
 
@@ -159,7 +159,7 @@ a.tag-mp:hover { filter:brightness(0.92); }
     <table class="trig-table">
       <tr><th>谁触发我</th><td><span class="tag-ev">已授权项目（DP · 首次）</span><span class="tag-ev">已授权阶段（DP · 每阶段）</span><span class="tag-ev">例外计划批准（DP · 例外时）</span><span class="tag-ev">新问题或风险（随时）</span></td></tr>
       <tr><th>我触发谁</th><td><span class="tag-ev">工作包已授权 → MP</span><span class="tag-ev">阶段边界临近 → SB</span><span class="tag-ev">项目竣工临近 → CP</span><span class="tag-ev">已提出例外 / 要点报告 → DP</span></td></tr>
-      <tr><th>产出管理产品</th><td><a class="tag-mp" href="../entities/product.html">工作包描述</a><a class="tag-mp" href="../entities/product.html">要点报告</a><a class="tag-mp" href="../entities/product.html">例外报告</a><a class="tag-mp" href="../entities/product.html">问题报告</a><a class="tag-mp" href="../entities/product.html">产品登记单</a></td></tr>
+      <tr><th>产品与处理</th><td><a class="tag-mp" href="../entities/product.html">A15 工作包描述（创建/更新）</a><a class="tag-mp" href="../entities/product.html">A6 要点报告（创建）</a><a class="tag-mp" href="../entities/product.html">A5 例外报告（按需创建）</a><a class="tag-mp" href="../entities/product.html">A7 问题报告（按需创建）</a><a class="tag-mp" href="../entities/product.html">A13 项目记录单：产品登记单（组成项，更新）</a></td></tr>
     </table>
   </div>
 

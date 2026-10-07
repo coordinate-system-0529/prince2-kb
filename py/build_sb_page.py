@@ -100,7 +100,7 @@ CTX = dict(
     svg=SVG,
     trig_in='<span class="tag-ev">阶段边界临近（IP · 首个交付阶段前）</span><span class="tag-ev">阶段边界临近（CS · 各阶段临近结束）</span><span class="tag-ev">例外计划请求（DP · 例外时）</span>',
     trig_out='<span class="tag-ev">下一阶段请求 → DP</span><span class="tag-ev">例外计划批准请求 → DP（例外时）</span>',
-    products='<a class="tag-mp" href="../entities/product.html">阶段计划</a><a class="tag-mp" href="../entities/product.html">例外计划</a><a class="tag-mp" href="../entities/product.html">阶段竣工报告</a><a class="tag-mp" href="../entities/product.html">项目计划（更新）</a><a class="tag-mp" href="../entities/product.html">商业论证（更新）</a>',
+    products='<a class="tag-mp" href="../entities/product.html">A9 计划：阶段计划（类型，创建）</a><a class="tag-mp" href="../entities/product.html">A9 计划：例外计划（类型，按需创建）</a><a class="tag-mp" href="../entities/product.html">A4 阶段竣工报告（创建）</a><a class="tag-mp" href="../entities/product.html">A9 计划：项目计划（类型，更新）</a><a class="tag-mp" href="../entities/product.html">A1 商业论证（更新）</a>',
     reading='流程原文：<a href="../chapters/ch18.html">第18章 阶段边界管理</a>　·　管理产品定义：<a href="../chapters/appendix_a.html">附录 A</a>　·　信息流全景：<a href="../graph-full.html">管理产品信息流</a>',
     nav_prev='<a href="mp.html">◁ MP 产品交付管理</a>',
     nav_next='<a href="cp.html">CP 项目收尾 ▷</a>',

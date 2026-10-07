@@ -76,9 +76,8 @@
             text-decoration: none;
             border-left: 3px solid transparent;
             transition: all 0.15s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
         .ftoc-item:hover {
             background: #3a2515;

@@ -93,13 +93,14 @@ NEW = '''  <div class="card" id="cs-detail" style="display:none">
       <line x1="560" y1="478" x2="560" y2="384" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
 
       <!-- CS ↔ MP 接口（三条：派活↓ / 检查点↑ / 完成通知↑） -->
-      <line x1="220" y1="534" x2="220" y2="686" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
+      <line x1="220" y1="534" x2="220" y2="614" stroke="#2E8B57" stroke-width="2.5"/>
+      <line x1="220" y1="636" x2="220" y2="686" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
       <rect x="150" y="614" width="124" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
       <text x="212" y="629" text-anchor="middle" font-size="10" fill="#9a5b06">工作包已授权</text>
-      <text x="282" y="629" text-anchor="start" font-size="9" fill="#999">派活↓ + 工作包描述</text>
+      <text x="282" y="629" text-anchor="start" font-size="9" fill="#999">派活↓ + A15 工作包描述</text>
       <line x1="560" y1="686" x2="560" y2="534" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
       <rect x="505" y="614" width="110" height="22" rx="11" fill="#f6e4f6" stroke="#8B008B" stroke-width="1.2"/>
-      <text x="560" y="629" text-anchor="middle" font-size="10" fill="#6b1a6b">检查点报告</text>
+      <text x="560" y="629" text-anchor="middle" font-size="10" fill="#6b1a6b">A2 检查点报告</text>
       <text x="622" y="629" text-anchor="start" font-size="9" fill="#999">MP 定期↑</text>
       <line x1="900" y1="686" x2="900" y2="534" stroke="#2E8B57" stroke-width="2.5" marker-end="url(#ah3g)"/>
       <rect x="828" y="614" width="144" height="22" rx="11" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
@@ -114,7 +115,7 @@ NEW = '''  <div class="card" id="cs-detail" style="display:none">
 
       <!-- 图例 -->
       <rect x="80" y="746" width="16" height="16" rx="3" fill="#fdebd5" stroke="#d97706" stroke-width="1.2"/>
-      <text x="102" y="758" font-size="11" fill="#444">橙 = 事件　紫 = 管理产品　绿框 = 活动（加粗 = 决策枢纽）　实绿条 = 上下游流程(DP/MP)　蓝字 = 出处(可点)</text>
+      <text x="102" y="758" font-size="11" fill="#444">橙 = 事件　紫 = 正式管理产品或标明所属的组成项　绿框 = 活动（加粗 = 决策枢纽）　实绿条 = 上下游流程(DP/MP)　蓝字 = 出处(可点)</text>
     </svg>'''
 
 def main():

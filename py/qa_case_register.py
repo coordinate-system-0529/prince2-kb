@@ -57,6 +57,33 @@ def main() -> int:
         guide_overflow = driver.execute_script(
             "return arguments[0].scrollWidth > arguments[0].clientWidth;", guide
         )
+        sidebar_products = driver.find_elements(
+            By.CSS_SELECTOR, ".product-sidebar-product[data-product-code]"
+        )
+        sidebar_codes = [
+            item.get_attribute("data-product-code") for item in sidebar_products
+        ]
+        sidebar_group_counts = [
+            summary.find_element(By.TAG_NAME, "small").text
+            for summary in driver.find_elements(By.CSS_SELECTOR, ".product-sidebar summary")
+        ]
+        sidebar_home_href = driver.find_element(
+            By.CSS_SELECTOR, ".product-sidebar-all"
+        ).get_attribute("href")
+        sidebar_taxonomy = {
+            "sharedLoaded": driver.execute_script(
+                "return Boolean(window.PRINCE2_PRODUCT_TAXONOMY);"
+            ),
+            "productCount": len(sidebar_products),
+            "codes": sidebar_codes,
+            "groupCounts": sidebar_group_counts,
+            "componentCount": len(
+                driver.find_elements(By.CSS_SELECTOR, ".product-sidebar-component")
+            ),
+            "homeWithoutFragment": "#" not in sidebar_home_href,
+            "closureClassifiedAsAction": "流程动作 · 非正式产品"
+            in driver.find_element(By.CSS_SELECTOR, ".timeline-section").text,
+        }
         screenshot_path = Path(args.screenshot)
         screenshot_path.parent.mkdir(parents=True, exist_ok=True)
         guide_screenshot = screenshot_path.with_name(
@@ -151,6 +178,19 @@ def main() -> int:
             .get_attribute("textContent")
             .strip(),
         }
+        parent_targets = {}
+        for parent_name in ["商业论证", "经验教训报告", "计划", "项目记录单"]:
+            target_id = f"entity-{parent_name}"
+            driver.get(urljoin(args.url, f"../entities/product.html#{target_id}"))
+            target = driver.find_element(By.ID, target_id)
+            parent_targets[parent_name] = {
+                "exists": True,
+                "atViewportTop": abs(
+                    driver.execute_script(
+                        "return arguments[0].getBoundingClientRect().top;", target
+                    )
+                ) <= 2,
+            }
         product_console_errors = [
             item
             for item in driver.get_log("browser")
@@ -165,8 +205,10 @@ def main() -> int:
             "buttonLabels": button_labels,
             "guideOverflow": guide_overflow,
             "documentOverflow": document_overflow,
+            "sidebarTaxonomy": sidebar_taxonomy,
             "events": results,
             "productTable": product_table,
+            "parentTargets": parent_targets,
             "console": console_errors,
         }
         print(json.dumps(output, ensure_ascii=False, indent=2))
@@ -179,6 +221,19 @@ def main() -> int:
             or len(set(button_labels)) != 6
             or guide_overflow
             or document_overflow
+            or not sidebar_taxonomy["sharedLoaded"]
+            or sidebar_taxonomy["productCount"] != 15
+            or sidebar_taxonomy["codes"]
+            != ["A1", "A9", "A10", "A11", "A12", "A14", "A15",
+                "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A13"]
+            or sidebar_taxonomy["groupCounts"] != ["7", "7", "1"]
+            or sidebar_taxonomy["componentCount"] != 21
+            or not sidebar_taxonomy["homeWithoutFragment"]
+            or not sidebar_taxonomy["closureClassifiedAsAction"]
+            or not all(
+                item["exists"] and item["atViewportTop"]
+                for item in parent_targets.values()
+            )
             or product_table["headers"][4] != "验收日期"
             or "计划验收" in product_table["headers"]
             or product_table["rowCount"] != 4

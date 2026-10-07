@@ -70,7 +70,7 @@ a.tag-mp:hover {{ filter:brightness(0.92); }}
     <table class="trig-table">
       <tr><th>谁触发我</th><td>{trig_in}</td></tr>
       <tr><th>我触发谁</th><td>{trig_out}</td></tr>
-      <tr><th>产出管理产品</th><td>{products}</td></tr>
+      <tr><th>产品与处理</th><td>{products}</td></tr>
     </table>
   </div>
 

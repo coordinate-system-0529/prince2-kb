@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="refresh" content="0; url=product.html">
+    <title>正在打开管理产品首页</title>
+</head>
+<body>
+    <p>管理产品首页已经合并，正在打开<a id="product-home-link" href="product.html">管理产品首页</a>。</p>
+    <script>
+        (function () {
+            "use strict";
+            var target = "product.html" + window.location.search + window.location.hash;
+            document.getElementById("product-home-link").href = target;
+            window.location.replace(target);
+        }());
+    </script>
+</body>
+</html>

@@ -243,3 +243,13 @@ h4.section-heading {
     .section-content p { text-indent: 1.5em; }
     .chapter-toc .toc-list { max-height: 300px; }
 }
+ /* 原文表格保持语义与文本，超出阅读栏时局部滚动。 */
+.chapter-table-scroll { max-width: 100%; overflow-x: auto; margin: 1em 0; }
+.chapter-table-scroll table { width: 100%; table-layout: auto; }
+.chapter-table-scroll table .compact-table-label { white-space: nowrap; }
+.chapter-table-scroll:focus-visible { outline: 2px solid var(--accent-color, #986b26); outline-offset: 2px; }
+.section-heading { text-wrap: balance; }
+@media print {
+    .chapter-table-scroll { overflow: visible; }
+    .chapter-table-scroll table .compact-table-label { white-space: normal; }
+}

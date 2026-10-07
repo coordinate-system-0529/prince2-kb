@@ -21,14 +21,17 @@
     --ui-font: "Noto Sans SC", "Microsoft YaHei", sans-serif;
     --serif-font: "Noto Serif SC", "Source Han Serif CN", "SimSun", serif;
     --shadow: 0 18px 46px rgba(68, 42, 26, 0.09);
+    --sidebar-width: 390px;
+    --content-width: 1180px;
 }
 
 html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
 }
 
 body {
-    min-width: 1080px;
+    min-width: 0;
     min-height: 100vh;
     color: var(--ink);
     background:
@@ -47,8 +50,9 @@ a:focus-visible {
 .site-header,
 main,
 footer {
-    width: min(1320px, calc(100% - 72px));
-    margin-inline: auto;
+    width: min(var(--content-width), calc(100% - var(--sidebar-width) - 72px));
+    margin-right: 0;
+    margin-left: max(calc(var(--sidebar-width) + 36px), calc((100% - var(--content-width) + var(--sidebar-width)) / 2));
 }
 
 .site-header {
@@ -78,6 +82,7 @@ footer {
 
 main {
     padding: 28px 0 58px;
+    overflow-anchor: none;
 }
 
 .case-hero {
@@ -1456,8 +1461,8 @@ footer a:hover {
 }
 
 .product-sidebar-toggle {
-    right: 22px;
-    bottom: 24px;
+    top: 14px;
+    left: 14px;
     display: none;
     align-items: center;
     gap: 8px;
@@ -1484,18 +1489,18 @@ footer a:hover {
 }
 
 .product-sidebar {
-    top: 0;
-    right: max(18px, calc((100vw - 1320px) / 2 - 264px));
-    width: 310px;
+    inset: 0 auto 0 0;
+    width: var(--sidebar-width);
     height: 100vh;
     max-height: none;
     overflow: auto;
     border: 0;
-    border-left: 0;
+    border-right: 1px solid rgba(113, 19, 93, 0.13);
     border-radius: 0;
     color: var(--ink);
-    background: var(--paper);
-    box-shadow: 8px 0 28px rgba(68, 42, 26, 0.08);
+    background: rgba(250, 246, 238, 0.96);
+    box-shadow: 12px 0 40px rgba(73, 51, 37, 0.06);
+    overscroll-behavior: contain;
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
 }
@@ -1523,8 +1528,8 @@ footer a:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 164px;
-    padding: 28px 22px;
+    min-height: 180px;
+    padding: 30px 28px 24px;
     text-align: center;
     color: var(--ink);
     background:
@@ -1574,20 +1579,20 @@ footer a:hover {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 4px;
-    margin: 14px 20px 8px;
-    padding: 4px;
+    margin: 18px 22px 12px;
+    padding: 5px;
     border: 1px solid rgba(113, 19, 93, 0.2);
-    border-radius: 8px;
+    border-radius: 11px;
     background: rgba(113, 19, 93, 0.06);
 }
 
 .product-mode-switch a {
     display: grid;
-    min-height: 36px;
+    min-height: 44px;
     place-items: center;
     padding: 7px 9px;
     border: 1px solid transparent;
-    border-radius: 5px;
+    border-radius: 8px;
     color: var(--ink-soft);
     font-size: 12px;
     font-weight: 800;
@@ -1748,39 +1753,174 @@ footer a:hover {
     background: #eadfeb;
 }
 
-@media (max-width: 1379px) {
-    .product-sidebar { right: 18px; transform: translateX(calc(100% + 30px)); transition: transform 220ms ease; }
-    .product-sidebar.is-open { transform: translateX(0); }
-    .product-sidebar-toggle { display: flex; }
-    .product-sidebar-close { display: block; }
-}
+@media (max-width: 1220px) {
+    :root {
+        --sidebar-width: 340px;
+    }
 
-@media (min-width: 1380px) {
     .site-header,
     main,
-    footer {
-        width: min(1320px, calc(100% - 382px));
-        margin-right: 28px;
-        margin-left: max(342px, calc((100vw - 1320px) / 2));
+    footer,
+    body[data-case-product] main {
+        width: calc(100% - var(--sidebar-width) - 48px);
+        margin-right: 0;
+        margin-left: calc(var(--sidebar-width) + 24px);
+    }
+
+    .case-hero {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 900px) {
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    .site-header,
+    main,
+    footer,
+    body[data-case-product] main {
+        width: min(calc(100% - 36px), 780px);
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .site-header {
+        min-height: 58px;
+        padding-left: 52px;
+    }
+
+    main {
+        padding-top: 56px;
     }
 
     .product-sidebar {
-        top: 0;
-        right: auto;
-        left: max(0px, calc((100vw - 1940px) / 2));
-        transform: none;
+        width: min(390px, 88vw);
+        transform: translateX(-102%);
+        transition: transform 180ms ease;
     }
 
-    .product-sidebar-toggle,
+    .product-sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    .product-sidebar-toggle {
+        display: flex;
+    }
+
     .product-sidebar-close {
+        display: block;
+    }
+
+    .case-hero {
+        padding: 34px 28px;
+    }
+
+    .case-overview,
+    .case-section {
+        padding: 26px 24px 30px;
+    }
+
+    .section-heading {
+        gap: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .case-hero {
+        padding: 30px 22px;
+    }
+
+    .case-hero h1 {
+        font-size: clamp(32px, 11vw, 46px);
+    }
+
+    .case-hero-copy > p {
+        font-size: 17px;
+    }
+
+    .case-overview,
+    .case-section {
+        padding: 23px 20px 26px;
+    }
+
+    .section-heading {
+        display: block;
+    }
+
+    .register-story-guide {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .register-story-guide ol {
+        flex-wrap: wrap;
+    }
+
+    .register-revision-note {
+        grid-column: 1;
+    }
+
+    .register-revision-note a {
+        display: inline-block;
+        margin-top: 6px;
+        margin-left: 0;
+    }
+
+    .timeline-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .timeline-item::before,
+    .timeline-marker::after {
         display: none;
     }
 
-    /* 产品页各自的页面样式会定义宽度和自动外边距，必须在此覆盖，避免正文滑到固定侧栏下方。 */
-    body[data-case-product] main {
-        width: min(1320px, calc(100% - 382px));
-        margin-right: 28px;
-        margin-left: max(342px, calc((100vw - 1320px) / 2));
+    .timeline-marker {
+        padding: 0;
+        text-align: left;
+    }
+
+    .timeline-marker span,
+    .timeline-marker small {
+        display: inline;
+    }
+
+    .timeline-marker small {
+        margin-left: 8px;
+    }
+
+    .timeline-card > header {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .timeline-card > header > div {
+        align-items: flex-start;
+    }
+
+    .timeline-card h3 {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+    }
+
+    .timeline-dimensions {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-dimensions > div,
+    .timeline-dimensions > div:nth-child(even),
+    .timeline-dimensions > div:nth-last-child(-n + 2) {
+        border-right: 0;
+        border-bottom: 1px dashed var(--line);
+    }
+
+    .timeline-dimensions > div:last-child {
+        border-bottom: 0;
     }
 }
 

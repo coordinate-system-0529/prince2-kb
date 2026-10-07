@@ -107,7 +107,7 @@ CTX = dict(
     svg=SVG,
     trig_in='<span class="tag-ev">授权项目启动（DP · 批准项目启动后）</span>',
     trig_out='<span class="tag-ev">请求项目授权 → DP（PID 完成后）</span><span class="tag-ev">阶段边界临近 → SB（准备下一阶段 · 首个交付阶段前）</span>',
-    products='<a class="tag-mp" href="../entities/product.html">项目启动文件（PID）</a><a class="tag-mp" href="../entities/product.html">项目计划</a><a class="tag-mp" href="../entities/product.html">完整商业论证</a><a class="tag-mp" href="../entities/product.html">风险管理方法</a><a class="tag-mp" href="../entities/product.html">质量管理方法</a><a class="tag-mp" href="../entities/product.html">沟通管理方法</a><a class="tag-mp" href="../entities/product.html">项目控制</a><a class="tag-mp" href="../entities/product.html">项目产品描述（更新）</a><a class="tag-mp" href="../entities/product.html">项目记录单（更新）</a>',
+    products='<a class="tag-mp" href="../entities/product.html">A12 项目启动文件（创建）</a><a class="tag-mp" href="../entities/product.html">A9 计划：项目计划（类型，创建）</a><a class="tag-mp" href="../entities/product.html">A1 商业论证（完善）</a><a class="tag-mp" href="../entities/product.html">A12 组成：九种管理方法（创建）</a><span class="tag-ev">建立项目控制（管理动作）</span><a class="tag-mp" href="../entities/product.html">A14 项目产品描述（更新）</a><a class="tag-mp" href="../entities/product.html">A13 项目记录单（更新）</a>',
     reading='流程原文：<a href="../chapters/ch15.html">第15章 项目启动</a>　·　管理产品定义：<a href="../chapters/appendix_a.html">附录 A</a>　·　信息流全景：<a href="../graph-full.html">管理产品信息流</a>',
     nav_prev='<a href="dp.html">◁ DP 项目指导</a>',
     nav_next='<a href="cs.html">CS 阶段控制 ▷</a>',

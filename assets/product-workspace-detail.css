@@ -1,0 +1,110 @@
+/* 已接入产品共用的紧凑双模式详情框架。 */
+body[data-workspace-entry] .workspace-row[aria-current="page"] { background: var(--workspace-tint); color: var(--workspace-accent); font-weight: 700; }
+body[data-workspace-entry] .workspace-overview { background: transparent; color: var(--ink-soft); }
+body[data-workspace-entry] .detail-shell { background: none; }
+body[data-workspace-entry] .workspace-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; min-height: 36px; padding: 6px 0; color: var(--workspace-muted); font-size: 11px; }
+body[data-workspace-entry] .workspace-breadcrumb a { color: var(--ink-soft); text-decoration: none; }
+body[data-workspace-entry] .workspace-breadcrumb a:hover { text-decoration: underline; text-underline-offset: 4px; }
+body[data-workspace-entry] .workspace-breadcrumb [aria-current] { color: var(--workspace-accent); }
+body[data-workspace-entry] .workspace-reading-bar { position: sticky; z-index: 20; top: 12px; padding: 6px; border: 1px solid var(--workspace-line); border-radius: 7px; background: #fbfaf6; }
+body[data-workspace-entry] .workspace-reading-bar nav { display: flex; gap: 6px; }
+body[data-workspace-entry] .workspace-reading-bar a { display: block; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; color: var(--ink-soft); text-decoration: none; }
+body[data-workspace-entry] .workspace-reading-bar a:hover { color: var(--workspace-accent); background: var(--workspace-tint); }
+body[data-workspace-entry] .detail-hero { display: block; margin: 0 0 12px; padding: 16px 0 12px; border: 0; }
+body[data-workspace-entry] .detail-hero-copy { display: grid; grid-template-columns: minmax(0, 1fr) 180px; align-items: center; gap: 6px 12px; }
+body[data-workspace-entry] .detail-hero h1 { margin: 0; color: var(--ink); font-family: "Noto Serif SC", "Source Han Serif CN", SimSun, serif; font-size: clamp(30px, 3vw, 44px); font-weight: 800; line-height: 1.35; letter-spacing: 0.02em; }
+body[data-workspace-entry] .detail-hero .eyebrow { grid-column: 1 / -1; margin: 0; color: var(--workspace-accent); font-family: var(--workspace-font); font-size: 11px; letter-spacing: 1px; }
+body[data-workspace-entry] .provenance-label { justify-self: end; min-height: 24px; margin: 0; padding: 3px 8px; color: var(--workspace-accent); background: var(--workspace-tint); font-family: var(--workspace-font); font-size: 10px; font-weight: 500; }
+body[data-workspace-entry] .detail-summary { grid-column: 1 / -1; min-height: 26.6px; max-width: none; color: var(--ink-soft); font-family: var(--workspace-font); font-size: 14px; line-height: 1.9; }
+body[data-workspace-entry] .source-definition { margin: 0 0 4px; border-radius: 6px; border: 1px solid var(--workspace-line); background: var(--paper-light); box-shadow: none; }
+body[data-workspace-entry] .source-row { grid-template-columns: 94px minmax(0, 1fr); }
+body[data-workspace-entry] .source-row p { padding: 10px 16px; font-size: 14px; line-height: 1.9; }
+body[data-workspace-entry] .source-label { padding: 8px 12px; color: var(--workspace-accent); background: var(--workspace-tint); font-size: 13px; }
+body[data-workspace-entry] .source-label:hover { background: var(--workspace-tint); }
+body[data-workspace-entry] .source-note { padding: 8px 16px; color: var(--workspace-muted); font-size: 11px; }
+/* 正文按连续文档排版，保留章节分隔，取消每节重复的卡片外框。 */
+body[data-workspace-entry] .detail-section { margin: 0; padding: 16px 0; border: 0; border-bottom: 1px solid var(--workspace-line); border-radius: 0; background: transparent; }
+body[data-workspace-entry] .detail-section-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-bottom: 10px; }
+body[data-workspace-entry] .detail-section-heading > div:first-child { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding-left: 0; }
+body[data-workspace-entry] .detail-number { position: static; color: var(--workspace-accent); font-size: 13px; }
+body[data-workspace-entry] .detail-section h2, body[data-workspace-entry] .case-entry h2 { color: var(--ink); font-size: 25px; line-height: 1.4; }
+body[data-workspace-entry] .detail-section h2 { order: 1; margin: 0; }
+body[data-workspace-entry] .section-kicker { color: var(--workspace-accent); font-size: 10px; }
+body[data-workspace-entry] .detail-section .section-kicker { order: 2; margin: 0; }
+body[data-workspace-entry] .evidence-menu { margin-top: 0; }
+body[data-workspace-entry] .provenance-note { border: 0; padding: 0; margin: 0 0 10px; background: none; color: var(--workspace-muted); font-size: 12px; }
+/* 组成内容用紧凑的字段清单，两种模式共享排版，不压缩字号或截断原文。 */
+body[data-workspace-entry] .field-grid { gap: 0 24px; }
+body[data-workspace-entry] .field-grid > div { display: grid; grid-template-columns: minmax(156px, max-content) minmax(0, 1fr); gap: 0 12px; align-items: start; min-width: 0; padding: 10px 0; border: 0; border-bottom: 1px solid var(--workspace-line); border-radius: 0; background: transparent; }
+body[data-workspace-entry] .field-grid dt { gap: 8px; align-items: baseline; color: var(--workspace-accent); font-size: 14px; line-height: 1.85; white-space: nowrap; }
+body[data-workspace-entry] .field-grid dt span { flex: 0 0 22px; color: var(--workspace-muted); }
+body[data-workspace-entry] .field-grid dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.85; overflow-wrap: anywhere; }
+body[data-workspace-entry] .evidence-menu summary { border-radius: 5px; padding: 6px 10px; color: var(--workspace-accent); font-size: 11px; }
+body[data-workspace-entry] .evidence-menu a { color: var(--workspace-accent); }
+body[data-workspace-entry] .detail-table { table-layout: fixed; font-size: 13px; }
+body[data-workspace-entry] .detail-table th, body[data-workspace-entry] .detail-table td { padding: 9px 12px; }
+body[data-workspace-entry] .detail-table thead th:nth-child(1) { width: 23%; }
+body[data-workspace-entry] .detail-table thead th:nth-child(2) { width: 18%; }
+body[data-workspace-entry] .detail-table thead th:nth-child(3) { width: 18%; }
+body[data-workspace-entry] .detail-table tbody th { color: var(--ink); font-weight: 600; text-wrap: balance; }
+body[data-workspace-entry] .relation-tag { color: var(--workspace-accent); background: var(--workspace-tint); border-radius: 4px; font-size: 11px; }
+body[data-workspace-entry] .boundary-note { grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 12px; margin-top: 10px; padding: 8px 12px; border: 0; border-radius: 4px; background: var(--workspace-tint); font-size: 12px; }
+body[data-workspace-entry] .boundary-note strong { color: var(--workspace-accent); }
+body[data-workspace-entry] .rhythm { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 8px; padding: 8px 12px; border: 0; border-radius: 4px; background: var(--workspace-tint); }
+body[data-workspace-entry] .rhythm span { flex: 1 1 220px; padding: 0; border: 0; text-align: left; }
+body[data-workspace-entry] .rhythm b { display: inline; margin-right: 8px; color: var(--workspace-accent); }
+.lifecycle-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 13px; line-height: 1.8; }
+.lifecycle-table th, .lifecycle-table td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--workspace-line); overflow-wrap: break-word; }
+.lifecycle-table thead th { background: var(--workspace-tint); color: var(--workspace-muted); font-size: 11px; font-weight: 500; }
+.lifecycle-table thead th:nth-child(1) { width: 17%; }
+.lifecycle-table thead th:nth-child(2) { width: 25%; }
+.lifecycle-table .process-code { display: block; margin: 0; color: var(--workspace-accent); white-space: nowrap; }
+.lifecycle-table tbody th small { display: block; color: var(--workspace-muted); font-size: 11px; font-weight: 400; }
+.lifecycle-table .lifecycle-action { color: var(--ink); font-weight: 600; }
+.lifecycle-table .lifecycle-record { color: var(--ink-soft); }
+@media screen and (max-width: 640px) {
+    .lifecycle-table thead { display: none; }
+    .lifecycle-table tr { display: grid; grid-template-columns: 94px minmax(0, 1fr); gap: 2px 10px; padding: 10px 0; border-bottom: 1px solid var(--workspace-line); }
+    .lifecycle-table th, .lifecycle-table td { padding: 0; border: 0; }
+    .lifecycle-table tbody th { grid-row: 1 / 3; }
+    .lifecycle-table .lifecycle-record { grid-column: 2; }
+    .lifecycle-table .process-code { white-space: normal; }
+}
+body[data-workspace-entry] .case-entry { display: flex; align-items: baseline; justify-content: flex-start; flex-wrap: wrap; gap: 2px 6px; margin: 12px 0 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
+body[data-workspace-entry] .case-entry[hidden] { display: none; }
+body[data-workspace-entry] .case-entry .section-kicker { margin: 0; color: var(--muted); font-size: 13px; font-weight: 400; letter-spacing: 0; }
+body[data-workspace-entry] .workspace-related-link { color: var(--workspace-accent); font-size: 13px; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+body[data-workspace-entry] .workspace-related-link:hover { text-decoration-thickness: 2px; }
+body[data-workspace-entry] .workspace-related-link:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+body[data-workspace-entry] .button { min-height: 36px; padding: 7px 12px; border-radius: 6px; font-size: 12px; }
+body[data-workspace-entry] .page-footer { margin: 16px 0 0; padding-top: 10px; }
+body[data-workspace-entry] .workspace-frame { padding-bottom: 24px; }
+body[data-workspace-entry] .button-gold { background: #fdfbf5; border-color: var(--workspace-line); color: var(--workspace-accent); }
+body[data-workspace-entry] #detail-content [id], body[data-workspace-entry] [data-view-anchor] { scroll-margin-top: 84px; }
+@media (max-width: 1200px) {
+    body[data-workspace-entry] .field-grid { grid-template-columns: 1fr; }
+    body[data-workspace-entry] .detail-summary { min-height: 53.2px; }
+}
+@media (max-width: 960px) {
+    body[data-workspace-entry] .workspace-reading-bar { top: 64px; }
+    body[data-workspace-entry] .workspace-reading-bar a { padding: 6px 8px; }
+    body[data-workspace-entry] #detail-content [id], body[data-workspace-entry] [data-view-anchor] { scroll-margin-top: 132px; }
+}
+@media (max-width: 640px) {
+    body[data-workspace-entry] .workspace-breadcrumb { gap: 6px; font-size: 10px; }
+    body[data-workspace-entry] .workspace-reading-bar nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+    body[data-workspace-entry] .workspace-reading-bar a { padding: 6px 2px; text-align: center; font-size: 10px; white-space: nowrap; }
+    body[data-workspace-entry] .detail-hero h1 { font-size: 29px; }
+    body[data-workspace-entry] .detail-hero-copy { grid-template-columns: 1fr; }
+    body[data-workspace-entry] .provenance-label { justify-self: start; }
+    body[data-workspace-entry] .detail-summary { min-height: 74.1px; font-size: 13px; }
+    body[data-workspace-entry] .source-row { grid-template-columns: 76px minmax(0, 1fr); }
+    body[data-workspace-entry] .source-row p { padding: 10px 12px; font-size: 13px; }
+    body[data-workspace-entry] .source-label { padding: 8px; font-size: 12px; }
+    body[data-workspace-entry] .source-note { padding: 8px 12px; }
+    body[data-workspace-entry] .detail-section { padding: 14px 0; }
+    body[data-workspace-entry] .detail-section h2 { font-size: 22px; }
+    body[data-workspace-entry] .field-grid, body[data-workspace-entry] .lifecycle-list { grid-template-columns: 1fr; }
+    body[data-workspace-entry] .field-grid > div { grid-template-columns: 1fr; gap: 3px 0; padding: 10px 0; }
+    body[data-workspace-entry] .boundary-note { grid-template-columns: 1fr; gap: 4px; }
+}

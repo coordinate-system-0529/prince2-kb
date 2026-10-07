@@ -1,0 +1,31 @@
+/* 样式只作用于完整商业论证实例，不改变其他产品或流程图。 */
+.business-title-part { display:inline-block; }
+[data-document-slug="full-business-case"] .business-contents { display:flex; flex-wrap:wrap; gap:6px 16px; padding:0 0 14px; border-bottom:1px solid var(--workspace-line); }
+[data-document-slug="full-business-case"] .business-contents a,
+[data-document-slug="full-business-case"] .business-references a { color:var(--workspace-accent); text-underline-offset:3px; }
+.business-chapter { padding:18px 0; border-bottom:1px solid var(--workspace-line); line-height:1.8; }
+.business-chapter h2 { margin-bottom:10px; text-wrap:balance; }
+.business-chapter p { margin:8px 0; }
+.business-note strong { color:var(--ink); font-weight:600; }
+.business-table-wrap { max-width:100%; overflow-x:auto; }
+.business-table-wrap:focus-visible { outline:2px solid var(--workspace-accent); outline-offset:2px; }
+.business-table { width:100%; border-collapse:collapse; font-size:13px; line-height:1.8; }
+.business-table caption { text-align:left; color:var(--workspace-muted); font-size:12px; padding:0 0 6px; }
+.business-table th, .business-table td { text-align:left; vertical-align:top; padding:8px 10px; border-bottom:1px solid var(--workspace-line); }
+.business-table thead th { color:var(--workspace-accent); background:var(--workspace-tint); white-space:nowrap; }
+.business-table tbody th { min-width:8em; color:var(--ink); font-weight:500; }
+.business-references { display:flex; flex-wrap:wrap; gap:8px 24px; list-style:none; padding:0; margin:8px 0; }
+@media screen and (max-width:640px) {
+    .business-table { min-width:580px; }
+    #business-case-chapter-7 .business-table { min-width:0; }
+    .business-chapter { padding:14px 0; }
+}
+@media print {
+    .business-contents { display:none !important; }
+    .business-chapter { padding:10pt 0; }
+    .business-chapter h2 { break-after:avoid; }
+    .business-table-wrap { overflow:visible; }
+    .business-table { min-width:0; font-size:9pt; }
+    .business-table tr { break-inside:avoid; }
+    .business-table thead { display:table-header-group; }
+}

@@ -343,6 +343,8 @@
             color: var(--text-heading);
         }
         .detail-header .close-btn {
+            flex-shrink: 0;
+            white-space: nowrap;
             margin-left: auto;
             background: none;
             border: 1px solid #5c3d1a;
@@ -411,12 +413,16 @@
             padding-bottom: 8px;
             border-bottom: 1px solid var(--border-subtle);
         }
+        .flow-table-scroll { max-width:100%; overflow-x:auto; overscroll-behavior-x:contain; }
+        .flow-table-scroll:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
         .flow-table {
+            min-width:760px;
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85em;
         }
         .flow-table th {
+            white-space:nowrap;
             background: var(--bg-card);
             color: var(--text-heading);
             padding: 10px 12px;
@@ -509,13 +515,13 @@
                     </ul>
                 </div>
                 <div class="detail-col">
-                    <h4>📥 输入产品</h4>
+                    <h4>📥 产品与事件</h4>
                     <ul>
-                        <li><span class="product-dot input"></span>项目启动文档</li>
-                        <li><span class="product-dot input"></span>阶段计划</li>
-                        <li><span class="product-dot input"></span>亮点报告</li>
-                        <li><span class="product-dot input"></span>例外报告</li>
-                        <li><span class="product-dot input"></span>项目收尾建议</li>
+                        <li><span class="product-dot input"></span>A12 项目启动文件</li>
+                        <li><span class="product-dot input"></span>A9 计划：阶段计划（类型）</li>
+                        <li><span class="product-dot input"></span>A6 要点报告</li>
+                        <li><span class="product-dot input"></span>A5 例外报告</li>
+                        <li><span class="product-dot input"></span>项目收尾建议（流程通知，非管理产品）</li>
                     </ul>
                 </div>
                 <div class="detail-col">
@@ -873,6 +879,8 @@
     <!-- 管理产品流转表 -->
     <div class="data-flow-section">
         <h3>📊 核心管理产品流转</h3>
+        <p style="color:var(--text-muted);font-size:13px;margin:0 0 12px">第七版共有 15 项正式管理产品：7 项基准、7 项报告、1 项项目记录单。下表展示其中的核心流转；计划类型归入 A9，登记单和日志归入 A13。</p>
+        <div class="flow-table-scroll" role="region" aria-label="核心管理产品流转表，可横向滚动" tabindex="0">
         <table class="flow-table">
             <thead>
                 <tr>
@@ -886,7 +894,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>商业论证</td>
+                    <td>A1 商业论证</td>
                     <td>项目准备 SU</td>
                     <td class="arrow-cell">→</td>
                     <td>项目启动 IP、阶段边界 SB</td>
@@ -894,7 +902,7 @@
                     <td>项目收尾 CP</td>
                 </tr>
                 <tr>
-                    <td>项目计划</td>
+                    <td>A9 计划：项目计划（类型）</td>
                     <td>项目启动 IP</td>
                     <td class="arrow-cell">→</td>
                     <td>阶段边界 SB</td>
@@ -902,7 +910,7 @@
                     <td>项目收尾 CP</td>
                 </tr>
                 <tr>
-                    <td>风险登记册</td>
+                    <td>A13 项目记录单：风险登记单（组成项）</td>
                     <td>项目准备 SU</td>
                     <td class="arrow-cell">→</td>
                     <td>阶段控制 CS、阶段边界 SB</td>
@@ -910,7 +918,7 @@
                     <td>项目收尾 CP</td>
                 </tr>
                 <tr>
-                    <td>问题登记册</td>
+                    <td>A13 项目记录单：问题登记单（组成项）</td>
                     <td>项目准备 SU</td>
                     <td class="arrow-cell">→</td>
                     <td>阶段控制 CS</td>
@@ -918,7 +926,7 @@
                     <td>项目收尾 CP</td>
                 </tr>
                 <tr>
-                    <td>质量登记册</td>
+                    <td>A13 项目记录单：质量登记单（组成项）</td>
                     <td>项目启动 IP</td>
                     <td class="arrow-cell">→</td>
                     <td>产品交付 MP</td>
@@ -926,7 +934,7 @@
                     <td>项目收尾 CP</td>
                 </tr>
                 <tr>
-                    <td>经验教训记录</td>
+                    <td>A13 项目记录单：经验教训记录单（组成项）</td>
                     <td>项目准备 SU</td>
                     <td class="arrow-cell">→</td>
                     <td>所有流程持续更新</td>
@@ -934,7 +942,7 @@
                     <td>项目收尾 CP</td>
                 </tr>
                 <tr>
-                    <td>工作包</td>
+                    <td>A15 工作包描述</td>
                     <td>阶段控制 CS</td>
                     <td class="arrow-cell">→</td>
                     <td>产品交付 MP</td>
@@ -951,6 +959,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 
