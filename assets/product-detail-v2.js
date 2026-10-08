@@ -6,8 +6,10 @@
     var currentMode = "theory";
     var anchorIds = ["detail-hero", "lesson-register-section", "definition-section", "composition-section", "roles-section", "lifecycle-section", "case-section"];
     var workspaceSlug = new URLSearchParams(window.location.search).get("entry");
-    var workspaceDetail = ["issue-register", "outline-business-case", "full-business-case", "product-register", "product-description", "project-brief", "project-product-description", "risk-register", "lessons-log", "quality-register", "quality-management-approach", "work-package-description"].includes(workspaceSlug);
+    var workspaceDetail = Boolean(catalog && catalog.entries[workspaceSlug] && catalog.entries[workspaceSlug].caseView);
     var restoringWorkspace = false;
+    var restoreRequest = 0;
+    var historyHashUrl = null;
 
     // 已完成对应案例映射的产品共用紧凑框架。
     if (workspaceDetail) {
@@ -367,7 +369,9 @@
 
     function renderCase(caseEntry, mode) {
         var section = byId("case-section");
-        if (!caseEntry || !caseEntry.href || (workspaceDetail && mode !== "case")) {
+        // 概要版两种模式共用同一关联文件入口，避免页尾切换因入口高度变化而跳动。
+        var sharedRelatedEntry = workspaceSlug === "outline-business-case" || (window.PRINCE2ProductManagementUsage && window.PRINCE2ProductManagementUsage.supports(workspaceSlug));
+        if (!caseEntry || !caseEntry.href || (workspaceDetail && mode !== "case" && !sharedRelatedEntry)) {
             section.hidden = true;
             return;
         }
@@ -394,26 +398,32 @@
 
     function captureViewportAnchor() {
         if (workspaceDetail && window.scrollY < 30) { return { pageTop: true }; }
-        var referenceTop = currentSlug === "full-business-case"
+        var sceneAnchor = currentSlug === "project-plan" && window.PRINCE2ProjectPlanUsage && window.PRINCE2ProjectPlanUsage.captureReadingAnchor();
+        if (!sceneAnchor && ["outline-business-case", "full-business-case"].includes(currentSlug) && window.PRINCE2BusinessCaseUsage) { sceneAnchor = window.PRINCE2BusinessCaseUsage.captureReadingAnchor(); }
+        if (!sceneAnchor && window.PRINCE2ProductManagementUsage && window.PRINCE2ProductManagementUsage.supports(currentSlug)) { sceneAnchor = window.PRINCE2ProductManagementUsage.captureReadingAnchor(); }
+        if (sceneAnchor) { return sceneAnchor; }
+        var paperDocument = ["full-business-case", "project-plan"].includes(currentSlug);
+        var referenceTop = paperDocument
             ? (window.innerWidth <= 960 ? 134 : 86)
             : Math.min(150, window.innerHeight * 0.25);
         var referenceLeft = Math.min(window.innerWidth * 0.62, document.documentElement.clientWidth - 1);
         // 双列理论字段可能同处一行，优先保留仍在阅读线上的已选章节。
-        var previousAnchor = currentSlug === "full-business-case" && history.state && history.state.viewportAnchor;
+        var previousAnchor = paperDocument && history.state && history.state.viewportAnchor;
         if (previousAnchor && previousAnchor.dataAnchor) {
             var previousElement = Array.from(byId("detail-content").querySelectorAll("[data-view-anchor]")).find(function (element) {
                 return element.dataset.viewAnchor === previousAnchor.dataAnchor;
             });
             var previousRect = previousElement && previousElement.getBoundingClientRect();
-            if (previousRect && previousRect.height > 0 && previousRect.top <= referenceTop && previousRect.bottom > referenceTop) {
+            if (isVisibleAnchor(previousElement) && previousRect && previousRect.height > 0 && previousRect.top <= referenceTop && previousRect.bottom > referenceTop) {
                 return { dataAnchor: previousAnchor.dataAnchor, sectionId: previousElement.closest("section").id, top: previousRect.top };
             }
         }
         var pointElement = document.elementFromPoint(referenceLeft, referenceTop);
         var mappedElement = pointElement && pointElement.closest("[data-view-anchor]");
+        if (!isVisibleAnchor(mappedElement)) { mappedElement = null; }
         if (!mappedElement && workspaceDetail) {
             // 移动端抽屉会覆盖正文，仍按正文实际矩形找到被遮住的阅读项。
-            var mappedElements = Array.from(byId("detail-content").querySelectorAll("[data-view-anchor]"));
+            var mappedElements = Array.from(byId("detail-content").querySelectorAll("[data-view-anchor]")).filter(isVisibleAnchor);
             mappedElement = mappedElements.find(function (element) {
                 var rect = element.getBoundingClientRect();
                 return rect.top <= referenceTop && rect.bottom > referenceTop && rect.left <= referenceLeft && rect.right > referenceLeft;
@@ -434,7 +444,7 @@
         var selectedDistance = Number.POSITIVE_INFINITY;
         anchorIds.forEach(function (id) {
             var element = byId(id);
-            var rect = element && !element.hidden ? element.getBoundingClientRect() : null;
+            var rect = isVisibleAnchor(element) ? element.getBoundingClientRect() : null;
             if (rect && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight) {
                 var distance = Math.abs(rect.top - referenceTop);
                 if (distance < selectedDistance) {
@@ -446,29 +456,50 @@
         return selected;
     }
 
+    function isVisibleAnchor(element) {
+        return element && !element.closest("[hidden], .lesson-help-dialog:not([open]), details:not([open])");
+    }
+
+    function findAnchorElement(anchor) {
+        var key = anchor.dataAnchor || anchor.id;
+        var direct = byId(key);
+        if (isVisibleAnchor(direct)) { return direct; }
+        return Array.from(document.querySelectorAll("[data-view-anchor]")).find(function (element) {
+            return element.dataset.viewAnchor === key && isVisibleAnchor(element);
+        }) || direct;
+    }
+
+    function finishRestore(request) {
+        if (request !== restoreRequest) { return; }
+        restoringWorkspace = false;
+        saveReadingPosition();
+    }
+
     function restoreViewportAnchor(anchor) {
+        var request = ++restoreRequest;
         if (!anchor) {
+            restoringWorkspace = false;
             return;
         }
+        restoringWorkspace = true;
         window.requestAnimationFrame(function () {
+            if (request !== restoreRequest) { return; }
             if (anchor.pageTop) {
                 window.scrollTo({ top: 0, behavior: "instant" });
-                restoringWorkspace = false;
+                requestAnimationFrame(function () { finishRestore(request); });
                 return;
             }
-            var element = anchor.dataAnchor
-                ? document.querySelector('[data-view-anchor="' + anchor.dataAnchor + '"]')
-                : byId(anchor.id);
+            var element = findAnchorElement(anchor);
             if (!element && anchor.sectionId) { element = byId(anchor.sectionId); }
             if (element && element.closest(".lesson-help-dialog:not([open])")) {
                 window.scrollBy({ top: byId("lesson-register-section").getBoundingClientRect().top - (window.innerWidth <= 960 ? 84 : 24), behavior: "instant" });
-                restoringWorkspace = false;
+                requestAnimationFrame(function () { finishRestore(request); });
                 return;
             }
             if (element && element.hidden && element.id === "lesson-register-section") {
                 // 实际单据没有一一对应的理论行，切回理论时落到定义，不沿用长单据的负偏移。
                 window.scrollBy({ top: byId("definition-section").getBoundingClientRect().top - (window.innerWidth <= 960 ? 132 : 84), behavior: "instant" });
-                restoringWorkspace = false;
+                requestAnimationFrame(function () { finishRestore(request); });
                 return;
             }
             if (element) {
@@ -478,7 +509,7 @@
                 window.scrollBy(0, element.getBoundingClientRect().top - anchor.top);
                 root.style.scrollBehavior = previousScrollBehavior;
             }
-            requestAnimationFrame(function () { restoringWorkspace = false; });
+            requestAnimationFrame(function () { finishRestore(request); });
         });
     }
 
@@ -520,10 +551,16 @@
         renderLifecycle(entry.lifecycle);
         renderCase(entry.caseEntry, resolvedMode);
         if (window.PRINCE2LessonRegister) { window.PRINCE2LessonRegister.render(baseEntry.slug, resolvedMode); }
+        if (baseEntry.slug === "project-plan" && window.PRINCE2ProjectPlanUsage) { window.PRINCE2ProjectPlanUsage.render(resolvedMode); }
+        if (window.PRINCE2BusinessCaseUsage) { window.PRINCE2BusinessCaseUsage.render(baseEntry.slug, resolvedMode); }
+        if (window.PRINCE2ProductManagementUsage) { window.PRINCE2ProductManagementUsage.render(baseEntry.slug, resolvedMode); }
         setText("detail-footer-note", "新版管理产品详情页 · " + entry.name + " · " + (resolvedMode === "case" ? "案例" : "理论知识"));
         byId("detail-status").hidden = true;
         byId("detail-status").setAttribute("aria-busy", "false");
         byId("detail-content").hidden = false;
+        if (baseEntry.slug === "project-plan" && window.PRINCE2ProjectPlanUsage) { window.PRINCE2ProjectPlanUsage.stabilizePanel(); }
+        if (["outline-business-case", "full-business-case"].includes(baseEntry.slug) && window.PRINCE2BusinessCaseUsage) { window.PRINCE2BusinessCaseUsage.stabilizePanel(); }
+        if (window.PRINCE2ProductManagementUsage && window.PRINCE2ProductManagementUsage.supports(baseEntry.slug)) { window.PRINCE2ProductManagementUsage.stabilizePanel(); }
         var navigation = window.PRINCE2ProductNavigation && window.PRINCE2ProductNavigation.instance;
         if (navigation && typeof navigation.markCurrentItem === "function") {
             navigation.markCurrentItem(baseEntry.name);
@@ -531,6 +568,7 @@
         if (workspaceDetail && window.PRINCE2Workspace) {
             window.PRINCE2Workspace.setDetailContext({ slug: baseEntry.slug, name: baseEntry.name, mode: resolvedMode });
         }
+        restoreRecordFromHistory();
         restoreViewportAnchor(anchor);
         window.dispatchEvent(new CustomEvent("product-detail-v2:rendered", {
             detail: { slug: baseEntry.slug, name: baseEntry.name, mode: resolvedMode, parent: baseEntry.parent || null }
@@ -574,7 +612,7 @@
         if (!link) {
             return;
         }
-        if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) { return; }
+        if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) { return; }
         event.preventDefault();
         if (link.getAttribute("aria-disabled") === "true") {
             return;
@@ -594,32 +632,111 @@
             return;
         }
         var anchor = captureViewportAnchor();
+        historyHashUrl = null;
         if (workspaceDetail) {
-            window.history.replaceState({ entry: currentSlug, mode: currentMode, viewportAnchor: anchor }, "");
+            window.history.replaceState(readingState(anchor), "");
             if (window.PRINCE2Workspace) { window.PRINCE2Workspace.setDrawer(false); }
         }
-        window.history.pushState({ entry: currentSlug, mode: targetMode, viewportAnchor: anchor }, "", modeUrl(currentSlug, targetMode, anchor));
+        var targetUrl = modeUrl(currentSlug, targetMode, anchor);
+        window.history.pushState({ entry: currentSlug, mode: targetMode, viewportAnchor: anchor,
+            hash: new URL(targetUrl, location.href).hash, recordId: selectedRecordId() }, "", targetUrl);
         render(entry, targetMode, anchor);
     }
 
-    function anchorFromHistory() {
-        if (history.state && history.state.entry === routeFromUrl().slug && history.state.viewportAnchor) {
-            return history.state.viewportAnchor;
-        }
+    function readingState(anchor) {
+        return Object.assign({}, history.state, { entry: currentSlug, mode: currentMode,
+            hash: location.hash, viewportAnchor: anchor, recordId: selectedRecordId() });
+    }
+
+    function selectedRecordId() {
+        var section = byId("lesson-register-section");
+        var record = section && section.dataset.documentSlug === currentSlug && section.querySelector(".lesson-detail:not([hidden])");
+        return record ? record.id.slice("lesson-detail-".length) : null;
+    }
+
+    function currentReadingState() {
+        var route = routeFromUrl();
+        var state = history.state;
+        return state && state.entry === route.slug && state.mode === route.mode &&
+            (state.hash === undefined || state.hash === location.hash) ? state : null;
+    }
+
+    function restoreRecordFromHistory() {
+        var state = currentReadingState();
+        return Boolean(currentMode === "case" && state && state.recordId && window.PRINCE2LessonRegister &&
+            window.PRINCE2LessonRegister.restoreSelection && window.PRINCE2LessonRegister.restoreSelection(state.recordId));
+    }
+
+    function explicitHashAnchor() {
         var id;
         try { id = decodeURIComponent(location.hash.slice(1)); } catch (error) { return null; }
         return id ? { id: id, top: window.innerWidth <= 960 ? 132 : 84 } : { pageTop: true };
     }
 
+    function anchorFromHistory() {
+        var state = currentReadingState();
+        if (state && state.viewportAnchor) {
+            return state.viewportAnchor;
+        }
+        return explicitHashAnchor();
+    }
+
+    function syncLinkedRecord(preferHistory) {
+        if (preferHistory && restoreRecordFromHistory()) { return; }
+        var anchor = explicitHashAnchor();
+        if (currentMode === "case" && anchor && /^(lesson-detail-|record-field-)/.test(anchor.id || "") && window.PRINCE2LessonRegister) {
+            window.PRINCE2LessonRegister.render(currentSlug, currentMode);
+        }
+    }
+
+    function handleAnchorClick(event) {
+        if (!workspaceDetail || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) { return; }
+        var link = event.target.closest("a[href]");
+        if (!link || link.hasAttribute("data-detail-mode") || link.hasAttribute("download") ||
+            (link.getAttribute("target") && link.getAttribute("target") !== "_self") ||
+            link.closest(".workspace-skip, .skip-link, dialog[open]")) { return; }
+        var url = new URL(link.href, location.href);
+        if (url.origin !== location.origin || url.pathname !== location.pathname || url.search !== location.search || !url.hash) { return; }
+        var id;
+        try { id = decodeURIComponent(url.hash.slice(1)); } catch (error) { return; }
+        if (!findAnchorElement({ id: id })) { return; }
+        event.preventDefault();
+        historyHashUrl = null;
+        var previousAnchor = captureViewportAnchor();
+        history.replaceState(readingState(previousAnchor), "");
+        var anchor = { id: id, top: window.innerWidth <= 960 ? 132 : 84 };
+        if (location.hash !== url.hash) {
+            history.pushState({ entry: currentSlug, mode: currentMode, hash: url.hash, viewportAnchor: anchor }, "", url.href);
+        } else {
+            history.replaceState(readingState(anchor), "");
+        }
+        // pushState 不产生 hashchange，仍需结束之前的流程场景阅读意图。
+        [window.PRINCE2ProjectPlanUsage, window.PRINCE2BusinessCaseUsage, window.PRINCE2ProductManagementUsage].forEach(function (usage) {
+            if (usage && usage.resetReadingIntent) { usage.resetReadingIntent(); }
+        });
+        syncLinkedRecord(false);
+        restoreViewportAnchor(anchor);
+    }
+
     function saveReadingPosition() {
         if (!workspaceDetail || restoringWorkspace || byId("detail-content").hidden) { return; }
-        history.replaceState({ entry: currentSlug, mode: currentMode, viewportAnchor: captureViewportAnchor() }, "");
+        history.replaceState(readingState(captureViewportAnchor()), "");
     }
 
     function init() {
         document.addEventListener("click", handleModeClick);
+        document.addEventListener("click", handleAnchorClick);
         window.addEventListener("popstate", function () {
-            renderRoute(workspaceDetail ? anchorFromHistory() : captureViewportAnchor());
+            var route = routeFromUrl();
+            var anchor = workspaceDetail ? anchorFromHistory() : captureViewportAnchor();
+            historyHashUrl = location.href;
+            if (workspaceDetail && route.slug === currentSlug && route.mode === currentMode) {
+                restoringWorkspace = true;
+                syncLinkedRecord(true);
+                restoreViewportAnchor(anchor);
+            } else {
+                renderRoute(anchor);
+            }
         });
         renderRoute(workspaceDetail ? anchorFromHistory() : null);
         if (workspaceDetail) {
@@ -630,9 +747,13 @@
                 readingFrame = requestAnimationFrame(function () { readingFrame = null; saveReadingPosition(); });
             }, { passive: true });
             window.addEventListener("pagehide", saveReadingPosition);
+            window.addEventListener("product-record:changed", saveReadingPosition);
             window.addEventListener("hashchange", function () {
-                history.replaceState({ entry: currentSlug, mode: currentMode }, "");
-                restoreViewportAnchor(anchorFromHistory());
+                // 浏览器历史跳转紧接着触发 hashchange，不覆盖已恢复的精确阅读位置。
+                if (historyHashUrl === location.href) { historyHashUrl = null; return; }
+                historyHashUrl = null;
+                syncLinkedRecord(false);
+                restoreViewportAnchor(explicitHashAnchor());
             });
         }
     }

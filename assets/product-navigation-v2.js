@@ -48,8 +48,8 @@
     var CATEGORY_ORDER = ["baseline", "report", "record"];
     var COUNTS = {
         products: 15,
-        knowledge: 27,
-        planned: 4,
+        knowledge: Object.keys(global.PRINCE2_PRODUCT_ROUTES || {}).length || 27,
+        planned: global.PRINCE2_PRODUCT_ROUTES ? 0 : 4,
         building: 0
     };
     var PLANNED_COMPONENTS = {
@@ -61,7 +61,7 @@
     var COMPONENT_TARGETS = {
         "概要商业论证": "product-detail-v2.html?entry=outline-business-case",
         "完整商业论证": "product-detail-v2.html?entry=full-business-case",
-        "项目计划": "product.html#entity-项目计划",
+        "项目计划": "product-detail-v2.html?entry=project-plan",
         "阶段计划": "product.html#entity-阶段计划",
         "例外计划": "product.html#entity-例外计划",
         "收益管理方法": "product.html#entity-收益管理方法",
@@ -101,6 +101,7 @@
         "风险登记单": "risk-register"
     };
     var CASE_DECORATIONS = {
+        A9: { components: { "项目计划": { href: "product-detail-v2.html?entry=project-plan&mode=case", badge: "案例" } } },
         A1: {
             href: "../cases/project-brief.html#business-case",
             badge: "关联案例",
@@ -173,11 +174,15 @@
     }
 
     function productTarget(product) {
+        var route = (global.PRINCE2_PRODUCT_ROUTES || {})[productName(product)];
+        if (route) { return "product-detail-v2.html?entry=" + route + "&mode=theory"; }
         var detailId = product.detailId || ("entity-" + productName(product));
         return "product.html#" + encodeURIComponent(detailId);
     }
 
     function componentTarget(name) {
+        var route = (global.PRINCE2_PRODUCT_ROUTES || {})[name];
+        if (route) { return "product-detail-v2.html?entry=" + route + "&mode=theory"; }
         return COMPONENT_TARGETS[name] || "";
     }
 
@@ -203,7 +208,9 @@
 
     function renderComponent(product, component, decoration) {
         var name = componentName(component);
-        var plannedLabel = PLANNED_COMPONENTS[name] || "";
+        var route = (global.PRINCE2_PRODUCT_ROUTES || {})[name];
+        if (route) { decoration = { href: "product-detail-v2.html?entry=" + route + "&mode=case", badge: "案例" }; }
+        var plannedLabel = route ? "" : PLANNED_COMPONENTS[name] || "";
         var planned = Boolean(plannedLabel);
         var href = planned ? "" : componentTarget(name);
         var id = componentId(name);
@@ -231,6 +238,8 @@
         var name = productName(product);
         var id = product.id || "";
         var decoration = CASE_DECORATIONS[code] || {};
+        var route = (global.PRINCE2_PRODUCT_ROUTES || {})[name];
+        if (route) { decoration = Object.assign({}, decoration, { href: "product-detail-v2.html?entry=" + route + "&mode=case", badge: "案例" }); }
         var componentDecorations = decoration.components || {};
         var components = (product.components || []).map(function (component) {
             var nameValue = componentName(component);
@@ -283,9 +292,9 @@
         if (status) {
             var parts = [
                 COUNTS.products + " 项正式产品",
-                COUNTS.knowledge + " 条详细知识",
-                COUNTS.planned + " 条待完善"
+                COUNTS.knowledge + " 个阅读入口"
             ];
+            if (COUNTS.planned) parts.push(COUNTS.planned + " 条待完善");
             if (COUNTS.building) {
                 parts.push(COUNTS.building + " 条建设中");
             }

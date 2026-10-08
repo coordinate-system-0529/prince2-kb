@@ -681,13 +681,13 @@
         caseView: {
             identity: { label: "住宅装修教学案例" },
             summary: {
-                text: "住宅装修项目在第 2 至 3 周将 16 周计划和 42 万元预算设为基准，细化选项、成本、收益、风险及衡量方式，用于授权整个项目并支持后续阶段检查。",
+                text: "第 2 至 3 周编制完整商业论证 v1.0 拟稿，按 16 周目标和 42 万元预算细化选项、收益及风险；本稿批准凭据待补。",
                 provenance: "fictional-case",
                 evidence: [{ label: "住宅装修项目启动记录", href: "../cases/renovation.html#full-business-case" }]
             },
             definition: {
                 label: "项目状态",
-                text: "项目已完成启动阶段的详细规划。概要判断被增强为完整版本，形成 16 周项目计划、42 万元成本基准、量化收益指标、风险应对和后续复查安排。",
+                text: "完整商业论证 v1.0 拟稿已形成，包含 16 周目标、42 万元预算分配、收益指标及风险安排；批准状态待确认。",
                 provenance: "fictional-case"
             },
             purpose: {
@@ -699,7 +699,7 @@
             composition: {
                 title: "案例中的完整商业论证",
                 kicker: "十项理论字段与详细案例值",
-                note: "v1.0：第 2 至 3 周；计划复查：第 8 周。",
+                note: "v1.0 拟稿：第 2 至 3 周；批准待确认；计划复查：第 8 周。",
                 provenance: "fictional-case",
                 evidence: [
                     { label: "项目启动时间线", href: "../cases/renovation.html#full-business-case" },
@@ -785,7 +785,7 @@
             },
             lifecycle: {
                 title: "案例中的开发与持续检查",
-                kicker: "v1.0 基线与后续决策点",
+                kicker: "v1.0 拟稿与后续决策点",
                 note: "",
                 provenance: "fictional-case",
                 evidence: [{ label: "住宅装修项目虚拟进展", href: "../cases/renovation.html#full-business-case" }],
@@ -797,8 +797,8 @@
                 ],
                 items: [
                     { processCode: "SU", action: "继承概要依据", description: "第 1 周比较三个业务选项，形成 42 万元和 16 周的高层边界。", provenance: "fictional-case" },
-                    { processCode: "IP", action: "形成 v1.0", description: "第 2 至 3 周建立计划、成本、收益指标、风险应对和维护控制，形成完整商业论证基线。", provenance: "fictional-case" },
-                    { processCode: "DP", action: "授权项目", description: "周诚代表项目管理委员会确认详细依据，授权进入受控交付。", provenance: "fictional-case" },
+                    { processCode: "IP", action: "形成 v1.0 拟稿", description: "第 2 至 3 周汇总计划、成本、收益指标、风险应对和维护控制；本稿批准凭据待补。", provenance: "fictional-case" },
+                    { processCode: "DP", action: "审查与授权", description: "MGT-002 记载项目启动文件 v1.0 的历史授权；本商业论证拟稿的批准状态待确认。", provenance: "fictional-case" },
                     { processCode: "SB", action: "阶段边界复查", description: "第 8 周计划结合防水复验、木门排产、实际成本和剩余风险判断是否继续。", provenance: "fictional-case" },
                     { processCode: "CP / 项目后", action: "确认使用价值", description: "第 16 周检查交付和收益实现概率，并在入住后 1 个月和 6 个月复查安全、使用和维护情况。", provenance: "fictional-case" }
                 ]
@@ -2531,7 +2531,7 @@
                 ],
                 "boundary": {
                     "title": "防水事件已发生，剩余不确定性继续跟踪",
-                    "text": "RISK-007 的旧快照写“闭水可能失败”。现有 QA-WPF-01 已失败，返工后的 WPF-011 v1.1 待复验，应关联失败事实并继续跟踪复验和交付影响，不能沿用旧“监视中”作为全部当前状态。",
+                    "text": "QA-WPF-01 首次检查失败；WPF-011 v1.1 返工后待复验。RISK-007 持续跟踪复验及交付影响，当前评级与应对效果待核验。",
                     "provenance": "fictional-case"
                 }
             },
@@ -3667,7 +3667,7 @@
                         "actions": [
                             "待批准"
                         ],
-                        "description": "拟负责本方法批准，当前不记录虚构批准日期。",
+                        "description": "拟负责本方法批准。批准状态：待确认。",
                         "provenance": "fictional-case"
                     },
                     {
@@ -4202,6 +4202,82 @@
         }
     };
 
+
+    const planFieldPairs = [["范围","计划范围（项目、阶段、团队和例外）的描述"],["依赖关系","计划所依赖的外部产品或活动"],["计划假设和先决条件","计划所基于的假设以及计划取得成功所必须建立或保持的任何基础方面"],["包括的经验教训","已经过审查并纳入本计划的，以前类似项目的相关经验教训细节"],["要交付的产品","计划范围内的产品分解结构、产品流程图和产品描述"],["要执行的工作","通过工作分解结构和相关的工作包描述显示的计划范围内的工作"],["预算","项目成本，包括风险预算和变更预算"],["进度表","项目阶段和活动、项目持续时间和顺序的表示形式，例如甘特图"],["目标和容许偏差","绩效目标，以及计划层面上的范围、成本和时间容许偏差。阶段计划和小组计划还可能包括可持续性和风险容许偏差"],["监视、控制和报告安排","描述如何监视和控制项目以及报告程序和职责"]];
+    const planEvidence = [{ label: "附录 A9 概括性内容", href: "../chapters/appendix_a.html#source-plan-composition" }];
+    const planSummaries = [
+        "128㎡住宅全屋装修，交付可入住住宅及竣工资料包；不含前期搬迁和入住后维护。",
+        "物业作业条件、家庭需求确认、材料交期与资金安排；相关确认凭据待补。",
+        "住宅可按约定移交施工，关键产品描述可供执行；进场条件及采购提前期待确认。",
+        "封闭前检查留照、定位样板、长周期主材预警；纳入审查及应用效果待核验。",
+        "HOME-025 与 HAN-024 为最终交付，专业系统按既有台账编号分解并保留验收依赖。",
+        "陈默统筹设计、拆除、隐蔽工程、饰面、定制安装和交接工作；以工作包分派责任。",
+        "沿用商业论证六项分配，合计42万元，含5万元风险余量；变更预算划分待确认。",
+        "目标16周，案例第8周进行阶段边界复查；周序起算日期与供应排产待确认。",
+        "总投入不突破42万元，目标16周、最多延后1周；防水和用电安全不接受降级。",
+        "周度检查工作包及交付预测，阶段边界审查剩余计划；超出容许偏差预测上报。"
+    ];
+    const projectPlan = {
+        slug: "project-plan", name: "项目计划", englishName: "Project plan", code: "A9", kind: "plan-type",
+        identity: { type: "plan-type", label: "计划类型", isFormalManagementProduct: false, provenance: "manual-verbatim",
+            evidence: [{ label: "计划层级", href: "../chapters/ch07.html#pn-7" }] },
+        parent: { code: "A9", name: "计划", href: "product.html#entity-计划", provenance: "manual-verbatim" },
+        summary: { text: "项目层交付、阶段边界、资源和成本安排。", provenance: "project-synthesis" },
+        legacyHref: "product.html#entity-项目计划",
+        definition: { label: "定义", text: "一项说明项目的主要产品及其交付日期、交付方式和相应成本的高层次计划。",
+            provenance: "manual-verbatim", sourceHref: "../chapters/ch07.html#source-project-plan-definition" },
+        purpose: { label: "用途", text: "项目计划的目的是为项目管理委员会提供信心，即项目将完成其商业论证。项目计划还告知项目管理团队，他们有一种可行的方法在批准的资源和容许偏差范围内交付所需的产品。",
+            provenance: "manual-verbatim", sourceHref: "../chapters/ch07.html#source-project-plan-purpose" },
+        sourceNote: "定义与用途：第7章原文。组成：附录A9。职责与生命周期：项目归纳。",
+        composition: { title: "组成内容", kicker: "附录 A9 · 十项内容", note: "", provenance: "manual-verbatim", evidence: planEvidence,
+            items: planFieldPairs.map(function (pair) { return { label: pair[0], text: pair[1], provenance: "manual-verbatim" }; }) },
+        roles: { title: "角色和动作", kicker: "编制、保证与授权", note: "", provenance: "project-synthesis",
+            evidence: [{ label: "A9 使用表", href: "../chapters/appendix_a.html#source-plan-usage" }],
+            items: [
+                { name: "项目经理", relation: "计划管理", actions: ["编制", "检查", "更新"], description: "在项目启动编制项目计划，在阶段边界检查和更新，在收尾审查。" },
+                { name: "项目管理委员会", relation: "项目层授权", actions: ["批准", "审查", "检查"], description: "批准项目计划，并审查影响基线和项目继续开展的变更。" },
+                { name: "项目保证", relation: "独立保证", actions: ["建议", "审查"], description: "在项目启动和阶段边界提供建议，检查计划是否现实、可行。" },
+                { name: "项目支持", relation: "记录支持", actions: ["整理", "关联"], description: "协助维护版本、产品台账和审查资料，不替代批准职权。" }
+            ],
+            boundary: { title: "计划类型", text: "阶段计划细化一个管理阶段；小组计划用于执行工作包且可选。例外计划用于获授权的重新规划，不是固定的第四个层级。", provenance: "project-synthesis" } },
+        lifecycle: { title: "生命周期", kicker: "编制、授权与复查", note: "", provenance: "project-synthesis",
+            evidence: [{ label: "项目计划使用", href: "../chapters/ch07.html#pn-8" }, { label: "A9 使用表", href: "../chapters/appendix_a.html#source-plan-usage" }],
+            items: [
+                { processCode: "IP", action: "编制项目计划", description: "明确主要产品、工作包、阶段边界、资源和成本，提交项目管理委员会。" },
+                { processCode: "DP", action: "批准与设定基线", description: "批准后提供衡量进展的基线；审查与批准凭据随版本保留。" },
+                { processCode: "SB", action: "检查与更新", description: "比较实际进展和剩余预测，更新项目计划并准备下一阶段计划。" },
+                { processCode: "DP", anchor: "DP-review", action: "审查变更与继续授权", description: "必要的项目计划变更由项目管理委员会批准；超差按例外程序处理。" },
+                { processCode: "CP", action: "收尾审查", description: "对照计划核对交付与绩效，记录差异和遗留事项。" }
+            ] },
+        caseEntry: { href: "../cases/renovation.html#full-business-case", title: "住宅装修计划关联", description: "启动、阶段边界与收尾。", linkLabel: "打开项目时间线" },
+        caseView: {
+            identity: { label: "住宅装修教学案例", provenance: "fictional-case" },
+            summary: { text: "16周交付安排 · 42万元投资边界 · 第8周阶段复查。", provenance: "fictional-case" },
+            definition: { label: "计划范围", text: planSummaries[0], provenance: "fictional-case" },
+            purpose: { label: "交付目标", text: "形成可安全入住住宅，完成家庭验收及资料移交。", provenance: "fictional-case" },
+            sourceNote: "教学虚构案例 · 计划拟稿 · 授权状态待确认。",
+            composition: { title: "组成内容", kicker: "项目层计划", note: "", provenance: "fictional-case",
+                evidence: [{ label: "完整商业论证", href: "product-detail-v2.html?entry=full-business-case&mode=case" }],
+                items: planFieldPairs.map(function (pair, index) { return { label: pair[0], text: planSummaries[index], provenance: "fictional-case" }; }) },
+            roles: { title: "角色和动作", kicker: "计划责任分工", note: "", provenance: "fictional-case",
+                evidence: [{ label: "人物与项目组织", href: "../cases/renovation.html#people-title" }],
+                items: [
+                    { name: "陈默 · 独立装修项目经理", relation: "项目经理", actions: ["编制", "复查", "上报"], description: "统筹产品、资源、进度和成本预测，准备阶段边界审查材料。" },
+                    { name: "周诚 · 业主，林悦 · 业主，陆明远 · 装修公司负责人", relation: "项目管理委员会", actions: ["审查", "批准"], description: "分别代表业务、用户和供应方审查项目层计划；签认资料待补。" },
+                    { name: "王志衡 · 第三方监理", relation: "项目保证", actions: ["核查", "建议"], description: "核查关键检查点、证据与计划可行性，不代替用户验收。" },
+                    { name: "许静 · 资料协调专员", relation: "项目支持", actions: ["维护", "关联"], description: "维护计划版本、台账、问题和质量资料的交叉引用。" }
+                ] },
+            lifecycle: { title: "计划管理历程", kicker: "时点与核验状态", note: "", provenance: "fictional-case",
+                evidence: [{ label: "项目时间线", href: "../cases/renovation.html#full-business-case" }],
+                items: [
+                    { processCode: "IP", action: "第2至3周：编制", description: "依据商业论证汇总16周目标、42万元边界及产品交付安排，形成拟稿。" },
+                    { processCode: "DP", action: "授权：待确认", description: "周诚、林悦、陆明远审查目标、需求与供应能力；计划批准凭据待补。" },
+                    { processCode: "SB", action: "第8周：拟复查", description: "核对隐蔽工程产品、实际成本、定制交期及下一阶段资源；结果待记录。" },
+                    { processCode: "DP", anchor: "DP-review", action: "变更：按需审查", description: "陈默提交影响分析，项目管理委员会在授权范围内决定；具体决定待记录。" },
+                    { processCode: "CP", action: "第16周：拟收尾", description: "对照HOME-025和HAN-024核对家庭验收、资料移交及遗留问题；结果待记录。" }
+                ] }
+        }
+    };
     window.PRINCE2_PRODUCT_DETAILS_V2 = Object.freeze({
         version: "2026-08-12",
         provenanceLabels: provenanceLabels,
@@ -4217,7 +4293,8 @@
             "lessons-log": lessonsLog,
             "quality-register": qualityRegister,
             "quality-management-approach": qualityManagementApproach,
-            "work-package-description": workPackageDescription
+            "work-package-description": workPackageDescription,
+            "project-plan": projectPlan
         })
     });
 }());

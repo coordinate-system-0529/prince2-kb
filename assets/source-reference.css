@@ -1,4 +1,4 @@
-/* 从产品索引跳转到原文时，精确定位并持续突出对应句子 */
+/* 从产品索引跳转到原文时，精确定位并短暂闪烁对应句子。 */
 .source-reference-target {
     scroll-margin-top: 88px;
     border-radius: 3px;

@@ -63,7 +63,8 @@ body.has-lesson-document #detail-content > .page-footer { display: none !importa
 .lesson-journey-table td:nth-child(2) { width: 23%; }
 .lesson-journey-table small, .lesson-journey-table a { display: block; }
 .lesson-journey-line { display: block; text-wrap: pretty; }
-.lesson-journey-table small { margin-top: 4px; color: var(--workspace-muted); font-size: 12px; }
+.lesson-journey-table small { margin-top: 4px; color: var(--workspace-muted); font-size: 12px; text-wrap: balance; }
+.lesson-date-part { display: inline-block; }
 .lesson-journey-table a { color: var(--workspace-accent); margin-top: 4px; text-underline-offset: 3px; }
 .lesson-interpretation-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
 .lesson-interpretation-tabs button { border: 1px solid var(--workspace-line); border-radius: 5px; background: transparent; color: var(--workspace-accent); padding: 8px 12px; font: inherit; cursor: pointer; }

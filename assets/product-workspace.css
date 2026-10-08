@@ -1,4 +1,5 @@
 /* 两个总览共用的阅读外框，后续详情接入须另行验收。 */
+html:has(body[data-product-shell]) { scrollbar-gutter: stable; }
 body[data-product-shell] {
     --workspace-width: 320px;
     --workspace-accent: #285c50;
@@ -162,4 +163,11 @@ details[open] > summary > .workspace-chevron { transform: rotate(45deg); }
 }
 @media (prefers-reduced-motion: reduce) {
     [data-product-shell] *, [data-product-shell] *::before, [data-product-shell] *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+    html:has(body[data-product-shell]) { scrollbar-gutter: auto; }
+    body[data-product-shell] { min-height: 0; background: white; overflow: visible !important; }
+    [data-product-shell] :is(.workspace-sidebar, .workspace-topbar, .workspace-menu, .workspace-close, .workspace-overlay, .workspace-skip, .workspace-reading-bar, .workspace-breadcrumb) { display: none !important; }
+    [data-product-shell] .workspace-frame { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+    [data-product-shell] > footer { display: none !important; }
 }

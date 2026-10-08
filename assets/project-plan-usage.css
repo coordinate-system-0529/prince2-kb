@@ -1,0 +1,107 @@
+body[data-workspace-entry="project-plan"] #plan-usage-matrix,
+body[data-workspace-entry="project-plan"] #plan-usage,
+#business-usage-matrix,
+#business-usage {
+    color: var(--ink-soft);
+    font-family: var(--workspace-font);
+    font-size: 13px;
+    line-height: 1.65;
+}
+.plan-matrix-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 10px; }
+.plan-matrix-legend b { color: var(--workspace-accent); }
+.plan-matrix-note, .plan-matrix-footnote { color: var(--workspace-muted); font-size: 12px; }
+.plan-matrix-footnote { margin: 10px 0 0; }
+.plan-matrix-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--workspace-line); border-radius: 6px; }
+.plan-matrix { width: 100%; min-width: 1000px; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+.plan-matrix th, .plan-matrix td { padding: 7px; border-bottom: 1px solid var(--workspace-line); text-align: center; vertical-align: middle; }
+.plan-matrix th:first-child { position: sticky; left: 0; z-index: 1; width: 180px; text-align: left; background: var(--paper-light, #fffdf8); }
+.plan-matrix thead th { color: var(--ink); background: var(--workspace-tint); font-weight: 500; }
+.plan-matrix thead th:first-child { z-index: 2; background: var(--workspace-tint); }
+.plan-matrix th strong, .plan-matrix th span, .plan-matrix th small { display: block; }
+.plan-matrix th strong, .plan-matrix th span { white-space: nowrap; }
+.plan-matrix th span { margin-top: 4px; color: var(--workspace-accent); font-weight: 600; }
+.plan-matrix th small { font-size: 11px; color: var(--workspace-muted); font-weight: 400; }
+.plan-matrix th small .plan-matrix-identity { margin: 0; color: inherit; font-weight: inherit; white-space: nowrap; }
+.plan-matrix th .plan-matrix-activity-label { display: inline-block; color: inherit; margin: 0; font-weight: inherit; white-space: nowrap; }
+.plan-matrix-activity { display: grid; grid-template-columns: 20px minmax(0, 1fr) 16px; gap: 5px; align-items: baseline; }
+.plan-matrix tbody th .plan-matrix-activity small { display: inline; margin: 0; }
+.plan-matrix-activity a { font-size: 12px; color: var(--workspace-muted); text-align: center; text-decoration: none; }
+.plan-matrix-activity a:hover { color: var(--workspace-accent); }
+.plan-matrix button { border: 0; padding: 0; background: transparent; color: var(--ink); font: inherit; font-weight: 600; text-align: left; cursor: pointer; }
+.plan-matrix button:hover { color: var(--workspace-accent); text-decoration: underline; text-underline-offset: 3px; }
+.plan-matrix tr.is-active td, .plan-matrix tr.is-active th { background: var(--workspace-tint); }
+.plan-matrix td.is-responsible { color: var(--workspace-accent); font-weight: 700; }
+.plan-matrix tr:last-child > * { border-bottom: 0; }
+.plan-matrix-footnote a, .plan-usage-outcome a { color: var(--workspace-accent); text-underline-offset: 3px; }
+.plan-usage-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; background: var(--workspace-tint); border-radius: 6px; }
+.plan-usage-tab { flex: 1 1 auto; border: 0; padding: 8px 12px; border-radius: 4px; color: var(--ink-soft); background: transparent; font: inherit; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.plan-usage-tab:hover { color: var(--workspace-accent); }
+.plan-usage-tab[aria-selected="true"] { color: var(--workspace-accent); background: var(--paper-light, #fffdf8); box-shadow: 0 1px 3px rgba(35, 30, 22, .1); }
+.plan-usage-context { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; padding: 10px 0; }
+.plan-usage-context strong { color: var(--ink); font-size: 15px; }
+.plan-usage-context p { margin: 4px 0 0; }
+.plan-usage-state { font-size: 11px; color: var(--workspace-accent); background: var(--workspace-tint); padding: 3px 8px; border-radius: 3px; }
+.plan-usage-steps { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.plan-usage-steps th, .plan-usage-steps td { padding: 9px 10px; border-bottom: 1px solid var(--workspace-line); text-align: left; vertical-align: top; overflow-wrap: break-word; }
+.plan-usage-steps thead th { padding: 7px 10px; color: var(--workspace-muted); font-size: 12px; background: var(--workspace-tint); }
+.plan-usage-steps thead .plan-usage-number-cell { width: 2.5em; padding-inline: 5px; white-space: nowrap; }
+.plan-usage-steps thead .plan-usage-actor-cell { width: 22%; }
+.plan-usage-steps thead .plan-usage-material-cell { width: 21%; }
+.plan-usage-steps thead .plan-usage-action-cell { width: 31%; }
+.plan-usage-steps tbody th { padding-inline: 5px; color: var(--workspace-muted); font-size: 11px; font-weight: 500; }
+.plan-usage-actors { display: grid; gap: 5px; }
+.plan-usage-person { display: inline-flex; flex-wrap: wrap; align-items: baseline; max-width: 100%; gap: 0 5px; }
+.plan-usage-person strong { color: var(--ink); font-size: 13px; white-space: nowrap; }
+.plan-usage-person small { color: var(--workspace-muted); font-size: 11px; font-weight: 400; white-space: nowrap; }
+.plan-usage-steps p { margin: 6px 0 0; }
+.plan-usage-steps .plan-usage-action-cell p { margin: 0; }
+.plan-usage-steps td:last-child strong { font-weight: 500; color: var(--ink); }
+.plan-usage-steps td:last-child p { color: var(--workspace-muted); font-size: 12px; }
+.plan-usage-result-state { display: block; color: var(--workspace-accent); font-size: 11px; }
+.plan-usage-materials { display: flex; flex-wrap: wrap; gap: 5px 7px; }
+.plan-usage-materials a { color: var(--workspace-accent); padding: 2px 6px; border-radius: 3px; background: var(--workspace-tint); text-decoration: none; font-size: 12px; }
+.plan-usage-materials a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.business-usage-pending { color: var(--workspace-muted); padding: 2px 6px; border-radius: 3px; background: var(--workspace-tint); font-size: 12px; }
+.plan-usage-outcome { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; padding-top: 12px; }
+.plan-usage-outcome > a { margin-left: auto; font-size: 11px; }
+.plan-usage-boundaries { padding-top: 14px; }
+.plan-usage-boundaries h3 { margin: 0 0 6px; color: var(--ink); font-size: 14px; }
+.plan-usage-boundaries dl { margin: 0; }
+.plan-usage-boundaries dl > div { display: grid; grid-template-columns: 9em 1fr 1fr; gap: 8px 16px; padding: 7px 0; border-bottom: 1px solid var(--workspace-line); }
+.plan-usage-boundaries dt { font-weight: 600; }
+.plan-usage-boundaries dd { margin: 0; }
+#plan-usage-matrix:focus-visible, #plan-usage-panel:focus-visible,
+#business-usage-matrix:focus-visible, #business-usage-panel:focus-visible,
+.plan-matrix-scroll:focus-visible, .plan-matrix button:focus-visible, .plan-usage-tab:focus-visible { outline: 2px solid var(--workspace-accent); outline-offset: 3px; }
+@media screen {
+    body[data-workspace-entry="project-plan"].has-lesson-document #detail-view-toolbar { display: block !important; }
+    body[data-workspace-entry="full-business-case"].has-lesson-document #detail-view-toolbar { display: block !important; }
+}
+@media screen and (max-width: 1200px) {
+    .plan-usage-steps thead { display: none; }
+    .plan-usage-steps tbody tr { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 0 7px; padding: 9px 0; border-bottom: 1px solid var(--workspace-line); }
+    .plan-usage-steps th, .plan-usage-steps td { display: block; width: auto; padding: 4px 0; border: 0; }
+    .plan-usage-steps tbody th { grid-row: 1 / span 4; padding-inline: 0; white-space: nowrap; }
+    .plan-usage-steps td { grid-column: 2; min-width: 0; }
+    .plan-usage-steps td::before { content: attr(data-label); display: block; margin-bottom: 3px; font-size: 11px; color: var(--workspace-muted); }
+}
+@media screen and (max-width: 680px) {
+    .plan-usage-tabs { display: flex; flex-wrap: wrap; }
+    .plan-usage-tab { flex: 1 1 auto; min-width: min(100%, 7em); max-width: 100%; padding: 7px 10px; white-space: normal; overflow-wrap: break-word; }
+    .plan-usage-boundaries dl > div { grid-template-columns: 1fr; gap: 2px; }
+    .plan-usage-outcome > a { margin-left: 0; }
+}
+@media screen and (max-width: 360px) {
+    .plan-matrix th:first-child { position: static; }
+}
+@media print {
+    .plan-matrix-scroll { overflow: visible; border: 0; border-radius: 0; }
+    .plan-matrix { min-width: 0; width: 100%; border-collapse: collapse; }
+    .plan-matrix th, .plan-matrix td { padding: 4px 3px; overflow-wrap: anywhere; }
+    .plan-matrix th:first-child { position: static; width: 25%; }
+    .plan-matrix th strong, .plan-matrix th span,
+    .plan-matrix th small .plan-matrix-identity,
+    .plan-matrix th .plan-matrix-activity-label { white-space: normal; }
+    .plan-matrix thead { display: table-header-group; }
+    .plan-matrix tr { break-inside: avoid; }
+}

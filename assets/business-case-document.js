@@ -26,6 +26,13 @@
             var tr = node("tr");
             row.forEach(function (value, index) {
                 var cell = node(index ? "td" : "th", String(value));
+                if (!index && / [·→] /.test(String(value))) {
+                    cell.replaceChildren();
+                    String(value).split(/ (?=[·→] )/).forEach(function (part, partIndex) {
+                        if (partIndex) { cell.append(document.createTextNode(" ")); }
+                        cell.append(node("span", part, "business-label-part"));
+                    });
+                }
                 if (!index) { cell.scope = "row"; }
                 tr.append(cell);
             });
@@ -54,7 +61,7 @@
             // 保留既有案例叙述作为基础，复杂比较改用表格展开。
             if ([0, 1, 7].includes(index)) { section.append(node("p", item.text)); }
             if (index === 0) {
-                note(section, "决策依据", "第 2 至 3 周形成的 v1.0 基线；第 8 周计划复查成本、工期与风险。后续实际值待复核。");
+                note(section, "决策依据", "第 2 至 3 周 v1.0 拟稿，批准凭据待补；第 8 周计划复查成本、工期与风险。后续实际值待复核。");
             }
             if (index === 2) {
                 table(section, "业务选项比较", ["选项", "初始投入", "覆盖范围", "局限／建议"], [
@@ -82,7 +89,7 @@
             }
             if (index === 5) {
                 table(section, "时间基准与复查", ["环节", "计划时点", "交付／检查"], [
-                    ["项目启动", "第 2 至 3 周", "形成 v1.0 完整商业论证、计划和成本基准"],
+                    ["项目启动", "第 2 至 3 周", "编制 v1.0 完整商业论证及计划，批准凭据待补"],
                     ["阶段边界", "第 8 周", "复查实际成本、剩余风险和交付预测"],
                     ["验收与收尾", "第 16 周", "家庭验收及资料移交"],
                     ["项目后收益复查", "入住后 1 个月、6 个月", "检查使用价值和维护情况"]
@@ -114,17 +121,20 @@
             }
             if (index === 9) {
                 var refs = [
+                    ["项目计划拟稿", "product-detail-v2.html?entry=project-plan&mode=case"],
                     ["项目概述文件 v1.0", "../cases/project-brief.html#business-case"],
                     ["项目启动时间线", "../cases/renovation.html#full-business-case"],
                     ["项目产品描述", "../cases/project-product-description.html"],
                     ["产品登记单", "product-detail-v2.html?entry=product-register&mode=case"],
                     ["风险登记单", "product-detail-v2.html?entry=risk-register&mode=case"],
-                    ["质量登记单", "product-detail-v2.html?entry=quality-register&mode=case"]
+                    ["质量登记单", "product-detail-v2.html?entry=quality-register&mode=case"],
+                    ["收益管理方法拟稿", "product-detail-v2.html?entry=benefits-management-approach&mode=case"],
+                    ["可持续性管理方法拟稿", "product-detail-v2.html?entry=sustainability-management-approach&mode=case"]
                 ];
                 var list = node("ul", "", "business-references");
                 refs.forEach(function (ref) { var li = node("li"), a = node("a", ref[0]); a.href = ref[1]; li.append(a); list.append(li); });
                 section.append(list);
-                note(section, "待补文件", "项目计划独立文件、收益管理方法、可持续性管理方法，以及商业论证批准签认资料。");
+                note(section, "待补资料", "项目计划、商业论证及管理方法的批准签认资料。");
             }
             root.append(section);
         });
@@ -134,12 +144,12 @@
         titleParts: ["住宅全屋装修项目", "商业论证"],
         eyebrow: "REN-001 · A1 商业论证 · 完整版本",
         metadata: [
-            ["版本／性质", "v1.0 · 教学虚构案例"],
-            ["文件时点", "第 2 至 3 周 · 启动阶段基线"],
+            ["版本／性质", "v1.0 拟稿 · 教学虚构案例"],
+            ["文件时点", "第 2 至 3 周 · 项目启动"],
             ["编制／维护", "陈默 · 项目经理／许静 · 项目支持"],
             ["问责／授权", "周诚 · 项目总监／项目管理委员会"],
             ["投资／工期", "上限 42 万元／目标 16 周"],
-            ["签认资料", "待补充"]
+            ["批准／签认", "批准待确认，签认资料待补充"]
         ],
         printLabel: "打印商业论证",
         budget: budget,

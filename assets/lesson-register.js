@@ -129,7 +129,11 @@
         var body = node("tbody");
         record.journey.forEach(function (item) {
             var row = node("tr"), stage = node("th"); stage.scope = "row";
-            stage.append(node("strong", item[0]), node("small", item[1]));
+            var timing = node("small");
+            item[1].split(/(\d+\s*月\s*\d+\s*日)/).forEach(function (part) {
+                timing.append(/^\d+\s*月\s*\d+\s*日$/.test(part) ? node("span", part, "lesson-date-part") : document.createTextNode(part));
+            });
+            stage.append(node("strong", item[0]), timing);
             var people = node("td"), result = node("td");
             item[2].split("；").forEach(function (person) { people.append(node("span", person, "lesson-journey-line")); });
             item[4].split(/[，；]/).forEach(function (state) { result.append(node("span", state, "lesson-journey-line")); });
@@ -205,6 +209,12 @@
         help.setAttribute("aria-haspopup", "dialog");
         help.setAttribute("aria-controls", "lesson-help-dialog");
         help.addEventListener("click", function () {
+            var lessons = helpDialog.dataset.lessonInterpretation === "true";
+            helpDialog.querySelector(".lesson-legacy-explanation").hidden = lessons;
+            helpDialog.querySelector(".lesson-interpretation").hidden = !lessons;
+            var inlineFields = ["project-plan", "full-business-case"].includes(section.dataset.documentSlug) || (window.PRINCE2ProductManagementUsage && window.PRINCE2ProductManagementUsage.supports(section.dataset.documentSlug));
+            document.getElementById("lesson-help-title").textContent = lessons ? "案例解读" : (inlineFields ? "字段说明" : "字段与职责说明");
+            helpDialog.querySelector(".lesson-help-close").setAttribute("aria-label", "关闭" + document.getElementById("lesson-help-title").textContent);
             helpDialog.showModal();
             document.body.classList.add("lesson-help-open");
         });
@@ -290,6 +300,7 @@
             } else {
                 field(list, "记录", references);
             }
+            Array.from(list.children).forEach(function (field, index) { field.id = "record-field-" + record.id + "-" + (index + 1); });
             detail.append(list);
             if (!configuration) { buildJourney(detail, record); }
             details.append(detail);
@@ -353,8 +364,9 @@
         }
         try { sessionStorage.setItem(selectionKey, selectedId); } catch (error) { /* 不阻断阅读。 */ }
         updateLessonInterpretation();
+        window.dispatchEvent(new CustomEvent("product-record:changed", { detail: { recordId: selectedId } }));
     }
-    function arrangeExplanations(active, lessons) {
+    function arrangeExplanations(active, lessons, inlineManagementContext, inlineRelated) {
         if (active && !helpDialog) {
             helpDialog = node("dialog", "", "lesson-help-dialog");
             helpDialog.id = "lesson-help-dialog";
@@ -391,20 +403,27 @@
         helpDialog.querySelector(".lesson-interpretation").hidden = !lessons;
         if (!active && helpDialog.open) { helpDialog.close(); }
         placements.forEach(function (placement) {
-            if (active) { helpDialog.querySelector(".lesson-legacy-explanation").append(placement.element); }
+            var inlineSection = (inlineManagementContext && ["roles-section", "lifecycle-section"].includes(placement.element.id)) || (inlineRelated && placement.element.id === "case-section");
+            if (active && !inlineSection) { helpDialog.querySelector(".lesson-legacy-explanation").append(placement.element); }
             else { placement.marker.after(placement.element); }
         });
         if (lessons) { updateLessonInterpretation(); }
     }
     window.PRINCE2LessonRegister = {
         records: records,
+        restoreSelection: function (id) {
+            if (!activeRecords || !activeRecords.some(function (record) { return record.id === id; })) { return false; }
+            selectRecord(id);
+            return true;
+        },
         render: function (slug, mode) {
             var section = document.getElementById("lesson-register-section");
-            var configuration = slug === "full-business-case" ? window.PRINCE2BusinessCaseDocument :
+            var configuration = slug === "project-plan" ? window.PRINCE2ProjectPlanDocument : slug === "full-business-case" ? window.PRINCE2BusinessCaseDocument :
                 (slug === "quality-register" ? window.PRINCE2QualityRegister : (window.PRINCE2RegisterDocuments || {})[slug]);
             var supported = slug === "lessons-log" || Boolean(configuration);
             var active = supported && mode === "case";
-            arrangeExplanations(active, active && slug === "lessons-log");
+            var inlineManagement = ["project-plan", "full-business-case"].includes(slug) || (window.PRINCE2ProductManagementUsage && window.PRINCE2ProductManagementUsage.supports(slug));
+            arrangeExplanations(active, active && slug === "lessons-log", inlineManagement, window.PRINCE2ProductManagementUsage && window.PRINCE2ProductManagementUsage.supports(slug));
             if (active && (!section.children.length || section.dataset.documentSlug !== slug)) {
                 selectionKey = "prince2-" + slug + "-selected-v1";
                 selectedId = "";
@@ -422,6 +441,8 @@
                     var linkedId = recordHash.slice("lesson-detail-".length);
                     if (activeRecords.some(function (record) { return record.id === linkedId; })) { selectRecord(linkedId); }
                 }
+                var fieldHash = recordHash.match(/^record-field-(.+)-\d+$/);
+                if (fieldHash && activeRecords.some(function (record) { return record.id === fieldHash[1]; })) { selectRecord(fieldHash[1]); }
             }
             section.querySelectorAll("[data-business-anchor]").forEach(function (chapter) {
                 if (active) { chapter.dataset.viewAnchor = chapter.dataset.businessAnchor; }
@@ -432,7 +453,7 @@
             if (!nav) { return; }
             var link = nav.querySelector("[data-lesson-document-link]");
             if (!link && supported) {
-                link = node("a", slug === "full-business-case" ? "商业论证文件" : "记录单实例");
+                link = node("a", configuration && configuration.documentLinkLabel || (slug === "full-business-case" ? "商业论证文件" : "记录单实例"));
                 link.href = "#lesson-register-section";
                 link.dataset.lessonDocumentLink = "true";
                 nav.prepend(link);

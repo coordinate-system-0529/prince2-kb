@@ -1,0 +1,34 @@
+/* 仅调整项目计划纸面实例，不影响图谱与其他产品。 */
+[data-document-slug="project-plan"] .business-contents { display:flex; flex-wrap:wrap; gap:6px 16px; padding-bottom:14px; border-bottom:1px solid var(--workspace-line); }
+[data-document-slug="project-plan"] a { color:var(--workspace-accent); text-underline-offset:3px; }
+[data-document-slug="project-plan"] h3 { margin:8px 0; font-size:14px; }
+[data-document-slug="project-plan"] .business-table tbody th { min-width:0; }
+.plan-product-breakdown ul { margin:6px 0; padding-left:22px; }
+.plan-product-breakdown ul ul { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:3px 20px; }
+.plan-product-flow { margin:14px 0; }
+.plan-product-flow figcaption { color:var(--workspace-muted); font-size:12px; margin-bottom:6px; }
+.plan-flow-node { padding:8px 12px; border:1px solid var(--workspace-line); border-radius:4px; background:var(--workspace-tint); }
+.plan-flow-term { display:inline-block; }
+.plan-flow-branches { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.plan-flow-connector { text-align:center; color:var(--workspace-muted); font-size:12px; }
+.plan-schedule-scroll { max-width:100%; overflow-x:auto; margin:12px 0; }
+.plan-schedule-scroll:focus-visible { outline:2px solid var(--workspace-accent); outline-offset:2px; }
+.plan-gantt { min-width:710px; margin:0; font-size:12px; }
+.plan-gantt figcaption { padding-bottom:6px; color:var(--workspace-muted); }
+.plan-gantt-row { display:grid; grid-template-columns:150px minmax(0,1fr); gap:8px; padding:6px 0; border-bottom:1px solid var(--workspace-line); align-items:center; }
+.plan-gantt-track { display:grid; grid-template-columns:repeat(16,minmax(0,1fr)); min-height:20px; align-items:center; text-align:center; background:repeating-linear-gradient(to right,transparent 0,transparent calc(6.25% - 1px),var(--workspace-line) calc(6.25% - 1px),var(--workspace-line) 6.25%); }
+.plan-gantt-bar { height:12px; background:var(--workspace-accent); border-radius:2px; margin:0 2px; }
+@media screen and (max-width:640px) {
+    .plan-product-breakdown ul ul, .plan-flow-branches { grid-template-columns:1fr; }
+    #project-plan-chapter-1 .business-table, #project-plan-chapter-7 .business-table { min-width:0; }
+    #project-plan-chapter-1 .business-table tbody th,
+    #project-plan-chapter-7 .business-table tbody th { white-space:nowrap; width:6em; }
+}
+@media print {
+    .plan-contents { display:none !important; }
+    .plan-schedule-scroll { overflow:visible; }
+    .plan-gantt { min-width:0; font-size:8pt; }
+    .plan-gantt-row { grid-template-columns:110px minmax(0,1fr); }
+    .plan-gantt-bar { background:#86582e; print-color-adjust:exact; }
+    .plan-product-flow { break-inside:avoid; }
+}

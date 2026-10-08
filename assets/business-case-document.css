@@ -13,7 +13,8 @@
 .business-table caption { text-align:left; color:var(--workspace-muted); font-size:12px; padding:0 0 6px; }
 .business-table th, .business-table td { text-align:left; vertical-align:top; padding:8px 10px; border-bottom:1px solid var(--workspace-line); }
 .business-table thead th { color:var(--workspace-accent); background:var(--workspace-tint); white-space:nowrap; }
-.business-table tbody th { min-width:8em; color:var(--ink); font-weight:500; }
+.business-table tbody th { min-width:8em; color:var(--ink); font-weight:500; text-wrap:balance; }
+.business-label-part { display:inline-block; }
 .business-references { display:flex; flex-wrap:wrap; gap:8px 24px; list-style:none; padding:0; margin:8px 0; }
 @media screen and (max-width:640px) {
     .business-table { min-width:580px; }

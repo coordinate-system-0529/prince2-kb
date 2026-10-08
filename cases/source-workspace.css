@@ -1,0 +1,40 @@
+/* 案例原文件只接入共用阅读外框，文档内容和证据关系保持原样。 */
+body[data-workspace-source] {
+    --quality-plum: var(--workspace-accent);
+    --quality-plum-deep: var(--ink);
+}
+body[data-workspace-source] :is(h1, h2, h3) { text-wrap: balance; }
+[data-workspace-source] .source-title-part { display: inline-block; }
+body[data-workspace-source] main.workspace-frame { padding-top: 0; }
+[data-workspace-source] .source-file-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    width: auto;
+    margin: 0;
+    padding: 14px 0 18px;
+    border: 0;
+    font-family: var(--workspace-font);
+    font-size: 12px;
+    line-height: 1.6;
+}
+.source-file-nav a { color: var(--workspace-accent); text-decoration: none; }
+.source-file-nav a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.source-file-nav span { color: var(--workspace-muted); }
+body[data-workspace-source] > footer { font-size: 12px; }
+@media print {
+    [data-workspace-source] #workspace-navigation,
+    [data-workspace-source] .workspace-topbar,
+    [data-workspace-source] .source-file-nav,
+    body[data-workspace-source] > footer { display: none !important; }
+    body[data-workspace-source] { background: white; }
+    body[data-workspace-source] main.workspace-frame { width: 100%; margin: 0; padding: 0; }
+    body[data-workspace-source][data-case-product="产品登记单"] { page: product-register-sheet; }
+    [data-workspace-source] .full-register-wrap { overflow: visible; }
+    [data-workspace-source] .full-register-table { min-width: 0; width: 100%; }
+    [data-workspace-source] .full-register-table th { white-space: normal; overflow-wrap: anywhere; }
+    [data-workspace-source] .full-register-table thead { display: table-header-group; }
+    [data-workspace-source] .full-register-table tr { break-inside: avoid; }
+}
+@page product-register-sheet { size: A4 landscape; margin: 12mm; }

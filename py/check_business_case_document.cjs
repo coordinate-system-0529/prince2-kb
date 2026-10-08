@@ -4,8 +4,13 @@ const vm = require('node:vm');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
-const context = { window: {} };
-vm.runInNewContext(read('assets/product-details-v2.js'), context);
+const context = { window: { addEventListener() {} } };
+for (const file of ['assets/prince2-products.js', 'assets/product-details-v2.js',
+    'cases/renovation-register-data.js', 'assets/register-documents.js', 'assets/product-management-usage.js',
+    'assets/product-remaining-v2.js', 'assets/product-remaining-cases.js',
+    'assets/product-remaining-methods.js', 'assets/product-remaining-runtime.js']) {
+    vm.runInNewContext(read(file), context, { filename: file });
+}
 vm.runInNewContext(read('assets/business-case-document.js'), context);
 const data = context.window.PRINCE2BusinessCaseDocument;
 const entry = context.window.PRINCE2_PRODUCT_DETAILS_V2.entries['full-business-case'];
@@ -16,6 +21,10 @@ assert.equal(data.budget.find(row => row[0] === '风险余量')[1], 5);
 assert.ok(data.metadata.some(row => row[1].includes('教学虚构')));
 const source = read('assets/business-case-document.js');
 for (const label of ['资金安排', '收益容许偏差', '运行维护成本', '签认资料', '净现值、回收期和投资回报率未计算']) assert.ok(source.includes(label), label);
+assert.ok(data.metadata.some(row => row[1].includes('v1.0 拟稿')));
+assert.ok(data.metadata.some(row => row[1].includes('批准待确认')));
+assert.ok(source.includes('entry=benefits-management-approach&mode=case'));
+assert.ok(source.includes('entry=sustainability-management-approach&mode=case'));
 for (const file of ['assets/business-case-document.js', 'assets/business-case-document.css', 'assets/lesson-register.js', 'entities/product-detail-v2.html']) {
     assert.ok(!read(file).includes('\uFFFD'), file);
 }

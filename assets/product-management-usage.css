@@ -1,0 +1,26 @@
+#product-duty-matrix, #product-management-usage {
+    color: var(--ink-soft);
+    font-family: var(--workspace-font);
+    font-size: 13px;
+    line-height: 1.65;
+}
+.product-duty-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.product-duty-table th, .product-duty-table td { padding: 8px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--workspace-line); }
+.product-duty-table thead th { color: var(--workspace-muted); font-size: 12px; background: var(--workspace-tint); }
+.product-duty-table thead th:first-child { width: 29%; }
+.product-duty-table thead th:nth-child(2) { width: 19%; }
+.product-duty-table tbody th { font-weight: 500; }
+.product-duty-table tbody th > small { display: block; color: var(--workspace-muted); font-size: 11px; }
+.product-management-provenance { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 8px 0 0; color: var(--workspace-muted); font-size: 11px; }
+.product-management-provenance a { color: var(--workspace-accent); text-underline-offset: 3px; }
+body[data-product-management="true"] #roles-boundary { margin-top: 10px; padding: 8px 0; border: 0; border-top: 1px solid var(--workspace-line); background: transparent; }
+#product-management-panel:focus-visible { outline: 2px solid var(--workspace-accent); outline-offset: 3px; }
+@media screen {
+    body[data-product-management="true"].has-lesson-document #detail-view-toolbar { display: block !important; }
+}
+@media screen and (max-width: 680px) {
+    .product-duty-table thead { display: none; }
+    .product-duty-table tbody tr { display: grid; gap: 3px; padding: 9px 0; border-bottom: 1px solid var(--workspace-line); }
+    .product-duty-table th, .product-duty-table td { display: block; padding: 0; border: 0; }
+    .product-duty-table tbody td::before { content: attr(data-label) "："; color: var(--workspace-muted); font-size: 11px; }
+}

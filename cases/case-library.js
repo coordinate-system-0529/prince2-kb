@@ -1,6 +1,42 @@
 (function() {
     "use strict";
 
+    function setupRecordInteractions() {
+        document.querySelectorAll(".register-event-trigger").forEach(function (trigger) {
+            trigger.addEventListener("click", function () {
+                var panel = document.getElementById(trigger.getAttribute("aria-controls"));
+                if (!panel) { return; }
+                var open = trigger.getAttribute("aria-expanded") !== "true";
+                trigger.setAttribute("aria-expanded", String(open));
+                panel.hidden = !open;
+            });
+        });
+    }
+
+    // 现行案例共用工作区目录，旧目录仅保留为兼容入口。
+    if (document.body.hasAttribute("data-product-shell")) {
+        setupRecordInteractions();
+        if (document.body.hasAttribute("data-workspace-source")) {
+            function syncSourceContext() {
+                if (!window.PRINCE2Workspace) { return; }
+                var name = document.body.dataset.caseProduct;
+                if (name === "项目概述文件" && location.hash === "#business-case") { name = "概要商业论证"; }
+                if (document.body.dataset.caseProduct === "风险登记单" && location.hash === "#lessons-log") {
+                    name = "经验教训记录单";
+                }
+                window.PRINCE2Workspace.setSourceContext({ name: name, kind: document.body.dataset.workspaceSource });
+            }
+            syncSourceContext();
+            // 底部脚本接入的摘录页，要在工作区页头完成后再同步一次身份。
+            if (document.readyState !== "complete") {
+                document.addEventListener("DOMContentLoaded", syncSourceContext, { once: true });
+            }
+            window.addEventListener("hashchange", syncSourceContext);
+            if ("scrollRestoration" in history) { history.scrollRestoration = "auto"; }
+        }
+        return;
+    }
+
     var NAV_BUILD = "20260814-2";
     var SIDEBAR_SCROLL_KEY = "prince2-product-sidebar-scroll";
     var isKnowledgeIndex = document.body.hasAttribute("data-product-index");
@@ -397,17 +433,5 @@
 
     window.addEventListener("hashchange", updateSidebarContext);
 
-    document.querySelectorAll(".register-event-trigger").forEach(function(trigger) {
-        trigger.addEventListener("click", function() {
-            var panelId = trigger.getAttribute("aria-controls");
-            var panel = document.getElementById(panelId);
-            if (!panel) {
-                return;
-            }
-
-            var willOpen = trigger.getAttribute("aria-expanded") !== "true";
-            trigger.setAttribute("aria-expanded", String(willOpen));
-            panel.hidden = !willOpen;
-        });
-    });
+    setupRecordInteractions();
 }());

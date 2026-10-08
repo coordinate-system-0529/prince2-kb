@@ -22,6 +22,7 @@
     } catch (error) { /* 存储不可用时仍可正常浏览。 */ }
 
     var theoryRoutes = {
+        "项目计划": "project-plan",
         "问题登记单": "issue-register",
         "概要商业论证": "outline-business-case",
         "完整商业论证": "full-business-case",
@@ -36,6 +37,7 @@
         "工作包描述": "work-package-description"
     };
     var caseRoutes = {
+        "项目计划": "entities/product-detail-v2.html?entry=project-plan&mode=case",
         "问题登记单": "entities/product-detail-v2.html?entry=issue-register&mode=case",
         "概要商业论证": "entities/product-detail-v2.html?entry=outline-business-case&mode=case",
         "完整商业论证": "entities/product-detail-v2.html?entry=full-business-case&mode=case",
@@ -49,6 +51,10 @@
         "质量管理方法": "entities/product-detail-v2.html?entry=quality-management-approach&mode=case",
         "工作包描述": "entities/product-detail-v2.html?entry=work-package-description&mode=case"
     };
+    Object.entries(window.PRINCE2_PRODUCT_ROUTES || {}).forEach(function (route) {
+        theoryRoutes[route[0]] = route[1];
+        caseRoutes[route[0]] = "entities/product-detail-v2.html?entry=" + route[1] + "&mode=case";
+    });
 
     function escape(value) {
         return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -90,7 +96,7 @@
             '<details data-expand="' + productItem.code + '"' + expanded(productItem.code) + '><summary class="workspace-row">' +
             '<b class="workspace-code">' + productItem.code + '</b><span class="workspace-name">' + escape(productItem.name) + '</span>' +
             '<small class="workspace-child-count">' + productItem.components.length + '</small><span class="workspace-chevron" aria-hidden="true"></span></summary>' +
-            '<ul class="workspace-children">' + productItem.components.map(function (name) { return leaf(name, ""); }).join("") + '</ul></details></li>';
+            '<ul class="workspace-children"><li class="workspace-parent-entry"><a class="workspace-row" href="' + escape(route(productItem.name)) + '"><span class="workspace-branch" aria-hidden="true"></span><span class="workspace-name">' + escape(productItem.name) + '总览</span></a></li>' + productItem.components.map(function (name) { return leaf(name, ""); }).join("") + '</ul></details></li>';
     }
     function group(category) {
         var items = products.filter(function (item) { return item.type === category; });
@@ -116,7 +122,7 @@
         '<p id="workspace-search-status" aria-live="polite">15 项正式产品 · 7 基准 / 7 报告 / 1 记录</p></div>' +
         '<nav class="workspace-tree" aria-label="15 项正式管理产品">' + (products.length ? ["baseline", "report", "record"].map(group).join("") : '<p role="status">目录暂时无法加载，请刷新页面。</p>') + '</nav>' +
         '<p class="workspace-empty" hidden>没有匹配项，请尝试其他名称或编号。</p>' +
-        '<div class="workspace-sidebar-note">同一目录，两种阅读方式。<br>灰色条目尚未完成当前模式的内容。</div></aside>';
+        '<div class="workspace-sidebar-note">同一目录，理论与案例对应。<br>案例中的拟稿与核验状态分别列示。</div></aside>';
 
     var sidebar = mount.querySelector(".workspace-sidebar");
     var tree = mount.querySelector(".workspace-tree");
@@ -207,7 +213,8 @@
     drawer(false);
 
     function setDetailContext(context) {
-        var firstSelection = !document.body.dataset.workspaceCurrent;
+        var firstSelection = !document.body.dataset.workspaceCurrent ||
+            (context.source && document.body.dataset.workspaceCurrent !== context.name);
         mode = context.mode;
         isCase = mode === "case";
         document.body.dataset.productShell = mode;
@@ -242,6 +249,13 @@
             if (name === context.name) { row.setAttribute("aria-current", "page"); }
             else { row.removeAttribute("aria-current"); }
         });
+        tree.querySelectorAll(".workspace-product").forEach(function (item) {
+            var row = item.querySelector(".workspace-parent-entry > a");
+            if (!row) return;
+            row.href = route(item.dataset.name);
+            if (item.dataset.name === context.name) row.setAttribute("aria-current", "page");
+            else row.removeAttribute("aria-current");
+        });
         if (firstSelection) {
             var selected = tree.querySelector('.workspace-row[aria-current="page"]');
             var ancestor = selected && selected.parentElement;
@@ -264,7 +278,24 @@
         var label = document.querySelector(".workspace-mode-label");
         if (label) { label.textContent = isCase ? "案例模式" : "理论模式"; }
     }
-    window.PRINCE2Workspace = { setDetailContext: setDetailContext, setDrawer: drawer };
+    // 原文件沿用同一目录，模式入口进入对应的 V2 产品，不追加无效模式参数。
+    function setSourceContext(context) {
+        setDetailContext({ name: context.name, mode: "case", source: true });
+        var entry = theoryRoutes[context.name];
+        mount.querySelectorAll("[data-workspace-mode]").forEach(function (link) {
+            link.href = entry ? url("entities/product-detail-v2.html?entry=" + entry + "&mode=" + link.dataset.workspaceMode) :
+                url(link.dataset.workspaceMode === "case" ? "cases/renovation.html" : "entities/product.html");
+            delete link.dataset.detailMode;
+        });
+        var label = document.querySelector(".workspace-mode-label");
+        if (label) { label.textContent = context.kind || "案例原文件"; }
+        var back = document.querySelector("[data-source-return]");
+        if (back && entry) {
+            back.href = url("entities/product-detail-v2.html?entry=" + entry + "&mode=case");
+            back.textContent = "返回" + context.name + "案例";
+        }
+    }
+    window.PRINCE2Workspace = { setDetailContext: setDetailContext, setSourceContext: setSourceContext, setDrawer: drawer };
 
     function finish() {
         var top = document.getElementById("workspace-topbar");
