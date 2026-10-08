@@ -1,31 +1,36 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>产品登记单生命周期 - 住宅装修案例</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="case-library.css">
+    <link rel="stylesheet" href="case-library.css?v=20260814-2">
     <link rel="stylesheet" href="product-register-case.css">
-    <script src="../assets/prince2-products.js" defer></script>
-    <script src="case-library.js" defer></script>
+    <script src="../assets/prince2-products.js?v=routes-36-1" defer></script>
+    <script src="../assets/product-workspace.js?v=routes-36-1" defer></script>
+    <script src="case-library.js?v=source-nav-1" defer></script>
     <script src="renovation-register-data.js" defer></script>
     <script src="product-register-case.js" defer></script>
+    <link rel="stylesheet" href="case-responsive.css?v=1">
+    <link rel="stylesheet" href="../assets/product-workspace.css?v=acceptance-1">
+    <link rel="stylesheet" href="source-workspace.css?v=acceptance-1">
 </head>
-<body data-case-product="产品登记单">
-    <header class="site-header">
-        <a class="back-link" href="renovation.html#product-register-story">← 返回装修项目时间线</a>
+<body data-case-product="产品登记单" data-product-shell="case" data-workspace-source="案例原文件">
+    <div id="workspace-navigation"></div>
+    <main class="workspace-frame register-case-page" id="main-content" tabindex="-1">
+    <div class="workspace-topbar" id="workspace-topbar"></div>
+    <nav class="source-file-nav" aria-label="原文件导航">
+        <a data-source-return href="../entities/product-detail-v2.html?entry=product-register&amp;mode=case">返回产品登记单案例</a>
         <span class="site-label">PRINCE2 案例库 · 单产品视图</span>
-    </header>
-
-    <main class="register-case-page">
+    </nav>
         <section class="register-case-hero" aria-labelledby="page-title">
             <div class="register-hero-copy">
                 <span class="case-kicker">教学虚构案例 · REN-001 · A13 项目记录单组成项</span>
                 <h1 id="page-title">产品登记单</h1>
                 <p class="register-hero-lead">产品登记单不是独立的正式管理产品，它是 A13 项目记录单的组成项，用于持续记录每项产品的状态、版本、验收日期、验收结果和参考资料。</p>
                 <div class="register-hero-links">
-                    <a href="../entities/product.html#entity-产品登记单">查看通用定义</a>
+                    <a href="../entities/product-detail-v2.html?entry=product-register&amp;mode=theory">产品登记单理论</a>
                     <a href="renovation.html#timeline-title">回到完整项目进展</a>
                 </div>
             </div>
@@ -221,7 +226,7 @@
                 <article class="update-panel" id="update-panel-04" role="tabpanel" aria-labelledby="update-04">
                     <header>
                         <div><span class="update-status is-current">正在处理</span><small>第 7 周 · 管理阶段 1</small></div>
-                        <h3>保留防水失败结果并安排复验</h3>
+                        <h3><span class="source-title-part">保留防水失败结果</span><span class="source-title-part">并安排复验</span></h3>
                         <p>闭水试验未通过，返工成果已经受控，验收仍需等待再次试验。</p>
                     </header>
                     <div class="update-detail-grid">
@@ -335,7 +340,7 @@
                     <span class="section-index">02</span>
                     <h2 id="register-sheet-title">装修项目产品登记单</h2>
                 </div>
-                <p>这是一份教学仿真记录。点击产品名称，在原位查看具体内容、人员责任、验收标准和变化历史。</p>
+                <p>产品条目可展开查看职责、验收标准与变更历史。</p>
             </header>
 
             <article class="register-document" aria-labelledby="register-document-title">
@@ -343,7 +348,7 @@
                     <div>
                         <span>教学仿真管理记录</span>
                         <h3 id="register-document-title"><b id="registerDocumentId">REN-PR-001</b> 住宅全屋装修项目产品登记单</h3>
-                        <p>本案例按项目需要增加负责人、来源、计划验收和最后更新字段，不代表 PRINCE2 规定的固定模板。</p>
+                        <p>项目扩展字段：负责人、来源、计划验收、最后更新。</p>
                     </div>
                     <strong id="registerDocumentStatus">持续维护中</strong>
                 </header>
@@ -410,7 +415,7 @@
         <p>PRINCE2® 7 知识库 · 教学虚构案例</p>
         <div class="footer-links">
             <a href="renovation.html#product-register-story">返回装修项目</a>
-            <a href="../entities/product.html#entity-产品登记单">查看产品通用说明</a>
+            <a href="../entities/product-detail-v2.html?entry=product-register&amp;mode=theory">产品登记单理论</a>
         </div>
     </footer>
 </body>

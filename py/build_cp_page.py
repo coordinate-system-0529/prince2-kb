@@ -53,7 +53,7 @@ SVG = '''<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11
       <!-- ── 上排：准备（双入口） ── -->
       <a href="../chapters/ch19.html#pn-7"><rect x="130" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="220" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">准备按计划收尾</text><text x="220" y="237" text-anchor="middle" font-size="11" fill="#888">19.4.1</text></a>
       <a href="../chapters/ch19.html#pn-8"><rect x="810" y="196" width="180" height="52" rx="10" fill="#eef7f1" stroke="#2E8B57" stroke-width="2"/><text x="900" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">准备提前收尾</text><text x="900" y="237" text-anchor="middle" font-size="11" fill="#888">19.4.2 · 例外时</text></a>
-      <a href="../entities/product.html#entity-项目收尾建议"><text x="120" y="266" text-anchor="start" font-size="10" class="src-link">产出：项目收尾建议</text></a>
+      <a href="../chapters/ch19.html#pn-7"><text x="120" y="266" text-anchor="start" font-size="10" class="src-link">动作：准备并通知项目收尾建议（非管理产品）</text></a>
 
       <!-- ── 中排：确认验收（枢纽，两路汇入） ── -->
       <a href="../chapters/ch19.html#pn-9"><rect x="470" y="330" width="180" height="52" rx="10" fill="#e3f2e9" stroke="#2E8B57" stroke-width="3"/><text x="560" y="354" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E8B57">确认项目验收</text><text x="560" y="371" text-anchor="middle" font-size="11" fill="#888">19.4.3</text></a>
@@ -94,7 +94,7 @@ CTX = dict(
     svg=SVG,
     trig_in='<span class="tag-ev">项目竣工临近（CS · 最后阶段临近结束）</span><span class="tag-ev">提前收尾请求（DP · 例外时）</span>',
     trig_out='<span class="tag-ev">项目收尾请求 → DP（请求授权关闭项目）</span>',
-    products='<a class="tag-mp" href="../entities/product.html">项目收尾建议</a><a class="tag-mp" href="../entities/product.html">项目竣工报告</a><a class="tag-mp" href="../entities/product.html">经验教训记录单（关闭）</a><a class="tag-mp" href="../entities/product.html">后续行动建议</a><a class="tag-mp" href="../entities/product.html">收益管理方法（更新）</a><a class="tag-mp" href="../entities/product.html">项目计划（更新）</a>',
+    products='<span class="tag-ev">项目收尾建议（流程通知，非管理产品）</span><a class="tag-mp" href="../entities/product.html">A3 项目竣工报告（创建）</a><a class="tag-mp" href="../entities/product.html">A8 经验教训报告（创建）</a><a class="tag-mp" href="../entities/product.html">A13 项目记录单：经验教训记录单（组成项，关闭）</a><span class="tag-ev">后续行动建议（报告内容/流程输出）</span><a class="tag-mp" href="../entities/product.html">A12 组成：收益管理方法（更新）</a><a class="tag-mp" href="../entities/product.html">A9 计划：项目计划（类型，更新）</a>',
     reading='流程原文：<a href="../chapters/ch19.html">第19章 项目收尾</a>　·　管理产品定义：<a href="../chapters/appendix_a.html">附录 A</a>　·　信息流全景：<a href="../graph-full.html">管理产品信息流</a>',
     nav_prev='<a href="sb.html">◁ SB 阶段边界管理</a>',
     nav_next='<span class="disabled">CP 是最后一个流程 ▷</span>',

@@ -35,11 +35,11 @@ NEW_BLOCK = '''    <!-- ③管理层（重排贴合官方图 12.2：SU→IP / SB
                                 </div>
                             </div>
                             <div class="proc-products">
-                                <a class="mgmt-product mp-plan" href="entities/product.html">项目概述文件</a>
-                                <a class="mgmt-product mp-register" href="entities/product.html">日志</a>
-                                <a class="mgmt-product mp-register" href="entities/product.html">风险登记单</a>
-                                <a class="mgmt-product mp-register" href="entities/product.html">问题登记单</a>
-                                <a class="mgmt-product mp-register" href="entities/product.html">经验教训记录单</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A11 项目概述文件</a>
+                                <a class="mgmt-product mp-register" href="entities/product.html">A13组成·日志</a>
+                                <a class="mgmt-product mp-register" href="entities/product.html">A13组成·风险登记单</a>
+                                <a class="mgmt-product mp-register" href="entities/product.html">A13组成·问题登记单</a>
+                                <a class="mgmt-product mp-register" href="entities/product.html">A13组成·经验教训记录单</a>
                             </div>
                         </div>
                     </div>
@@ -60,16 +60,20 @@ NEW_BLOCK = '''    <!-- ③管理层（重排贴合官方图 12.2：SU→IP / SB
                                 </div>
                             </div>
                             <div class="proc-products">
-                                <a class="mgmt-product mp-plan" href="entities/product.html">项目启动文件</a>
-                                <a class="mgmt-product mp-plan" href="entities/product.html">项目计划</a>
-                                <a class="mgmt-product mp-plan" href="entities/product.html">项目产品描述</a>
-                                <a class="mgmt-product mp-approach" href="entities/product.html">质量管理方法</a>
-                                <a class="mgmt-product mp-approach" href="entities/product.html">风险管理方法</a>
-                                <a class="mgmt-product mp-approach" href="entities/product.html">沟通管理方法</a>
-                                <a class="mgmt-product mp-approach" href="entities/product.html">收益管理方法</a>
-                                <a class="mgmt-product mp-approach" href="entities/product.html">可持续性管理方法</a>
-                                <a class="mgmt-product mp-approach" href="entities/product.html">问题管理方法</a>
-                                <a class="mgmt-product mp-register" href="entities/product.html">质量登记单</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A1 商业论证</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A12 项目启动文件</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A9类型·项目计划</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A14 项目产品描述</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·质量管理方法</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·风险管理方法</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·沟通管理方法</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·收益管理方法</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·可持续性管理方法</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·问题管理方法</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·变更管理方法</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·商务管理方法</a>
+                                <a class="mgmt-product mp-approach" href="entities/product.html">A12组成·数字化和数据管理方法</a>
+                                <a class="mgmt-product mp-register" href="entities/product.html">A13组成·质量登记单</a>
                             </div>
                         </div>
                     </div>
@@ -91,9 +95,9 @@ NEW_BLOCK = '''    <!-- ③管理层（重排贴合官方图 12.2：SU→IP / SB
                                 </div>
                             </div>
                             <div class="proc-products">
-                                <a class="mgmt-product mp-plan" href="entities/product.html">阶段计划</a>
-                                <a class="mgmt-product mp-plan" href="entities/product.html">阶段竣工报告</a>
-                                <a class="mgmt-product mp-plan" href="entities/product.html">例外计划</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A9类型·阶段计划</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A4 阶段竣工报告</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A9类型·例外计划</a>
                             </div>
                         </div>
                     </div>
@@ -112,8 +116,9 @@ NEW_BLOCK = '''    <!-- ③管理层（重排贴合官方图 12.2：SU→IP / SB
                                 </div>
                             </div>
                             <div class="proc-products">
-                                <a class="mgmt-product mp-plan" href="entities/product.html">项目竣工报告</a>
-                                <a class="mgmt-product mp-plan" href="entities/product.html">项目收尾建议</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A3 项目竣工报告</a>
+                                <a class="mgmt-product mp-plan" href="entities/product.html">A8 经验教训报告</a>
+                                <span class="ev ev-up">项目收尾建议·流程通知</span>
                             </div>
                         </div>
                     </div>
@@ -151,11 +156,11 @@ NEW_BLOCK = '''    <!-- ③管理层（重排贴合官方图 12.2：SU→IP / SB
                                     </div>
                                 </div>
                                 <div class="proc-products">
-                                    <a class="mgmt-product mp-plan" href="entities/product.html">工作包描述</a>
-                                    <a class="mgmt-product mp-plan" href="entities/product.html">要点报告</a>
-                                    <a class="mgmt-product mp-plan" href="entities/product.html">例外报告</a>
-                                    <a class="mgmt-product mp-plan" href="entities/product.html">问题报告</a>
-                                    <a class="mgmt-product mp-register" href="entities/product.html">产品登记单</a>
+                                    <a class="mgmt-product mp-plan" href="entities/product.html">A15 工作包描述</a>
+                                    <a class="mgmt-product mp-plan" href="entities/product.html">A6 要点报告</a>
+                                    <a class="mgmt-product mp-plan" href="entities/product.html">A5 例外报告</a>
+                                    <a class="mgmt-product mp-plan" href="entities/product.html">A7 问题报告</a>
+                                    <a class="mgmt-product mp-register" href="entities/product.html">A13组成·产品登记单</a>
                                 </div>
                             </div>
                             <span class="cs-input-tag">← 新问题 / 风险</span>
@@ -203,8 +208,8 @@ NEW_BLOCK = '''    <!-- ③管理层（重排贴合官方图 12.2：SU→IP / SB
                             </div>
                         </div>
                         <div class="proc-products">
-                            <a class="mgmt-product mp-plan" href="entities/product.html">检查点报告</a>
-                            <a class="mgmt-product mp-plan" href="entities/product.html">产品描述</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">A2 检查点报告</a>
+                            <a class="mgmt-product mp-plan" href="entities/product.html">A10 产品描述</a>
                         </div>
                     </div>
                 </div>

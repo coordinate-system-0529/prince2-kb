@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PRINCE2 7 管理产品定义、用途、组成、角色关系和生命周期。">
+    <title>管理产品详情 - PRINCE2 7</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../assets/product-overview-v2.css?v=20260814-2">
+    <link rel="stylesheet" href="../assets/product-detail-v2.css?v=20260811-3">
+    <link rel="stylesheet" href="../assets/product-workspace.css?v=acceptance-1">
+    <link rel="stylesheet" href="../assets/product-workspace-detail.css?v=structured-detail-1">
+    <link rel="stylesheet" href="../assets/lesson-register.css?v=lesson-journey-1">
+    <link rel="stylesheet" href="../assets/business-case-document.css?v=business-paper-1">
+    <link rel="stylesheet" href="../assets/project-plan-document.css?v=project-plan-1">
+    <link rel="stylesheet" href="../assets/project-plan-usage.css?v=acceptance-1">
+    <link rel="stylesheet" href="../assets/product-management-usage.css?v=management-1">
+    <link rel="stylesheet" href="../assets/product-raci.css?v=raci-1">
+    <link rel="stylesheet" href="../assets/product-remaining.css?v=remaining-1">
+</head>
+<body data-page="product-detail" data-current-item="">
+    <a class="skip-link" href="#main-content">跳到正文</a>
+
+    <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-controls="product-sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>管理产品目录</span>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay" hidden></div>
+
+    <aside class="product-sidebar" id="product-sidebar" aria-label="管理产品导航">
+        <header class="sidebar-brand">
+            <div>
+                <a href="../index.html" class="brand-name" aria-label="返回 PRINCE2 7 知识库首页">PRINCE2<sup>®</sup> 7</a>
+                <p>管理产品 · 15 项正式产品</p>
+            </div>
+            <button class="sidebar-close" id="sidebar-close" type="button" aria-label="关闭管理产品目录">×</button>
+        </header>
+        <nav class="mode-switch" aria-label="详情内容模式">
+            <a id="detail-mode-theory-sidebar" href="?mode=theory" data-detail-mode="theory" aria-current="page">理论知识</a>
+            <a id="detail-mode-case-sidebar" href="?mode=case" data-detail-mode="case">案例</a>
+        </nav>
+        <a class="overview-node" href="product.html">
+            <span class="overview-icon" aria-hidden="true">⌂</span>
+            <span><strong>管理产品总览</strong><small>理论概述与阅读入口</small></span>
+        </a>
+        <div class="sidebar-summary">
+            <strong>7 基准 · 7 报告 · 1 记录</strong>
+            <span id="sidebar-current-path">正在载入当前条目</span>
+        </div>
+        <div class="tree-tools">
+            <label for="product-tree-search">查找管理产品</label>
+            <div class="search-field"><span aria-hidden="true">⌕</span><input id="product-tree-search" type="search" placeholder="输入名称或编号，如 A13" autocomplete="off"></div>
+            <p id="product-tree-status" class="tree-status" aria-live="polite"></p>
+        </div>
+        <nav class="product-tree" id="product-tree" aria-label="15 项正式管理产品"><p class="tree-loading">正在载入管理产品目录</p></nav>
+    </aside>
+
+    <main class="page-shell detail-shell" id="main-content" tabindex="-1">
+        <nav class="top-nav" aria-label="面包屑导航">
+            <a href="../index.html">返回主页</a><span aria-hidden="true">/</span>
+            <a href="product.html">管理产品总览</a><span aria-hidden="true">/</span>
+            <a id="breadcrumb-parent" href="product.html">管理产品</a><span aria-hidden="true">/</span>
+            <span id="breadcrumb-current" aria-current="page">正在载入</span>
+        </nav>
+
+        <div class="detail-view-toolbar" id="detail-view-toolbar" hidden>
+            <div>
+                <span class="detail-view-label">当前内容</span>
+                <nav class="detail-view-switch" aria-label="详情内容模式">
+                    <a id="detail-mode-theory" href="?mode=theory" data-detail-mode="theory" aria-current="page">理论知识</a>
+                    <a id="detail-mode-case" href="?mode=case" data-detail-mode="case">案例</a>
+                </nav>
+            </div>
+            <p id="detail-mode-caption">理论结构与项目案例按相同章节一一对应</p>
+            <span class="visually-hidden" id="detail-mode-status" aria-live="polite"></span>
+        </div>
+
+        <section id="detail-status" class="detail-section" aria-live="polite" aria-busy="true">
+            <p class="tree-loading">正在载入产品详情</p>
+        </section>
+
+        <div id="detail-content" hidden>
+            <header class="detail-hero" id="detail-hero">
+                <div class="detail-hero-copy">
+                    <p class="eyebrow" id="detail-eyebrow"></p>
+                    <h1 id="detail-title"></h1>
+                    <p class="provenance-label" id="detail-provenance"></p>
+                    <p class="detail-summary" id="detail-summary"></p>
+                </div>
+                <div class="detail-hero-actions" id="detail-actions"></div>
+            </header>
+
+            <section class="lesson-document" id="lesson-register-section" aria-labelledby="lesson-document-title" hidden></section>
+
+            <section class="source-definition" id="definition-section" aria-label="定义与用途">
+                <div class="source-row" data-view-anchor="definition">
+                    <a class="source-label" id="definition-link">定义</a>
+                    <p id="definition-text"></p>
+                </div>
+                <div class="source-row" data-view-anchor="purpose">
+                    <a class="source-label" id="purpose-link">用途</a>
+                    <p id="purpose-text"></p>
+                </div>
+                <p class="source-note" id="source-note"></p>
+            </section>
+
+            <section class="detail-section" id="composition-section" aria-labelledby="composition-title">
+                <header class="detail-section-heading">
+                    <div><span class="detail-number">01</span><p class="section-kicker" id="composition-kicker"></p><h2 id="composition-title">组成内容</h2></div>
+                    <details class="evidence-menu" id="composition-evidence"><summary>本节依据</summary><div></div></details>
+                </header>
+                <p class="provenance-note" id="composition-note"></p>
+                <dl class="field-grid" id="composition-list"></dl>
+            </section>
+
+            <section class="detail-section" id="roles-section" aria-labelledby="roles-title">
+                <header class="detail-section-heading">
+                    <div><span class="detail-number">02</span><p class="section-kicker" id="roles-kicker"></p><h2 id="roles-title">角色和动作</h2></div>
+                    <details class="evidence-menu" id="roles-evidence"><summary>本节依据</summary><div></div></details>
+                </header>
+                <p class="provenance-note" id="roles-note"></p>
+                <div class="role-table-wrap" tabindex="0" aria-label="角色关系表，可横向滚动">
+                    <table class="detail-table">
+                        <thead><tr><th scope="col">角色</th><th scope="col">与产品的关系</th><th scope="col">执行动作</th><th scope="col">具体说明</th></tr></thead>
+                        <tbody id="roles-list"></tbody>
+                    </table>
+                </div>
+                <aside class="boundary-note" id="roles-boundary" hidden>
+                    <strong id="roles-boundary-title"></strong>
+                    <p id="roles-boundary-text"></p>
+                </aside>
+            </section>
+
+            <section class="detail-section" id="lifecycle-section" aria-labelledby="lifecycle-title">
+                <header class="detail-section-heading">
+                    <div><span class="detail-number">03</span><p class="section-kicker" id="lifecycle-kicker"></p><h2 id="lifecycle-title">生命周期</h2></div>
+                    <details class="evidence-menu" id="lifecycle-evidence"><summary>本节依据</summary><div></div></details>
+                </header>
+                <p class="provenance-note" id="lifecycle-note"></p>
+                <div class="rhythm" id="lifecycle-rhythm" aria-label="产品执行节奏"></div>
+                <table class="lifecycle-table" aria-labelledby="lifecycle-title">
+                    <thead><tr><th scope="col">流程／环节</th><th scope="col">主要动作</th><th scope="col">记录与交接</th></tr></thead>
+                    <tbody id="lifecycle-list"></tbody>
+                </table>
+            </section>
+
+            <section class="case-entry" id="case-section" aria-labelledby="case-title">
+                <div><p class="section-kicker" id="case-kicker">放回项目情境</p><h2 id="case-title"></h2><p id="case-description"></p></div>
+                <a class="button button-gold" id="case-link"><span id="case-link-label"></span> <span aria-hidden="true">→</span></a>
+            </section>
+
+            <footer class="page-footer"><p id="detail-footer-note">新版管理产品详情页</p><a href="product.html">返回管理产品总览</a></footer>
+        </div>
+    </main>
+
+    <script src="../assets/prince2-products.js?v=routes-36-1"></script>
+    <script src="../assets/product-details-v2.js?v=acceptance-1"></script>
+    <script src="../assets/product-navigation-v2.js?v=routes-36-1"></script>
+    <script src="../assets/quality-register.js?v=quality-paper-1"></script>
+    <script src="../cases/renovation-register-data.js"></script>
+    <script src="../assets/register-documents.js?v=issue-paper-1"></script>
+    <script src="../assets/business-case-document.js?v=acceptance-1"></script>
+    <script src="../assets/project-plan-document.js?v=project-plan-1"></script>
+    <script src="../assets/project-plan-usage.js?v=navigation-1"></script>
+    <script src="../assets/business-case-usage.js?v=navigation-1"></script>
+    <script src="../assets/product-management-usage.js?v=acceptance-1"></script>
+    <script src="../assets/product-remaining-v2.js?v=remaining-1"></script>
+    <script src="../assets/product-remaining-cases.js?v=remaining-1"></script>
+    <script src="../assets/product-remaining-methods.js?v=remaining-1"></script>
+    <script src="../assets/product-remaining-runtime.js?v=remaining-1"></script>
+    <script src="../assets/product-raci.js?v=raci-records-2"></script>
+    <script src="../assets/lesson-register.js?v=navigation-1"></script>
+    <script src="../assets/product-detail-v2.js?v=navigation-1"></script>
+    <script src="../assets/product-workspace.js?v=routes-36-1"></script>
+</body>
+</html>

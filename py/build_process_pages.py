@@ -86,7 +86,7 @@ a.tag-mp:hover {{ filter:brightness(0.92); }}
     <table class="trig-table">
       <tr><th>谁触发我</th><td>{trig_in}</td></tr>
       <tr><th>我触发谁</th><td>{trig_out}</td></tr>
-      <tr><th>产出管理产品</th><td>{products}</td></tr>
+      <tr><th>产品与处理</th><td>{products}</td></tr>
     </table>
   </div>
 
@@ -121,7 +121,7 @@ def main():
             svg=cs_svg,
             trig_in='<span class="tag-ev">已授权项目（DP · 首次）</span><span class="tag-ev">已授权阶段（DP · 每阶段）</span><span class="tag-ev">例外计划批准（DP · 例外时）</span><span class="tag-ev">新问题或风险（随时）</span>',
             trig_out='<span class="tag-ev">工作包已授权 → MP</span><span class="tag-ev">阶段边界临近 → SB</span><span class="tag-ev">项目竣工临近 → CP</span><span class="tag-ev">已提出例外 / 要点报告 → DP</span>',
-            products='<a class="tag-mp" href="../entities/product.html">工作包描述</a><a class="tag-mp" href="../entities/product.html">要点报告</a><a class="tag-mp" href="../entities/product.html">例外报告</a><a class="tag-mp" href="../entities/product.html">问题报告</a><a class="tag-mp" href="../entities/product.html">产品登记单</a>',
+            products='<a class="tag-mp" href="../entities/product.html">A15 工作包描述（创建/更新）</a><a class="tag-mp" href="../entities/product.html">A6 要点报告（创建）</a><a class="tag-mp" href="../entities/product.html">A5 例外报告（按需创建）</a><a class="tag-mp" href="../entities/product.html">A7 问题报告（按需创建）</a><a class="tag-mp" href="../entities/product.html">A13 项目记录单：产品登记单（组成项，更新）</a>',
             reading='流程原文：<a href="../chapters/ch16.html">第16章 阶段控制</a>　·　管理产品定义：<a href="../chapters/appendix_a.html">附录 A</a>　·　信息流全景：<a href="../graph-full.html">管理产品信息流</a>',
             nav_prev='<a href="ip.html">◁ IP 项目启动</a>',
             nav_next='<a href="mp.html">MP 产品交付管理 ▷</a>',
@@ -133,7 +133,7 @@ def main():
             svg=mp_svg,
             trig_in='<span class="tag-ev">工作包已授权（CS）＋ 工作包描述</span>',
             trig_out='<span class="tag-ev">检查点报告 → CS（定期）</span><span class="tag-ev">已完成工作包通知 → CS</span>',
-            products='<a class="tag-mp" href="../entities/product.html">小组计划</a><a class="tag-mp" href="../entities/product.html">检查点报告</a><span class="tag-ev" style="background:#eee;border-color:#999;color:#555">专业产品（交付物）</span>',
+            products='<a class="tag-mp" href="../entities/product.html">A9 计划：小组计划（类型，按需创建）</a><a class="tag-mp" href="../entities/product.html">A2 检查点报告（创建）</a><span class="tag-ev" style="background:#eee;border-color:#999;color:#555">专业产品（交付物，非管理产品）</span>',
             reading='流程原文：<a href="../chapters/ch17.html">第17章 产品交付管理</a>　·　管理产品定义：<a href="../chapters/appendix_a.html">附录 A</a>　·　信息流全景：<a href="../graph-full.html">管理产品信息流</a>',
             nav_prev='<a href="cs.html">◁ CS 阶段控制</a>',
             nav_next='<a href="sb.html">SB 阶段边界管理 ▷</a>',

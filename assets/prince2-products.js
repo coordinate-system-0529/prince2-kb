@@ -71,4 +71,17 @@
             { id: 'work-package-description', code: 'A15', name: '工作包描述', type: 'baseline', detailId: 'entity-工作包描述', components: [] }
         ]
     };
+    // 所有入口共用一个名称到V2条目的映射，避免两种模式的可用范围不同。
+    var components = {
+        "概要商业论证": "outline-business-case", "完整商业论证": "full-business-case",
+        "项目计划": "project-plan", "阶段计划": "stage-plan", "例外计划": "exception-plan", "小组计划": "team-plan",
+        "收益管理方法": "benefits-management-approach", "变更管理方法": "change-management-approach",
+        "商务管理方法": "commercial-management-approach", "沟通管理方法": "communication-management-approach",
+        "数字化和数据管理方法": "digital-and-data-management-approach", "问题管理方法": "issue-management-approach",
+        "质量管理方法": "quality-management-approach", "风险管理方法": "risk-management-approach",
+        "可持续性管理方法": "sustainability-management-approach", "日志": "daily-log", "问题登记单": "issue-register",
+        "经验教训记录单": "lessons-log", "产品登记单": "product-register", "质量登记单": "quality-register", "风险登记单": "risk-register"
+    };
+    global.PRINCE2_PRODUCT_TAXONOMY.products.forEach(function (product) { components[product.name] = product.id; });
+    global.PRINCE2_PRODUCT_ROUTES = Object.freeze(components);
 }(window));

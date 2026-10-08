@@ -1,7 +1,67 @@
 (function() {
     "use strict";
 
+    function setupRecordInteractions() {
+        document.querySelectorAll(".register-event-trigger").forEach(function (trigger) {
+            trigger.addEventListener("click", function () {
+                var panel = document.getElementById(trigger.getAttribute("aria-controls"));
+                if (!panel) { return; }
+                var open = trigger.getAttribute("aria-expanded") !== "true";
+                trigger.setAttribute("aria-expanded", String(open));
+                panel.hidden = !open;
+            });
+        });
+    }
+
+    // 现行案例共用工作区目录，旧目录仅保留为兼容入口。
+    if (document.body.hasAttribute("data-product-shell")) {
+        setupRecordInteractions();
+        if (document.body.hasAttribute("data-workspace-source")) {
+            function syncSourceContext() {
+                if (!window.PRINCE2Workspace) { return; }
+                var name = document.body.dataset.caseProduct;
+                if (name === "项目概述文件" && location.hash === "#business-case") { name = "概要商业论证"; }
+                if (document.body.dataset.caseProduct === "风险登记单" && location.hash === "#lessons-log") {
+                    name = "经验教训记录单";
+                }
+                window.PRINCE2Workspace.setSourceContext({ name: name, kind: document.body.dataset.workspaceSource });
+            }
+            syncSourceContext();
+            // 底部脚本接入的摘录页，要在工作区页头完成后再同步一次身份。
+            if (document.readyState !== "complete") {
+                document.addEventListener("DOMContentLoaded", syncSourceContext, { once: true });
+            }
+            window.addEventListener("hashchange", syncSourceContext);
+            if ("scrollRestoration" in history) { history.scrollRestoration = "auto"; }
+        }
+        return;
+    }
+
+    var NAV_BUILD = "20260814-2";
+    var SIDEBAR_SCROLL_KEY = "prince2-product-sidebar-scroll";
     var isKnowledgeIndex = document.body.hasAttribute("data-product-index");
+
+    if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+    }
+
+    function withBuildVersion(href) {
+        if (!href || href.charAt(0) === "#") {
+            return href;
+        }
+        var parts = href.split("#");
+        var separator = parts[0].indexOf("?") === -1 ? "?" : "&";
+        return parts[0] + separator + "v=" + NAV_BUILD + (parts[1] ? "#" + parts[1] : "");
+    }
+
+    function addPrefetch(href) {
+        var link = document.createElement("link");
+        link.rel = "prefetch";
+        link.href = href;
+        document.head.appendChild(link);
+    }
+
+    addPrefetch(withBuildVersion("../entities/product.html"));
 
     // 分类、名称和组成项只读取共享数据源；这里仅保存案例库专属的链接和状态。
     var caseDecorations = {
@@ -9,7 +69,11 @@
             href: "project-brief.html#business-case",
             badge: "关联案例",
             components: {
-                "概要商业论证": { href: "project-brief.html#business-case", badge: "关联案例" }
+                "概要商业论证": { href: "project-brief.html#business-case", badge: "关联案例" },
+                "完整商业论证": {
+                    href: "../entities/product-detail-v2.html?entry=full-business-case&mode=case",
+                    badge: "案例"
+                }
             }
         },
         A10: { href: "product-description-waterproofing.html", badge: "案例" },
@@ -59,12 +123,22 @@
         if (!isCaseDecoration(decoration) || !decoration.href) {
             return "";
         }
+        if (/^(?:\.\.\/|\/|https?:)/.test(decoration.href)) {
+            return decoration.href;
+        }
         return isKnowledgeIndex ? "../cases/" + decoration.href : decoration.href;
     }
 
     function knowledgeHref(name) {
-        // A1 的两个演进状态共用商业论证知识条目，知识索引没有两个重复条目。
-        var targetName = name === "概要商业论证" || name === "完整商业论证" ? "商业论证" : name;
+        var detailTargets = {
+            "概要商业论证": "product-detail-v2.html?entry=outline-business-case&mode=theory",
+            "完整商业论证": "product-detail-v2.html?entry=full-business-case&mode=theory",
+            "产品登记单": "product-detail-v2.html?entry=product-register"
+        };
+        if (detailTargets[name]) {
+            return (isKnowledgeIndex ? "" : "../entities/") + detailTargets[name];
+        }
+        var targetName = name;
         var hash = "#entity-" + encodeURIComponent(targetName || "");
         return isKnowledgeIndex ? hash : "../entities/product.html" + hash;
     }
@@ -109,7 +183,12 @@
         // 项目概述文件同时承载 A1 的概要商业论证案例，只有该锚点属于 A1。
         if (document.body.getAttribute("data-case-product") === "项目概述文件" &&
                 window.location.hash === "#business-case") {
-            return "商业论证";
+            return "概要商业论证";
+        }
+        if (!document.body.hasAttribute("data-case-product") &&
+                /\/renovation\.html$/.test(window.location.pathname) &&
+                window.location.hash === "#full-business-case") {
+            return "完整商业论证";
         }
         return document.body.getAttribute("data-case-product") || "";
     }
@@ -190,6 +269,7 @@
     }
 
     function createCaseSidebar() {
+        if (document.body.hasAttribute("data-product-shell")) { return; }
         var currentProduct = currentSelection();
         if (document.getElementById("product-sidebar")) {
             return;
@@ -219,6 +299,7 @@
     }
 
     function updateSidebarContext() {
+        if (document.body.hasAttribute("data-product-shell")) { return; }
         var sidebar = document.getElementById("product-sidebar");
         if (!sidebar) {
             return;
@@ -229,16 +310,24 @@
         var modeKnowledge = sidebar.querySelector('[data-product-mode="knowledge"]');
         var modeCase = sidebar.querySelector('[data-product-mode="case"]');
         var status = sidebar.querySelector("[data-product-mode-status]");
-        var targetCaseHref = context ? caseHref(context.decoration) : (isKnowledgeIndex ? "../cases/renovation.html" : "renovation.html");
+        var currentCaseHref = window.location.pathname.split("/").pop() + window.location.hash;
+        var targetCaseHref = isKnowledgeIndex
+            ? (context ? caseHref(context.decoration) : "../cases/renovation.html")
+            : currentCaseHref;
         var targetKnowledgeHref = selection ? knowledgeHref(selection) : (isKnowledgeIndex ? "#" : "../entities/product.html");
 
-        modeKnowledge.href = targetKnowledgeHref;
-        modeKnowledge.setAttribute("aria-current", isKnowledgeIndex ? "page" : "false");
-        modeCase.setAttribute("aria-current", isKnowledgeIndex ? "false" : "page");
+        modeKnowledge.href = withBuildVersion(targetKnowledgeHref);
+        if (isKnowledgeIndex) {
+            modeKnowledge.setAttribute("aria-current", "page");
+            modeCase.removeAttribute("aria-current");
+        } else {
+            modeKnowledge.removeAttribute("aria-current");
+            modeCase.setAttribute("aria-current", "page");
+        }
         modeCase.classList.toggle("is-disabled", !targetCaseHref);
         modeCase.setAttribute("aria-disabled", String(!targetCaseHref));
         if (targetCaseHref) {
-            modeCase.href = targetCaseHref;
+            modeCase.href = withBuildVersion(targetCaseHref);
             modeCase.removeAttribute("title");
         } else {
             modeCase.removeAttribute("href");
@@ -294,10 +383,32 @@
             return;
         }
         sidebar.classList.toggle("is-open", open);
+        document.body.classList.toggle("sidebar-open", open);
         sidebarToggle.setAttribute("aria-expanded", String(open));
     }
 
     if (sidebar && sidebarToggle) {
+        var restoredSidebarScroll = false;
+        try {
+            var savedSidebarScroll = Number(sessionStorage.getItem(SIDEBAR_SCROLL_KEY));
+            if (Number.isFinite(savedSidebarScroll) && savedSidebarScroll > 0) {
+                sidebar.scrollTop = savedSidebarScroll;
+                restoredSidebarScroll = true;
+            }
+        } catch (error) {
+            // 浏览器禁用会话存储时保持默认滚动行为。
+        }
+
+        function saveSidebarScroll() {
+            try {
+                sessionStorage.setItem(SIDEBAR_SCROLL_KEY, String(sidebar.scrollTop));
+            } catch (error) {
+                // 浏览器禁用会话存储时无需处理。
+            }
+        }
+
+        sidebar.addEventListener("scroll", saveSidebarScroll, { passive: true });
+        window.addEventListener("pagehide", saveSidebarScroll);
         sidebarToggle.addEventListener("click", function() {
             setSidebar(!sidebar.classList.contains("is-open"));
         });
@@ -307,7 +418,7 @@
         });
 
         var currentLink = sidebar.querySelector('[aria-current="page"]');
-        if (currentLink) {
+        if (currentLink && !restoredSidebarScroll) {
             window.requestAnimationFrame(function() {
                 var sidebarRect = sidebar.getBoundingClientRect();
                 var currentRect = currentLink.getBoundingClientRect();
@@ -322,17 +433,5 @@
 
     window.addEventListener("hashchange", updateSidebarContext);
 
-    document.querySelectorAll(".register-event-trigger").forEach(function(trigger) {
-        trigger.addEventListener("click", function() {
-            var panelId = trigger.getAttribute("aria-controls");
-            var panel = document.getElementById(panelId);
-            if (!panel) {
-                return;
-            }
-
-            var willOpen = trigger.getAttribute("aria-expanded") !== "true";
-            trigger.setAttribute("aria-expanded", String(willOpen));
-            panel.hidden = !willOpen;
-        });
-    });
+    setupRecordInteractions();
 }());

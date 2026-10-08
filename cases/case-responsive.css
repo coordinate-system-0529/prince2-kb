@@ -1,0 +1,96 @@
+/* 案例原文件的共用排版，保留桌面文档结构，窄屏按阅读顺序重排。 */
+.timeline-card h3 { overflow: visible; text-overflow: clip; white-space: normal; text-wrap: pretty; }
+.register-control-grid dd,
+.quality-document-header dd,
+.product-detail-sheet > header dd,
+.product-register-row > td,
+.product-register-row > td:nth-child(3) b,
+.product-register-row > td:nth-child(3) small,
+.product-detail-trigger > span,
+.product-detail-trigger b,
+.product-detail-trigger strong,
+.product-detail-trigger small,
+.register-product-state {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+}
+.full-register-wrap { overflow-x: auto; }
+.full-register-table { min-width: 1320px; }
+.full-register-table th { white-space: nowrap; }
+.section-title > span { flex-shrink: 0; }
+.section-title > div { min-width: 0; }
+.document-header h2, .register-document-header h2,
+.quality-section-title h2, .record-reference h2, .timeline-card h3 { text-wrap: balance; }
+.record-reference th { white-space: nowrap; }
+.register-sheet-section h2, .project-org-strip h3 { text-wrap: balance; }
+.org-person { grid-template-columns: auto minmax(0, 1fr); }
+.org-person small { grid-column: 1 / -1; text-align: left; }
+.brief-section h2, .quality-section h2 { text-wrap: balance; }
+@media screen and (max-width: 1200px) {
+    .brief-hero, .document-header, .brief-body-layout,
+    .final-product-statement, .waterproof-definition, .product-definition,
+    .quality-record-hero, .quality-document-header, .quality-record-layout,
+    .inspection-layout, .register-entry, .register-case-hero,
+    .update-panel > header, .product-detail-sheet > header {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+    .brief-toc, .quality-record-toc { position: static; }
+    .org-flow { grid-template-columns: minmax(0, 1fr); }
+    .org-flow-arrow b { transform: rotate(90deg); }
+    .brief-toc ol { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+    .document-status, .quality-document-header > dl, .record-meta-grid,
+    .register-control-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media screen and (max-width: 640px) {
+    .site-header { padding-top: 66px; flex-wrap: wrap; gap: 8px; }
+    .brief-hero, .document-header, .brief-body-layout,
+    .quality-record-hero, .quality-document-header, .quality-record-layout,
+    .register-case-hero { padding: 20px 16px; }
+    .brief-hero h1, .quality-record-hero h1, .register-hero-copy h1 {
+        font-size: 30px; line-height: 1.3; letter-spacing: 0;
+    }
+    .brief-hero-links, .quality-hero-links, .register-hero-links,
+    .document-footer, .site-footer, .footer-links, .register-document-footer {
+        flex-wrap: wrap; gap: 10px;
+    }
+    .decision-summary, .decision-facts, .definition-grid, .scope-matrix,
+    .assumption-row, .business-case-notes, .expectation-grid, .approach-sequence,
+    .definition-boundary-grid, .composition-map, .composition-grid,
+    .evidence-grid, .waterproof-composition, .waterproof-responsibility,
+    .hold-points, .failure-summary, .product-passport, .update-detail-grid,
+    .register-audit-summary, .product-history,
+    .record-scope-note, .pending-record-banner, .precondition-checklist,
+    .register-entry dl, .evidence-strip, .nonconformity-summary, .blank-result-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .document-status, .quality-document-header > dl, .record-meta-grid,
+    .register-control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .update-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .people-actions ul { grid-template-columns: minmax(0, 1fr); }
+    .reference-list li, .expectation-list li { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .lineage, .baseline-lineage, .responsibility-flow, .method-flow,
+    .traceability-chain, .evidence-chain, .rework-flow, .record-traceability,
+    .version-distinction, .version-change-record { grid-template-columns: minmax(0, 1fr); }
+    .lineage > i, .baseline-lineage > i, .responsibility-flow > i,
+    .method-flow > i, .traceability-chain > i, .evidence-chain > i,
+    .rework-flow > i, .record-traceability > i { transform: rotate(90deg); justify-self: center; }
+    .change-row { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .brief-section [class$="-table-wrap"], .version-history,
+    .quality-record-page [class$="-wrap"] { max-width: 100%; overflow-x: auto; }
+    .brief-section table, .quality-record-page table { min-width: 660px; }
+    .brief-section table th, .quality-record-page table th { white-space: nowrap; }
+    .section-title { gap: 8px; }
+    .section-title h2 { font-size: 22px; }
+    .register-document-header { flex-direction: column; gap: 10px; }
+    .register-document-header h3 { text-wrap: balance; }
+    .register-document-header h3 b { display: block; }
+    .case-overview dl { grid-template-columns: minmax(0, 1fr); }
+    .project-org-strip > header { display: block; }
+    .project-org-strip > header p { margin-top: 8px; text-align: left; }
+    .quality-section-title { flex-wrap: wrap; gap: 8px; }
+    .quality-section-title > div { flex: 1; min-width: 0; }
+    .quality-section-title h2 { font-size: 22px; }
+    .quality-section-title .record-state { margin-left: 52px; }
+}

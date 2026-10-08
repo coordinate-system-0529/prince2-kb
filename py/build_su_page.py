@@ -117,12 +117,12 @@ CTX = dict(
     svg=SVG,
     trig_in='<span class="tag-ev">项目任务书（业务层 · 公司或项目群管理层下达）</span>',
     trig_out='<span class="tag-ev">项目启动请求 → DP（项目指导 · 请求授权启动项目）</span>',
-    products='<a class="tag-mp" href="../entities/product.html#entity-日志">日志（创建）</a>'
-             '<a class="tag-mp" href="../entities/product.html#entity-经验教训记录单">经验教训记录单（创建）</a>'
-             '<a class="tag-mp" href="../entities/product.html#entity-项目产品描述">项目产品描述（创建）</a>'
-             '<a class="tag-mp" href="../entities/product.html">概要商业论证（创建）</a>'
-             '<a class="tag-mp" href="../entities/product.html#entity-项目概述文件">项目概述文件（创建）</a>'
-             '<a class="tag-mp" href="../entities/product.html#entity-阶段计划">阶段计划（启动阶段 · 创建）</a>',
+    products='<a class="tag-mp" href="../entities/product.html#entity-日志">A13 项目记录单：日志（组成项，创建）</a>'
+             '<a class="tag-mp" href="../entities/product.html#entity-经验教训记录单">A13 项目记录单：经验教训记录单（组成项，创建）</a>'
+             '<a class="tag-mp" href="../entities/product.html#entity-项目产品描述">A14 项目产品描述（创建）</a>'
+             '<a class="tag-mp" href="../entities/product.html">A1 商业论证（概要版，创建）</a>'
+             '<a class="tag-mp" href="../entities/product.html#entity-项目概述文件">A11 项目概述文件（创建）</a>'
+             '<a class="tag-mp" href="../entities/product.html#entity-阶段计划">A9 计划：启动阶段计划（类型，创建）</a>',
     reading='流程原文：<a href="../chapters/ch13.html">第13章 项目准备</a>　·　管理产品定义：<a href="../chapters/appendix_a.html">附录 A</a>　·　信息流全景：<a href="../graph-full.html">管理产品信息流</a>',
     nav_prev='<span class="disabled">◁ SU 是第一个流程</span>',
     nav_next='<a href="dp.html">DP 项目指导 ▷</a>',

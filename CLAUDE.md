@@ -30,12 +30,13 @@ python -m http.server 8000
 /
 ├── index.html          # 主页：章节导航、搜索、概念索引
 ├── graph.html          # 流程图：4层分层布局 + 点击展开详情面板
-├── graph-full.html     # 管理产品信息流：27个管理产品 + 层间授权事件连接器
+├── graph-full.html     # 管理产品信息流：15项正式产品 + 组成项 + 层间授权事件连接器
 ├── color-schemes.html  # 6套配色方案预览
 ├── chapters/           # 19个章节 + appendix_a.html、appendix_b.html、glossary.html
 ├── entities/           # 6种实体类型索引（每种一个文件）
 └── assets/
-    └── floating-toc.js # 章节页浮动目录导航
+    ├── floating-toc.js       # 章节页浮动目录导航
+    └── prince2-products.js   # PRINCE2 7 A1-A15 统一产品分类数据源
 ```
 
 ### graph.html 分层布局架构
@@ -67,7 +68,7 @@ python -m http.server 8000
 | `.mp-approach` | 管理方法 | 深蓝底 #2E6B9B 边框 |
 | `.mp-register` | 登记单 / 日志 | 深棕底 #8B6B00 边框 |
 
-> 注：此三分类是本项目的展示口径，**与官方 Appendix A 的"基线/报告/记录单"分类不同**；产品清单也收录了"项目收尾建议"而缺"商业论证/经验教训报告"，与 `entities/product.html` 一致但与官方手册有出入。改分类是牵动全站的内容决策，勿擅自改。
+> 管理产品的正式分类统一读取 `assets/prince2-products.js`：A1-A15，共7个基准、7个报告和1个项目记录单。计划类型归入A9，管理方法归入A12，六种动态记录归入A13。`项目收尾建议`属于流程动作/输出，不是 Appendix A 正式管理产品。图谱中的 `.mp-plan`、`.mp-approach`、`.mp-register` 仅用于视觉区分，不得解释为另一套正式分类。
 
 **列对齐网格（整个页面对齐的骨架）**：所有需要纵向对齐的行都用**同一套四列网格**——4 个 `flex:1` 列，列间 3 个间隔。`gap1`(SU↔IP) 与 `gap3`(SB↔CP) = 28px（`.arrow-spacer` 或 `.flow-arrow`）；**`gap2`(IP↔SB) = 90px（`.gap-wide`）**，这条加宽间隙就是 DP→CS 连线穿过的"通道"。因为每一行结构完全相同，列才会跨行对齐。列顺序：SU / IP / SB / CP，**CS 与 MP 都对齐在第 3 列（SB 列）下方**。使用此网格的行：`.up-flow-row`、顶部 `.managing-row`、`.sb-cs-row`、底部 `.managing-row`(CS)、`.delivery-row`。改任一行的间隔，必须同步改其余所有行，否则列错位。
 
@@ -94,7 +95,7 @@ python -m http.server 8000
 | 实践 (Practice) | `entities/practice.html` | 7 | 褐色 |
 | 流程 (Process) | `entities/process.html` | 7 | 绿色 |
 | 角色 (Role) | `entities/role.html` | 10 | 蓝色 |
-| 管理产品 (Product) | `entities/product.html` | 27 | 紫色 |
+| 管理产品 (Product) | `entities/product.html` | 15项正式产品（另有27条详细解读） | 紫色 |
 | 术语 (Term) | `entities/term.html` | 141 | 棕色 |
 
 ### 主题系统
@@ -115,7 +116,7 @@ python -m http.server 8000
 
 ### entity 页面模板约定
 
-6个实体索引页面（`entities/principle.html`、`practice.html`、`process.html`、`role.html`、`product.html`、`term.html`）共享统一模板：
+原则、实践、流程、角色和术语索引页共享以下基础模板。管理产品使用独立的新版总览与数据驱动详情页，唯一正式入口为 `entities/product.html`；`entities/product-overview-v2.html` 仅保留兼容跳转，旧版正文归档在 `旧版/product.html`。
 
 1. **导航栏**：返回主页链接 + 6种实体类型的快捷入口（每种用对应色码）
 2. **`page-title`**：实体类型名称（如"原则索引"）

@@ -1,0 +1,17 @@
+.remaining-contents { display:flex; flex-wrap:wrap; gap:5px 16px; padding-bottom:12px; border-bottom:1px solid var(--workspace-line); }
+.remaining-contents a, .remaining-references a { color:var(--workspace-accent); text-underline-offset:3px; }
+.remaining-chapter h2 { font-size:19px; text-wrap:balance; }
+.remaining-record-fields { margin:0; }
+.remaining-record-fields > div { display:grid; grid-template-columns:8em minmax(0,1fr); gap:10px; padding:8px 0; }
+.remaining-record-fields dt { color:var(--workspace-accent); font-weight:600; }
+.remaining-record-fields dd { margin:0; }
+@media screen and (max-width:640px) {
+    .remaining-chapter .business-table { min-width:520px; }
+    .remaining-record-fields > div { display:block; }
+    .remaining-record-fields dt { margin-bottom:4px; }
+}
+@media print {
+    .remaining-contents { display:none !important; }
+    .remaining-chapter .business-table { min-width:0; width:100%; }
+    .remaining-references { break-inside:avoid; }
+}
